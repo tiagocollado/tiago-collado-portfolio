@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+@theme {
+  /* Tipografías */
+  --font-display: var(--font-space-grotesk), sans-serif;
+  --font-body:    var(--font-geist-sans), sans-serif;
+  --font-mono:    var(--font-geist-mono), monospace;
+
+  /* Colores de marca — usables como clases de Tailwind */
+  --color-accent:       #C96A3A;
+  --color-accent-hover: #B05A2E;
+  --color-accent-subtle: #F3E4DA;
+
+  /* Radios */
+  --radius-card: 12px;
+  --radius-pill: 999px;
+
+  /* Transición de easing personalizado */
+  --ease-expo-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Variables de tema — cambian según light/dark */
+:root {
+  --bg-primary:   #F7F4EF;
+  --bg-secondary: #EFECE7;
+  --bg-tertiary:  #E8E5E0;
+
+  --ink-primary:   #111110;
+  --ink-secondary: #4A4845;
+  --ink-muted:     #8A8680;
+
+  --border-default: rgba(17, 17, 16, 0.10);
+  --border-strong:  rgba(17, 17, 16, 0.20);
+}
+
+.dark {
+  --bg-primary:   #111110;
+  --bg-secondary: #1C1B1A;
+  --bg-tertiary:  #242320;
+
+  --ink-primary:   #F0EDE8;
+  --ink-secondary: #A8A49F;
+  --ink-muted:     #6A6660;
+
+  --border-default: rgba(240, 237, 232, 0.10);
+  --border-strong:  rgba(240, 237, 232, 0.20);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--ink-primary);
+  font-family: var(--font-body);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
