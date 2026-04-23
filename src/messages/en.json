@@ -12,7 +12,8 @@
     "cta_cv": "Download CV"
   },
   "projects": {
-    "title": "Selected work",
+    "label": "SELECTED WORK",
+    "statement": "Process, criteria and execution.",
     "coming_soon": "Coming soon",
     "view_case": "View case study",
     "view_behance": "View on Behance",
@@ -64,8 +65,10 @@
     "title": "Tech stack"
   },
   "footer": {
-    "cta": "Got a project in mind?",
-    "email_button": "Let's talk",
+    "cta": "Let's work together?",
+    "cta_sub": "Send me a direct email.",
+    "copy_email": "Copy email",
+    "copied": "Copied!",
     "download_cv": "Download CV",
     "rights": "Tiago Collado. All rights reserved."
   }

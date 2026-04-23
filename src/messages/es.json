@@ -12,7 +12,8 @@
     "cta_cv": "Descargar CV"
   },
   "projects": {
-    "title": "Proyectos seleccionados",
+    "label": "TRABAJO SELECCIONADO",
+    "statement": "Proceso, criterio y ejecución.",
     "coming_soon": "En construcción",
     "view_case": "Ver caso de estudio",
     "view_behance": "Ver en Behance",
@@ -64,8 +65,10 @@
     "title": "Stack tecnológico"
   },
   "footer": {
-    "cta": "¿Tenés un proyecto en mente?",
-    "email_button": "Escribime",
+    "cta": "¿Trabajamos juntos?",
+    "cta_sub": "Enviame un mail directo.",
+    "copy_email": "Copiar email",
+    "copied": "¡Copiado!",
     "download_cv": "Descargar CV",
     "rights": "Tiago Collado. Todos los derechos reservados."
   }
