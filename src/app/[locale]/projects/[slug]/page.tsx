@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import { projects } from '@/data/projects'
 import { Locale } from '@/types'
-import { getTranslations } from 'next-intl/server'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
 
 interface ProjectPageProps {
   params: Promise<{
@@ -19,13 +19,14 @@ export async function generateStaticParams() {
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { locale, slug } = await params
+  setRequestLocale(locale)
   const project = projects.find((p) => p.slug === slug)
 
   if (!project) {
     notFound()
   }
 
-  // Intenta cargar traducciones específicas del caso de estudio
+  // Skip case study content for coming-soon projects to avoid build warnings
   const caseStudyKey = `case_study_${slug}`
   let hasCaseStudy = false
   let caseStudyContent = {
@@ -36,19 +37,20 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     results: ''
   }
 
-  try {
-    const t = await getTranslations(caseStudyKey)
-    hasCaseStudy = true
-    caseStudyContent = {
-      context: t('context'),
-      role: t('role'),
-      process: t('process'),
-      solution: t('solution'),
-      results: t('results')
+  if (!project.comingSoon) {
+    try {
+      const t = await getTranslations(caseStudyKey)
+      hasCaseStudy = true
+      caseStudyContent = {
+        context: t('context'),
+        role: t('role'),
+        process: t('process'),
+        solution: t('solution'),
+        results: t('results')
+      }
+    } catch {
+      hasCaseStudy = false
     }
-  } catch {
-    // No hay caso de estudio específico para este proyecto
-    hasCaseStudy = false
   }
 
   return (
