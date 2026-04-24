@@ -6,10 +6,46 @@
     "download_cv": "Download CV"
   },
   "hero": {
+    "name": "Tiago Collado",
+    "role": "UX/UI Designer & Frontend Developer",
+    "availability": "Available for work",
     "headline": "I design experiences with empathy.",
     "subheadline": "I build them with precision.",
     "cta_projects": "View projects",
+    "cta_contact": "Get in touch",
     "cta_cv": "Download CV"
+  },
+  "contact": {
+    "label": "GET IN TOUCH",
+    "title": "Let's work together?",
+    "body": "If you want to collaborate on a product, discuss an opportunity, or simply ask a question, feel free to reach out. I'm always open to new ideas, teams and collaborations where design and code coexist well.",
+    "email_label": "Email",
+    "whatsapp_label": "WhatsApp",
+    "whatsapp_cta": "Chat on WhatsApp",
+    "location_label": "Location",
+    "location": "Buenos Aires, Argentina",
+    "copy_email": "Copy",
+    "copied": "Copied!"
+  },
+  "case_study": {
+    "back": "Back to home",
+    "demo_title": "Project showcase",
+    "demo_placeholder": "Visual material coming soon.",
+    "pending_content": "Content pending.",
+    "view_behance": "View on Behance",
+    "view_live": "View live demo",
+    "view_github_frontend": "View code (Frontend)",
+    "view_github_backend": "View code (Backend)",
+    "ux_s0": "Problem",
+    "ux_s1": "Value proposition",
+    "ux_s2": "Insight",
+    "ux_s3": "Solution",
+    "ux_s4": "Impact",
+    "fs_s0": "Context",
+    "fs_s1": "My role",
+    "fs_s2": "Process and decisions",
+    "fs_s3": "The solution",
+    "fs_s4": "Results"
   },
   "projects": {
     "label": "SELECTED WORK",
@@ -65,10 +101,6 @@
     "title": "Tech stack"
   },
   "footer": {
-    "cta": "Let's work together?",
-    "cta_sub": "Send me a direct email.",
-    "copy_email": "Copy email",
-    "copied": "Copied!",
     "download_cv": "Download CV",
     "rights": "Tiago Collado. All rights reserved."
   }
