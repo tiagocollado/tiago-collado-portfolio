@@ -13,21 +13,21 @@ export default function Projects() {
   const sortedProjects = [...projects].sort((a, b) => a.order - b.order)
 
   return (
-    <section id="projects" className="py-28 md:py-36 px-6">
+    <section id="projects" className="py-28 md:py-40 px-6 md:px-10">
       <div className="max-w-7xl mx-auto">
 
         <FadeInSection>
-          <div className="mb-14 md:mb-20">
-            {/* Label pequeño tipo eyebrow */}
+          <div className="mb-16 md:mb-24 max-w-3xl">
+            {/* Label eyebrow */}
             <p
-              className="text-xs font-mono tracking-[0.2em] mb-4 uppercase"
+              className="text-xs font-mono tracking-[0.2em] mb-5 uppercase"
               style={{ color: 'var(--color-accent)' }}
             >
               {t('label')}
             </p>
             {/* Statement display */}
             <h2
-              className="font-display text-4xl md:text-6xl font-semibold tracking-tight"
+              className="font-display text-4xl md:text-6xl font-semibold tracking-tight leading-[1.1]"
               style={{ color: 'var(--ink-primary)' }}
             >
               {t('statement')}
@@ -36,7 +36,7 @@ export default function Projects() {
         </FadeInSection>
 
         <FadeInSection delay={0.15}>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 auto-rows-[280px] md:auto-rows-[320px]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 auto-rows-[300px] md:auto-rows-[340px]">
             {sortedProjects.map((project) => (
               <ProjectCard
                 key={project.slug}

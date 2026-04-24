@@ -11,80 +11,103 @@ interface ProjectPageProps {
 }
 
 export async function generateStaticParams() {
-  const slugs = projects.map((project) => ({
-    slug: project.slug,
-  }))
-  return slugs
+  return projects.map((project) => ({ slug: project.slug }))
+}
+
+// Mapeo de sección → tipo de label (UX usa "Problema/Propuesta/Insight…",
+// fullstack usa "Contexto/Rol/Proceso…")
+const SECTION_KEYS = ['context', 'role', 'process', 'solution', 'results'] as const
+
+function getSectionLabelPrefix(projectType: string) {
+  // ux, wordpress, coming-soon → usan labels UX (wordpress es design-heavy también)
+  if (projectType === 'fullstack') return 'fs'
+  return 'ux'
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { locale, slug } = await params
   setRequestLocale(locale)
+
   const project = projects.find((p) => p.slug === slug)
+  if (!project) notFound()
 
-  if (!project) {
-    notFound()
-  }
+  const cs = await getTranslations('case_study')
+  const labelPrefix = getSectionLabelPrefix(project.type)
 
-  // Skip case study content for coming-soon projects to avoid build warnings
+  // Intenta cargar el caso de estudio. Si no existe, usamos placeholder.
   const caseStudyKey = `case_study_${slug}`
   let hasCaseStudy = false
-  let caseStudyContent = {
-    context: '',
-    role: '',
-    process: '',
-    solution: '',
-    results: ''
-  }
+  const caseStudyContent: Record<string, string> = {}
 
   if (!project.comingSoon) {
     try {
       const t = await getTranslations(caseStudyKey)
       hasCaseStudy = true
-      caseStudyContent = {
-        context: t('context'),
-        role: t('role'),
-        process: t('process'),
-        solution: t('solution'),
-        results: t('results')
+      for (const key of SECTION_KEYS) {
+        caseStudyContent[key] = t(key)
       }
     } catch {
       hasCaseStudy = false
     }
   }
 
+  const hasLinks = Boolean(
+    project.links.behance || project.links.live || project.links.github || project.links.githubBack
+  )
+
   return (
-    <main className="min-h-screen py-24 px-6">
-      <div className="max-w-4xl mx-auto">
-        
-        {/* Header */}
-        <div className="mb-16">
-          <a 
+    <main className="min-h-screen pb-24 md:pb-32">
+
+      {/* ============ HEADER ============ */}
+      <div className="px-6 md:px-10 pt-12 md:pt-16">
+        <div className="max-w-4xl mx-auto">
+
+          {/* Back link */}
+          <a
             href={`/${locale}`}
-            className="inline-block text-sm mb-8 transition-colors duration-200 hover:opacity-70"
+            className="inline-flex items-center gap-2 text-sm mb-10 md:mb-14 transition-opacity duration-200 hover:opacity-70"
             style={{ color: 'var(--ink-secondary)' }}
           >
-            ← {locale === 'es' ? 'Volver' : 'Back'}
+            <span aria-hidden>←</span>
+            {cs('back')}
           </a>
-          
-          <h1 className="font-display text-5xl md:text-6xl font-semibold tracking-tight mb-6" style={{ color: 'var(--ink-primary)' }}>
+
+          {/* Meta badge: tipo de proyecto */}
+          <p
+            className="text-xs font-mono tracking-[0.2em] uppercase mb-5"
+            style={{ color: 'var(--color-accent)' }}
+          >
+            {project.type === 'ux' ? 'UX / UI Case Study'
+              : project.type === 'fullstack' ? 'Full-stack Project'
+              : 'Design Project'}
+          </p>
+
+          {/* Title */}
+          <h1
+            className="font-display text-5xl md:text-7xl font-semibold tracking-tight leading-[1.05] mb-6 md:mb-8"
+            style={{ color: 'var(--ink-primary)' }}
+          >
             {project.title}
           </h1>
-          
-          <p className="text-xl leading-relaxed mb-8" style={{ color: 'var(--ink-secondary)' }}>
+
+          {/* Tagline */}
+          <p
+            className="text-lg md:text-2xl leading-relaxed mb-10 md:mb-12 max-w-3xl"
+            style={{ color: 'var(--ink-secondary)' }}
+          >
             {project.tagline[locale]}
           </p>
 
           {/* Tags */}
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 mb-12 md:mb-16">
             {project.tags.map((tag) => (
-              <span 
+              <span
                 key={tag}
-                className="text-sm px-3 py-1 rounded-lg border"
+                className="text-xs font-mono tracking-wide px-3 py-1.5 rounded-full border"
                 style={{
                   borderColor: 'var(--border-default)',
                   backgroundColor: 'var(--bg-secondary)',
-                  color: 'var(--ink-primary)',
+                  color: 'var(--ink-secondary)',
                 }}
               >
                 {tag}
@@ -92,181 +115,181 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             ))}
           </div>
         </div>
+      </div>
 
-        {/* Cover image */}
-        {project.coverImage ? (
-          <img 
-            src={project.coverImage} 
-            alt={project.title}
-            className="w-full h-96 rounded-card object-cover mb-16"
-          />
-        ) : (
-          <div 
-            className="w-full h-96 rounded-card mb-16 flex items-center justify-center"
-            style={{ backgroundColor: 'var(--bg-tertiary)' }}
-          >
-            <span className="text-sm font-mono" style={{ color: 'var(--ink-muted)' }}>
-              Cover image · 1200x800
-            </span>
-          </div>
-        )}
-
-        {/* Contenido del caso de estudio */}
-        <div className="space-y-16">
-          
-          {/* El contexto */}
-          <section>
-            <h2 className="font-display text-3xl font-semibold tracking-tight mb-6" style={{ color: 'var(--ink-primary)' }}>
-              {locale === 'es' ? 'El contexto' : 'Context'}
-            </h2>
-            <div className="text-lg leading-relaxed space-y-4" style={{ color: 'var(--ink-secondary)' }}>
-              {hasCaseStudy ? (
-                caseStudyContent.context.split('\n\n').map((paragraph, i) => (
-                  <p key={i}>{paragraph}</p>
-                ))
-              ) : (
-                <p>{project.description[locale]}</p>
-              )}
+      {/* ============ COVER IMAGE — full-bleed ============ */}
+      <div className="px-6 md:px-10 mb-20 md:mb-32">
+        <div className="max-w-6xl mx-auto">
+          {project.coverImage ? (
+            <img
+              src={project.coverImage}
+              alt={project.title}
+              className="w-full h-80 md:h-130 rounded-card object-cover"
+            />
+          ) : (
+            <div
+              className="w-full h-80 md:h-130 rounded-card flex items-center justify-center"
+              style={{ backgroundColor: 'var(--bg-tertiary)' }}
+            >
+              <span className="text-sm font-mono" style={{ color: 'var(--ink-muted)' }}>
+                Cover image · 1200×800
+              </span>
             </div>
-          </section>
+          )}
+        </div>
+      </div>
 
-          {/* Mi rol */}
-          <section>
-            <h2 className="font-display text-3xl font-semibold tracking-tight mb-6" style={{ color: 'var(--ink-primary)' }}>
-              {locale === 'es' ? 'Mi rol' : 'My role'}
-            </h2>
-            <div className="text-lg leading-relaxed space-y-4" style={{ color: 'var(--ink-secondary)' }}>
-              {hasCaseStudy ? (
-                caseStudyContent.role.split('\n\n').map((paragraph, i) => (
-                  <p key={i}>{paragraph}</p>
-                ))
-              ) : (
-                <p className="italic opacity-60">
-                  [{locale === 'es' ? 'Contenido pendiente — qué hiciste exactamente y con quién' : 'Content pending — what you did exactly and with whom'}]
-                </p>
-              )}
-            </div>
-          </section>
+      {/* ============ CASE STUDY SECTIONS ============ */}
+      <div className="px-6 md:px-10">
+        <div className="max-w-3xl mx-auto space-y-24 md:space-y-32">
 
-          {/* Proceso y decisiones */}
-          <section>
-            <h2 className="font-display text-3xl font-semibold tracking-tight mb-6" style={{ color: 'var(--ink-primary)' }}>
-              {locale === 'es' ? 'Proceso y decisiones' : 'Process and decisions'}
-            </h2>
-            <div className="text-lg leading-relaxed space-y-4" style={{ color: 'var(--ink-secondary)' }}>
-              {hasCaseStudy ? (
-                caseStudyContent.process.split('\n\n').map((paragraph, i) => (
-                  <p key={i}>{paragraph}</p>
-                ))
-              ) : (
-                <p className="italic opacity-60">
-                  [{locale === 'es' ? 'Contenido pendiente — investigación, flujos, wireframes, prototipos descartados' : 'Content pending — research, flows, wireframes, discarded prototypes'}]
-                </p>
-              )}
-            </div>
-          </section>
+          {SECTION_KEYS.map((key, index) => {
+            const sectionNumber = String(index + 1).padStart(2, '0')
+            const sectionLabel = cs(`${labelPrefix}_s${index}`)
+            const content = hasCaseStudy ? caseStudyContent[key] : ''
 
-          {/* La solución */}
-          <section>
-            <h2 className="font-display text-3xl font-semibold tracking-tight mb-6" style={{ color: 'var(--ink-primary)' }}>
-              {locale === 'es' ? 'La solución' : 'The solution'}
-            </h2>
-            <div className="text-lg leading-relaxed space-y-4" style={{ color: 'var(--ink-secondary)' }}>
-              {hasCaseStudy ? (
-                caseStudyContent.solution.split('\n\n').map((paragraph, i) => (
-                  <p key={i}>{paragraph}</p>
-                ))
-              ) : (
-                <p className="italic opacity-60">
-                  [{locale === 'es' ? 'Contenido pendiente — la interfaz final y su implementación' : 'Content pending — the final interface and its implementation'}]
-                </p>
-              )}
-            </div>
-          </section>
+            return (
+              <section key={key} className="relative">
+                {/* Número de sección en grande, color acento */}
+                <div className="flex items-baseline gap-4 md:gap-5 mb-8 md:mb-10">
+                  <span
+                    className="font-mono text-sm md:text-base font-semibold tracking-wider"
+                    style={{ color: 'var(--color-accent)' }}
+                  >
+                    {sectionNumber}
+                  </span>
+                  <span
+                    className="h-px flex-1 max-w-10 mt-3"
+                    style={{ backgroundColor: 'var(--border-strong)' }}
+                  />
+                  <h2
+                    className="font-display text-3xl md:text-4xl font-semibold tracking-tight"
+                    style={{ color: 'var(--ink-primary)' }}
+                  >
+                    {sectionLabel}
+                  </h2>
+                </div>
 
-          {/* Resultados */}
-          <section>
-            <h2 className="font-display text-3xl font-semibold tracking-tight mb-6" style={{ color: 'var(--ink-primary)' }}>
-              {locale === 'es' ? 'Resultados' : 'Results'}
-            </h2>
-            <div className="text-lg leading-relaxed space-y-4" style={{ color: 'var(--ink-secondary)' }}>
-              {hasCaseStudy ? (
-                caseStudyContent.results.split('\n\n').map((paragraph, i) => (
-                  <p key={i}>{paragraph}</p>
-                ))
-              ) : (
-                <p className="italic opacity-60">
-                  [{locale === 'es' ? 'Contenido pendiente — métricas, aprendizajes, validación técnica' : 'Content pending — metrics, learnings, technical validation'}]
-                </p>
-              )}
-            </div>
-          </section>
+                {/* Content */}
+                <div
+                  className="text-lg md:text-xl leading-[1.75] space-y-6 pl-0 md:pl-14"
+                  style={{ color: 'var(--ink-secondary)' }}
+                >
+                  {hasCaseStudy ? (
+                    content.split('\n\n').map((paragraph, i) => (
+                      <p key={i}>{paragraph}</p>
+                    ))
+                  ) : key === 'context' ? (
+                    <p>{project.description[locale]}</p>
+                  ) : (
+                    <p className="italic opacity-60">[{cs('pending_content')}]</p>
+                  )}
+                </div>
+              </section>
+            )
+          })}
 
         </div>
-
-        {/* Enlaces del proyecto */}
-        {(project.links.behance || project.links.live || project.links.github || project.links.githubBack) && (
-          <div className="mt-16 pt-8 border-t flex flex-wrap gap-4" style={{ borderColor: 'var(--border-default)' }}>
-            {project.links.behance && (
-              <a 
-                href={project.links.behance}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-6 py-3 rounded-lg font-medium text-sm border transition-all duration-200 hover:opacity-70"
-                style={{
-                  borderColor: 'var(--border-default)',
-                  color: 'var(--ink-primary)',
-                }}
-              >
-                {locale === 'es' ? 'Ver en Behance →' : 'View on Behance →'}
-              </a>
-            )}
-            {project.links.live && (
-              <a 
-                href={project.links.live}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-6 py-3 rounded-lg font-medium text-sm transition-all duration-200 hover:opacity-90"
-                style={{
-                  backgroundColor: 'var(--color-accent)',
-                  color: '#FFFFFF',
-                }}
-              >
-                {locale === 'es' ? 'Ver demo en vivo →' : 'View live demo →'}
-              </a>
-            )}
-            {project.links.github && (
-              <a 
-                href={project.links.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-6 py-3 rounded-lg font-medium text-sm border transition-all duration-200 hover:opacity-70"
-                style={{
-                  borderColor: 'var(--border-default)',
-                  color: 'var(--ink-primary)',
-                }}
-              >
-                {locale === 'es' ? 'Ver código (Frontend) →' : 'View code (Frontend) →'}
-              </a>
-            )}
-            {project.links.githubBack && (
-              <a 
-                href={project.links.githubBack}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-6 py-3 rounded-lg font-medium text-sm border transition-all duration-200 hover:opacity-70"
-                style={{
-                  borderColor: 'var(--border-default)',
-                  color: 'var(--ink-primary)',
-                }}
-              >
-                {locale === 'es' ? 'Ver código (Backend) →' : 'View code (Backend) →'}
-              </a>
-            )}
-          </div>
-        )}
-
       </div>
+
+      {/* ============ DEMOSTRACIÓN DEL PROYECTO ============ */}
+      {hasLinks && (
+        <div className="px-6 md:px-10 mt-28 md:mt-40">
+          <div className="max-w-5xl mx-auto">
+
+            <div className="mb-12 md:mb-16 max-w-2xl">
+              <p
+                className="text-xs font-mono tracking-[0.2em] uppercase mb-5"
+                style={{ color: 'var(--color-accent)' }}
+              >
+                06 · {cs('demo_title').toUpperCase()}
+              </p>
+              <h2
+                className="font-display text-3xl md:text-5xl font-semibold tracking-tight leading-tight"
+                style={{ color: 'var(--ink-primary)' }}
+              >
+                {cs('demo_title')}
+              </h2>
+            </div>
+
+            {/* Grid de links a demos/galerías externas */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5">
+
+              {project.links.live && (
+                <DemoLink
+                  href={project.links.live}
+                  label={cs('view_live')}
+                  variant="primary"
+                />
+              )}
+
+              {project.links.behance && (
+                <DemoLink
+                  href={project.links.behance}
+                  label={cs('view_behance')}
+                />
+              )}
+
+              {project.links.github && (
+                <DemoLink
+                  href={project.links.github}
+                  label={cs('view_github_frontend')}
+                />
+              )}
+
+              {project.links.githubBack && (
+                <DemoLink
+                  href={project.links.githubBack}
+                  label={cs('view_github_backend')}
+                />
+              )}
+            </div>
+
+            {/* Placeholder para galería futura */}
+            <p
+              className="mt-10 md:mt-12 text-xs font-mono tracking-wide"
+              style={{ color: 'var(--ink-muted)' }}
+            >
+              {cs('demo_placeholder')}
+            </p>
+          </div>
+        </div>
+      )}
+
     </main>
+  )
+}
+
+/** Botón grande para links de demo (Behance, Live, GitHub) */
+function DemoLink({
+  href,
+  label,
+  variant = 'secondary',
+}: {
+  href: string
+  label: string
+  variant?: 'primary' | 'secondary'
+}) {
+  const isPrimary = variant === 'primary'
+
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group p-6 md:p-7 rounded-card border flex items-center justify-between gap-4 transition-all duration-300 hover:-translate-y-1"
+      style={{
+        borderColor: isPrimary ? 'var(--color-accent)' : 'var(--border-default)',
+        backgroundColor: isPrimary ? 'var(--color-accent)' : 'var(--bg-secondary)',
+        color: isPrimary ? '#FFFFFF' : 'var(--ink-primary)',
+      }}
+    >
+      <span className="font-display text-base md:text-lg font-semibold tracking-tight">
+        {label}
+      </span>
+      <span className="text-xl transition-transform duration-300 group-hover:translate-x-1" aria-hidden>
+        →
+      </span>
+    </a>
   )
 }

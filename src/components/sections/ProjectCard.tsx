@@ -12,51 +12,58 @@ interface ProjectCardProps {
 export default function ProjectCard({ project, locale }: ProjectCardProps) {
   const t = useTranslations('projects')
 
-  // Featured = 2×2, el resto = 1×1 (bento grid intacto)
+  // Bento grid: featured = 2×2, resto = 1×1 (intacto)
   const spanClasses = project.featured
     ? 'md:col-span-2 md:row-span-2'
     : 'md:col-span-1 md:row-span-1'
 
   return (
     <article
-      className={`${spanClasses} rounded-card overflow-hidden group relative`}
-      style={{ backgroundColor: 'var(--bg-tertiary)' }}
+      className={`${spanClasses} rounded-card overflow-hidden group relative border transition-all duration-500 ease-out
+                  hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/5`}
+      style={{
+        backgroundColor: 'var(--bg-secondary)',
+        borderColor: 'var(--border-default)',
+      }}
     >
-      {/* Link que cubre toda la card */}
+      {/* Link invisible sobre toda la card */}
       {!project.comingSoon && (
         <Link
           href={`/${locale}/projects/${project.slug}`}
-          className="absolute inset-0 z-10"
+          className="absolute inset-0 z-30"
           aria-label={`Ver caso de estudio: ${project.title}`}
         />
       )}
 
-      {/* Cover image con zoom sutil en hover */}
+      {/* Cover image — dimmed y en grayscale por default, vivo en hover */}
       {project.coverImage ? (
-        <img
-          src={project.coverImage}
-          alt={project.title}
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-        />
-      ) : (
-        <div
-          className="absolute inset-0 flex items-center justify-center"
-          style={{ backgroundColor: 'var(--bg-tertiary)' }}
-        >
-          <span className="text-xs font-mono" style={{ color: 'var(--ink-muted)' }}>
-            Cover image
-          </span>
+        <div className="absolute inset-0 overflow-hidden">
+          <img
+            src={project.coverImage}
+            alt={project.title}
+            className="absolute inset-0 w-full h-full object-cover
+                       opacity-25 grayscale scale-105
+                       transition-all duration-700 ease-out
+                       group-hover:opacity-55 group-hover:grayscale-0 group-hover:scale-100"
+          />
+          {/* Velo oscuro que se disipa en hover */}
+          <div
+            className="absolute inset-0 transition-opacity duration-500"
+            style={{
+              background: 'linear-gradient(180deg, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.55) 100%)',
+            }}
+          />
         </div>
-      )}
+      ) : null}
 
       {/* Overlay coming soon */}
       {project.comingSoon && (
         <div
           className="absolute inset-0 backdrop-blur-sm flex items-center justify-center z-20"
-          style={{ backgroundColor: 'rgba(0,0,0,0.45)' }}
+          style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}
         >
           <span
-            className="px-4 py-2 rounded-full font-medium text-xs tracking-widest uppercase"
+            className="px-4 py-2 rounded-full font-medium text-[11px] tracking-widest uppercase"
             style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--ink-primary)' }}
           >
             {t('coming_soon')}
@@ -64,37 +71,66 @@ export default function ProjectCard({ project, locale }: ProjectCardProps) {
         </div>
       )}
 
-      {/* Panel inferior — siempre visible, más opaco en hover */}
+      {/* Contenido: título + stack siempre visibles, CTA aparece en hover */}
       {!project.comingSoon && (
-        <div
-          className="absolute inset-x-0 bottom-0 p-5 md:p-6 flex flex-col justify-end z-5
-                     transition-all duration-300
-                     group-hover:[--gradient-opacity:1]"
-          style={{
-            background: 'linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.45) 55%, transparent 100%)',
-          }}
-        >
-          <h3
-            className="font-display font-semibold text-white leading-tight mb-1
-                       text-lg md:text-xl group-hover:text-white transition-colors"
-          >
-            {project.title}
-          </h3>
+        <div className="relative z-10 h-full p-6 md:p-7 flex flex-col justify-between">
 
-          <p className="text-sm text-white/70 leading-snug mb-3 line-clamp-2">
-            {project.tagline[locale]}
-          </p>
+          {/* Top row: categoría del proyecto */}
+          <div className="flex items-start justify-between">
+            <span
+              className="text-[10px] font-mono tracking-[0.18em] uppercase px-2.5 py-1 rounded-full border
+                         transition-colors duration-300"
+              style={{
+                color: 'var(--ink-muted)',
+                borderColor: 'var(--border-default)',
+                backgroundColor: 'var(--bg-primary)',
+              }}
+            >
+              {project.type === 'ux' ? 'UX / UI' : project.type === 'fullstack' ? 'Full-stack' : 'Design'}
+            </span>
+          </div>
 
-          <div className="flex flex-wrap gap-1.5">
-            {project.tags.slice(0, project.featured ? 4 : 3).map((tag) => (
-              <span
-                key={tag}
-                className="text-[11px] px-2 py-0.5 rounded-full font-medium"
-                style={{ backgroundColor: 'rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.9)' }}
-              >
-                {tag}
+          {/* Bottom: título + stack + CTA */}
+          <div className="mt-auto">
+            {/* Título */}
+            <h3
+              className="font-display font-semibold leading-tight mb-3 transition-colors duration-300
+                         text-xl md:text-2xl"
+              style={{ color: 'var(--ink-primary)' }}
+            >
+              {project.title}
+            </h3>
+
+            {/* Stack tecnológico */}
+            <div className="flex flex-wrap gap-1.5 mb-5">
+              {project.tags.slice(0, project.featured ? 5 : 3).map((tag) => (
+                <span
+                  key={tag}
+                  className="text-[10.5px] font-mono tracking-wide px-2 py-0.5 rounded-full border transition-colors duration-300"
+                  style={{
+                    color: 'var(--ink-muted)',
+                    borderColor: 'var(--border-default)',
+                    backgroundColor: 'transparent',
+                  }}
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            {/* CTA que aparece en hover */}
+            <div
+              className="inline-flex items-center gap-1.5 text-sm font-medium
+                         opacity-0 translate-y-1 transition-all duration-400 ease-out
+                         group-hover:opacity-100 group-hover:translate-y-0"
+              style={{ color: 'var(--color-accent)' }}
+            >
+              <span className="px-3.5 py-2 rounded-full border inline-flex items-center gap-1.5"
+                    style={{ borderColor: 'var(--color-accent)', backgroundColor: 'var(--bg-primary)' }}>
+                {t('view_case')}
+                <span aria-hidden>→</span>
               </span>
-            ))}
+            </div>
           </div>
         </div>
       )}

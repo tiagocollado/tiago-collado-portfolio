@@ -6,10 +6,46 @@
     "download_cv": "Descargar CV"
   },
   "hero": {
+    "name": "Tiago Collado",
+    "role": "UX/UI Designer & Frontend Developer",
+    "availability": "Disponible para colaborar",
     "headline": "Diseño experiencias con empatía.",
     "subheadline": "Las construyo con precisión.",
     "cta_projects": "Ver proyectos",
+    "cta_contact": "Contactar",
     "cta_cv": "Descargar CV"
+  },
+  "contact": {
+    "label": "PONTE EN CONTACTO",
+    "title": "¿Trabajamos juntos?",
+    "body": "Si querés colaborar en un producto, charlar sobre una oportunidad o simplemente hacerme una pregunta, no dudes en escribirme. Siempre estoy abierto a nuevas ideas, equipos y colaboraciones donde diseño y código conviven bien.",
+    "email_label": "Email",
+    "whatsapp_label": "WhatsApp",
+    "whatsapp_cta": "Hablemos por WhatsApp",
+    "location_label": "Ubicación",
+    "location": "Buenos Aires, Argentina",
+    "copy_email": "Copiar",
+    "copied": "¡Copiado!"
+  },
+  "case_study": {
+    "back": "Volver al inicio",
+    "demo_title": "Demostración del proyecto",
+    "demo_placeholder": "Material visual en preparación.",
+    "pending_content": "Contenido pendiente.",
+    "view_behance": "Ver en Behance",
+    "view_live": "Ver demo en vivo",
+    "view_github_frontend": "Ver código (Frontend)",
+    "view_github_backend": "Ver código (Backend)",
+    "ux_s0": "Problema",
+    "ux_s1": "Propuesta de valor",
+    "ux_s2": "Insight",
+    "ux_s3": "Solución",
+    "ux_s4": "Impacto",
+    "fs_s0": "Contexto",
+    "fs_s1": "Mi rol",
+    "fs_s2": "Proceso y decisiones",
+    "fs_s3": "La solución",
+    "fs_s4": "Resultados"
   },
   "projects": {
     "label": "TRABAJO SELECCIONADO",
@@ -65,10 +101,6 @@
     "title": "Stack tecnológico"
   },
   "footer": {
-    "cta": "¿Trabajamos juntos?",
-    "cta_sub": "Enviame un mail directo.",
-    "copy_email": "Copiar email",
-    "copied": "¡Copiado!",
     "download_cv": "Descargar CV",
     "rights": "Tiago Collado. Todos los derechos reservados."
   }
