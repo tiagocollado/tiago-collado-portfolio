@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { projects } from '@/data/projects'
 import { Locale } from '@/types'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
+import Gallery from '@/components/sections/Gallery'
 
 interface ProjectPageProps {
   params: Promise<{
@@ -14,12 +15,10 @@ export async function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }))
 }
 
-// Mapeo de sección → tipo de label (UX usa "Problema/Propuesta/Insight…",
-// fullstack usa "Contexto/Rol/Proceso…")
+// Mapeo de sección → tipo de label
 const SECTION_KEYS = ['context', 'role', 'process', 'solution', 'results'] as const
 
 function getSectionLabelPrefix(projectType: string) {
-  // ux, wordpress, coming-soon → usan labels UX (wordpress es design-heavy también)
   if (projectType === 'fullstack') return 'fs'
   return 'ux'
 }
@@ -34,7 +33,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const cs = await getTranslations('case_study')
   const labelPrefix = getSectionLabelPrefix(project.type)
 
-  // Intenta cargar el caso de estudio. Si no existe, usamos placeholder.
+  // Cargar contenido del caso de estudio
   const caseStudyKey = `case_study_${slug}`
   let hasCaseStudy = false
   const caseStudyContent: Record<string, string> = {}
@@ -56,10 +55,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   )
 
   return (
-    <main className="min-h-screen pb-24 md:pb-32">
+    <main className="min-h-screen pb-24 md:pb-32" style={{ paddingTop: '64px' }}>
 
       {/* ============ HEADER ============ */}
-      <div className="px-6 md:px-10 pt-12 md:pt-16">
+      <div className="px-6 md:px-10 pt-16 md:pt-20">
         <div className="max-w-4xl mx-auto">
 
           {/* Back link */}
@@ -72,7 +71,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             {cs('back')}
           </a>
 
-          {/* Meta badge: tipo de proyecto */}
+          {/* 1. Tipo de proyecto */}
           <p
             className="text-xs font-mono tracking-[0.2em] uppercase mb-5"
             style={{ color: 'var(--color-accent)' }}
@@ -82,7 +81,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               : 'Design Project'}
           </p>
 
-          {/* Title */}
+          {/* 2. Título */}
           <h1
             className="font-display text-5xl md:text-7xl font-semibold tracking-tight leading-[1.05] mb-6 md:mb-8"
             style={{ color: 'var(--ink-primary)' }}
@@ -90,16 +89,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             {project.title}
           </h1>
 
-          {/* Tagline */}
-          <p
-            className="text-lg md:text-2xl leading-relaxed mb-10 md:mb-12 max-w-3xl"
-            style={{ color: 'var(--ink-secondary)' }}
-          >
-            {project.tagline[locale]}
-          </p>
-
-          {/* Tags */}
-          <div className="flex flex-wrap gap-2 mb-12 md:mb-16">
+          {/* 3. Herramientas / Tags */}
+          <div className="flex flex-wrap gap-2 mb-8 md:mb-10">
             {project.tags.map((tag) => (
               <span
                 key={tag}
@@ -114,28 +105,14 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               </span>
             ))}
           </div>
-        </div>
-      </div>
 
-      {/* ============ COVER IMAGE — full-bleed ============ */}
-      <div className="px-6 md:px-10 mb-20 md:mb-32">
-        <div className="max-w-6xl mx-auto">
-          {project.coverImage ? (
-            <img
-              src={project.coverImage}
-              alt={project.title}
-              className="w-full h-80 md:h-130 rounded-card object-cover"
-            />
-          ) : (
-            <div
-              className="w-full h-80 md:h-130 rounded-card flex items-center justify-center"
-              style={{ backgroundColor: 'var(--bg-tertiary)' }}
-            >
-              <span className="text-sm font-mono" style={{ color: 'var(--ink-muted)' }}>
-                Cover image · 1200×800
-              </span>
-            </div>
-          )}
+          {/* 4. Descripción / Tagline */}
+          <p
+            className="text-lg md:text-2xl leading-relaxed mb-12 md:mb-16 max-w-3xl"
+            style={{ color: 'var(--ink-secondary)' }}
+          >
+            {project.tagline[locale]}
+          </p>
         </div>
       </div>
 
@@ -150,7 +127,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
             return (
               <section key={key} className="relative">
-                {/* Número de sección en grande, color acento */}
+                {/* Número + Título */}
                 <div className="flex items-baseline gap-4 md:gap-5 mb-8 md:mb-10">
                   <span
                     className="font-mono text-sm md:text-base font-semibold tracking-wider"
@@ -170,7 +147,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                   </h2>
                 </div>
 
-                {/* Content */}
+                {/* Contenido */}
                 <div
                   className="text-lg md:text-xl leading-[1.75] space-y-6 pl-0 md:pl-14"
                   style={{ color: 'var(--ink-secondary)' }}
@@ -192,7 +169,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         </div>
       </div>
 
-      {/* ============ DEMOSTRACIÓN DEL PROYECTO ============ */}
+      {/* ============ GALERÍA ============ */}
+      {project.gallery && project.gallery.length > 0 && (
+        <Gallery slug={slug} images={project.gallery} />
+      )}
+
+      {/* ============ DEMO LINKS ============ */}
       {hasLinks && (
         <div className="px-6 md:px-10 mt-28 md:mt-40">
           <div className="max-w-5xl mx-auto">
@@ -212,9 +194,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               </h2>
             </div>
 
-            {/* Grid de links a demos/galerías externas */}
+            {/* Grid de links */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5">
-
               {project.links.live && (
                 <DemoLink
                   href={project.links.live}
@@ -222,21 +203,18 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                   variant="primary"
                 />
               )}
-
               {project.links.behance && (
                 <DemoLink
                   href={project.links.behance}
                   label={cs('view_behance')}
                 />
               )}
-
               {project.links.github && (
                 <DemoLink
                   href={project.links.github}
                   label={cs('view_github_frontend')}
                 />
               )}
-
               {project.links.githubBack && (
                 <DemoLink
                   href={project.links.githubBack}
@@ -245,7 +223,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               )}
             </div>
 
-            {/* Placeholder para galería futura */}
             <p
               className="mt-10 md:mt-12 text-xs font-mono tracking-wide"
               style={{ color: 'var(--ink-muted)' }}
@@ -260,7 +237,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   )
 }
 
-/** Botón grande para links de demo (Behance, Live, GitHub) */
 function DemoLink({
   href,
   label,
@@ -277,10 +253,10 @@ function DemoLink({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="group p-6 md:p-7 rounded-card border flex items-center justify-between gap-4 transition-all duration-300 hover:-translate-y-1"
+      className="group p-6 md:p-7 rounded-2xl border flex items-center justify-between gap-4 transition-all duration-300 hover:-translate-y-2"
       style={{
         borderColor: isPrimary ? 'var(--color-accent)' : 'var(--border-default)',
-        backgroundColor: isPrimary ? 'var(--color-accent)' : 'var(--bg-secondary)',
+        backgroundColor: isPrimary ? 'var(--color-accent)' : 'var(--color-surface)',
         color: isPrimary ? '#FFFFFF' : 'var(--ink-primary)',
       }}
     >

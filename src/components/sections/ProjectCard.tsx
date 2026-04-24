@@ -12,21 +12,20 @@ interface ProjectCardProps {
 export default function ProjectCard({ project, locale }: ProjectCardProps) {
   const t = useTranslations('projects')
 
-  // Bento grid: featured = 2×2, resto = 1×1 (intacto)
   const spanClasses = project.featured
-    ? 'md:col-span-2 md:row-span-2'
+    ? 'md:col-span-2 md:row-span-1'
     : 'md:col-span-1 md:row-span-1'
 
   return (
     <article
-      className={`${spanClasses} rounded-card overflow-hidden group relative border transition-all duration-500 ease-out
-                  hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/5`}
+      className={`${spanClasses} rounded-2xl overflow-hidden group relative border transition-all duration-500 ease-out
+                  hover:-translate-y-2 hover:shadow-xl`}
       style={{
-        backgroundColor: 'var(--bg-secondary)',
+        backgroundColor: 'var(--color-surface)',
         borderColor: 'var(--border-default)',
       }}
     >
-      {/* Link invisible sobre toda la card */}
+      {/* Link invisible */}
       {!project.comingSoon && (
         <Link
           href={`/${locale}/projects/${project.slug}`}
@@ -35,100 +34,99 @@ export default function ProjectCard({ project, locale }: ProjectCardProps) {
         />
       )}
 
-      {/* Cover image — dimmed y en grayscale por default, vivo en hover */}
+      {/* Cover */}
       {project.coverImage ? (
         <div className="absolute inset-0 overflow-hidden">
           <img
             src={project.coverImage}
             alt={project.title}
             className="absolute inset-0 w-full h-full object-cover
-                       opacity-25 grayscale scale-105
+                       opacity-40 grayscale scale-105
                        transition-all duration-700 ease-out
-                       group-hover:opacity-55 group-hover:grayscale-0 group-hover:scale-100"
+                       group-hover:opacity-60 group-hover:grayscale-0 group-hover:scale-100"
           />
-          {/* Velo oscuro que se disipa en hover */}
           <div
-            className="absolute inset-0 transition-opacity duration-500"
+            className="absolute inset-0"
             style={{
-              background: 'linear-gradient(180deg, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.55) 100%)',
+              background: 'linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.7) 100%)',
             }}
           />
         </div>
       ) : null}
 
-      {/* Overlay coming soon */}
+      {/* Coming soon */}
       {project.comingSoon && (
         <div
           className="absolute inset-0 backdrop-blur-sm flex items-center justify-center z-20"
-          style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}
+          style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
         >
           <span
-            className="px-4 py-2 rounded-full font-medium text-[11px] tracking-widest uppercase"
-            style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--ink-primary)' }}
+            className="px-5 py-2.5 rounded-full font-medium text-xs tracking-widest uppercase"
+            style={{ backgroundColor: 'var(--color-surface)', color: 'var(--ink-primary)' }}
           >
             {t('coming_soon')}
           </span>
         </div>
       )}
 
-      {/* Contenido: título + stack siempre visibles, CTA aparece en hover */}
+      {/* Contenido */}
       {!project.comingSoon && (
-        <div className="relative z-10 h-full p-6 md:p-7 flex flex-col justify-between">
+        <div className="relative z-10 h-full flex flex-col justify-end" style={{ padding: '28px 32px' }}>
 
-          {/* Top row: categoría del proyecto */}
-          <div className="flex items-start justify-between">
+          {/* Contenido */}
+          <div style={{ marginTop: 'auto' }}>
+            {/* Tipo */}
             <span
-              className="text-[10px] font-mono tracking-[0.18em] uppercase px-2.5 py-1 rounded-full border
-                         transition-colors duration-300"
+              className="text-[9px] font-mono tracking-[0.2em] uppercase rounded-full border mb-3 inline-block"
               style={{
                 color: 'var(--ink-muted)',
                 borderColor: 'var(--border-default)',
-                backgroundColor: 'var(--bg-primary)',
+                backgroundColor: 'var(--color-surface)',
+                padding: '5px 10px',
               }}
             >
               {project.type === 'ux' ? 'UX / UI' : project.type === 'fullstack' ? 'Full-stack' : 'Design'}
             </span>
-          </div>
 
-          {/* Bottom: título + stack + CTA */}
-          <div className="mt-auto">
             {/* Título */}
             <h3
-              className="font-display font-semibold leading-tight mb-3 transition-colors duration-300
-                         text-xl md:text-2xl"
-              style={{ color: 'var(--ink-primary)' }}
+              className="font-display font-semibold leading-tight uppercase"
+              style={{ color: 'var(--ink-primary)', fontSize: '20px', marginBottom: '16px', marginTop: '8px' }}
             >
               {project.title}
             </h3>
 
-            {/* Stack tecnológico */}
-            <div className="flex flex-wrap gap-1.5 mb-5">
-              {project.tags.slice(0, project.featured ? 5 : 3).map((tag) => (
-                <span
-                  key={tag}
-                  className="text-[10.5px] font-mono tracking-wide px-2 py-0.5 rounded-full border transition-colors duration-300"
-                  style={{
-                    color: 'var(--ink-muted)',
-                    borderColor: 'var(--border-default)',
-                    backgroundColor: 'transparent',
-                  }}
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
+            {/* Tags y CTA - aparecen en hover */}
+            <div className="group-hover:opacity-100 group-hover:translate-y-0 opacity-0 translate-y-3 transition-all duration-400" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div className="flex flex-wrap gap-2">
+                {project.tags.slice(0, project.featured ? 4 : 3).map((tag) => (
+                  <span
+                    key={tag}
+                    className="text-[10px] font-medium tracking-wide rounded-full border"
+                    style={{
+                      color: 'var(--color-accent)',
+                      borderColor: 'var(--color-accent)',
+                      backgroundColor: 'transparent',
+                      padding: '6px 12px',
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
 
-            {/* CTA que aparece en hover */}
-            <div
-              className="inline-flex items-center gap-1.5 text-sm font-medium
-                         opacity-0 translate-y-1 transition-all duration-400 ease-out
-                         group-hover:opacity-100 group-hover:translate-y-0"
-              style={{ color: 'var(--color-accent)' }}
-            >
-              <span className="px-3.5 py-2 rounded-full border inline-flex items-center gap-1.5"
-                    style={{ borderColor: 'var(--color-accent)', backgroundColor: 'var(--bg-primary)' }}>
+              <span 
+                className="text-sm font-semibold rounded-full border inline-flex items-center gap-2 mt-1"
+                style={{ 
+                  color: 'var(--color-accent)',
+                  borderColor: 'var(--color-accent)', 
+                  backgroundColor: 'transparent',
+                  padding: '10px 18px',
+                  width: 'fit-content'
+                }}
+              >
                 {t('view_case')}
-                <span aria-hidden>→</span>
+                <span>→</span>
               </span>
             </div>
           </div>
