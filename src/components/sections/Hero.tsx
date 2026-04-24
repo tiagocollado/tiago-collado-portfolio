@@ -2,83 +2,37 @@
 
 import { useTranslations } from 'next-intl'
 import { motion } from 'framer-motion'
-import { useRef, useCallback } from 'react'
+import InteractiveDotGrid from '@/components/ui/InteractiveDotGrid'
 
 export default function Hero() {
   const t = useTranslations('hero')
-  const accentLayerRef = useRef<HTMLDivElement>(null)
-
-  // Mutación directa del DOM → cero re-renders, animación fluida
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
-    if (!accentLayerRef.current) return
-    const rect = e.currentTarget.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    const mask = `radial-gradient(circle 240px at ${x}px ${y}px, black 0%, transparent 100%)`
-    accentLayerRef.current.style.maskImage = mask
-    accentLayerRef.current.style.webkitMaskImage = mask
-  }, [])
-
-  const handleMouseLeave = useCallback(() => {
-    if (!accentLayerRef.current) return
-    accentLayerRef.current.style.maskImage = 'none'
-    accentLayerRef.current.style.webkitMaskImage = 'none'
-  }, [])
-
-  const scrollToContact = () => {
-    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
-  }
 
   return (
-    <section
-      className="min-h-screen flex items-center justify-center px-6 md:px-10 py-20 relative overflow-hidden"
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-    >
+    <section className="min-h-screen flex items-center justify-center px-6 md:px-10 py-20 md:py-28 lg:py-36 relative overflow-hidden">
 
-      {/* Dot grid base — sutil, siempre visible */}
-      <div
-        className="absolute inset-0 opacity-[0.12] pointer-events-none"
-        style={{
-          backgroundImage: 'radial-gradient(circle, var(--ink-muted) 1px, transparent 1px)',
-          backgroundSize: '32px 32px',
-        }}
-      />
+      {/* Fondo interactivo: canvas en desktop con repulsión del cursor, CSS estático en touch. */}
+      <InteractiveDotGrid opacity={0.55} />
 
-      {/* Dot grid accent — terracota, se ilumina cerca del mouse */}
-      <div
-        ref={accentLayerRef}
-        className="absolute inset-0 opacity-55 pointer-events-none"
-        style={{
-          backgroundImage: 'radial-gradient(circle, var(--color-accent) 1px, transparent 1px)',
-          backgroundSize: '32px 32px',
-          maskImage: 'none',
-          WebkitMaskImage: 'none',
-        }}
-      />
-
+      {/* Contenedor principal con flex + gap */}
       <motion.div
-        className="max-w-4xl w-full relative z-10"
+        className="max-w-4xl w-full relative z-10 flex flex-col items-start gap-6 lg:gap-10"
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
       >
-
-        {/* Identidad: nombre + rol + status */}
+        {/* Status pill */}
         <motion.div
-          className="mb-10 md:mb-14"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
         >
-          {/* Status pill con dot animado */}
           <div
-            className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border mb-6
-                       text-xs font-medium"
+            className="inline-flex items-center gap-2.5 rounded-full border text-xs font-medium"
             style={{
               borderColor: 'var(--border-strong)',
-              backgroundColor: 'var(--bg-primary)',
+              backgroundColor: 'var(--bg-secondary)',
               color: 'var(--ink-secondary)',
+              padding: '8px 24px',
             }}
           >
             <span className="relative flex h-2 w-2">
@@ -93,67 +47,55 @@ export default function Hero() {
             </span>
             {t('availability')}
           </div>
-
-          {/* Nombre — protagonista de la identidad */}
-          <p
-            className="font-display text-xl md:text-2xl font-semibold tracking-tight mb-1.5"
-            style={{ color: 'var(--ink-primary)' }}
-          >
-            {t('name')}
-          </p>
-
-          {/* Rol — contexto inmediato para el reclutador */}
-          <p
-            className="text-sm md:text-base font-mono tracking-wide"
-            style={{ color: 'var(--ink-muted)' }}
-          >
-            {t('role')}
-          </p>
         </motion.div>
 
-        {/* Headline display */}
+        {/* H1 */}
         <h1
-          className="font-display text-5xl md:text-7xl font-semibold tracking-tight leading-[1.05] mb-3 md:mb-4"
+          className="font-display text-5xl md:text-7xl lg:text-8xl font-semibold tracking-tight leading-[1.15] text-balance"
           style={{ color: 'var(--ink-primary)' }}
         >
-          {t('headline')}
+          {t('name')}
         </h1>
 
+        {/* Role */}
         <p
-          className="font-display text-5xl md:text-7xl font-semibold tracking-tight leading-[1.05] mb-12 md:mb-16"
-          style={{ color: 'var(--ink-primary)' }}
+          className="text-lg md:text-xl font-medium tracking-wide text-balance"
+          style={{ color: 'var(--ink-secondary)' }}
         >
-          {t('subheadline')}
+          {t('role')}
         </p>
 
-        {/* CTAs: primario + secundario */}
-        <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-4">
-          <motion.a
-            href="#projects"
-            className="inline-flex items-center gap-2 px-7 md:px-8 py-4 rounded-lg font-medium text-base transition-colors duration-200 w-full sm:w-auto justify-center sm:justify-start"
-            style={{ backgroundColor: 'var(--color-accent)', color: '#FFFFFF' }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+        {/* Headlines */}
+        <div className="space-y-3 max-w-prose">
+          <p
+            className="font-display text-2xl md:text-4xl font-medium tracking-tight leading-[1.15]"
+            style={{ color: 'var(--ink-secondary)' }}
           >
-            {t('cta_projects')}
-            <span aria-hidden>→</span>
-          </motion.a>
-
-          <motion.button
-            onClick={scrollToContact}
-            className="inline-flex items-center gap-2 px-7 md:px-8 py-4 rounded-lg font-medium text-base border transition-all duration-200 w-full sm:w-auto justify-center sm:justify-start hover:bg-(--bg-secondary)"
-            style={{
-              borderColor: 'var(--border-strong)',
-              color: 'var(--ink-primary)',
-              backgroundColor: 'transparent',
-            }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            {t('headline')}
+          </p>
+          <p
+            className="font-display text-2xl md:text-4xl font-medium tracking-tight leading-[1.15]"
+            style={{ color: 'var(--ink-secondary)' }}
           >
-            {t('cta_contact')}
-            <span aria-hidden>↓</span>
-          </motion.button>
+            {t('subheadline')}
+          </p>
         </div>
+
+        {/* CTA */}
+        <motion.a
+          href="#projects"
+          className="inline-flex items-center gap-2 rounded-xl font-semibold text-base px-10 py-5 transition-all duration-300 hover:-translate-y-1"
+          style={{
+            backgroundColor: 'var(--color-accent)',
+            color: '#FFFFFF',
+            boxShadow: '0 4px 24px rgba(201, 106, 58, 0.35)',
+          }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          {t('cta_projects')}
+          <span aria-hidden="true">↓</span>
+        </motion.a>
 
       </motion.div>
     </section>

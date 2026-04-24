@@ -21,6 +21,12 @@ export interface Project {
     figma?:      string
   }
   coverImage: string | null
+  /**
+   * Paths absolutos (desde /public) a imágenes de galería del caso de estudio.
+   * Si está vacío o undefined, el componente Gallery no renderiza nada.
+   * Para agregar más imágenes a un proyecto, sumar paths acá — no hay probe automático.
+   */
+  gallery?: string[]
   featured: boolean
   order: number
   comingSoon?: boolean

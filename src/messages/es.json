@@ -16,16 +16,11 @@
     "cta_cv": "Descargar CV"
   },
   "contact": {
-    "label": "PONTE EN CONTACTO",
+    "label": "CONTACTO",
     "title": "¿Trabajamos juntos?",
-    "body": "Si querés colaborar en un producto, charlar sobre una oportunidad o simplemente hacerme una pregunta, no dudes en escribirme. Siempre estoy abierto a nuevas ideas, equipos y colaboraciones donde diseño y código conviven bien.",
-    "email_label": "Email",
-    "whatsapp_label": "WhatsApp",
-    "whatsapp_cta": "Hablemos por WhatsApp",
+    "body": "Escribime para charlar sobre proyectos, oportunidades o lo que quieras.",
     "location_label": "Ubicación",
-    "location": "Buenos Aires, Argentina",
-    "copy_email": "Copiar",
-    "copied": "¡Copiado!"
+    "location": "Buenos Aires, Argentina"
   },
   "case_study": {
     "back": "Volver al inicio",
@@ -98,7 +93,7 @@
     "p3": "Busco sumarme a equipos de producto que valoren tanto la visión de diseño como la capacidad técnica para ejecutarla. Mi objetivo es cerrar la brecha entre UX y desarrollo, facilitando el hand-off y asegurando que lo que se diseña sea técnicamente viable desde el principio."
   },
   "stack": {
-    "title": "Stack tecnológico"
+    "title": "Tecnologías que Utilizo"
   },
   "footer": {
     "download_cv": "Descargar CV",
