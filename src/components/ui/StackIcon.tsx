@@ -21,7 +21,7 @@ import {
   Search,
   Wand2,
   Blocks,
-  Accessibility,
+  Contrast,
   PenLine,
 } from 'lucide-react'
 import {
@@ -62,7 +62,7 @@ const LUCIDE_ICONS: Record<string, LucideIcon> = {
   'UX Research':   Search,
   'Prototyping':   Wand2,
   'Design Systems': Blocks,
-  'Accessibility': Accessibility,
+  'Accessibility': Contrast,
 }
 
 interface StackIconProps {
