@@ -58,7 +58,7 @@ export default async function LocaleLayout({
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <NextIntlClientProvider messages={messages}>
             <Navbar />
-            <main style={{ paddingTop: '64px' }}>
+            <main className="pt-16">
               {children}
             </main>
           </NextIntlClientProvider>

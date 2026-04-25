@@ -11,13 +11,13 @@ export default function Contact() {
   const t = useTranslations('contact')
 
   return (
-    <section id="contact" className="py-20 md:py-28 lg:py-36 px-6 md:px-10">
-      <div className="flex flex-col items-center max-w-4xl mx-auto">
+    <section id="contact" className="py-20 md:py-28 lg:py-36 px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32">
+      <div className="flex flex-col items-center max-w-3xl mx-auto">
 
         <FadeInSection>
           {/* Label */}
           <p
-            className="text-xs font-mono tracking-[0.2em] uppercase mb-8 text-center"
+            className="text-xs font-mono tracking-[0.2em] uppercase mb-6 text-center"
             style={{ color: 'var(--color-accent)' }}
           >
             {t('label')}
@@ -25,7 +25,7 @@ export default function Contact() {
 
           {/* Title */}
           <h2
-            className="font-display text-5xl md:text-7xl lg:text-8xl font-semibold tracking-tight leading-tight text-center"
+            className="font-display text-4xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-tight text-center"
             style={{ color: 'var(--ink-primary)' }}
           >
             {t('title')}
@@ -33,30 +33,25 @@ export default function Contact() {
 
           {/* Body */}
           <p
-            className="text-lg md:text-xl leading-relaxed text-center mt-8 max-w-prose mx-auto"
+            className="text-base md:text-lg leading-relaxed text-center mt-6 max-w-prose mx-auto"
             style={{ color: 'var(--ink-secondary)' }}
           >
             {t('body')}
           </p>
 
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12">
+          {/* CTAs — pills más compactas */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
             {/* Email */}
             <a
               href={`mailto:${EMAIL}`}
-              className="group flex items-center gap-4 px-12 py-6 rounded-2xl border-2 transition-all duration-300 hover:-translate-y-2 hover:border-accent hover:shadow-xl w-full sm:w-auto min-w-[320px]"
+              className="group flex items-center gap-3 px-6 py-3 rounded-full border transition-all duration-300 hover:-translate-y-1 hover:border-accent hover:shadow-md"
               style={{
-                borderColor: 'var(--border-default)',
+                borderColor: 'var(--border-strong)',
                 backgroundColor: 'var(--color-surface)',
               }}
             >
-              <div
-                className="w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110"
-                style={{ backgroundColor: 'var(--bg-secondary)' }}
-              >
-                <Mail className="w-6 h-6" style={{ color: 'var(--color-accent)' }} />
-              </div>
-              <span className="font-semibold text-xl pr-2" style={{ color: 'var(--ink-primary)' }}>
+              <Mail className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
+              <span className="font-medium text-sm md:text-base" style={{ color: 'var(--ink-primary)' }}>
                 {EMAIL}
               </span>
             </a>
@@ -66,19 +61,14 @@ export default function Contact() {
               href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center gap-4 px-12 py-6 rounded-2xl transition-all duration-300 hover:-translate-y-2 hover:shadow-xl w-full sm:w-auto min-w-[320px]"
+              className="group flex items-center gap-3 px-6 py-3 rounded-full transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
               style={{
                 backgroundColor: 'var(--color-accent)',
                 color: '#FFFFFF',
               }}
             >
-              <div
-                className="w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110"
-                style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
-              >
-                <MessageCircle className="w-6 h-6" />
-              </div>
-              <span className="font-semibold text-xl">
+              <MessageCircle className="w-4 h-4" />
+              <span className="font-medium text-sm md:text-base">
                 WhatsApp
               </span>
             </a>

@@ -28,12 +28,12 @@ export default function Navbar() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md" style={{ backgroundColor: 'color-mix(in srgb, var(--bg-primary) 85%, transparent)' }}>
-      <nav className="max-w-[1400px] mx-auto px-6 md:px-10 h-16 flex items-center justify-end gap-8">
+      <nav className="max-w-400 mx-auto px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32 h-16 flex items-center justify-end gap-8">
 
         {/* Logo - con hover animado */}
         <a
           href={`/${locale}`}
-          className="font-display text-base font-semibold tracking-tight no-underline absolute left-6 md:left-10 transition-all duration-300 hover:opacity-60 hover:scale-[1.02]"
+          className="font-display text-base font-semibold tracking-tight no-underline absolute left-6 md:left-10 lg:left-16 xl:left-24 2xl:left-32 transition-all duration-300 hover:opacity-60 hover:scale-[1.02]"
           style={{ color: 'var(--ink-primary)' }}
         >
           Tiago Collado

@@ -13,12 +13,12 @@ export default function About() {
   const t = useTranslations('about')
 
   return (
-    <section id="about" className="py-20 md:py-28 lg:py-36 px-6 md:px-10">
-      <div className="max-w-5xl mx-auto">
+    <section id="about" className="pt-16 md:pt-20 lg:pt-28 pb-8 md:pb-10 lg:pb-12 px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32">
+      <div className="max-w-6xl mx-auto">
 
         <FadeInSection>
           {/* Label */}
-          <div className="pb-8">
+          <div className="pb-8 md:pb-10">
             <p
               className="text-xs font-mono tracking-[0.2em] uppercase"
               style={{ color: 'var(--color-accent)' }}
@@ -28,7 +28,7 @@ export default function About() {
           </div>
 
           {/* Grid principal */}
-          <div className="grid grid-cols-1 lg:grid-cols-[6fr_1fr] gap-12 lg:gap-28 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[6fr_1fr] gap-12 lg:gap-20 items-start">
             {/* Texto - columna izquierda */}
             <div className="space-y-6 max-w-prose">
               <p
@@ -51,14 +51,12 @@ export default function About() {
               {CHIPS.map(({ num, label }) => (
                 <div
                   key={label}
-                  className="group relative overflow-hidden rounded-2xl border-2 p-8 transition-all duration-500
-                             hover:border-accent hover:shadow-2xl hover:-translate-y-2
+                  className="group relative overflow-hidden rounded-xl border p-5 transition-all duration-500
+                             hover:border-accent hover:shadow-lg hover:-translate-y-1
                              cursor-pointer"
                   style={{
                     borderColor: 'var(--border-default)',
                     backgroundColor: 'var(--color-surface)',
-                    minHeight: '100px',
-                    minWidth: '200px'
                   }}
                 >
                   {/* Animated gradient background */}
@@ -71,7 +69,7 @@ export default function About() {
 
                   {/* Corner accent */}
                   <div
-                    className="absolute top-0 right-0 w-16 h-16 transition-all duration-500 group-hover:w-20 group-hover:h-20"
+                    className="absolute top-0 right-0 w-10 h-10 transition-all duration-500 group-hover:w-14 group-hover:h-14"
                     style={{
                       background: 'linear-gradient(135deg, var(--color-accent) 0%, transparent 100%)',
                       opacity: 0.1
@@ -79,21 +77,21 @@ export default function About() {
                   />
 
                   {/* Content */}
-                  <div className="relative flex flex-col gap-4 p-2">
+                  <div className="relative flex flex-col gap-2.5">
                     <span
-                      className="text-xs font-mono tracking-[0.2em] transition-colors duration-300"
+                      className="text-[10px] font-mono tracking-[0.2em] transition-colors duration-300"
                       style={{ color: 'var(--color-accent)' }}
                     >
                       {num}
                     </span>
 
                     <div
-                      className="w-12 h-0.5 transition-all duration-300 group-hover:w-full group-hover:bg-accent"
+                      className="w-8 h-px transition-all duration-300 group-hover:w-full group-hover:bg-accent"
                       style={{ backgroundColor: 'var(--border-default)' }}
                     />
 
                     <span
-                      className="text-base font-semibold tracking-wide transition-all duration-300
+                      className="text-sm font-semibold tracking-wide transition-all duration-300
                                  group-hover:text-accent group-hover:translate-x-1"
                       style={{ color: 'var(--ink-primary)' }}
                     >
@@ -107,7 +105,7 @@ export default function About() {
 
           {/* Ubicación al final */}
           <div
-            className="flex items-center gap-3 text-sm font-mono tracking-wide mt-12"
+            className="flex items-center gap-3 text-sm font-mono tracking-wide mt-8 md:mt-10"
             style={{ color: 'var(--ink-muted)' }}
           >
             <span className="uppercase tracking-[0.18em]">Ubicación</span>

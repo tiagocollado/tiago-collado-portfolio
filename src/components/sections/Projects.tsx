@@ -13,7 +13,7 @@ export default function Projects() {
   const sortedProjects = [...projects].sort((a, b) => a.order - b.order)
 
   return (
-    <section id="projects" className="py-20 md:py-28 lg:py-36 px-6 md:px-10">
+    <section id="projects" className="py-16 md:py-20 lg:py-28 px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32">
       <div className="max-w-7xl mx-auto">
 
         <FadeInSection>
@@ -34,7 +34,7 @@ export default function Projects() {
         </FadeInSection>
 
         <FadeInSection delay={0.15}>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 auto-rows-[280px] md:auto-rows-[320px] mt-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 auto-rows-[280px] md:auto-rows-[320px] mt-12 md:mt-16">
             {sortedProjects.map((project) => (
               <ProjectCard
                 key={project.slug}

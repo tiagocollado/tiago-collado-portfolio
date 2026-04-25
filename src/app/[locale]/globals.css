@@ -52,10 +52,17 @@
   --border-strong:  rgba(240, 237, 232, 0.20);
 }
 
+/*
+  IMPORTANTE: NO agregar margin: 0 ni padding: 0 acá.
+  En Tailwind v4 las utilities viven dentro de @layer utilities. Una regla
+  unlayered (sin @layer) gana sobre cualquier layer, sin importar la
+  especificidad — una regla universal con padding o margin mataría todas
+  las utilities px y py del proyecto. Ver nota completa en CLAUDE.md.
+  El reset de margin/padding ya lo hace el preflight de Tailwind sobre los
+  elementos que lo necesitan (h1-h6, p, ul, ol, etc.).
+*/
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 html {

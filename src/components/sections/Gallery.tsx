@@ -64,7 +64,7 @@ export default function Gallery({ slug, images }: GalleryProps) {
   const hasMultiple = images.length > 1
 
   return (
-    <section className="px-6 md:px-10 mt-20 md:mt-32">
+    <section className="px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32 mt-20 md:mt-28 lg:mt-36">
       <div className="max-w-6xl mx-auto">
 
         {/* Header: label + título + contador */}

@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl'
 import { stack } from '@/data/stack'
 import FadeInSection from '../ui/FadeInSection'
+import StackIcon from '../ui/StackIcon'
 
 export default function Stack() {
   const t = useTranslations('stack')
@@ -11,8 +12,8 @@ export default function Stack() {
   const stackLoop = [...visibleStack, ...visibleStack]
 
   return (
-    <section className="py-20 md:py-28 lg:py-36 px-0 md:px-10">
-      <div className="max-w-7xl mx-auto px-6 md:px-10">
+    <section className="pt-8 md:pt-10 lg:pt-12 pb-16 md:pb-20 lg:pb-28">
+      <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32">
         <FadeInSection>
           <div className="max-w-3xl">
             <p
@@ -32,7 +33,7 @@ export default function Stack() {
       </div>
 
       {/* Carrusel full-bleed */}
-      <div className="relative mt-16">
+      <div className="relative mt-12 md:mt-16">
         <div
           className="absolute left-0 top-0 bottom-0 w-20 md:w-40 z-10 pointer-events-none"
           style={{ background: 'linear-gradient(to right, var(--bg-primary), transparent)' }}
@@ -47,17 +48,15 @@ export default function Stack() {
             {stackLoop.map((item, index) => (
               <div
                 key={`${item.name}-${index}`}
-                className="carousel-item flex items-center gap-3 px-5 py-3 md:px-6 md:py-4 rounded-full border transition-all duration-300 hover:-translate-y-1 hover:border-accent"
+                className="carousel-item flex items-center gap-3 px-5 py-3 md:px-6 md:py-4 rounded-full border transition-colors duration-300 hover:border-accent"
                 style={{
                   borderColor: 'var(--border-default)',
                   backgroundColor: 'var(--color-surface)',
                 }}
               >
-                <span
-                  className="inline-block w-1.5 h-1.5 rounded-full"
-                  style={{ backgroundColor: 'var(--color-accent)' }}
-                  aria-hidden
-                />
+                <span style={{ color: 'var(--ink-secondary)' }}>
+                  <StackIcon name={item.name} size={18} />
+                </span>
                 <span
                   className="font-medium text-sm md:text-base whitespace-nowrap"
                   style={{ color: 'var(--ink-primary)' }}
