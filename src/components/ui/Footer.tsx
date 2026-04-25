@@ -7,15 +7,15 @@ export default function Footer() {
 
   return (
     <footer
-      className="py-24 md:py-32 border-t"
+      className="py-10 md:py-14 border-t"
       style={{
         borderColor: 'var(--border-default)',
       }}
     >
-      <div className="flex flex-col items-center px-6" style={{ paddingTop: '32px' }}>
+      <div className="flex flex-col items-center px-6">
 
-        {/* Links con iconos - bien separados */}
-        <div className="flex flex-wrap justify-center gap-14" style={{ paddingTop: '24px', paddingBottom: '24px' }}>
+        {/* Links con iconos */}
+        <div className="flex flex-wrap justify-center gap-10">
           {/* LinkedIn */}
           <a
             href="https://www.linkedin.com/in/tiagocollado/"
@@ -62,14 +62,14 @@ export default function Footer() {
           </a>
         </div>
 
-        {/* Divider grande */}
+        {/* Divider corto entre links y copyright */}
         <div
-          className="w-32 h-px py-20"
+          className="w-24 h-px my-6"
           style={{ backgroundColor: 'var(--border-strong)' }}
         />
 
         {/* Copyright centrado */}
-        <p className="text-base text-center" style={{ color: 'var(--ink-muted)', paddingTop: '16px', paddingBottom: '16px' }}>
+        <p className="text-sm text-center" style={{ color: 'var(--ink-muted)' }}>
           © 2026 Tiago Collado. Todos los derechos reservados.
         </p>
 

@@ -71,18 +71,17 @@ export default function ProjectCard({ project, locale }: ProjectCardProps) {
 
       {/* Contenido */}
       {!project.comingSoon && (
-        <div className="relative z-10 h-full flex flex-col justify-end" style={{ padding: '28px 32px' }}>
+        <div className="relative z-10 h-full flex flex-col justify-end px-8 py-7">
 
           {/* Contenido */}
-          <div style={{ marginTop: 'auto' }}>
+          <div className="mt-auto">
             {/* Tipo */}
             <span
-              className="text-[9px] font-mono tracking-[0.2em] uppercase rounded-full border mb-3 inline-block"
+              className="text-[9px] font-mono tracking-[0.2em] uppercase rounded-full border mb-3 inline-block px-2.5 py-1"
               style={{
                 color: 'var(--ink-muted)',
                 borderColor: 'var(--border-default)',
                 backgroundColor: 'var(--color-surface)',
-                padding: '5px 10px',
               }}
             >
               {project.type === 'ux' ? 'UX / UI' : project.type === 'fullstack' ? 'Full-stack' : 'Design'}
@@ -90,24 +89,23 @@ export default function ProjectCard({ project, locale }: ProjectCardProps) {
 
             {/* Título */}
             <h3
-              className="font-display font-semibold leading-tight uppercase"
-              style={{ color: 'var(--ink-primary)', fontSize: '20px', marginBottom: '16px', marginTop: '8px' }}
+              className="font-display font-semibold leading-tight uppercase text-xl mt-2 mb-4"
+              style={{ color: 'var(--ink-primary)' }}
             >
               {project.title}
             </h3>
 
             {/* Tags y CTA - aparecen en hover */}
-            <div className="group-hover:opacity-100 group-hover:translate-y-0 opacity-0 translate-y-3 transition-all duration-400" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div className="flex flex-col gap-3 group-hover:opacity-100 group-hover:translate-y-0 opacity-0 translate-y-3 transition-all duration-400">
               <div className="flex flex-wrap gap-2">
                 {project.tags.slice(0, project.featured ? 4 : 3).map((tag) => (
                   <span
                     key={tag}
-                    className="text-[10px] font-medium tracking-wide rounded-full border"
+                    className="text-[10px] font-medium tracking-wide rounded-full border px-3 py-1.5"
                     style={{
                       color: 'var(--color-accent)',
                       borderColor: 'var(--color-accent)',
                       backgroundColor: 'transparent',
-                      padding: '6px 12px',
                     }}
                   >
                     {tag}
@@ -115,14 +113,12 @@ export default function ProjectCard({ project, locale }: ProjectCardProps) {
                 ))}
               </div>
 
-              <span 
-                className="text-sm font-semibold rounded-full border inline-flex items-center gap-2 mt-1"
-                style={{ 
+              <span
+                className="text-sm font-semibold rounded-full border inline-flex items-center gap-2 mt-1 px-5 py-2.5 w-fit"
+                style={{
                   color: 'var(--color-accent)',
-                  borderColor: 'var(--color-accent)', 
+                  borderColor: 'var(--color-accent)',
                   backgroundColor: 'transparent',
-                  padding: '10px 18px',
-                  width: 'fit-content'
                 }}
               >
                 {t('view_case')}

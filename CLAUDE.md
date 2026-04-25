@@ -3,6 +3,22 @@
 
 ---
 
+## ⚠️ TAILWIND V4 + CSS CASCADE LAYERS — LEER ANTES DE EDITAR `globals.css`
+
+**Bug crítico que ya nos comió tiempo: NO escribir reglas universales (`* { ... }`) con `margin` o `padding` fuera de un `@layer`.**
+
+En Tailwind v4 las utilities (`px-*`, `py-*`, `mt-*`, `mb-*`, etc.) viven dentro de `@layer utilities`. En CSS Cascade Layers, las reglas **fuera de cualquier `@layer` ganan SIEMPRE** sobre las que están en layers — sin importar la especificidad. Una regla como `* { padding: 0 }` mata todas las utilities de padding del proyecto.
+
+Reglas:
+- ❌ Nunca poner `padding`, `margin` o relacionados en una regla universal `* { ... }` unlayered.
+- ✅ El reset de margin/padding ya lo hace el preflight de Tailwind sobre los elementos correctos (h1-h6, p, ul, ol, etc.). No hace falta replicarlo.
+- ✅ Si necesitás un reset custom, ponelo dentro de `@layer base { ... }` para que respete el orden de layers.
+- ✅ Inline styles (`style={{ padding: '24px' }}`) siempre ganan porque tienen specificity 1,0,0,0 — son el escape hatch si algo se rompe, pero indican un bug abajo.
+
+Si en algún momento las utilities `px-*`/`py-*` no parecen estar tomando efecto, **lo primero a revisar es globals.css** buscando reglas universales.
+
+---
+
 ## 🎨 REGLAS DE DISEÑO — LEER ANTES DE TOCAR UI
 
 **Antes de cualquier cambio visual, releer esta sección. Si un cambio no está cubierto acá, preguntar antes de improvisar valores.**
@@ -77,6 +93,60 @@ Tiago todavía está estudiando y la programación no es su gran fuerte. **El c�
 
 ## Estado actual del proyecto
 
+> **Nota futura**: Tiago quizá decida ocultar `CLAUDE.md` y `AGENTS.md` del repo público (o moverlos a un `.docs/` privado) cuando el proyecto madure. Por ahora se quedan visibles para no romper el flujo. Si llegamos a ese momento, también revisar qué del `.gitignore` cambia.
+
+---
+
+## 📍 Dónde estamos ahora (sesión actual: 2026-04-25)
+
+### Trabajo completado en sesiones recientes
+1. ✅ **Saneamiento** — fix CSS vars rotas, spacing normalizado, dead code removido, Devicon CDN removido. Bump lucide 1.9 → 1.11.
+2. ✅ **InteractiveDotGrid** — canvas 2D en Hero con repulsión cuadrática, fallback CSS para touch, theme-aware.
+3. ✅ **Gallery con Embla** — reemplazó el grid + setTimeout race condition. FM crossfade, prev/next, dots, contador.
+4. ✅ **`en.json` completado** — paridad total con `es.json` (74 keys, 5 case studies traducidos).
+5. ✅ Push a main como commit `f03b2c6`.
+6. ✅ **Tanda A — fundamentos visuales (sesión 2026-04-25)**:
+   - **Bug crítico encontrado y corregido**: regla `* { padding: 0; margin: 0 }` unlayered en `globals.css` mataba TODAS las utilities `px-*`/`py-*`/`mt-*` del proyecto (Tailwind v4 + CSS Cascade Layers). Por eso muchos componentes tenían `style={{ paddingX: 'Ypx' }}` inline — eran el único workaround posible. Ver advertencia al inicio de este archivo.
+   - **Cleanup de inline-style workarounds**: eliminados de Footer, ProjectCard, Hero (status pill), layout.tsx. Reemplazados por utilities Tailwind ahora que funcionan.
+   - **Bug de doble `<main>`**: `layout.tsx` y la página de proyecto envolvían en `<main paddingTop=64>` cada una → 128px de gap arriba en páginas de caso de estudio. La página de proyecto se cambió a `<div>`.
+   - **Spacing aplicado a la escala de CLAUDE.md**: `py-20 md:py-28 lg:py-36` vertical, `px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32` horizontal en todas las secciones.
+   - **Hero**: identidad agrupada (nombre + role con `gap-2/3` interno, separados del claim por `mt-10/14`).
+   - **Tipografía Tailwind v4**: refactor de `hover:text-[var(--color-accent)]` → `hover:text-accent` en About/Contact/Stack (Tailwind v4 genera utilities automáticamente desde tokens del `@theme`).
+
+### Feedback de Tiago (post-deploy del commit f03b2c6)
+1. Falta padding/margin en general — todo se siente pegado.
+2. Componentes pegados a la izquierda — falta margin-left visual en secciones.
+3. Contact no centrado en pantalla, los CTAs no convencen.
+4. Stack: faltan íconos reales de cada herramienta (yo los rompí cuando saqué Devicon CDN).
+5. Hover de project cards en light mode se ve mal (overlay negro fijo).
+6. Página de caso de estudio se ve fea, hay que rediseñar.
+
+### Plan acordado — Tandas de trabajo
+- **Tanda A** (en curso): fundamentos visuales — bumpear `px-` horizontal, aumentar gaps internos, headline Hero más dominante.
+- **Tanda B**: rediseñar `ProjectCard` con overlay theme-aware, tag arriba, título display gigante, hover state con CTA pill terracota.
+- **Tanda C**: rediseñar `Contact` — `min-h-screen` centrado, headline gigante, CTAs como pills.
+- **Tanda D**: íconos de marca en Stack (probablemente SVGs locales descargados de simpleicons.org en `public/images/stack/`).
+- **Tanda E**: rediseñar página de caso de estudio (necesita más dirección visual de Tiago).
+
+---
+
+## 🎨 Referencias visuales (inspiración)
+
+URLs que Tiago compartió como inspiración premium:
+- **https://isadeburgh.com/** — el "Get in touch" de la navbar funciona como un texto que rota in-place tipo carrusel; al hacer hover se frena y al click va al mail. Vale la pena copiar este patrón cuando lleguemos a Navbar refinada.
+- **https://artemiilebedev.com/** — referencia general de portfolio premium.
+- **https://louispaquet.com/** — ídem.
+
+Imágenes de referencia ya en `public/images/references/`:
+- `hero_reference.png` — POSTA agency: tipografía gigante centrada, mucha respiración, glow accent arriba.
+- `navbar_reference.png` — Felipe portfolio: logo a la izquierda, nav con `Mail` icon en pill, glow accent.
+- `card_reference_active.png` / `card_reference_desactive.png` — UMAIVERSE / VERTEX IDENTITY: cards con tag arriba, título display gigante centrado-abajo, overlay coloreado (no negro fijo), CTA pill con flecha.
+- `about_reference.png` / `about_reference2.png` — POSTA / Product Designer: claim gigante con palabras en bold, body text chico desplazado, distribución asimétrica.
+
+**Regla cuando se mire una referencia**: identificar la idea concreta a replicar (un patrón, una proporción, una micro-interacción), no copiar pixel-perfect. El portfolio mantiene su identidad de "minimalismo técnico pero cálido" con accent terracota.
+
+---
+
 ### ✅ Lo que YA funciona
 - **Deploy en Vercel**: https://tiagocollado.vercel.app/ (CI/CD activo, cada push a main redeploya)
 - **Bug de producción resuelto**: las páginas de proyecto ya renderean en Vercel (commit `10aa279`).
@@ -109,6 +179,11 @@ Tiago todavía está estudiando y la programación no es su gran fuerte. **El c�
 - `lucide-react` actualizado de 1.9.0 → ^1.11.0.
 - Clases con `hover:text-[var(--color-accent)]` refactorizadas a `hover:text-accent` (Tailwind v4 ya genera esos utilities automáticamente desde los tokens `--color-*` del `@theme`).
 
+### 📐 Patrón de "escalera" en max-w (a diseñar intencionalmente)
+Cada sección usa un `max-w-*` distinto en su container interno (Hero `max-w-6xl`, Projects `max-w-7xl`, About `max-w-6xl`, Stack header `max-w-7xl` + carrusel full-bleed, Contact `max-w-3xl`, Gallery `max-w-6xl`). Eso crea una "escalera" visual: en pantallas wide, no todo arranca en la misma columna invisible.
+
+**Decisión (2026-04-25)**: Tiago quiere mantener la escalera y diseñarla **intencionalmente con un patrón pensado**, no dejarla accidental. Pendiente: definir el patrón concreto (ej. Hero más angosto → Projects ancho → About vuelve angosto → Stack ancho → Contact muy angosto, generando un ritmo de zoom in/out). Hay que pensar el ritmo antes de tocar `max-w-*` en los componentes. **Esta tarea está en backlog** — no la abordamos en sesiones de spacing/layout normales.
+
 ### ⚠️ Lo que falta mejorar (DISEÑO VISUAL — prioridad para llegar a nivel Awwwards)
 - **Íconos del Stack**: hoy es solo un dot + texto. Decidir si se agregan íconos de marca (opciones: SVGs locales en `public/images/stack/`, el paquete `simple-icons`, o `devicon` instalado como npm en vez de CDN).
 - **Project cards**: hover overlay todavía básico; se puede sumar tilt 3D, reveal más rico, parallax del cover.
@@ -125,6 +200,8 @@ Tiago todavía está estudiando y la programación no es su gran fuerte. **El c�
 - **Pendiente de decisión**: qué fuente usar para íconos de marca (Figma, Photoshop, React, etc.) en el Stack. Recomendación: SVGs locales descargados de simpleicons.org — sin deps nuevas, control total.
 
 ### 📋 Features pendientes (opcionales pero charladas)
+- **Botón "back to top" con animación, centrado abajo del todo**: cuando el usuario llega al final de la página, mostrar un botón circular/pill en el centro que scrollea hacia arriba con animación suave. Implica **reordenar el Footer**: hoy el centro tiene los íconos de redes (LinkedIn / GitHub / CV) y debajo el copyright. La reorganización tiene que mantener accesible esa info pero liberar el centro para el botón. Pensar el reorder antes de codear (¿links a un costado? ¿copyright arriba del divider?). Sin código todavía — esperando definición visual.
+
 - **Fondo interactivo del Hero (InteractiveDotGrid)**: ✅ implementado en [src/components/ui/InteractiveDotGrid.tsx](src/components/ui/InteractiveDotGrid.tsx). Canvas 2D con RAF, repulsión cuadrática, lerp de retorno, fallback CSS para touch, respeta `prefers-reduced-motion`, re-lee color en cambio de tema vía MutationObserver. Props configurables: spacing, dotRadius, influenceRadius, maxDisplacement, lerpFactor, colorVar, opacity.
 - **Cursor personalizado (Awwwards-style)**: a reimplementar cuando se quiera. Debe ser sutil (dot + anillo con lag), magnético sobre interactivos, deshabilitado en touch.
 - **Easter egg** (konami code o micro-interacción escondida).

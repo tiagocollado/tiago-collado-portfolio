@@ -8,14 +8,15 @@ export default function Hero() {
   const t = useTranslations('hero')
 
   return (
-    <section className="min-h-screen flex items-center justify-center px-6 md:px-10 py-20 md:py-28 lg:py-36 relative overflow-hidden">
+    <section className="min-h-screen flex items-center px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32 py-24 md:py-32 lg:py-40 relative overflow-hidden">
 
       {/* Fondo interactivo: canvas en desktop con repulsión del cursor, CSS estático en touch. */}
       <InteractiveDotGrid opacity={0.55} />
 
-      {/* Contenedor principal con flex + gap */}
+      {/* Contenedor principal. Sin gap-* en el flex: cada bloque define su propio mt-* para
+          poder agrupar identidad (nombre + role) más pegada que el resto. */}
       <motion.div
-        className="max-w-4xl w-full relative z-10 flex flex-col items-start gap-6 lg:gap-10"
+        className="max-w-6xl w-full relative z-10 flex flex-col items-start"
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
@@ -27,12 +28,11 @@ export default function Hero() {
           transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
         >
           <div
-            className="inline-flex items-center gap-2.5 rounded-full border text-xs font-medium"
+            className="inline-flex items-center gap-2.5 rounded-full border text-xs font-medium px-6 py-2"
             style={{
               borderColor: 'var(--border-strong)',
               backgroundColor: 'var(--bg-secondary)',
               color: 'var(--ink-secondary)',
-              padding: '8px 24px',
             }}
           >
             <span className="relative flex h-2 w-2">
@@ -49,24 +49,24 @@ export default function Hero() {
           </div>
         </motion.div>
 
-        {/* H1 */}
-        <h1
-          className="font-display text-5xl md:text-7xl lg:text-8xl font-semibold tracking-tight leading-[1.15] text-balance"
-          style={{ color: 'var(--ink-primary)' }}
-        >
-          {t('name')}
-        </h1>
+        {/* Identidad: nombre + role agrupados con poco gap (son la misma "unidad" visual) */}
+        <div className="mt-8 md:mt-10 flex flex-col gap-2 md:gap-3">
+          <h1
+            className="font-display text-5xl md:text-7xl lg:text-8xl font-semibold tracking-tight leading-[1.05] text-balance"
+            style={{ color: 'var(--ink-primary)' }}
+          >
+            {t('name')}
+          </h1>
+          <p
+            className="text-base md:text-xl font-medium tracking-wide text-balance"
+            style={{ color: 'var(--ink-secondary)' }}
+          >
+            {t('role')}
+          </p>
+        </div>
 
-        {/* Role */}
-        <p
-          className="text-lg md:text-xl font-medium tracking-wide text-balance"
-          style={{ color: 'var(--ink-secondary)' }}
-        >
-          {t('role')}
-        </p>
-
-        {/* Headlines */}
-        <div className="space-y-3 max-w-prose">
+        {/* Headlines (claim del portfolio) — separados de la identidad */}
+        <div className="mt-10 md:mt-14 space-y-3 max-w-3xl">
           <p
             className="font-display text-2xl md:text-4xl font-medium tracking-tight leading-[1.15]"
             style={{ color: 'var(--ink-secondary)' }}
@@ -84,7 +84,7 @@ export default function Hero() {
         {/* CTA */}
         <motion.a
           href="#projects"
-          className="inline-flex items-center gap-2 rounded-xl font-semibold text-base px-10 py-5 transition-all duration-300 hover:-translate-y-1"
+          className="mt-10 md:mt-12 inline-flex items-center gap-2 rounded-xl font-semibold text-base px-8 py-4 transition-all duration-300 hover:-translate-y-1"
           style={{
             backgroundColor: 'var(--color-accent)',
             color: '#FFFFFF',

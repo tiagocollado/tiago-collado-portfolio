@@ -55,10 +55,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   )
 
   return (
-    <main className="min-h-screen pb-24 md:pb-32" style={{ paddingTop: '64px' }}>
+    <div className="min-h-screen pb-24 md:pb-32">
 
       {/* ============ HEADER ============ */}
-      <div className="px-6 md:px-10 pt-16 md:pt-20">
+      <div className="px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32 pt-16 md:pt-20">
         <div className="max-w-4xl mx-auto">
 
           {/* Back link */}
@@ -117,7 +117,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       </div>
 
       {/* ============ CASE STUDY SECTIONS ============ */}
-      <div className="px-6 md:px-10">
+      <div className="px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32">
         <div className="max-w-3xl mx-auto space-y-24 md:space-y-32">
 
           {SECTION_KEYS.map((key, index) => {
@@ -176,7 +176,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
       {/* ============ DEMO LINKS ============ */}
       {hasLinks && (
-        <div className="px-6 md:px-10 mt-28 md:mt-40">
+        <div className="px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32 mt-28 md:mt-40">
           <div className="max-w-5xl mx-auto">
 
             <div className="mb-12 md:mb-16 max-w-2xl">
@@ -233,7 +233,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         </div>
       )}
 
-    </main>
+    </div>
   )
 }
 
