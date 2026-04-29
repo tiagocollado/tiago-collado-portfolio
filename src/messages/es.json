@@ -88,9 +88,13 @@
   },
   "about": {
     "title": "Sobre mí",
-    "p1": "Soy estudiante avanzado de último año de la Licenciatura en Tecnología Multimedial en la Universidad Maimónides. Mi recorrido empezó en la comunicación digital, donde trabajé casi tres años gestionando contenido y redes sociales para Hotel Real Cafayate. Esa experiencia me enseñó a entender audiencias y a pensar estratégicamente, pero también me dejó claro que quería estar del otro lado: construyendo las plataformas, no solo usándolas.",
-    "p2": "Estudiar Tecnología Multimedial me permitió conectar diseño y código de forma natural. Como Auxiliar de Docencia en Diseño de Interfaces, reforcé mi capacidad de comunicar conceptos complejos de usabilidad y arquitectura de información. Después llegaron roles profesionales como Diseñador Web Jr. en Qualita Studio y proyectos como FutbolTalentPro, donde diseñé el MVP de una app mobile-first colaborando directamente con desarrolladores. Esas experiencias confirmaron que mi enfoque híbrido funciona: no solo diseño interfaces, las prototipo en Figma, las valido con usuarios y las codifico en React.",
-    "p3": "Busco sumarme a equipos de producto que valoren tanto la visión de diseño como la capacidad técnica para ejecutarla. Mi objetivo es cerrar la brecha entre UX y desarrollo, facilitando el hand-off y asegurando que lo que se diseña sea técnicamente viable desde el principio."
+    "claim": "Diseño y código en una sola cabeza.",
+    "background": "Mi primer rol profesional fue armar de cero la marca digital del Hotel Real Cafayate: posicionamiento, estrategia y operación de comunicación durante casi tres años. Hoy el hotel mantiene una presencia activa y automatizada con las bases que dejé. Entendí qué hace que una audiencia se quede — y entendí también que quería estar del otro lado: armando las plataformas, no solo usándolas. Hoy estoy cerrando la Licenciatura en Tecnología Multimedial en la Universidad Maimónides.",
+    "hybrid_path": "En la misma universidad fui Auxiliar de Docencia en Diseño de Interfaces — comunicar usabilidad y arquitectura de información a otros me obligó a entender los fundamentos en profundidad. En lo profesional vinieron Qualita Studio (Diseñador Web Jr.) y FutbolTalentPro, donde diseñé el MVP mobile-first colaborando directo con desarrolladores.",
+    "hook": "No solo diseño interfaces. Las prototipo en Figma, las valido con usuarios y las codifico en React.",
+    "mission": "Busco equipos de producto donde diseño y desarrollo no se hablen por traductor. Mi objetivo: cerrar la brecha entre UX y código — handoffs limpios, decisiones de diseño técnicamente viables desde el día uno.",
+    "location_label": "Ubicación",
+    "location": "Buenos Aires, Argentina"
   },
   "stack": {
     "title": "Tecnologías que Utilizo"

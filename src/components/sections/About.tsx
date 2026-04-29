@@ -1,9 +1,21 @@
 'use client'
 
+/**
+ * About
+ * -----
+ * Sección "Sobre mí" — diseñada para escaneabilidad en patrón F:
+ *  - <header> con eyebrow + claim (lo primero que lee un reclutador).
+ *  - 4 bloques de copy cortos (Ley de Miller — chunks digeribles), con el
+ *    "hook" diferenciador en bold como focal point.
+ *  - <aside> con la lista de áreas de práctica — sin chrome de botón
+ *    (no son interactivas, deben leerse como label tipográfico).
+ *  - <footer> con ubicación.
+ */
+
 import { useTranslations } from 'next-intl'
 import FadeInSection from '../ui/FadeInSection'
 
-const CHIPS = [
+const PRACTICE_AREAS = [
   { num: '01', label: 'UX / UI' },
   { num: '02', label: 'Frontend Dev' },
   { num: '03', label: 'Product Design' },
@@ -13,107 +25,110 @@ export default function About() {
   const t = useTranslations('about')
 
   return (
-    <section id="about" className="pt-16 md:pt-20 lg:pt-28 pb-8 md:pb-10 lg:pb-12 px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32">
+    <section
+      id="about"
+      aria-labelledby="about-heading"
+      className="pt-16 md:pt-20 lg:pt-28 pb-8 md:pb-10 lg:pb-12 px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32"
+    >
       <div className="max-w-6xl mx-auto">
-
         <FadeInSection>
-          {/* Label */}
-          <div className="pb-8 md:pb-10">
+
+          {/* Header — eyebrow + claim. Top de la "F", primero en escanear. */}
+          <header className="mb-10 md:mb-14">
             <p
-              className="text-xs font-mono tracking-[0.2em] uppercase"
+              className="text-xs font-mono tracking-[0.2em] uppercase mb-4"
               style={{ color: 'var(--color-accent)' }}
             >
               {t('title')}
             </p>
-          </div>
+            <h2
+              id="about-heading"
+              className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.05]"
+              style={{ color: 'var(--ink-primary)' }}
+            >
+              {t('claim')}
+            </h2>
+          </header>
 
-          {/* Grid principal */}
+          {/* Grid: copy a la izquierda, áreas de práctica a la derecha */}
           <div className="grid grid-cols-1 lg:grid-cols-[6fr_1fr] gap-12 lg:gap-20 items-start">
-            {/* Texto - columna izquierda */}
+
+            {/* Copy — 4 bloques cortos */}
             <div className="space-y-6 max-w-prose">
               <p
                 className="text-lg md:text-xl leading-relaxed"
                 style={{ color: 'var(--ink-secondary)' }}
               >
-                {t('p1')}
+                {t('background')}
               </p>
 
               <p
                 className="text-lg md:text-xl leading-relaxed"
                 style={{ color: 'var(--ink-secondary)' }}
               >
-                {t('p3')}
+                {t('hybrid_path')}
+              </p>
+
+              {/* Hook — focal point en bold + display, foco visual del bloque. */}
+              <p
+                className="font-display text-xl md:text-2xl font-semibold leading-snug"
+                style={{ color: 'var(--ink-primary)' }}
+              >
+                {t('hook')}
+              </p>
+
+              <p
+                className="text-lg md:text-xl leading-relaxed"
+                style={{ color: 'var(--ink-secondary)' }}
+              >
+                {t('mission')}
               </p>
             </div>
 
-            {/* Skills - columna derecha */}
-            <div className="grid grid-cols-1 gap-4">
-              {CHIPS.map(({ num, label }) => (
-                <div
-                  key={label}
-                  className="group relative overflow-hidden rounded-xl border p-5 transition-all duration-500
-                             hover:border-accent hover:shadow-lg hover:-translate-y-1
-                             cursor-pointer"
-                  style={{
-                    borderColor: 'var(--border-default)',
-                    backgroundColor: 'var(--color-surface)',
-                  }}
-                >
-                  {/* Animated gradient background */}
-                  <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+            {/* Áreas de práctica — lista numerada editorial, sin chrome de botón */}
+            <aside aria-label="Áreas de práctica">
+              <ul>
+                {PRACTICE_AREAS.map(({ num, label }, i) => (
+                  <li
+                    key={label}
+                    className="flex items-baseline gap-4 py-4"
                     style={{
-                      background: 'linear-gradient(135deg, rgba(200,106,58,0.08) 0%, rgba(200,106,58,0.02) 100%)'
+                      borderBottom: i < PRACTICE_AREAS.length - 1
+                        ? '1px solid var(--border-default)'
+                        : 'none',
                     }}
-                  />
-
-                  {/* Corner accent */}
-                  <div
-                    className="absolute top-0 right-0 w-10 h-10 transition-all duration-500 group-hover:w-14 group-hover:h-14"
-                    style={{
-                      background: 'linear-gradient(135deg, var(--color-accent) 0%, transparent 100%)',
-                      opacity: 0.1
-                    }}
-                  />
-
-                  {/* Content */}
-                  <div className="relative flex flex-col gap-2.5">
+                  >
                     <span
-                      className="text-[10px] font-mono tracking-[0.2em] transition-colors duration-300"
+                      className="font-mono text-sm tracking-wider"
                       style={{ color: 'var(--color-accent)' }}
                     >
                       {num}
                     </span>
-
-                    <div
-                      className="w-8 h-px transition-all duration-300 group-hover:w-full group-hover:bg-accent"
-                      style={{ backgroundColor: 'var(--border-default)' }}
-                    />
-
                     <span
-                      className="text-sm font-semibold tracking-wide transition-all duration-300
-                                 group-hover:text-accent group-hover:translate-x-1"
+                      className="font-display text-base md:text-lg font-medium"
                       style={{ color: 'var(--ink-primary)' }}
                     >
                       {label}
                     </span>
-                  </div>
-                </div>
-              ))}
-            </div>
+                  </li>
+                ))}
+              </ul>
+            </aside>
           </div>
 
           {/* Ubicación al final */}
-          <div
-            className="flex items-center gap-3 text-sm font-mono tracking-wide mt-8 md:mt-10"
-            style={{ color: 'var(--ink-muted)' }}
-          >
-            <span className="uppercase tracking-[0.18em]">Ubicación</span>
-            <span>·</span>
-            <span style={{ color: 'var(--ink-secondary)' }}>Buenos Aires, Argentina</span>
-          </div>
-        </FadeInSection>
+          <footer className="mt-12 md:mt-16">
+            <p
+              className="flex items-center gap-3 text-sm font-mono tracking-wide"
+              style={{ color: 'var(--ink-muted)' }}
+            >
+              <span className="uppercase tracking-[0.18em]">{t('location_label')}</span>
+              <span aria-hidden>·</span>
+              <span style={{ color: 'var(--ink-secondary)' }}>{t('location')}</span>
+            </p>
+          </footer>
 
+        </FadeInSection>
       </div>
     </section>
   )

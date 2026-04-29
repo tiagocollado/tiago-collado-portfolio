@@ -27,6 +27,8 @@ export interface Project {
    * Para agregar más imágenes a un proyecto, sumar paths acá — no hay probe automático.
    */
   gallery?: string[]
+  /** Año de realización (ej. 2025). Se muestra en la card como label arriba. */
+  year?: number
   featured: boolean
   order: number
   comingSoon?: boolean
