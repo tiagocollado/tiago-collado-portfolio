@@ -88,13 +88,17 @@
   },
   "about": {
     "title": "About",
-    "claim": "Design and code in one head.",
     "background": "My first professional role was building the Hotel Real Cafayate digital brand from scratch: positioning, strategy and communication operations for nearly three years. The hotel still runs today on the foundations I set, with an active and automated presence. I learned what makes an audience stay — and I also learned I wanted to be on the other side: building the platforms, not just using them. I'm currently finishing my degree in Multimedia Technology at Universidad Maimónides.",
     "hybrid_path": "At the same university I worked as Teaching Assistant in Interface Design — explaining usability and information architecture to others forced me to understand the fundamentals deeply. Professionally I've worked at Qualita Studio (Jr. Web Designer) and on FutbolTalentPro, where I designed the mobile-first MVP collaborating directly with developers.",
     "hook": "I don't just design interfaces. I prototype them in Figma, validate them with users, and code them in React.",
     "mission": "I'm looking for product teams where design and development don't need a translator. My goal: closing the gap between UX and code — clean handoffs, design decisions that are technically viable from day one.",
-    "location_label": "Location",
-    "location": "Buenos Aires, Argentina"
+    "toolkit_label": "What I bring",
+    "toolkit_1_title": "Product design",
+    "toolkit_1_desc": "Research, IA, systems and prototyping. From insight to interface.",
+    "toolkit_2_title": "Frontend with judgment",
+    "toolkit_2_desc": "React, Next, Tailwind. No handoff lost in translation.",
+    "toolkit_3_title": "End-to-end product",
+    "toolkit_3_desc": "From research to deploy. Design decisions viable from day one."
   },
   "stack": {
     "title": "Technologies I use"

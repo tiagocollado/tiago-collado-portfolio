@@ -88,13 +88,17 @@
   },
   "about": {
     "title": "Sobre mí",
-    "claim": "Diseño y código en una sola cabeza.",
     "background": "Mi primer rol profesional fue armar de cero la marca digital del Hotel Real Cafayate: posicionamiento, estrategia y operación de comunicación durante casi tres años. Hoy el hotel mantiene una presencia activa y automatizada con las bases que dejé. Entendí qué hace que una audiencia se quede — y entendí también que quería estar del otro lado: armando las plataformas, no solo usándolas. Hoy estoy cerrando la Licenciatura en Tecnología Multimedial en la Universidad Maimónides.",
     "hybrid_path": "En la misma universidad fui Auxiliar de Docencia en Diseño de Interfaces — comunicar usabilidad y arquitectura de información a otros me obligó a entender los fundamentos en profundidad. En lo profesional vinieron Qualita Studio (Diseñador Web Jr.) y FutbolTalentPro, donde diseñé el MVP mobile-first colaborando directo con desarrolladores.",
     "hook": "No solo diseño interfaces. Las prototipo en Figma, las valido con usuarios y las codifico en React.",
     "mission": "Busco equipos de producto donde diseño y desarrollo no se hablen por traductor. Mi objetivo: cerrar la brecha entre UX y código — handoffs limpios, decisiones de diseño técnicamente viables desde el día uno.",
-    "location_label": "Ubicación",
-    "location": "Buenos Aires, Argentina"
+    "toolkit_label": "Lo que traigo",
+    "toolkit_1_title": "Diseño de producto",
+    "toolkit_1_desc": "Research, IA, sistemas y prototipado. De insight a interfaz.",
+    "toolkit_2_title": "Frontend con criterio",
+    "toolkit_2_desc": "React, Next, Tailwind. Handoff sin traducción.",
+    "toolkit_3_title": "Producto end-to-end",
+    "toolkit_3_desc": "De research a deploy. Decisiones de diseño viables desde el día uno."
   },
   "stack": {
     "title": "Tecnologías que Utilizo"
