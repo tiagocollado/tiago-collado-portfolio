@@ -1,28 +1,31 @@
 'use client'
 
 /**
- * About
- * -----
- * Sección "Sobre mí" — diseñada para escaneabilidad en patrón F:
- *  - <header> con eyebrow + claim (lo primero que lee un reclutador).
- *  - 4 bloques de copy cortos (Ley de Miller — chunks digeribles), con el
- *    "hook" diferenciador en bold como focal point.
- *  - <aside> con la lista de áreas de práctica — sin chrome de botón
- *    (no son interactivas, deben leerse como label tipográfico).
- *  - <footer> con ubicación.
+ * About — versión 3.0
+ * -------------------
+ *  Layout 2 columnas en lg+:
+ *   - IZQUIERDA: 4 bloques de copy (Miller — chunks) + ubicación al final.
+ *   - DERECHA: 3 cards distribuidas en grid-rows-3 — ocupan la misma
+ *     altura que la columna izquierda (Similitud + Proximidad).
+ *
+ *  Sin H2 claim — la copy entra directo (Estética-Usabilidad: menos
+ *  cromo, más contenido). El eyebrow "Sobre mí" es el h2 semántico
+ *  (mono micro), section marker, no protagonista.
  */
 
 import { useTranslations } from 'next-intl'
+import { motion } from 'framer-motion'
 import FadeInSection from '../ui/FadeInSection'
 
-const PRACTICE_AREAS = [
-  { num: '01', label: 'UX / UI' },
-  { num: '02', label: 'Frontend Dev' },
-  { num: '03', label: 'Product Design' },
+const TOOLKIT_ITEMS = [
+  { num: '01', titleKey: 'toolkit_1_title' },
+  { num: '02', titleKey: 'toolkit_2_title' },
+  { num: '03', titleKey: 'toolkit_3_title' },
 ] as const
 
 export default function About() {
   const t = useTranslations('about')
+  const tc = useTranslations('contact')
 
   return (
     <section
@@ -33,100 +36,112 @@ export default function About() {
       <div className="max-w-6xl mx-auto">
         <FadeInSection>
 
-          {/* Header — eyebrow + claim. Top de la "F", primero en escanear. */}
-          <header className="mb-10 md:mb-14">
-            <p
-              className="text-xs font-mono tracking-[0.2em] uppercase mb-4"
-              style={{ color: 'var(--color-accent)' }}
-            >
-              {t('title')}
-            </p>
-            <h2
-              id="about-heading"
-              className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.05]"
-              style={{ color: 'var(--ink-primary)' }}
-            >
-              {t('claim')}
-            </h2>
-          </header>
+          {/* Section marker — el h2 semántico es el eyebrow micro */}
+          <h2
+            id="about-heading"
+            className="text-xs font-mono tracking-[0.2em] uppercase mb-10 md:mb-14"
+            style={{ color: 'var(--color-accent)' }}
+          >
+            {t('title')}
+          </h2>
 
-          {/* Grid: copy a la izquierda, áreas de práctica a la derecha */}
-          <div className="grid grid-cols-1 lg:grid-cols-[6fr_1fr] gap-12 lg:gap-20 items-start">
+          {/* Grid 2 columnas: copy/ubicación · cards distribuidas */}
+          <div className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-12 lg:gap-16 items-stretch">
 
-            {/* Copy — 4 bloques cortos */}
-            <div className="space-y-6 max-w-prose">
+            {/* Izquierda: copy + ubicación al final */}
+            <div className="flex flex-col">
+              <div className="space-y-6 max-w-prose">
+                <p
+                  className="text-lg md:text-xl leading-relaxed"
+                  style={{ color: 'var(--ink-secondary)' }}
+                >
+                  {t('background')}
+                </p>
+                <p
+                  className="text-lg md:text-xl leading-relaxed"
+                  style={{ color: 'var(--ink-secondary)' }}
+                >
+                  {t('hybrid_path')}
+                </p>
+                {/* Hook — focal point en bold + display */}
+                <p
+                  className="font-display text-xl md:text-2xl font-semibold leading-snug"
+                  style={{ color: 'var(--ink-primary)' }}
+                >
+                  {t('hook')}
+                </p>
+                <p
+                  className="text-lg md:text-xl leading-relaxed"
+                  style={{ color: 'var(--ink-secondary)' }}
+                >
+                  {t('mission')}
+                </p>
+              </div>
+
+              {/* Ubicación al final de la columna izquierda */}
               <p
-                className="text-lg md:text-xl leading-relaxed"
-                style={{ color: 'var(--ink-secondary)' }}
+                className="flex items-center gap-3 text-sm font-mono tracking-wide mt-10 md:mt-12"
+                style={{ color: 'var(--ink-muted)' }}
               >
-                {t('background')}
-              </p>
-
-              <p
-                className="text-lg md:text-xl leading-relaxed"
-                style={{ color: 'var(--ink-secondary)' }}
-              >
-                {t('hybrid_path')}
-              </p>
-
-              {/* Hook — focal point en bold + display, foco visual del bloque. */}
-              <p
-                className="font-display text-xl md:text-2xl font-semibold leading-snug"
-                style={{ color: 'var(--ink-primary)' }}
-              >
-                {t('hook')}
-              </p>
-
-              <p
-                className="text-lg md:text-xl leading-relaxed"
-                style={{ color: 'var(--ink-secondary)' }}
-              >
-                {t('mission')}
+                <span className="uppercase tracking-[0.18em]">{tc('location_label')}</span>
+                <span aria-hidden>·</span>
+                <span style={{ color: 'var(--ink-secondary)' }}>{tc('location')}</span>
               </p>
             </div>
 
-            {/* Áreas de práctica — lista numerada editorial, sin chrome de botón */}
-            <aside aria-label="Áreas de práctica">
-              <ul>
-                {PRACTICE_AREAS.map(({ num, label }, i) => (
-                  <li
-                    key={label}
-                    className="flex items-baseline gap-4 py-4"
-                    style={{
-                      borderBottom: i < PRACTICE_AREAS.length - 1
-                        ? '1px solid var(--border-default)'
-                        : 'none',
-                    }}
+            {/* Derecha: 3 cards content-height, gap generoso, animación
+                decorativa one-shot en scroll-in (no hover — no son botones) */}
+            <div className="flex flex-col gap-8 md:gap-12">
+              {TOOLKIT_ITEMS.map(({ num, titleKey }, i) => (
+                <motion.article
+                  key={num}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-50px' }}
+                  transition={{
+                    duration: 0.6,
+                    delay: i * 0.12,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                  className="flex flex-col p-5 md:p-6 rounded-xl"
+                  style={{
+                    border: '1px solid var(--border-default)',
+                    backgroundColor: 'var(--color-surface)',
+                  }}
+                >
+                  <span
+                    className="font-mono text-xs tracking-wider"
+                    style={{ color: 'var(--color-accent)' }}
                   >
-                    <span
-                      className="font-mono text-sm tracking-wider"
-                      style={{ color: 'var(--color-accent)' }}
-                    >
-                      {num}
-                    </span>
-                    <span
-                      className="font-display text-base md:text-lg font-medium"
-                      style={{ color: 'var(--ink-primary)' }}
-                    >
-                      {label}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </aside>
-          </div>
+                    {num}
+                  </span>
+                  {/* Línea accent decorativa — se dibuja de izq a der */}
+                  <motion.div
+                    initial={{ scaleX: 0 }}
+                    whileInView={{ scaleX: 1 }}
+                    viewport={{ once: true, margin: '-50px' }}
+                    transition={{
+                      duration: 0.6,
+                      delay: 0.3 + i * 0.12,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                    className="h-px w-8 mt-3"
+                    style={{
+                      backgroundColor: 'var(--color-accent)',
+                      transformOrigin: 'left',
+                    }}
+                  />
+                  <h3
+                    className="font-display text-base md:text-lg font-semibold leading-tight mt-4"
+                    style={{ color: 'var(--ink-primary)' }}
+                  >
+                    {t(titleKey)}
+                  </h3>
+                </motion.article>
+              ))}
+            </div>
 
-          {/* Ubicación al final */}
-          <footer className="mt-12 md:mt-16">
-            <p
-              className="flex items-center gap-3 text-sm font-mono tracking-wide"
-              style={{ color: 'var(--ink-muted)' }}
-            >
-              <span className="uppercase tracking-[0.18em]">{t('location_label')}</span>
-              <span aria-hidden>·</span>
-              <span style={{ color: 'var(--ink-secondary)' }}>{t('location')}</span>
-            </p>
-          </footer>
+          </div>
 
         </FadeInSection>
       </div>
