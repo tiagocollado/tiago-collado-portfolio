@@ -127,10 +127,10 @@ Tiago todavía está estudiando y la programación no es su gran fuerte. **El c�
 
 ---
 
-## 📍 Dónde estamos ahora — última sesión: 2026-04-29
+## 📍 Dónde estamos ahora — última sesión: 2026-04-30
 
 ### Estado del proyecto
-**Polish visual avanzado.** Cards, About 3.0 (75/25 grid + toolkit cards animadas) y favicon (T terracota geométrica) listos. Lo que sigue es contenido (mockups, métricas) o reestructura textual (case studies). Bases técnicas sólidas — i18n con paridad, animaciones decorativas funcionando, Tailwind v4 sin bugs de cascade, sin inline-style workarounds. Pendiente principal: mockups definitivos de 3 covers provisorios + métricas reales para sumar peso a los case studies.
+**Polish visual avanzado.** Cards, About 3.0 (75/25 grid + toolkit cards animadas), favicon (T terracota), case studies reescritos con leyes UX (B2) y quick fixes (B2.5: CTAs arriba, project nav abajo, Behance eliminado, FutbolTalentPro polish) listos. Bases técnicas sólidas — i18n con paridad, animaciones decorativas funcionando, Tailwind v4 sin bugs de cascade, server-component-friendly (CSS group-hover en lugar de Framer donde se puede). Próximo gran salto: **C2 — Rediseño Awwwards-style de las páginas de case study** (sidebar metadata + scroll-driven image reveals); el usuario va a mandar URLs de referencia y triar imágenes disponibles.
 
 ### ✅ Tandas completadas
 1. **Saneamiento técnico** — CSS vars rotas, spacing normalizado, dead code removido (CustomCursor, Toggles), Devicon CDN reemplazado. Bump lucide 1.9 → 1.11.
@@ -191,6 +191,17 @@ Tiago todavía está estudiando y la programación no es su gran fuerte. **El c�
     - **Footer site-wide**: ubicación NO va en Footer (queda solo en About). Footer = links + divider + copyright.
     - **i18n**: keys `claim`, `location_label`, `location` removidas del bloque about (location se levanta de `contact.*`). Sumadas keys `toolkit_label`, `toolkit_1_title/2_title/3_title`, `toolkit_1_desc/2_desc/3_desc` (descs como placeholder).
     - **Heurísticas aplicadas**: Miller (4 bloques copy + 3 cards), Estética-Usabilidad (sin H2 claim — copy directa), Similitud + Proximidad (3 cards iguales con número+línea+título agrupados), Jakob (CV-style location al final).
+11. **B2 — Reescritura de case studies con leyes UX** (commit pendiente):
+    - **Renderer custom** en `src/app/[locale]/projects/[slug]/page.tsx` parsea sintaxis liviana en strings de i18n: `## Texto` → h3, `- Texto` → bullet (con marker `—` accent), línea vacía → separa bloques. Sin sumar dependencias.
+    - **Renames de UX section labels**: `02 Propuesta de valor` → **Mi rol y contexto** (Jakob, match con content), `03 Insight` → **Desafíos y decisiones** (voz activa), `05 Impacto` → **Resultados y aprendizajes** (honestidad — sin métricas reales no exagerar).
+    - **Reescritura de los 5 `solution`** (ES + EN): bullets para FutbolTalentPro y Multibrand DS; split `## Arquitectura técnica` + `## Decisiones de interfaz` para El Ritual del Tono; `## Integración en el flujo` + `## Prototipo y sistema visual` para Cabify; `## Arquitectura de información` + `## Decisiones de accesibilidad` para Recuérdalo.
+12. **B2.5 — Quick fixes en case studies** (commit pendiente):
+    - **Header duplicado resuelto**: Gallery ahora usa `case_study.gallery_title` ("Galería"/"Gallery"); el bottom-section "Demostración del proyecto" se eliminó entera y `demo_title`/`demo_placeholder` se removieron.
+    - **CTAs movidos al top** (debajo de tagline): pills compactos con `view_live`, `view_github_frontend`, `view_github_backend`. Cabify queda sin CTAs (decisión: side effect de eliminar Behance).
+    - **Bottom navigation nuevo**: card prominente "Próximo proyecto: {nombre}" con flecha animada + link sobrio "Ver todos los proyectos". Helper `getNextProject` con wrap-around (recuérdalo → futbol-talent-pro). Filtra `comingSoon`.
+    - **Behance eliminado por completo**: keys `view_behance` (de `case_study` y `projects`) borradas, prosa de Cabify reescrita ("se documentó como caso de estudio" en vez de "publicado en Behance"), field `behance` removido de `Project.links` type y de `projects.ts` (Cabify), CLAUDE.md actualizado.
+    - **Back link animado** vía CSS `group-hover` (no Framer — page.tsx es server component). Mismo patrón en CTA "Próximo proyecto" (flecha derecha) y "Ver todos los proyectos" (flecha izquierda).
+    - **FutbolTalentPro polish**: emojis `(⚽🏆🔥)` removidos del texto del `process`; "40 pantallas" → "+30 pantallas" en es.json, en.json y projects.ts (3 lugares × 2 idiomas = 6 lugares).
 
 ---
 
@@ -215,7 +226,7 @@ Tiago todavía está estudiando y la programación no es su gran fuerte. **El c�
 | **D7** | **isadeburgh-style "get in touch" rotativo en Navbar** | Código | 30 min | Inspiración de Tiago: texto que rota in-place, pausa en hover, click va al mail. |
 | **E** | Easter egg, Vercel Analytics, dominio NIC.ar custom | Varía | — | Cuando estén ganas / tiempo / decisión. |
 
-**Recomendación de orden**: B1 (Tiago, generar mockups) → B2 (próxima sesión de código — case studies con leyes UX explícitas) → C1 (cuando Tiago pase data de WordPress projects) → D5 / D7 / D4 (animation polish global, ver eje cross-cutting al inicio).
+**Recomendación de orden** (actualizado 2026-04-30): C2 desbloqueado (Tiago subió `casestudy_reference.png` y va a mandar URLs Awwwards específicas) — es la próxima sesión grande. Camino: **C2 (Awwwards-style redesign)** → B1 (Tiago genera mockups en paralelo) → C1 (cuando pase data WordPress) → D5 / D7 / D4 (animation polish global).
 
 ---
 
@@ -470,7 +481,7 @@ tiago-collado/
 
 1. **FutbolTalentPro** (FEATURED, celda grande) — UX/UI para startup deportiva, trabajé ad honorem 3 meses, bajo NDA con permiso de mostrar material no sensible
 2. **El Ritual del Tono** — Full-stack MERN (React, Next.js, Node, MongoDB), live demo disponible
-3. **Cabify Music Match** — Concept UX/UI (2023), Behance, prototipo iPhone 14
+3. **Cabify Music Match** — Concept UX/UI (2023), prototipo iPhone 14 (sin CTAs activos: Behance fue removido del portfolio en B2.5)
 4. **Multibrand Design System** — Simulación laboral No Country, equipo multicultural de 6
 5. **Recuérdalo** — Proyecto universitario, UX inclusivo para adultos 70+
 6. **Retro Kicks** (COMING SOON) — En desarrollo, problema con MongoDB Atlas
