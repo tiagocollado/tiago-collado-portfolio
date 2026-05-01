@@ -9,8 +9,8 @@ export const projects: Project[] = [
       en: 'UX/UI platform connecting young players with scouts and clubs.',
     },
     description: {
-      es: 'Diseño end-to-end de una startup de movilidad deportiva: research, wireframes, design system y 40 pantallas en alta fidelidad para tres perfiles de usuario distintos.',
-      en: 'End-to-end design for a sports mobility startup: research, wireframes, design system and 40 high-fidelity screens for three distinct user profiles.',
+      es: 'Diseño end-to-end de una startup de movilidad deportiva: research, wireframes, design system y +30 pantallas en alta fidelidad para tres perfiles de usuario distintos.',
+      en: 'End-to-end design for a sports mobility startup: research, wireframes, design system and 30+ high-fidelity screens for three distinct user profiles.',
     },
     tags: ['UX Research', 'UI Design', 'Design System', 'Figma', 'FigJam'],
     type: 'ux',
@@ -60,9 +60,7 @@ export const projects: Project[] = [
     },
     tags: ['UX Research', 'UI Design', 'Prototyping', 'Figma'],
     type: 'ux',
-    links: {
-      behance: 'https://www.behance.net/gallery/192360257/Cabify-Music-Match-New-Feature-UXUI',
-    },
+    links: {},
     coverImage: '/images/projects/cabify-music-match-cover.jpg',
     gallery: ['/images/gallery/cabify-music-match/1.jpg'],
     year: 2023,

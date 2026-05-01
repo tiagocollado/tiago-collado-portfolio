@@ -80,7 +80,7 @@ export default function Gallery({ slug, images }: GalleryProps) {
               className="font-display text-3xl md:text-4xl font-semibold tracking-tight"
               style={{ color: 'var(--ink-primary)' }}
             >
-              {t('demo_title')}
+              {t('gallery_title')}
             </h2>
           </div>
 

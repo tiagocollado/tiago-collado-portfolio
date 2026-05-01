@@ -14,7 +14,6 @@ export interface Project {
   tags: string[]
   type: 'ux' | 'fullstack' | 'wordpress' | 'coming-soon'
   links: {
-    behance?:    string
     github?:     string
     githubBack?: string
     live?:       string
