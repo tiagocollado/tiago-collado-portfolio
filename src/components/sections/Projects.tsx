@@ -33,17 +33,21 @@ export default function Projects() {
           </div>
         </FadeInSection>
 
-        <FadeInSection delay={0.15}>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 auto-rows-[280px] md:auto-rows-[320px] mt-12 md:mt-16">
-            {sortedProjects.map((project) => (
-              <ProjectCard
-                key={project.slug}
-                project={project}
-                locale={locale}
-              />
-            ))}
-          </div>
-        </FadeInSection>
+        {/* Grid de cards con stagger entre hijos. El `index` que se pasa a
+            cada ProjectCard se traduce en delay incremental (0.08s por card)
+            del whileInView — entran una por una con offset, no todas a la
+            vez como bloque. Patrón consistente con la regla "Stagger en
+            grupos repetidos" del CLAUDE.md. */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 auto-rows-[280px] md:auto-rows-[320px] mt-12 md:mt-16">
+          {sortedProjects.map((project, i) => (
+            <ProjectCard
+              key={project.slug}
+              project={project}
+              locale={locale}
+              index={i}
+            />
+          ))}
+        </div>
 
       </div>
     </section>

@@ -1,16 +1,21 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
+import { motion } from 'framer-motion'
 
 export default function Footer() {
   const t = useTranslations('footer')
 
   return (
-    <footer
+    <motion.footer
       className="py-10 md:py-14 border-t"
       style={{
         borderColor: 'var(--border-default)',
       }}
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
     >
       <div className="flex flex-col items-center px-6">
 
@@ -74,6 +79,6 @@ export default function Footer() {
         </p>
 
       </div>
-    </footer>
+    </motion.footer>
   )
 }
