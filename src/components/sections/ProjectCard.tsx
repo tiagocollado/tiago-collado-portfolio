@@ -15,14 +15,21 @@
 
 import { Project, Locale } from '@/types'
 import { useTranslations } from 'next-intl'
+import { motion } from 'framer-motion'
 import Link from 'next/link'
 
 interface ProjectCardProps {
   project: Project
   locale: Locale
+  /**
+   * Posición de la card en el grid (0-based). Se usa para calcular el delay
+   * incremental del reveal scroll-driven (stagger). Si no se pasa, no hay
+   * stagger — la card aparece sin delay.
+   */
+  index?: number
 }
 
-export default function ProjectCard({ project, locale }: ProjectCardProps) {
+export default function ProjectCard({ project, locale, index = 0 }: ProjectCardProps) {
   const t = useTranslations('projects')
 
   const spanClasses = project.featured
@@ -41,7 +48,15 @@ export default function ProjectCard({ project, locale }: ProjectCardProps) {
     : 'DESIGN'
 
   return (
-    <article
+    <motion.article
+      initial={{ opacity: 0, y: 32 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{
+        duration: 0.6,
+        delay: index * 0.08,
+        ease: [0.16, 1, 0.3, 1],
+      }}
       className={`${spanClasses} relative rounded-2xl overflow-hidden group border transition-all duration-500 ease-out
                   hover:-translate-y-2 hover:shadow-2xl hover:shadow-accent/25 hover:border-accent`}
       style={{
@@ -181,6 +196,6 @@ export default function ProjectCard({ project, locale }: ProjectCardProps) {
           </div>
         </div>
       )}
-    </article>
+    </motion.article>
   )
 }

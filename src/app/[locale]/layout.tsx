@@ -6,6 +6,8 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { Space_Grotesk } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/ui/Navbar'
+import SmoothScrollProvider from '@/components/ui/SmoothScrollProvider'
+import { CursorProvider } from '@/components/ui/CustomCursor'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -57,10 +59,14 @@ export default async function LocaleLayout({
       <body>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <NextIntlClientProvider messages={messages}>
-            <Navbar />
-            <main className="pt-16">
-              {children}
-            </main>
+            <SmoothScrollProvider>
+              <CursorProvider>
+                <Navbar />
+                <main className="pt-16">
+                  {children}
+                </main>
+              </CursorProvider>
+            </SmoothScrollProvider>
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

@@ -80,12 +80,40 @@ export default function InteractiveDotGrid({
     let width = 0
     let height = 0
 
-    // Color leído de la CSS var. Se recalcula si cambia el tema (next-themes
-    // agrega/quita la clase `.dark` en <html>).
+    // Colores leídos de las CSS vars. Se recalculan si cambia el tema
+    // (next-themes agrega/quita la clase `.dark` en <html>).
+    // dotColor: color base del grid. accentColor: color terracota usado en
+    // los dots del cluster cercano al cursor (efecto "highlight on hover").
     let dotColor = 'rgba(138, 134, 128, 1)'
+    let accentRGB: { r: number; g: number; b: number } = { r: 201, g: 106, b: 58 }
+    let baseRGB: { r: number; g: number; b: number } = { r: 138, g: 134, b: 128 }
+
+    // Parsea "rgb(r, g, b)" / "rgba(...)" / "#rrggbb" a {r,g,b}. CSS computed
+    // values devueltos por getPropertyValue son siempre rgb(...) o rgba(...).
+    const parseRGB = (s: string) => {
+      const t = s.trim()
+      if (t.startsWith('#')) {
+        const hex = t.slice(1)
+        return {
+          r: parseInt(hex.slice(0, 2), 16),
+          g: parseInt(hex.slice(2, 4), 16),
+          b: parseInt(hex.slice(4, 6), 16),
+        }
+      }
+      const m = t.match(/[\d.]+/g)
+      if (m && m.length >= 3) {
+        return { r: +m[0], g: +m[1], b: +m[2] }
+      }
+      return { r: 138, g: 134, b: 128 }
+    }
     const readColor = () => {
       const raw = getComputedStyle(document.documentElement).getPropertyValue(colorVar).trim()
-      if (raw) dotColor = raw
+      if (raw) {
+        dotColor = raw
+        baseRGB = parseRGB(raw)
+      }
+      const accent = getComputedStyle(document.documentElement).getPropertyValue('--color-accent').trim()
+      if (accent) accentRGB = parseRGB(accent)
     }
     readColor()
     const themeObserver = new MutationObserver(readColor)
@@ -156,14 +184,33 @@ export default function InteractiveDotGrid({
 
     const render = () => {
       ctx.clearRect(0, 0, width, height)
-      ctx.globalAlpha = opacity
-      ctx.fillStyle = dotColor
+
+      // Scroll fade: opacity baja linealmente entre scrollY 0 y 600 hasta 0.
+      // Se aplica por encima del prop `opacity`, así que el grid se desvanece
+      // a medida que el usuario scrollea fuera del Hero.
+      const scrollY = window.scrollY
+      const scrollFade = Math.max(0, Math.min(1, 1 - scrollY / 600))
+
+      // Idle pulse: el radio de cada dot oscila entre 1× y 1.3× del base con
+      // período 4s (sin continuo). El portfolio "respira". prefers-reduced-
+      // motion → escala fija en 1 (sin pulso).
+      const now = performance.now()
+      const pulseScale = prefersReducedMotion
+        ? 1
+        : 1.15 + 0.15 * Math.sin((now * 2 * Math.PI) / 4000)
+      const drawRadius = dotRadius * pulseScale
+
+      ctx.globalAlpha = opacity * scrollFade
 
       for (const dot of dots) {
         let targetX = dot.homeX
         let targetY = dot.homeY
+        // colorBlend ∈ [0,1]: 1 = dot pegado al cursor, 0 = lejos. Lo usamos
+        // para lerpear entre el color base y el accent terracota — los dots
+        // del cluster cercano al cursor se "tiñen" gradualmente.
+        let colorBlend = 0
 
-        // Solo calculamos repulsión si el cursor está activo.
+        // Solo calculamos repulsión y blend si el cursor está activo.
         if (mouseX > -9000) {
           const dx = mouseX - dot.homeX
           const dy = mouseY - dot.homeY
@@ -176,14 +223,28 @@ export default function InteractiveDotGrid({
             const push = t * t * maxDisplacement
             targetX = dot.homeX - (dx / dist) * push
             targetY = dot.homeY - (dy / dist) * push
+            // Solo el cluster muy cercano (t > 0.5 ≈ mitad interna del radio)
+            // toma color accent. Más allá: blend=0 (color base).
+            if (t > 0.5) colorBlend = (t - 0.5) * 2
           }
         }
 
         dot.x += (targetX - dot.x) * lerpFactor
         dot.y += (targetY - dot.y) * lerpFactor
 
+        // Blend lineal RGB entre base y accent. Más simple y barato que
+        // hacer 2 passes con fillStyle distinto.
+        if (colorBlend > 0) {
+          const r = baseRGB.r + (accentRGB.r - baseRGB.r) * colorBlend
+          const g = baseRGB.g + (accentRGB.g - baseRGB.g) * colorBlend
+          const b = baseRGB.b + (accentRGB.b - baseRGB.b) * colorBlend
+          ctx.fillStyle = `rgb(${r}, ${g}, ${b})`
+        } else {
+          ctx.fillStyle = dotColor
+        }
+
         ctx.beginPath()
-        ctx.arc(dot.x, dot.y, dotRadius, 0, Math.PI * 2)
+        ctx.arc(dot.x, dot.y, drawRadius, 0, Math.PI * 2)
         ctx.fill()
       }
 
