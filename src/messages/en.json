@@ -53,18 +53,18 @@
     "view_github": "View code"
   },
   "case_study_futbol-talent-pro": {
-    "intro": "I designed the MVP for FutbolTalent.Pro: a mobile-first platform that connects young players with scouts and clubs without going through closed networks.",
-    "challenge": "Balancing democratic access with economic sustainability. The founders wanted to maximize paid conversion; I argued for a functional freemium so the product could be validated with real users before asking for money.",
-    "decision_1_title": "Freemium with a low ceiling, not a crippled demo",
-    "decision_1_body": "The free tier had to be useful enough to validate the product before monetizing. Players apply to a limited number of open calls; premium unlocks unlimited applications and training courses.",
-    "decision_2_title": "Progressive search, not a Google of filters",
-    "decision_2_body": "The founders wanted exhaustive filtering by default. I proposed simple search (name, position, region) with 'Advanced filters' for power users. Less cognitive load without losing power.",
-    "decision_3_title": "Gamification through the design system, not decoration",
-    "decision_3_body": "Weekly rankings, badges, and challenges could saturate the interface. Consistent iconography and light/dark support kept the visual clarity without sacrificing engagement.",
-    "delivered_1": "30+ high-fidelity screens for 3 user profiles (player, scout, club)",
-    "delivered_2": "Complete Design System (tokens, components, light/dark)",
-    "delivered_3": "Lo-fi wireframes, flows, and user personas (non-NDA material)",
-    "closing": "The Flutter developer implemented screens in parallel with my work, validating technical feasibility from day one. The founders presented it to investors and got approval to continue. Working under NDA forced me to document the 'why' behind every decision, not just the 'what'."
+    "intro": "I designed the user experience and information architecture for the MVP of a mobile-first platform focused on sports scouting.",
+    "challenge": "Design a scalable MVP connecting three distinct user profiles (players, scouts, and clubs) while maintaining intuitive navigation and low cognitive load. The core technical objective was to ensure all design decisions were 100% viable for agile code implementation.",
+    "decision_1_title": "Scalable information architecture",
+    "decision_1_body": "Instead of exposing all features at once, I structured progressive access flows. This differentiated basic access from advanced features through a clear visual hierarchy.",
+    "decision_2_title": "Progressive search to reduce cognitive load",
+    "decision_2_body": "I proposed a simple, intuitive default search (name, position, region), encapsulating complex options under 'Advanced Filters' for power users.",
+    "decision_3_title": "Gamification supported by a Design System",
+    "decision_3_body": "To prevent cluttering the screen with rankings and badges, I built an atomic design system from scratch (tokens, consistent iconography, light/dark). This kept the interface clean.",
+    "delivered_1": "Key interface designs for 3 user profiles",
+    "delivered_2": "Complete atomic Design System (tokens, components, light/dark)",
+    "delivered_3": "Lo-fi wireframes and user flows (anonymized version)",
+    "closing": "I worked in parallel with the frontend developer, validating the technical feasibility of each screen. Operating under strict confidentiality rules required me to be extremely methodical: rigorously documenting the 'why' behind each UX decision and ensuring a seamless handoff."
   },
   "case_study_el-ritual-del-tono": {
     "intro": "I built a reverse search engine for guitarists: you search by artist and song, and the app returns the full signal chain (guitar, pedals, amplifier) to replicate that exact sound. MERN stack, deployed on Vercel.",
@@ -122,6 +122,20 @@
     "delivered_3": "High-fidelity Figma prototype with every main screen",
     "closing": "Inclusive design isn't an aesthetic layer you add at the end, it's the foundation of a good experience. Designing for the 3 interviewees, with their visual limitations and fragile sequential memory, ended up creating a product that's clearer and more robust for everyone. If I were to redo it: a 'Family Peace-of-Mind System' that links the app with the user's children to reduce family anxiety and strengthen the support network."
   },
+  "case_study_sitios-wordpress": {
+    "intro": "Two WordPress sites with very different scopes: a simple landing for a kosher wine and an institutional site with functional plugins. Same process for both: design first in Figma, implement after.",
+    "challenge": "Each client came with a different brief. Govah needed a one-page landing to introduce the product and capture contact. Pulso Creativo asked for an institutional site with sections, forms, and a direct WhatsApp channel. The question was how to keep the design process clean without letting Elementor dictate the visual decisions.",
+    "decision_1_title": "Figma first, Elementor after",
+    "decision_1_body": "In both cases I started with wireframes and UI in Figma before touching WordPress. That allowed me to validate typography, hierarchy, and layout before fighting the builder's limitations. When it came time to implement, Elementor became an execution tool, not an exploration one.",
+    "decision_2_title": "Functional plugins without bloating the site",
+    "decision_2_body": "Pulso required a contact form + WhatsApp integration. I picked WPForms (lightweight, no bloat) and a WhatsApp plugin with a floating CTA. No extra page builders or libraries that would slow down loading: the site stays fast and forms reach the client's inbox without intermediaries.",
+    "decision_3_title": "End-to-end hosting on Pulso",
+    "decision_3_body": "On Pulso I owned the full setup: Hostinger for hosting and mail, NIC.ar domain, SSL certificates. That meant being the client's only point of contact for the entire site lifecycle. On Govah the scope was tighter: UI design + collaboration with another dev for the Elementor implementation.",
+    "delivered_1": "Govah, one-page landing (govah.com.ar) with a prominent CTA and contact block.",
+    "delivered_2": "Pulso Creativo, multi-section institutional site (pulsocreativo.com.ar) with integrated form and floating WhatsApp CTA.",
+    "delivered_3": "Operational setup on Pulso: hosting, domain, and mail configured for the client.",
+    "closing": "What I take from both projects: WordPress isn't a limitation if the design is solved beforehand. Elementor goes from being a bottleneck to a reasonable tool when you walk in with the visual decision already made in Figma."
+  },
   "about": {
     "title": "About",
     "background": "My first professional role was building the Hotel Real Cafayate digital brand from scratch: positioning, strategy and communication operations for nearly three years. The hotel still runs today on the foundations I set, with an active and automated presence. I learned what makes an audience stay — and I also learned I wanted to be on the other side: building the platforms, not just using them. I'm currently finishing my degree in Multimedia Technology at Universidad Maimónides.",
@@ -135,6 +149,17 @@
     "toolkit_2_desc": "React, Next, Tailwind. No handoff lost in translation.",
     "toolkit_3_title": "End-to-end product",
     "toolkit_3_desc": "From research to deploy. Design decisions viable from day one."
+  },
+  "services": {
+    "label": "Services I offer",
+    "items": [
+      "UX Research",
+      "Prototyping",
+      "UX/UI Designer",
+      "Design Systems",
+      "Frontend Development",
+      "Accessibility"
+    ]
   },
   "stack": {
     "title": "Technologies I use"

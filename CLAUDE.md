@@ -127,26 +127,67 @@ Tiago todavía está estudiando y la programación no es su gran fuerte. **El c�
 
 ---
 
-## 📍 Dónde estamos ahora — última sesión: 2026-05-07 (PM, rework Fases 1-3 + polish)
+## 📍 Dónde estamos ahora — última sesión: 2026-05-08 (rework completo + ServicesMarquee + Sitios WordPress)
 
 ### Estado del proyecto
-**Rework "frontend creativo" — Fases 1-3 ejecutadas** en una sesión chained con check-ins entre cada fase (sesión 2026-05-07 PM). Se siguió el plan en `C:\Users\tiago\.claude\plans\necesito-que-el-portfolio-glistening-donut.md` al pie de la letra. **Próxima sesión arranca con Fase 4** (resto de las secciones del home: stagger granular en Projects/About/Stack/Contact/Footer + magnetic en ProjectCard CTA + blur-in en Gallery + gradient text en Stack + glow pulse en Contact).
+**Rework "frontend creativo" — Fases 1-6 completas**. El plan de `C:\Users\tiago\.claude\plans\necesito-que-el-portfolio-glistening-donut.md` se ejecutó en su totalidad. Sumado en la misma tanda: ServicesMarquee como divider Hero→Projects + nueva card "Sitios WordPress" combinando Govah + Pulso Creativo. **El commit está bloqueado** hasta que Tiago suba el cover + 4 imágenes contextuales del case study WordPress.
 
-**Resumen ejecutivo de lo nuevo hoy** (detalle completo en Tanda 21 abajo):
-- ✅ **Lenis** smooth scroll global (anchors interceptados nativamente). Bypass automático en `prefers-reduced-motion`.
-- ✅ **Custom cursor** dot+ring con variants `default | link | view | drag`, `mix-blend-difference` para invertir sobre cualquier fondo. Solo desktop (`pointer: fine`).
-- ✅ **SplitText** char reveal con word-level wrappers (no rompe mid-word) + sr-only para a11y.
-- ✅ **Magnetic hover** hook reutilizable + **MagneticLink** que combina magnetic + cursor variant.
-- ✅ **Body grain** SVG-noise global tiled, opacity 0.03 (textura papel).
-- ✅ **Navbar simplificado**: h-16 fijo, sin dual-mode, NavLogo izq + Proyectos/Sobre mí/Hablemos centrados + LanguageToggle/theme der separados, hamburger rota.
-- ✅ **NameLogo gigante en Hero**: sticky top-2, shrink scale 1→0.13 en 0–500, fade-out en 405–500, mount con SplitText char reveal blur-in.
-- ✅ **Hero**: H1+H2 con SplitText delay 0.6/1.0, CTA en MagneticLink + tracking expand + chevrons aceleran on hover, dotgrid con idle pulse + scroll fade + accent cluster.
-- ✅ **MarqueeLink** bug fix: hover ahora frena hacia la izquierda hasta x=-copyWidth (label siempre primero); mouse-out retoma loop hacia la derecha sin reversa intermedia.
-- ✅ **Polish**: dotgrid bumpeado a `--ink-secondary` opacity 0.7 (más visible en light), SplitText word-wrap, scrollbar custom theme-aware terracota en hover.
+**Próxima sesión recomendada**: F3 (tipografía nueva — fundación visual) o el redesign Awwwards de About / Contact / Footer (Tiago lo flagó al final de esta sesión, ver Próximos pasos).
 
-**D5 v3-refine RESUELTO** por la simplificación del navbar en Fase 2: ya no hay dual-mode altura-dinámica; el handoff NameLogo (gigante en Hero) ↔ NavLogo (chico en navbar) es scroll-driven puro y no genera la sensación rara que el usuario flagó.
+**Resumen ejecutivo del estado actual**:
 
-**Resto del proyecto** (sin cambios desde la sesión anterior): 5 case studies con layout Awwwards completos + folder rename (projects → covers, gallery → case-study) + 20 imágenes case-study con `src` conectados.
+### Capa "frontend creativo" (Tandas 21-26)
+- ✅ **Lenis** smooth scroll global (anchors interceptados, bypass en reduced-motion, scroll-to-top en route change).
+- ✅ **Custom cursor** dot+ring con variants `default | link | view | drag` (colores sólidos theme-aware, NO mix-blend-difference), reset automático en route change.
+- ✅ **SplitText** char reveal con word-level wrappers + sr-only.
+- ✅ **Magnetic hover** hook + **MagneticLink** wrapper.
+- ✅ **Body grain** SVG-noise global, opacity 0.03.
+- ✅ **MotionConfig reducedMotion="user"** global → todas las animations Framer respetan prefers-reduced-motion automáticamente.
+- ✅ **Scrollbar custom** theme-aware terracota en hover (Firefox aislado con `@supports (-moz-appearance: none)` para no romper webkit en Chrome ≥ 121).
+
+### Hero / Navbar (Tandas 21)
+- ✅ **Navbar simplificado**: h-16 fijo, NavLogo izq + Proyectos/Sobre mí/Hablemos centrados absolute + LanguageToggle/theme der.
+- ✅ **NameLogo gigante en Hero**: sticky top-2, shrink scale 1→0.13 en 0–500, fade-out 405–500, mount con SplitText char reveal blur-in.
+- ✅ **Hero polish**: H1+H2 con SplitText, CTA en MagneticLink + tracking + chevrons aceleran, InteractiveDotGrid con idle pulse + scroll fade + accent cluster.
+
+### ServicesMarquee (Tanda 25)
+- ✅ Divider editorial entre Hero y Projects con servicios separados por bullet `•` accent terracota.
+- ✅ Fondo invertido respecto al page (light mode → dark bg, dark mode → light bg).
+- ✅ Loop infinito hacia la izquierda, velocidad constante (CSS keyframes, no velocity-driven).
+- ✅ 6 servicios reordenados con "Diseñador UX/UI" en posición 3 (anchor visual).
+
+### Home polish (Tanda 22, Fase 4)
+- ✅ Projects header con SplitText H2 + label fade-up.
+- ✅ ProjectCard con cursor variant `view` on hover (con reset on navigation).
+- ✅ About hook con SplitText whileInView.
+- ✅ Stack heading con gradient text ink → accent.
+- ✅ Contact title con SplitText + CTAs con glow pulse + cursor variant `link`.
+- ✅ Footer links con stagger 0.08s + cursor variant `link` + hover color shift accent.
+- ✅ Gallery con blur-in 8px en transición de slide + cursor variants en prev/next.
+
+### Case study polish (Tanda 23, Fase 5)
+- ✅ `<CaseStudyHeader>` (nuevo client component) con cascade entrance: back → type label → H1 SplitText → tagline → CTAs con stagger 0.12s.
+- ✅ `<CaseStudySidebar>` convertido a client + stagger items + bloque Links con cursor variant `link`.
+- ✅ `<CaseStudyImage>` con blur-in scroll-in (filter: blur 12px → 0px, scale 0.98 → 1, 0.9s expo-out, una vez).
+- ✅ `<CaseStudySection>` convertido a client con scroll-in del label + content stagger 0.1s.
+- ✅ Back links: pill ghost (border + bg surface, hover → border accent + text primary + lift).
+- ✅ Card "Próximo proyecto" rediseñada: grid 2-col texto + thumbnail cover desaturado (color en hover).
+- ✅ `<CaseStudyNextNav>` (nuevo client component) — extrae el bloque del page.tsx server para tener cursor variants.
+
+### Polish & QA cross-cutting (Tanda 24, Fase 6)
+- ✅ Cursor variants en todos los Navbar items (NavLink, MarqueeLink, LanguageToggle, theme toggle, hamburger, DropdownLink) + project nav.
+- ✅ Production build limpio (`npm run build` 17 SSG, sin warnings, sin TS errors).
+
+### Sitios WordPress card (Tanda 26)
+- ✅ Card combinada Govah + Pulso Creativo (`type: 'wordpress'`, `featured: true`, `awwwardsLayout: true`, `order: 7`).
+- ✅ Posición row 3 derecha; Retro Kicks `order: 6` (left, single col).
+- ✅ Multi-live URL: extendí `Project.links.live` a `string | Array<{url, label}>`. Sidebar itera y renderea Pulso Creativo + Govah como links separados.
+- ✅ "WordPress Project" label en CaseStudyHeader.
+- ✅ Stack reducido: WordPress, Elementor, Figma. Rol: "Product Design". Team con line break entre Govah/Pulso (`whitespace-pre-line` en sidebar).
+- ✅ Placeholder "BUILDING" en CaseStudyImage (era "TODO · Imagen pendiente"). Muestra `alt` como fallback si no hay description.
+- ⏳ **PENDIENTE Tiago**: cover image + 4 imágenes contextuales del case study.
+
+**Resto del proyecto** (sin cambios desde la sesión anterior): 5 case studies UX/Fullstack con layout Awwwards completos + 20 imágenes case-study con `src` conectados.
 
 ### ✅ Tandas completadas
 1. **Saneamiento técnico** — CSS vars rotas, spacing normalizado, dead code removido (CustomCursor, Toggles), Devicon CDN reemplazado. Bump lucide 1.9 → 1.11.
@@ -352,6 +393,59 @@ Tiago todavía está estudiando y la programación no es su gran fuerte. **El c�
       - **Navbar links centrados**: separados visualmente del LanguageToggle / theme con `absolute left-1/2 -translate-x-1/2` para el grupo central. Antes los 3 links + 2 toggles estaban todos a la derecha pegados.
       - **Scrollbar custom** ([globals.css](src/app/[locale]/globals.css)): `::-webkit-scrollbar` ancho 10px, thumb `color-mix(--ink-muted, 50%)` con border transparente 2px (efecto pill 6px visible), hover sólido `--color-accent`, active `--color-accent-hover`, transición 0.2s. Para Firefox: `scrollbar-width: thin` + `scrollbar-color` dentro de `@supports (-moz-appearance: none)` — necesario porque la prop standard `scrollbar-width` IGNORA las reglas `::-webkit-scrollbar` en Chrome ≥ 121, así que la aislamos a Firefox.
     - **Pendiente próxima sesión**: Fase 4 (resto del home — Projects/About/Stack/Contact/Footer/Gallery con stagger granular + magnetic CTA en ProjectCard + blur-in en Gallery + gradient text en Stack heading + glow pulse en Contact CTAs).
+22. **Fase 4 — Polish del home (Projects / About / Stack / Contact / Footer / Gallery)** (sesión 2026-05-08, sin commit):
+    - **Projects**: H2 "statement" ahora es `<SplitText whileInView>` (stagger 0.015, blur-in 4px). Label "PROYECTOS" con fade-up corto antes. Removido el `<FadeInSection>` envolvente para que el header tenga su propio reveal escalonado.
+    - **ProjectCard**: `useCursor()` cambia variant a `view` (ring 80px con pill "VIEW") on hover de cards no-coming-soon. Reset on leave. El pattern existente (lift + shadow accent + image grayscale → color) se mantiene.
+    - **About**: el **hook** (párrafo display bold focal point) ahora es `<SplitText whileInView>` con stagger 0.025 + blur-in. Las cards toolkit ya tenían stagger 0.12s, no se tocaron.
+    - **Stack**: H2 con **gradient text** ink-primary → accent terracota (`linear-gradient 120deg, ... 60% → 100%` con `bg-clip-text text-transparent`). Los primeros chars son ink, el final accent. Theme-aware automático.
+    - **Contact**: H2 con `<SplitText whileInView>`. Email + WhatsApp pills con clase `cta-glow-pulse` (CSS `@keyframes cta-glow 2s ease-in-out infinite` con box-shadow respirando del accent terracota). `useCursor` → `link`. Fallback estático en `prefers-reduced-motion`.
+    - **Footer**: `containerVariants` con `staggerChildren: 0.08` + `childVariants` para cada link/divider/copyright. Hover suma `hover:text-(--color-accent)`. `useCursor` → `link` en cada anchor. Estructura idéntica visualmente.
+    - **Gallery**: `motion.img` ahora con blur-in `filter: blur(8px) → blur(0px)` durante transición de slide. `useCursor` → `link` en botones prev/next. (No se renderea con `awwwardsLayout: true`; es polish para futuros casos sin layout Awwwards.)
+    - **globals.css**: `.cta-glow-pulse:hover` keyframe definido + override para reduced-motion (glow estático sutil).
+23. **Fase 5 — Polish de las páginas de case study** (sesión 2026-05-08, sin commit):
+    - **`<CaseStudyHeader>` nuevo client component** ([src/components/case-study/CaseStudyHeader.tsx](src/components/case-study/CaseStudyHeader.tsx)): encapsula la cabecera entera (back link, type label, H1, tags, tagline, CTAs). Container variant con `staggerChildren: 0.12` + `delayChildren: 0.05`. Cada bloque entra como `motion.*` con fade + slide-up 16px. **H1 ahora es `<SplitText>`** (stagger 0.025, delay 0.35, blur 6px, 0.7s expo-out). El bloque ~140 líneas del page.tsx server fue reemplazado por `<CaseStudyHeader project={project} locale={locale} />`. La page sigue siendo server (SEO/SSG intactos).
+    - **`<CaseStudySidebar>` convertido a client component**: container con `staggerChildren: 0.06` + `delayChildren: 0.5` (arranca después del header). Cada bloque (Cliente / Año / Rol / Duración / Equipo / Stack / NDA / Links) entra escalonado con fade + slide-up 12px. `useTranslations` versión client (next-intl) reemplaza el `await getTranslations` server. Anchors del bloque Links con cursor variant `link` on hover.
+    - **`<CaseStudyImage>` con blur-in scroll-in**: `motion.figure` envolvente con `whileInView` de `opacity 0 → 1`, `filter: blur(12px) → blur(0px)`, `scale: 0.98 → 1`, 0.9s expo-out, una sola vez (`once: true`, margin `-15%`). El parallax interno de la imagen sigue intacto. `useCursor` → `view` al hover.
+    - **`<CaseStudySection>` convertido a client**: `motion.section` con `whileInView` + `staggerChildren: 0.1`. Label entra primero (5s), luego el contenido. Cada sección (Desafío, Decisiones, Lo entregado, Cierre) hace su propio scroll-in.
+    - **Pill ghost en back links** (header + bottom): convertidos de plain text + flecha a `inline-flex items-center gap-2 px-5 py-2.5 rounded-full border` con `bg surface + text secondary` en idle, `border accent + text primary + lift -0.5` en hover. Mismo lenguaje que las pills del resto del portfolio. El "Ver todos los proyectos" del bottom apunta a `/${locale}#projects` (con anchor) para aterrizar directo en la grid.
+    - **Card "Próximo proyecto" rediseñada**: grid 2-col con texto izq + thumbnail cuadrada (w-32 lg:w-40 aspect-square) del cover desaturado a la derecha. En hover: thumb scale 1.1 + grayscale → color + opacity 100%. Card hover: lift -2 + border accent + shadow-2xl shadow-accent/15. Layout interno del texto: label + `flex items-baseline gap-4` con título y flecha al lado (no aislada al borde der).
+    - **Nuevo `<CaseStudyNextNav>` client component** ([src/components/case-study/CaseStudyNextNav.tsx](src/components/case-study/CaseStudyNextNav.tsx)): extrae el bloque "Próximo proyecto" + "Ver todos" del page.tsx server al cliente para tener cursor variants en hover. La page sigue siendo server.
+24. **Fase 6 — Polish & QA cross-cutting** (sesión 2026-05-08, sin commit):
+    - **`<MotionConfig reducedMotion="user">` global** ([CustomCursor.tsx](src/components/ui/CustomCursor.tsx) dentro del CursorProvider): hace que TODAS las animaciones de Framer Motion respeten `prefers-reduced-motion`. Sin esto, Framer ignora la regla CSS global de globals.css porque sus animaciones son JS-driven (rAF), no CSS transitions. Ahora chevrons / parallax / SplitText / magnetic / viewport reveals / dropdown stagger se neutralizan automáticamente.
+    - **Cursor variants pase final en Navbar**: `NavLink` y `DropdownLink` reciben `onMouseEnter/onMouseLeave` opcionales. `MarqueeLink` y `LanguageToggle` envueltos en `<div>` con handlers (sin acoplar a los componentes externos). Theme toggle button + hamburger button con handlers directos. Variant `link` en todos los elementos clickeables.
+    - **Cursor variants en project nav** (`<CaseStudyNextNav>` mencionado en Tanda 23).
+    - **Production build audit**: `npm run build` corre limpio. TS check OK, 17 SSG estáticas, sin warnings. El bundle se mantiene estático completo (todas `○ Static` o `● SSG`).
+    - **Side fix de housekeeping**: maté procesos `node.exe` huérfanos que quedaron de sesiones previas, borré `.next/` y rearranqué dev limpio. Bug de `Can't resolve 'tailwindcss'` post-build era cache corrupta de Turbopack — pasa cuando build y dev compiten por `.next/`.
+25. **ServicesMarquee — divider editorial entre Hero y Projects** (sesión 2026-05-08, sin commit):
+    - **Componente nuevo** ([src/components/sections/ServicesMarquee.tsx](src/components/sections/ServicesMarquee.tsx)): full-bleed marquee con servicios separados por bullet `•` accent terracota.
+    - **Behavior final**: loop infinito hacia la izquierda a velocidad constante (CSS keyframes, mismo pattern que Stack carousel). El primer intento fue velocity-driven (Framer ParallaxText con useScroll + useVelocity + useSpring + useAnimationFrame + wrap) pero Tiago lo descartó porque el feel del scroll-up reverse era "raro". CSS keyframe es más simple, predecible, liviano. Sin pause en hover (decisión del usuario).
+    - **Estilo cinemático**: `backgroundColor: var(--ink-primary)` + `color: var(--bg-primary)` → bg invertido respecto al page (en light mode queda dark con texto crema; en dark queda crema con texto dark). Theme-aware automático sin reglas duplicadas. Sin `border-y` (el bloque inverso se separa solo).
+    - **Tipografía**: `font-display font-semibold tracking-tight text-2xl md:text-4xl lg:text-5xl`.
+    - **6 servicios reordenados** (con "Diseñador UX/UI" en posición 3 como anchor visual):
+      - ES: `[UX Research, Prototipado, Diseñador UX/UI, Sistemas de diseño, Desarrollo Frontend, Accesibilidad]`
+      - EN: `[UX Research, Prototyping, UX/UI Designer, Design Systems, Frontend Development, Accessibility]`
+    - **Iteración del separador**: empezó con `°` (Carolina) → cambió a `+` (geométrico) → cambió a `/` (slash editorial) → final `•` (bullet, decisión del usuario).
+    - **i18n**: bloque `services` con `label` (aria-label) + `items[]` array en es.json y en.json.
+    - **Montado en page.tsx**: entre `<Hero />` y `<Projects />`.
+    - **prefers-reduced-motion**: cubierto vía la regla CSS global de globals.css que neutraliza `animation-duration` a 0.01ms.
+26. **Sitios WordPress card (Govah + Pulso) + scroll-to-top fix + multi-live URL** (sesión 2026-05-08, sin commit):
+    - **Decisión arquitectural**: ✅ una sola card combinada (no dos separadas). El target del portfolio es UX/UI + Frontend; dedicarles 2 cards diluiría el peso de las 4 cases UX heavyweight. El narrative diferencia los dos scopes: Govah 2024 (UI Figma + Elementor en pareja con un dev), Pulso 2026 (end-to-end: diseño + Elementor + plugins WPForms/WhatsApp + Hostinger + dominio NIC.ar).
+    - **Nueva entry en projects.ts** (`sitios-wordpress`):
+      - `featured: true` → col-span-2.
+      - `type: 'wordpress'`, `awwwardsLayout: true`, `order: 7`.
+      - `coverImage: null` mientras Tiago no suba el archivo (evita 404).
+      - `metadata.role` = "Product Design" (decisión del usuario, role broader than disciplinas individuales).
+      - `metadata.team` con `\n` entre Govah y Pulso → renderea como salto de línea en sidebar gracias a `whitespace-pre-line`.
+      - `metadata.stack` = `['WordPress', 'Elementor', 'Figma']` (saqué WPForms + Hostinger; siguen mencionados en body).
+      - 4 `imageBriefs` con `alt` ES + EN, sin `src` → placeholder "BUILDING" del CaseStudyImage.
+    - **Retro Kicks order 6 → 7 swap**: Tiago pidió Retro Kicks a la izquierda y WordPress a la derecha. Final layout row 3: `[Retro Kicks single col-1] [Sitios WordPress featured cols-2-3]`.
+    - **Type extension** ([src/types/index.ts](src/types/index.ts)): `Project.links.live` ahora es `string | Array<{url, label}>`. Caso normal (string) compatible 1-a-1 con los 5 entries existentes; caso array para sitios-wordpress que muestra Pulso Creativo + Govah como links separados en el sidebar. Type guard agregado en CaseStudyHeader.tsx (path non-awwwards).
+    - **CaseStudySidebar**: itera el array `live` cuando es array, fallback a un solo item cuando es string. Cada link respeta su propio `label` específico (Pulso Creativo / Govah).
+    - **CaseStudyHeader**: sumada branch `wordpress` en el `typeLabel` → "WordPress Project" (antes caía a "Design Project" como fallback).
+    - **CaseStudyImage placeholder**: "TODO · Imagen pendiente" reemplazado por "· BUILDING ·". Muestra `alt` como fallback si no hay `description`.
+    - **Scroll-to-top en navegación** ([SmoothScrollProvider.tsx](src/components/ui/SmoothScrollProvider.tsx)): `usePathname` + `useEffect` que dispara `lenis.scrollTo(0, { immediate: true })` en cada cambio de ruta. Fallback `window.scrollTo(0, 0)` si Lenis no instanció (reduced-motion). Resuelve el bug de "entré a un proyecto y no arranca arriba" porque Lenis mantenía su internal scroll state entre rutas.
+    - **i18n**: bloque `case_study_sitios-wordpress` con las 12 keys (intro, challenge, 3 decisions title+body, 3 delivered, closing) en es.json + en.json. Texto sin "clientes reales" / "real clients" (decisión del usuario para no implicar que los otros proyectos no son reales).
+    - **PENDIENTE Tiago**: cover (`/images/covers/sitios-wordpress-cover.jpg`) + 4 imágenes contextuales (`/images/case-study/sitios-wordpress/0[1-4]-*.jpg`). El commit está bloqueado hasta que estén.
 
 ---
 
@@ -363,7 +457,7 @@ Tiago todavía está estudiando y la programación no es su gran fuerte. **El c�
 |---|---|---|---|---|
 | **B1** | **Reemplazar covers provisorios** (FutbolTalentPro / Multibrand / Recuérdalo) | Tarea de Tiago | — | NO es código. Tiago tiene que generar/elegir mockups y reemplazar los archivos en `public/images/projects/{slug}-cover.jpg`. Hasta que lleguen, las cards muestran covers débiles. |
 | **B3** | **Sumar métricas + handoff destacado en FutbolTalentPro** | Código + copy | 30 min | **Bloqueado**: Tiago tiene que pasar números reales (% éxito en testing, tiempo ahorrado, etc.) y detalle de qué subió al handoff (tokens, components, doc). Si no hay data real, se puede saltar. |
-| **C1** | **Agregar Govah + Pulso Creativo** como proyectos WordPress | Código + data | 45 min | Tiago decidió incluirlos. Links: govah.com.ar / pulsocreativo.com.ar. Necesito de Tiago: tagline, descripción, tags, screenshot/cover, año, qué hizo él específicamente. Ambos son clientes reales. |
+| **C1** | ~~Agregar Govah + Pulso Creativo como proyectos WordPress~~ | Código | — | ✅ **COMPLETO en código** (2026-05-08, Tanda 26). Una card combinada `sitios-wordpress` featured 2-col, row 3 derecha. `links.live` array Pulso + Govah. Stack reducido a WordPress/Elementor/Figma. ⏳ **Pendiente Tiago**: cover + 4 imágenes contextuales (sin eso el commit está bloqueado). |
 | **C2** | ~~Rediseño Awwwards-style de case studies~~ | Código | — | ✅ **COMPLETO** (2026-05-02). Los 5 case studies migrados con tono refinado. Detalle en Tanda 14. |
 | **C2-img** | **Subir las 20 imágenes contextuales** (4 × 5 case studies) | Tarea de Tiago | — | NO es código. Tiago genera con Nano Banana / Gemini Pro / screenshots reales según [image-briefs.md](image-briefs.md). Subir a `public/images/case-study/{slug}/`. Después yo agrego `src` a cada brief en `projects.ts` y commit. |
 | **C2-cleanup** | ~~Borrar branch legacy en `page.tsx` + helpers + i18n labels viejas~~ | Código | — | ✅ **COMPLETO** (2026-05-02). page.tsx bajó de 598 → 358 líneas. Detalle en Tanda 16. |
@@ -380,18 +474,21 @@ Tiago todavía está estudiando y la programación no es su gran fuerte. **El c�
 | **F4** | ~~Toggle idioma ES/EN como segmented pill~~ | Código | — | ✅ **COMPLETO** (2026-05-07). `<LanguageToggle />` componente nuevo, reemplaza al botón viejo en navbar inline + dropdown hamburguesa. Detalle en Tanda 20. |
 | **D6** | ~~CustomCursor reimplementación~~ | Código | — | ✅ **COMPLETO** (2026-05-07 PM, Tanda 21) — `<CursorProvider>` + `<CustomCursor>` con dot+ring + variants `default | link | view | drag` + `mix-blend-difference`. |
 | **D7** | ~~Navbar marquee link estilo isadeburgh~~ | Código | — | ✅ **COMPLETO** (2026-05-02). `<MarqueeLink>` con loop infinito + hover frena hacia la izquierda hasta label-aligned + mouse-out retoma loop derecho directo (sin reversa intermedia). Bug fix final en Tanda 21. |
-| **Fase 4** | **Resto del home — Projects/About/Stack/Contact/Footer/Gallery polish** | Código | 90-120 min | Plan en `C:\Users\tiago\.claude\plans\necesito-que-el-portfolio-glistening-donut.md`. Stagger granular en cards/items, magnetic en ProjectCard CTA, blur-in en Gallery, gradient text en Stack heading, glow pulse en Contact CTAs. Próxima sesión. |
-| **Fase 5** | **Case Study pages polish** | Código | 60-90 min | Plan en mismo archivo. SplitText H1, sidebar items stagger, blur-in en CaseStudyImage, cascade entrance en header. |
-| **Fase 6** | **Polish & QA cross-cutting** | Código | 60 min | Plan en mismo archivo. Cursor variants en todos los links/images, audit `prefers-reduced-motion`, audit Lighthouse, ajustes finales de timings. |
+| **Fase 4** | ~~Resto del home — Projects/About/Stack/Contact/Footer/Gallery polish~~ | Código | — | ✅ **COMPLETO** (2026-05-08, Tanda 22). Stagger granular, cursor variants, blur-in Gallery, gradient text Stack, glow pulse Contact. |
+| **Fase 5** | ~~Case Study pages polish~~ | Código | — | ✅ **COMPLETO** (2026-05-08, Tanda 23). CaseStudyHeader cascade + SplitText H1, Sidebar stagger, CaseStudyImage blur-in, CaseStudySection scroll-in, pill ghost back links, Next project con thumbnail cover. |
+| **Fase 6** | ~~Polish & QA cross-cutting~~ | Código | — | ✅ **COMPLETO** (2026-05-08, Tanda 24). MotionConfig reducedMotion="user" global + cursor variants pase final + production build limpio (17 SSG). Lighthouse audit real queda pendiente como tarea manual (Tiago corre DevTools cuando quiera). |
+| **C1-img** | **Subir cover + 4 imágenes Sitios WordPress** | Tarea de Tiago | — | NO es código. `/images/covers/sitios-wordpress-cover.jpg` + `/images/case-study/sitios-wordpress/0[1-4]-{name}.jpg`. **Bloquea el commit actual** (Fases 4-6 + ServicesMarquee + WP card + scroll-to-top). |
+| **G1** | **Redesign Awwwards-level de About / Contact / Footer** | Código + decisión | 90-120 min | Tiago lo flagó al final de la sesión 2026-05-08 — sintió que estas 3 secciones no están al mismo nivel "premium" que el resto del rework. Antes de codear: revisar refs `casestudy*_reference.png` + `about_reference*` + URLs de carolinalevinsky, mikekus, joonassandell, isadeburgh, alejandromejias, henriheymans, silviasguotti, yaremenko. Identificar 2-3 patrones concretos a aplicar (ej. About con copy partida + imagen, Contact full-bleed con mailto gigante, Footer con marquee de redes + sitemap minimal). Charlar approach antes de codear. |
 | **E** | Easter egg, Vercel Analytics, dominio NIC.ar custom | Varía | — | Cuando estén ganas / tiempo / decisión. |
 
-**Recomendación de orden** (actualizado 2026-05-07 PM, fin sesión Tanda 21): Fases 1-3 + D4 + D5 v3 + D5 v3-refine + D6 + D7 + F1 + F2 + F4 COMPLETOS. Lo que falta:
-1. **Fase 4** (resto del home — Projects/About/Stack/Contact/Footer/Gallery polish) — próxima sesión.
-2. **Fase 5** (case study pages polish).
-3. **Fase 6** (polish & QA cross-cutting).
-4. **F3** (tipografía nueva) — independiente de las fases del rework, charlar combo antes.
-5. Backlog menor (D1 / D3 / D6 / C3 / cleanup CLAUDE.md) en sesiones cortas post-commit.
-6. C1 / B1 / B3 cuando lleguen data/mockups de Tiago.
+**Recomendación de orden** (actualizado 2026-05-08, fin sesión Tandas 22-26): rework "frontend creativo" COMPLETO en código (Fases 1-6 + ServicesMarquee + Sitios WordPress + scroll-to-top fix). Lo que falta:
+1. **C1-img** (cover + 4 imágenes Sitios WordPress) — Tiago. Desbloquea el commit grande.
+2. **F3** (tipografía nueva) — fundación visual, charlar combo antes.
+3. **G1** (redesign Awwwards About / Contact / Footer) — Tiago lo flagó como flojo. Refs ya están en `public/images/references/`. Charlar approach antes.
+4. **C2-img** (las 20 imágenes case-study) y **B1** (covers definitivos) — ya están parcialmente cubiertas (las imágenes de los 5 case studies UX/Fullstack ya están conectadas; faltan los 3 covers + WP).
+5. **Lighthouse audit real** — manual, Tiago en DevTools cuando quiera.
+6. Backlog menor (D1 / D2 / D3 / C3) en sesiones cortas post-commit.
+7. B3 cuando Tiago tenga métricas reales de FTP.
 
 ---
 
@@ -457,6 +554,19 @@ Lecciones concretas de equivocaciones que ya nos comieron tiempo:
 
 #### 15. Lenis y `scroll-behavior: smooth` se pelean
 - **Lección**: cuando agregás Lenis (smooth scroll lerpeado por JS), **sacá `scroll-behavior: smooth` del `html`**. Las dos animaciones compitiendo se sienten raras y Next 16 además flagea el warning sobre `data-scroll-behavior`. Si en algún momento se quita Lenis y se quiere volver al smooth nativo, agregar `data-scroll-behavior="smooth"` en `<html>` (atributo, no la regla CSS), porque Next lo respeta solo en navegación intra-app.
+
+#### 16. Lenis NO resetea scroll entre rutas — hay que forzarlo
+- **Error**: cuando el usuario navegaba desde el home a un case study, la página NO arrancaba arriba — quedaba en el scroll position donde estabas. Esperábamos que Next App Router resetee el scroll por default (lo hace para navegación nativa), pero Lenis mantiene su propio internal scroll state que persiste entre rutas.
+- **Lección**: en `SmoothScrollProvider`, agregar `usePathname` + `useEffect` que dispare `lenis.scrollTo(0, { immediate: true })` en cada cambio de path. Fallback `window.scrollTo(0, 0)` para reduced-motion (Lenis no instanciado). Implementación en [SmoothScrollProvider.tsx](src/components/ui/SmoothScrollProvider.tsx).
+
+#### 17. `mix-blend-difference` falla con colores tema-mid (light beige)
+- **Error**: el custom cursor usaba `mix-blend-difference` con `var(--ink-primary)` (color del texto del tema) para invertir sobre cualquier fondo. En dark mode funcionaba (texto claro sobre fondo oscuro → diff = claro = visible). En **light mode** el fondo `#EDE2CD` (beige cálido) con texto `#111110` (casi negro) daba `diff = (220, 209, 189)` = beige claro casi idéntico al fondo → cursor invisible.
+- **Por qué**: `mix-blend-difference` se diseñó para invertir sobre fondos puros (blanco/negro). Sobre tonos cálidos del medio, el resultado matemático es color similar al fondo. NO funciona universalmente theme-aware.
+- **Lección**: para elementos que deben ser visibles en ambos modos sobre un palette warm beige + dark, usar **colores sólidos theme-aware** (`bg-accent` para el dot, `border-(--ink-primary)` para el ring, con `background-color: color-mix(--bg-primary, 80%)` translúcido para legibilidad del texto encima). Es más predecible que blend modes.
+
+#### 18. CursorContext sticky después de route change
+- **Error**: hacés click en una `<ProjectCard>` (que setea variant `view` on hover), Next navega, la card se desmonta, el `onMouseLeave` NUNCA dispara → el cursor queda eternamente en variant `view` en la siguiente página. Mismo bug aplicable a cualquier componente que setee variant on mouseenter pero confíe en onMouseLeave para resetear.
+- **Lección**: en el `CursorProvider`, agregar `usePathname` + `useEffect` que resetee `setVariant('default')` en cada cambio de path. No hace falta cleanup en cada consumidor — el provider centraliza la solución. Implementación en [CustomCursor.tsx](src/components/ui/CustomCursor.tsx).
 
 ---
 
@@ -537,12 +647,92 @@ Cada sección usa un `max-w-*` distinto en su container interno (Hero `max-w-6xl
 **Decisión (2026-04-25)**: Tiago quiere mantener la escalera y diseñarla **intencionalmente con un patrón pensado**, no dejarla accidental. Pendiente: definir el patrón concreto (ej. Hero más angosto → Projects ancho → About vuelve angosto → Stack ancho → Contact muy angosto, generando un ritmo de zoom in/out). Hay que pensar el ritmo antes de tocar `max-w-*` en los componentes. **Esta tarea está en backlog** — no la abordamos en sesiones de spacing/layout normales.
 
 ### ⚠️ Lo que falta mejorar (DISEÑO VISUAL — prioridad para llegar a nivel Awwwards)
-- **Resto del rework** (Fases 4-6): Projects/About/Stack/Contact/Footer/Gallery con stagger granular + magnetic CTAs + blur-in en images + gradient text en Stack heading + glow pulse en Contact. Plan en `C:\Users\tiago\.claude\plans\necesito-que-el-portfolio-glistening-donut.md`.
-- **Tipografía principal** (F3): Space Grotesk + Geist están bien pero Tiago quiere algo más en tendencia para UX/UI / branding personal.
-- **Mockups definitivos** de covers FutbolTalentPro / Multibrand / Recuérdalo (los 3 provisorios siguen en `public/images/covers/`). Tarea de Tiago.
-- **Métricas en FutbolTalentPro**: bloqueado en data de Tiago (% de éxito en testing, tiempo ahorrado, etc.).
-- **Govah + Pulso Creativo**: agregar como proyectos WordPress (clientes reales). Necesita data de Tiago.
-- **Imágenes**: tanto `Gallery.tsx` como `ProjectCard.tsx` como `CaseStudyImage` usan `<img>` nativo. Migrar a `next/image` para mejorar LCP.
+- **Redesign Awwwards About / Contact / Footer** (G1): Tiago lo flagó al fin de la sesión 2026-05-08 — sintió que estas 3 secciones no están al nivel premium del resto del rework. Pendiente: charlar approach antes de codear, revisar refs visuales (`public/images/references/*`).
+- **Tipografía principal** (F3): Space Grotesk + Geist funcionan pero Tiago quiere algo más en tendencia para UX/UI / branding personal.
+- **Imágenes Sitios WordPress** (C1-img): cover + 4 imágenes contextuales. Bloquea el commit grande actual.
+- **Mockups definitivos** de covers FutbolTalentPro / Multibrand / Recuérdalo (B1): los 3 provisorios siguen en `public/images/covers/`. Tarea de Tiago.
+- **Métricas en FutbolTalentPro** (B3): bloqueado en data de Tiago (% de éxito en testing, tiempo ahorrado, etc.).
+- **Imágenes**: `Gallery.tsx`, `ProjectCard.tsx`, `CaseStudyImage` usan `<img>` nativo. Migrar a `next/image` para LCP (D3, ~30 min, post-commit).
+- **Lighthouse audit real** — manual en DevTools, Tiago cuando quiera. No hay números actuales.
+
+### 📸 Guía de imágenes pendientes (B1 + C1-img)
+
+**Para Tiago — leer antes de generar/elegir cualquier cover o imagen del case study.**
+
+#### Filosofía de covers (qué evitar, qué buscar)
+
+Las project cards del home ya muestran HTML encima del cover (tag pill TYPE + YEAR top-left, título display bottom-left, y en hover aparecen tags + CTA pill). Por eso **el cover NO debe contener información ni texto** — si la imagen tiene texto, compite con el título HTML y se ve sucio.
+
+Lo que SÍ debe hacer el cover:
+- **Comunicar VIBE / CONTEXTO** del proyecto, no features ni copy.
+- **Funcionar desaturado (grayscale) en idle** y con color full en hover (la card aplica el filtro automático). Un cover con buen contraste tonal funciona bien en gris. Uno que depende solo del color queda flat en idle.
+- **Un foco visual dominante**, no un collage de elementos chicos.
+- **No texto legible**. Si hay UI con texto, que sea borroso/contextual, no para leer.
+- **Aspect**: las cards son ~`auto-rows-[280px md:320px]`. Featured (col-span-2) son panorámicas (~16:9 a ~16:7). Singles son más cuadradas (~3:2). Subir imágenes 1920×1200 o similar y `object-fit: cover` se encarga del crop.
+- **Formato**: JPG comprimido, <300kb. WebP si querés más control.
+
+#### Briefs por proyecto
+
+**B1 — covers que hay que reemplazar** (los actuales son provisorios y se ven débiles):
+
+1. **FutbolTalentPro** (`/images/covers/futboltalentpro-cover.jpg`, featured 2-col)
+   - **Idea**: mockup con 2-3 pantallas iPhone flotando en escena oscura/neutral. Una pantalla principal grande + 2 más chicas detrás. Las pantallas con UI del producto pero sin info NDA (wireframes lo-fi, design system tokens, o flujos abstractos).
+   - **Vibe**: tech, deportivo, alta fidelidad.
+   - **Evitar**: el cover provisorio actual.
+
+2. **Multibrand Design System** (`/images/covers/multibrand-cover.jpg`, single col)
+   - **Idea**: tablero Figma desaturado con la paleta de tokens, componentes ordenados en grid. O un specimen tipográfico con jerarquía visible. Algo "sistémico".
+   - **Vibe**: ordenado, designer, profesional.
+   - **Evitar**: nombres del equipo en mockups grupales (esos van adentro del case study si querés).
+
+3. **Recuérdalo** (`/images/covers/recuerdalo-cover.jpg`, single col)
+   - **Idea**: mockup mobile con la UI de Recuérdalo (tipografía grande, contraste alto). Puede ser un mockup limpio sobre fondo neutro. Mejor desktop simulando un screen único, NO un trabajo grupal foto.
+   - **Vibe**: cálido, accesible, humano.
+   - **Evitar**: usar la imagen de presentación de TP universitaria.
+
+**Mantener tal cual** (estos covers ya funcionan):
+- **El Ritual del Tono** — el actual está OK.
+- **Cabify Music Match** — el actual está OK.
+
+**C1-img — cover Sitios WordPress** (`/images/covers/sitios-wordpress-cover.jpg`, featured 2-col, NUEVO)
+
+- **Opción A (recomendada)**: screenshot limpio del hero de **pulsocreativo.com.ar** (above-the-fold, desktop). Pulso es la web más sustancial visualmente y da una buena cover panorámica para featured.
+- **Opción B**: composición de 2 desktop screenshots — Govah a la izquierda + Pulso a la derecha — en un mockup tipo "behance". Funciona si te tomás el trabajo de armar el mockup en Figma.
+- **Opción C (más débil)**: solo Govah. Demasiado simple (es one-page) para representar el case study completo.
+
+#### Imágenes del case study Sitios WordPress (C1-img)
+
+**Carpeta**: `public/images/case-study/sitios-wordpress/` (ya existe con `.gitkeep`).
+
+**Specs**: 1920×1200 px (16:10 aspect), JPG, <500kb cada una.
+
+**Las 4 imágenes**:
+
+1. **`01-hero.jpg`** — `Hero shot — Pulso Creativo en desktop, vista principal de la web institucional`.
+   - Screenshot limpio above-the-fold de pulsocreativo.com.ar.
+   - Mejor con el navbar visible y el bloque hero completo.
+   - Sin scroll bars, sin DevTools, sin cursor.
+
+2. **`02-challenge.jpg`** — `Govah — landing one-page de vino kosher en desktop`.
+   - Screenshot completo o above-the-fold de govah.com.ar.
+   - Si es completo (toda la landing scrolleada como una imagen larga), funciona aún mejor para mostrar el alcance acotado del proyecto.
+
+3. **`03-decisions.jpg`** — `Detalle de plugins en Pulso: formulario WPForms y CTA flotante de WhatsApp`.
+   - Composición de 2 elementos: el formulario WPForms (puede ser un crop del fondo de la página) + el CTA flotante de WhatsApp (botón circular abajo-derecha).
+   - Podés armar un mockup en Figma con ambos elementos visibles en una pantalla, o usar un screenshot con scroll hasta el formulario + el WhatsApp button visible flotando.
+
+4. **`04-delivered.jpg`** — `Ambos sitios en mobile: responsive y rendimiento similar`.
+   - Side-by-side: Pulso mobile izquierda + Govah mobile derecha, o stacked.
+   - Mockup en frames de iPhone 14 o similares queda más editorial. Sin frames también funciona (puro screenshot mobile).
+
+#### Workflow recomendado
+
+1. Generar/triajar las imágenes localmente.
+2. Subirlas a las paths exactas.
+3. Para el cover Sitios WordPress: actualizar `coverImage: null` → `coverImage: '/images/covers/sitios-wordpress-cover.jpg'` en [src/data/projects.ts](src/data/projects.ts).
+4. Para las 4 imágenes del case study: agregar `src` a cada `imageBrief` en el mismo entry.
+5. Verificar visualmente en `/es/projects/sitios-wordpress` que los placeholders "BUILDING" desaparecieron.
+6. **Después de eso**: el commit ya no está bloqueado.
 
 ### 📐 Íconos — estado actual
 - **`lucide-react` ^1.11.0** instalado y usado en: Navbar (Sun/Moon/Languages), Contact (Mail/MessageCircle), StackIcon (PenLine/Sparkles/Search/Wand2/Blocks/Contrast para skills sin marca).
@@ -698,6 +888,20 @@ tiago-collado/
 
 ---
 
+## 🔒 Confidencialidad y NDA — Proyecto FutbolTalent
+
+**REGLA ESTRICTA. Leer antes de tocar cualquier texto, imagen o metadata del case study `futbol-talent-pro`.**
+
+- **Vocabulario prohibido**: nunca usar los términos **freemium**, **premium**, **monetización**, **inversores**, **fundadores** ni **Flutter** en el caso de estudio de FutbolTalent. Aplica a los 3 lugares donde vive la copy: `case_study_futbol-talent-pro` en [es.json](src/messages/es.json) / [en.json](src/messages/en.json), y el entry en [projects.ts](src/data/projects.ts) (tagline, description, metadata, `imageBriefs[].alt`).
+- **Nunca revelar** flujos de negocio, estrategias de retención ni métricas internas. Esto incluye números de entregables que impliquen escala del producto (ej. la vieja mención "+30 pantallas" fue removida).
+- **Framing obligatorio**: el proyecto se describe **siempre** como un **MVP validado técnicamente**, enfocado en **arquitectura de información** y **reducción de carga cognitiva**. Ese es el ángulo permitido; no reintroducir el ángulo de producto/negocio.
+- **NO ocultar** el campo `metadata.client` (`'FutbolTalent.Pro'`), el `title` ni el `slug`. El nombre de la empresa ya es público en el perfil profesional de Tiago y el NDA no restringe mencionar el vínculo laboral. La URL `/{locale}/projects/futbol-talent-pro` se mantiene estable.
+
+### ESTADO ACTUAL / PENDIENTE
+Falta reemplazar las imágenes de alta fidelidad en `public/images/case-study/futbol-talent-pro/` (y el cover en `public/images/covers/`) por versiones **"Marca Blanca"** generadas en Figma. Hasta que eso pase, la purga es solo textual: **las imágenes actuales todavía muestran UI real del producto**.
+
+---
+
 ## Workflow actual
 
 - **Desarrollo**: `npm run dev` (levanta en localhost:3000)
@@ -707,22 +911,25 @@ tiago-collado/
 
 ---
 
-## Prioridades inmediatas (al 2026-05-07 PM, post Tanda 21 + commit)
+## Prioridades inmediatas (al 2026-05-08, rework completo + commit pendiente)
 
-### Listo para arrancar
-1. **Fase 4 — Resto del home** (90-120 min). Próximo en agenda. Plan en `C:\Users\tiago\.claude\plans\necesito-que-el-portfolio-glistening-donut.md`. Stagger granular en Projects/About/Stack/Contact/Footer + magnetic CTA en ProjectCard + blur-in en Gallery + gradient text en Stack + glow pulse en Contact CTAs.
-2. **Fase 5 — Case Study pages polish** (60-90 min). SplitText H1, sidebar items stagger, blur-in en CaseStudyImage, cascade entrance en header.
-3. **Fase 6 — Polish & QA cross-cutting** (60 min). Cursor variants en todos los links/images, audit `prefers-reduced-motion`, audit Lighthouse, ajustes finales de timings.
-4. **F3 — Tipografía nueva** (30 min, independiente del rework). Definir combo antes de codear (Inter / Manrope / Satoshi / General Sans / Söhne / Aeonik / Cabinet Grotesk / NB International). Edit en layout.tsx + @theme.
+### COMMIT BLOQUEADO
+El commit grande (~30+ archivos cambiados desde `2c97abb`) está pendiente hasta que Tiago suba **cover + 4 imágenes Sitios WordPress** (`/images/covers/sitios-wordpress-cover.jpg` + `/images/case-study/sitios-wordpress/0[1-4]-*.jpg`). Sin eso la card del home muestra null bg y los CaseStudyImage muestran placeholders "BUILDING".
+
+### Listo para arrancar (post-commit)
+1. **F3 — Tipografía nueva** (30 min). Próximo en agenda. Definir combo antes de codear (Inter / Manrope / Satoshi / General Sans / Söhne / Aeonik / Cabinet Grotesk / NB International). Edit en layout.tsx + @theme.
+2. **G1 — Redesign Awwwards About / Contact / Footer** (90-120 min). Tiago lo flagó como flojo. Antes de codear: revisar refs visuales en `public/images/references/` + URLs Awwwards y definir 2-3 patrones concretos.
+3. **Lighthouse audit** (manual en DevTools, Tiago). No hay números actuales del bundle post-rework.
 
 ### Bloqueado por contenido de Tiago
+- **Cover + 4 imágenes Sitios WordPress** → desbloquea el commit grande. (Tarea C1-img)
 - **Mockups definitivos** de covers FutbolTalentPro / Multibrand / Recuérdalo → reemplazar archivos en `public/images/covers/`. (Tarea B1)
 - **Métricas de FutbolTalentPro** → para sumar peso al case study. (Tarea B3)
-- **Data de Govah + Pulso Creativo** → tagline, descripción, tags, cover, año, rol específico. (Tarea C1)
 
-### Backlog menor (post-Fase 6)
-- **D1 — Botón back-to-top + Footer reorder**: requiere decisión visual previa antes de codear.
-- **D3 — Migración a next/image**: optimización de LCP.
+### Backlog menor (post-G1 / F3)
+- **D1 — Botón back-to-top + Footer reorder**: requiere decisión visual previa antes de codear. Probablemente se solapa con G1 (redesign Footer).
+- **D3 — Migración a next/image**: optimización de LCP. Se hace cuando los covers definitivos estén listos.
+- **D2 — Lightbox en Gallery + más imágenes por proyecto**: cuando Tiago tenga más material.
 - **C3 — Escalera intencional de max-w**: pensar el ritmo antes de tocar componentes.
 
 Resto del backlog en "🚦 Próximos pasos" arriba.

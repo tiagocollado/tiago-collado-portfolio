@@ -53,18 +53,18 @@
     "view_github": "Ver código"
   },
   "case_study_futbol-talent-pro": {
-    "intro": "Diseñé el MVP de FutbolTalent.Pro: una plataforma mobile-first que conecta jugadores jóvenes con scouts y clubes sin pasar por redes cerradas.",
-    "challenge": "Equilibrar acceso democrático con sostenibilidad económica. Los fundadores querían maximizar conversión a pago; yo defendí un freemium funcional para validar el producto con usuarios reales antes de pedir dinero.",
-    "decision_1_title": "Freemium con techo bajo, no demo capada",
-    "decision_1_body": "El plan gratis tenía que servir para validar el producto antes de monetizar. Los jugadores postulan a convocatorias limitadas; premium desbloquea postulaciones ilimitadas y cursos de formación.",
-    "decision_2_title": "Búsqueda progresiva, no Google de filtros",
-    "decision_2_body": "Los fundadores querían filtrado exhaustivo por defecto. Propuse búsqueda simple (nombre, posición, región) con 'Filtros avanzados' para power users. Menos carga cognitiva sin perder potencia.",
-    "decision_3_title": "Gamificación con design system, no decoración",
-    "decision_3_body": "Rankings semanales, badges y desafíos podían saturar la interfaz. Iconografía consistente y soporte light/dark mantuvieron la claridad visual sin sacrificar engagement.",
-    "delivered_1": "+30 pantallas alta fidelidad para 3 perfiles (jugador, scout, club)",
-    "delivered_2": "Design System completo (tokens, componentes, light/dark)",
-    "delivered_3": "Wireframes lo-fi, flujos y user personas (material no NDA)",
-    "closing": "El desarrollador Flutter implementó las pantallas en paralelo a mi trabajo, validando viabilidad técnica desde el día uno. Los fundadores lo presentaron a inversores con aprobación para continuar. Trabajar bajo NDA me obligó a documentar el 'por qué' de cada decisión, no solo el 'qué'."
+    "intro": "Diseñé la experiencia de usuario y arquitectura de información para el MVP de una plataforma mobile-first enfocada en scouting deportivo.",
+    "challenge": "Diseñar un MVP escalable que conecte a tres perfiles de usuarios muy distintos (jugadores, scouts y clubes) manteniendo una navegación intuitiva y una carga cognitiva baja. El objetivo técnico central fue asegurar que las decisiones de diseño fueran 100% viables para una implementación ágil en código.",
+    "decision_1_title": "Arquitectura de información escalable",
+    "decision_1_body": "En lugar de exponer todas las funcionalidades de entrada, estructuré flujos de acceso progresivo. Esto permitió diferenciar accesos básicos de funcionalidades avanzadas mediante una jerarquía visual clara.",
+    "decision_2_title": "Búsqueda progresiva para reducir carga cognitiva",
+    "decision_2_body": "Propuse un buscador de uso simple e intuitivo por defecto (nombre, posición, región), encapsulando las opciones complejas bajo 'Filtros Avanzados' para usuarios experimentados.",
+    "decision_3_title": "Gamificación soportada por un Design System",
+    "decision_3_body": "Para evitar saturar la pantalla con rankings y medallas, construí un sistema de diseño atómico desde cero (tokens, iconografía consistente, light/dark). Esto mantuvo la interfaz limpia.",
+    "delivered_1": "Diseño de pantallas clave para 3 perfiles de usuario",
+    "delivered_2": "Design System atómico completo (tokens, componentes, light/dark)",
+    "delivered_3": "Wireframes lo-fi y flujos de usuario (versión anonimizada)",
+    "closing": "Trabajé en paralelo con el desarrollador frontend, validando la viabilidad técnica de cada pantalla. Operar bajo normativas estrictas de confidencialidad me exigió ser extremadamente metódico: documentar rigurosamente el 'por qué' de cada decisión de UX y asegurar un handoff impecable."
   },
   "case_study_el-ritual-del-tono": {
     "intro": "Construí un motor de búsqueda inversa para guitarristas: buscás por artista y canción, y la app te devuelve la cadena de señal completa (guitarra, pedales, amplificador) para replicar ese sonido. Stack MERN, deployado en Vercel.",
@@ -122,6 +122,20 @@
     "delivered_3": "Prototipo Figma alta fidelidad con todas las pantallas principales",
     "closing": "El diseño inclusivo no es una capa estética que agregás al final, es la base de una buena experiencia. Diseñar para los 3 entrevistados, con sus limitaciones visuales y memoria secuencial frágil, terminó creando un producto más claro y robusto para cualquiera. Si volviera a hacerlo: un 'Sistema de Tranquilidad Familiar' que vincule la app con los hijos para reducir ansiedad familiar y reforzar la red de apoyo."
   },
+  "case_study_sitios-wordpress": {
+    "intro": "Dos sitios WordPress con scopes muy distintos: una landing simple para un vino kosher y una web institucional con plugins funcionales. Mismo proceso en los dos: diseñar primero en Figma, implementar después.",
+    "challenge": "Cada cliente venía con un brief distinto. Govah necesitaba una landing one-page para presentar el producto y captar contacto. Pulso Creativo pedía una web institucional con secciones, formularios y un canal directo a WhatsApp. La pregunta era cómo mantener prolijo el proceso de diseño sin que Elementor termine dictando las decisiones visuales.",
+    "decision_1_title": "Figma primero, Elementor después",
+    "decision_1_body": "En ambos casos arranqué con wireframes y UI en Figma antes de tocar WordPress. Eso permitió validar tipografía, jerarquía y layout antes de pelearme con limitaciones del builder. Cuando llegó el momento de implementar, Elementor se volvió una herramienta de ejecución, no de exploración.",
+    "decision_2_title": "Plugins funcionales sin sobrecargar el sitio",
+    "decision_2_body": "Pulso pedía formulario de contacto + integración a WhatsApp. Elegí WPForms (lightweight, sin bloat) y un plugin de WhatsApp con CTA flotante. Nada de page builders extra ni librerías que enlentecieran la carga: el sitio sigue rápido y los formularios llegan al mail del cliente sin intermediarios.",
+    "decision_3_title": "Hosting end-to-end en Pulso",
+    "decision_3_body": "En Pulso me hice cargo del setup completo: Hostinger para hosting y mail, dominio en NIC.ar, certificados SSL. Eso significó ser el único punto de contacto del cliente para todo el ciclo de vida del sitio. En Govah el scope fue más acotado: diseño UI + colaboración con otro dev en la implementación con Elementor.",
+    "delivered_1": "Govah, landing one-page (govah.com.ar) con CTA prominente y bloque de contacto.",
+    "delivered_2": "Pulso Creativo, web institucional multi-sección (pulsocreativo.com.ar) con formulario integrado y CTA flotante de WhatsApp.",
+    "delivered_3": "Setup operativo en Pulso: hosting, dominio y mails configurados para el cliente.",
+    "closing": "Lo que me llevo de los dos proyectos: WordPress no es una limitación si el diseño viene resuelto antes. Elementor pasa de ser un cuello de botella a una herramienta razonable cuando entrás con la decisión visual ya tomada en Figma."
+  },
   "about": {
     "title": "Sobre mí",
     "background": "Mi primer rol profesional fue armar de cero la marca digital del Hotel Real Cafayate: posicionamiento, estrategia y operación de comunicación durante casi tres años. Hoy el hotel mantiene una presencia activa y automatizada con las bases que dejé. Entendí qué hace que una audiencia se quede — y entendí también que quería estar del otro lado: armando las plataformas, no solo usándolas. Hoy estoy cerrando la Licenciatura en Tecnología Multimedial en la Universidad Maimónides.",
@@ -135,6 +149,17 @@
     "toolkit_2_desc": "React, Next, Tailwind. Handoff sin traducción.",
     "toolkit_3_title": "Producto end-to-end",
     "toolkit_3_desc": "De research a deploy. Decisiones de diseño viables desde el día uno."
+  },
+  "services": {
+    "label": "Servicios que ofrezco",
+    "items": [
+      "UX Research",
+      "Prototipado",
+      "Diseñador UX/UI",
+      "Sistemas de diseño",
+      "Desarrollo Frontend",
+      "Accesibilidad"
+    ]
   },
   "stack": {
     "title": "Tecnologías que Utilizo"

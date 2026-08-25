@@ -5,12 +5,12 @@ export const projects: Project[] = [
     slug: 'futbol-talent-pro',
     title: 'FutbolTalentPro',
     tagline: {
-      es: 'Plataforma UX/UI para conectar jugadores jóvenes con scouts y clubes.',
-      en: 'UX/UI platform connecting young players with scouts and clubs.',
+      es: 'Plataforma mobile-first para scouting deportivo.',
+      en: 'Mobile-first platform for sports scouting.',
     },
     description: {
-      es: 'Diseño end-to-end de una startup de movilidad deportiva: research, wireframes, design system y +30 pantallas en alta fidelidad para tres perfiles de usuario distintos.',
-      en: 'End-to-end design for a sports mobility startup: research, wireframes, design system and 30+ high-fidelity screens for three distinct user profiles.',
+      es: 'Diseño de experiencia e interfaz, arquitectura de información progresiva y Design System atómico para un MVP validado técnicamente.',
+      en: 'UX/UI design, progressive information architecture, and atomic Design System for a technically validated MVP.',
     },
     tags: ['UX Research', 'UI Design', 'Design System', 'Figma', 'FigJam'],
     type: 'ux',
@@ -27,7 +27,7 @@ export const projects: Project[] = [
       client:   { es: 'FutbolTalent.Pro',                    en: 'FutbolTalent.Pro' },
       role:     { es: 'Diseñador UX/UI',                     en: 'UX/UI Designer' },
       duration: { es: '3 meses',                             en: '3 months' },
-      team:     { es: 'Trabajo en equipo · 1 dev Flutter + 2 leads', en: 'Team setup · 1 Flutter dev + 2 leads' },
+      team:     { es: 'Equipo multidisciplinario · Diseño UX/UI y Desarrollo Frontend', en: 'Cross-functional team · UX/UI Design & Frontend Development' },
       stack:    ['Figma', 'FigJam', 'Design System', 'UX Research'],
       nda:      { es: 'Bajo confidencialidad, material no sensible', en: 'Under NDA, non-sensitive material only' },
     },
@@ -41,8 +41,8 @@ export const projects: Project[] = [
       },
       {
         alt: {
-          es: 'Wireframes lo-fi mostrando el flujo de freemium vs premium',
-          en: 'Lo-fi wireframes showing freemium vs premium flow',
+          es: 'Wireframes lo-fi mostrando el flujo de acceso progresivo',
+          en: 'Lo-fi wireframes showing the progressive access flow',
         },
         src: '/images/case-study/futbol-talent-pro/02-challenge.jpg',
       },
@@ -323,5 +323,70 @@ export const projects: Project[] = [
     featured: false,
     order: 6,
     comingSoon: true,
+  },
+  {
+    slug: 'sitios-wordpress',
+    title: 'Sitios WordPress',
+    tagline: {
+      es: 'Dos sitios WordPress: una landing de vino kosher y una web institucional con plugins funcionales y hosting propio.',
+      en: 'Two WordPress sites: a kosher wine landing and an institutional site with functional plugins and self-managed hosting.',
+    },
+    description: {
+      es: 'Govah + Pulso Creativo. Diseño UI en Figma + implementación con Elementor.',
+      en: 'Govah + Pulso Creativo. UI design in Figma + Elementor implementation.',
+    },
+    tags: ['WordPress', 'Elementor', 'UI Design', 'Landing Page', 'Web Institucional', 'WPForms'],
+    type: 'wordpress',
+    // Dos demos en vivo (Pulso Creativo y Govah). El sidebar itera el array
+    // y renderea un link por entry con su label específico.
+    links: {
+      live: [
+        { url: 'https://pulsocreativo.com.ar', label: 'Pulso Creativo' },
+        { url: 'https://govah.com.ar',         label: 'Govah' },
+      ],
+    },
+    // Cover y las 4 imágenes contextuales pendientes — Tiago las sube a
+    // public/images/covers/sitios-wordpress-cover.jpg y a
+    // public/images/case-study/sitios-wordpress/{01..04}-*.jpg.
+    // Mientras tanto: coverImage:null para que la card no muestre 404,
+    // y los imageBriefs sin `src` activan el placeholder "BUILDING" del CaseStudyImage.
+    coverImage: null,
+    year: 2026,
+    featured: true,
+    order: 7,
+    awwwardsLayout: true,
+    metadata: {
+      client:   { es: 'Govah · Pulso Creativo',                                                en: 'Govah · Pulso Creativo' },
+      role:     { es: 'Product Design',                                                         en: 'Product Design' },
+      duration: { es: '2024 — 2026 (proyectos independientes)',                                en: '2024 — 2026 (independent projects)' },
+      team:     { es: 'Govah: en pareja con un dev.\nPulso: trabajo individual end-to-end.',   en: 'Govah: paired with a dev.\nPulso: solo end-to-end.' },
+      stack:    ['WordPress', 'Elementor', 'Figma'],
+    },
+    imageBriefs: [
+      {
+        alt: {
+          es: 'Hero shot — Pulso Creativo en desktop, vista principal de la web institucional',
+          en: 'Hero shot — Pulso Creativo on desktop, main view of the institutional site',
+        },
+      },
+      {
+        alt: {
+          es: 'Govah — landing one-page de vino kosher en desktop',
+          en: 'Govah — kosher wine landing in desktop',
+        },
+      },
+      {
+        alt: {
+          es: 'Detalle de plugins en Pulso: formulario WPForms y CTA flotante de WhatsApp',
+          en: 'Plugins detail in Pulso: WPForms contact form and floating WhatsApp CTA',
+        },
+      },
+      {
+        alt: {
+          es: 'Ambos sitios en mobile: responsive y rendimiento similar',
+          en: 'Both sites on mobile: responsive and similar performance',
+        },
+      },
+    ],
   },
 ]
