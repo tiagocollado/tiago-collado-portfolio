@@ -117,6 +117,28 @@ body::before {
   background-color: var(--color-accent-hover) !important;
 }
 
+/* CTA glow pulse — anillo terracota que "respira" en hover. Se aplica a
+   los botones de Contact (Email + WhatsApp). El glow va sobre el border
+   external del botón vía `box-shadow`, sin afectar el layout.
+   Idle: sin glow. Hover: pulso continuo 2s linear infinite. */
+.cta-glow-pulse:hover {
+  animation: cta-glow 2s ease-in-out infinite;
+}
+@keyframes cta-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent) 40%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 10px color-mix(in srgb, var(--color-accent) 0%, transparent);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cta-glow-pulse:hover {
+    animation: none;
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 25%, transparent);
+  }
+}
+
 /* ─── Scrollbar custom ──────────────────────────────────────────────────
    Theme-aware vía CSS vars, terracota en hover. Lenis no reemplaza la
    scrollbar nativa (solo lerpea el scroll), así que la podemos estilar

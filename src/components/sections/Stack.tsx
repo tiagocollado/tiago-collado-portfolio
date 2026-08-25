@@ -22,9 +22,16 @@ export default function Stack() {
             >
               STACK
             </p>
+            {/* H2 con gradient text: ink-primary → accent terracota.
+                `bg-clip-text` + `text-transparent` recortan el gradiente al
+                glyph — clásico portfolio premium. Funciona theme-aware
+                porque ambos colores son CSS vars. */}
             <h2
-              className="font-display text-4xl md:text-5xl font-semibold tracking-tight leading-tight"
-              style={{ color: 'var(--ink-primary)' }}
+              className="font-display text-4xl md:text-5xl font-semibold tracking-tight leading-tight bg-clip-text text-transparent"
+              style={{
+                backgroundImage:
+                  'linear-gradient(120deg, var(--ink-primary) 0%, var(--ink-primary) 60%, var(--color-accent) 100%)',
+              }}
             >
               {t('title')}
             </h2>

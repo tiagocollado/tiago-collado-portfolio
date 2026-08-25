@@ -17,6 +17,7 @@ import { Project, Locale } from '@/types'
 import { useTranslations } from 'next-intl'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { useCursor } from '@/hooks/useCursor'
 
 interface ProjectCardProps {
   project: Project
@@ -31,6 +32,7 @@ interface ProjectCardProps {
 
 export default function ProjectCard({ project, locale, index = 0 }: ProjectCardProps) {
   const t = useTranslations('projects')
+  const { setVariant } = useCursor()
 
   const spanClasses = project.featured
     ? 'md:col-span-2 md:row-span-1'
@@ -57,6 +59,8 @@ export default function ProjectCard({ project, locale, index = 0 }: ProjectCardP
         delay: index * 0.08,
         ease: [0.16, 1, 0.3, 1],
       }}
+      onMouseEnter={() => !project.comingSoon && setVariant('view')}
+      onMouseLeave={() => setVariant('default')}
       className={`${spanClasses} relative rounded-2xl overflow-hidden group border transition-all duration-500 ease-out
                   hover:-translate-y-2 hover:shadow-2xl hover:shadow-accent/25 hover:border-accent`}
       style={{

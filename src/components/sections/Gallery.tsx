@@ -15,6 +15,7 @@ import useEmblaCarousel from 'embla-carousel-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useTranslations } from 'next-intl'
+import { useCursor } from '@/hooks/useCursor'
 
 interface GalleryProps {
   slug: string
@@ -23,6 +24,7 @@ interface GalleryProps {
 
 export default function Gallery({ slug, images }: GalleryProps) {
   const t = useTranslations('case_study')
+  const { setVariant } = useCursor()
 
   // Embla config: un slide por vista, arrastrable, con loop si hay ≥2 imágenes.
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -117,10 +119,13 @@ export default function Gallery({ slug, images }: GalleryProps) {
                         src={src}
                         alt={`${slug.replace(/-/g, ' ')} — ${index + 1}`}
                         className="absolute inset-0 w-full h-full object-cover"
-                        initial={{ opacity: 0, scale: 1.04 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                        // Blur-in: la imagen entra desenfocada y se vuelve
+                        // nítida durante la transición. Refuerza la sensación
+                        // de "foto que se ajusta" típica de portfolios premium.
+                        initial={{ opacity: 0, scale: 1.04, filter: 'blur(8px)' }}
+                        animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                        exit={{ opacity: 0, filter: 'blur(4px)' }}
+                        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                       />
                     )}
                   </AnimatePresence>
@@ -146,6 +151,8 @@ export default function Gallery({ slug, images }: GalleryProps) {
                 onClick={scrollPrev}
                 disabled={!canPrev}
                 aria-label="Imagen anterior"
+                onMouseEnter={() => setVariant('link')}
+                onMouseLeave={() => setVariant('default')}
                 className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-12 h-12 rounded-full backdrop-blur-md border transition-all duration-300 hover:-translate-y-[calc(50%+2px)] disabled:opacity-30 disabled:cursor-not-allowed"
                 style={{
                   backgroundColor: 'color-mix(in srgb, var(--bg-primary) 80%, transparent)',
@@ -160,6 +167,8 @@ export default function Gallery({ slug, images }: GalleryProps) {
                 onClick={scrollNext}
                 disabled={!canNext}
                 aria-label="Imagen siguiente"
+                onMouseEnter={() => setVariant('link')}
+                onMouseLeave={() => setVariant('default')}
                 className="absolute right-4 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-12 h-12 rounded-full backdrop-blur-md border transition-all duration-300 hover:-translate-y-[calc(50%+2px)] disabled:opacity-30 disabled:cursor-not-allowed"
                 style={{
                   backgroundColor: 'color-mix(in srgb, var(--bg-primary) 80%, transparent)',

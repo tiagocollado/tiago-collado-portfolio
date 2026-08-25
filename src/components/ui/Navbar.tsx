@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import MarqueeLink from './MarqueeLink'
 import NavLogo from './NavLogo'
 import LanguageToggle from './LanguageToggle'
+import { useCursor } from '@/hooks/useCursor'
 
 /**
  * Navbar simplificado — altura constante h-16 siempre.
@@ -27,9 +28,15 @@ export default function Navbar() {
   const t = useTranslations('nav')
   const locale = useLocale()
   const { theme, setTheme } = useTheme()
+  const { setVariant } = useCursor()
   const [mounted, setMounted] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+
+  // Handlers compartidos para todos los items interactivos del navbar.
+  // Cualquier link / botón que sea clickeable cambia el cursor a `link`.
+  const onCursorEnter = () => setVariant('link')
+  const onCursorLeave = () => setVariant('default')
 
   useEffect(() => {
     setMounted(true)
@@ -61,21 +68,37 @@ export default function Navbar() {
             independiente del ancho del logo y de los toggles. Así el grupo
             queda visualmente separado de los toggles de la derecha. */}
         <div className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
-          <NavLink href={`/${locale}#projects`} color={linkColor}>
+          <NavLink
+            href={`/${locale}#projects`}
+            color={linkColor}
+            onMouseEnter={onCursorEnter}
+            onMouseLeave={onCursorLeave}
+          >
             {t('projects')}
           </NavLink>
-          <NavLink href={`/${locale}#about`} color={linkColor}>
+          <NavLink
+            href={`/${locale}#about`}
+            color={linkColor}
+            onMouseEnter={onCursorEnter}
+            onMouseLeave={onCursorLeave}
+          >
             {t('about')}
           </NavLink>
-          <MarqueeLink href={`/${locale}#contact`} label={t('contact_marquee')} />
+          <div onMouseEnter={onCursorEnter} onMouseLeave={onCursorLeave}>
+            <MarqueeLink href={`/${locale}#contact`} label={t('contact_marquee')} />
+          </div>
         </div>
 
         {/* Derecha (lg+): toggles idioma + tema. */}
         <div className="hidden lg:flex items-center gap-3">
-          <LanguageToggle />
+          <div onMouseEnter={onCursorEnter} onMouseLeave={onCursorLeave}>
+            <LanguageToggle />
+          </div>
           {mounted && (
             <button
               onClick={toggleTheme}
+              onMouseEnter={onCursorEnter}
+              onMouseLeave={onCursorLeave}
               aria-label={theme === 'dark' ? 'Modo claro' : 'Modo oscuro'}
               className="flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-300 hover:bg-(--bg-secondary) hover:scale-105"
               style={{ color: 'var(--ink-secondary)', backgroundColor: 'transparent' }}
@@ -93,6 +116,8 @@ export default function Navbar() {
         <div className="lg:hidden relative">
           <motion.button
             onClick={() => setMenuOpen((o) => !o)}
+            onMouseEnter={onCursorEnter}
+            onMouseLeave={onCursorLeave}
             aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
             aria-expanded={menuOpen}
             className="flex items-center justify-center w-9 h-9 rounded-lg transition-colors duration-300 hover:bg-(--bg-secondary)"
@@ -126,18 +151,24 @@ export default function Navbar() {
                 <DropdownLink
                   href={`/${locale}#projects`}
                   onClick={() => setMenuOpen(false)}
+                  onMouseEnter={onCursorEnter}
+                  onMouseLeave={onCursorLeave}
                 >
                   {t('projects')}
                 </DropdownLink>
                 <DropdownLink
                   href={`/${locale}#about`}
                   onClick={() => setMenuOpen(false)}
+                  onMouseEnter={onCursorEnter}
+                  onMouseLeave={onCursorLeave}
                 >
                   {t('about')}
                 </DropdownLink>
                 <DropdownLink
                   href={`/${locale}#contact`}
                   onClick={() => setMenuOpen(false)}
+                  onMouseEnter={onCursorEnter}
+                  onMouseLeave={onCursorLeave}
                 >
                   {t('contact_marquee')}
                 </DropdownLink>
@@ -182,14 +213,20 @@ function NavLink({
   href,
   color,
   children,
+  onMouseEnter,
+  onMouseLeave,
 }: {
   href: string
   color: string
   children: React.ReactNode
+  onMouseEnter?: () => void
+  onMouseLeave?: () => void
 }) {
   return (
     <a
       href={href}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       className="relative text-sm font-medium no-underline transition-colors duration-300 after:absolute after:left-0 after:-bottom-1 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-current after:transition-transform after:duration-250 after:ease-expo-out hover:after:scale-x-100"
       style={{ color }}
     >
@@ -204,16 +241,22 @@ function NavLink({
 function DropdownLink({
   href,
   onClick,
+  onMouseEnter,
+  onMouseLeave,
   children,
 }: {
   href: string
   onClick?: () => void
+  onMouseEnter?: () => void
+  onMouseLeave?: () => void
   children: React.ReactNode
 }) {
   return (
     <motion.a
       href={href}
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       variants={{ hidden: { opacity: 0, y: -4 }, visible: { opacity: 1, y: 0 } }}
       className="block px-4 py-2 text-sm font-medium no-underline transition-colors duration-200 hover:bg-(--bg-secondary) hover:text-(--ink-primary)"
       style={{ color: 'var(--ink-secondary)' }}

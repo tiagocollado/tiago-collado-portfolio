@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import Lenis from 'lenis'
+import { usePathname } from 'next/navigation'
 
 /**
  * Wrapper alrededor de toda la app que monta una instancia global de Lenis
@@ -14,12 +15,20 @@ import Lenis from 'lenis'
  *
  * Anchor links (`#id`): Lenis los respeta automáticamente cuando se setea
  * `anchors: true`. El click en `<a href="#contact">` hace scroll smooth.
+ *
+ * Scroll-to-top en navegación: Next.js debería hacerlo nativamente, pero
+ * con Lenis activo el scroll persiste entre rutas (Lenis mantiene su
+ * propio internal state). Forzamos `scrollTo(0, immediate)` en cada
+ * pathname change.
  */
 export default function SmoothScrollProvider({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const lenisRef = useRef<Lenis | null>(null)
+  const pathname = usePathname()
+
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (reduced) return
@@ -32,6 +41,7 @@ export default function SmoothScrollProvider({
       // Soporte nativo de anchor links (interceptados por Lenis).
       anchors: true,
     })
+    lenisRef.current = lenis
 
     let rafId: number
     function raf(time: number) {
@@ -43,8 +53,21 @@ export default function SmoothScrollProvider({
     return () => {
       cancelAnimationFrame(rafId)
       lenis.destroy()
+      lenisRef.current = null
     }
   }, [])
+
+  // En cada cambio de ruta forzamos scroll al top. `immediate: true` evita
+  // la animación lerpeada (no querés ver el case study scroll-anim hasta el
+  // top mientras la página recién entra). Fallback `window.scrollTo(0,0)`
+  // por si Lenis está en reduced-motion (no instanciado).
+  useEffect(() => {
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(0, { immediate: true })
+    } else {
+      window.scrollTo(0, 0)
+    }
+  }, [pathname])
 
   return <>{children}</>
 }

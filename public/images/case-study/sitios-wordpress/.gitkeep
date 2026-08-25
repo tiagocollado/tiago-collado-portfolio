@@ -1,0 +1,12 @@
+# Carpeta de imágenes contextuales del case study sitios-wordpress.
+#
+# Pendiente: Tiago sube 4 imágenes acá:
+#   01-hero.jpg        — Pulso Creativo desktop hero
+#   02-challenge.jpg   — Govah landing desktop
+#   03-decisions.jpg   — Pulso plugin/formulario detail
+#   04-delivered.jpg   — Ambos sitios en mobile
+#
+# Specs: 16:10 aspect (1920×1200 o similar), JPG, <500kb cada una.
+# Cuando estén, actualizar `imageBriefs[*].src` en src/data/projects.ts.
+#
+# Ver "📸 Guía de imágenes pendientes" en CLAUDE.md para el detalle.

@@ -16,7 +16,13 @@ export interface Project {
   links: {
     github?:     string
     githubBack?: string
-    live?:       string
+    /**
+     * URL del live demo. Acepta una URL string (caso normal — un único demo)
+     * o un array de objetos `{ url, label }` cuando el proyecto tiene varios
+     * demos relacionados (ej. dos sitios cliente bajo el mismo case study).
+     * El sidebar itera el array y renderea un link por entry.
+     */
+    live?:       string | Array<{ url: string; label: string }>
     figma?:      string
   }
   coverImage: string | null

@@ -6,7 +6,9 @@ import {
   useMotionValue,
   useSpring,
   useReducedMotion,
+  MotionConfig,
 } from 'framer-motion'
+import { usePathname } from 'next/navigation'
 import {
   CursorContext,
   type CursorVariant,
@@ -20,14 +22,19 @@ import {
  * - Variants:
  *   - default: dot + ring
  *   - link: ring crece a 64px
- *   - view: ring se transforma en pill "VIEW"
+ *   - view: ring crece a 80px con texto "VIEW" adentro
  *   - drag: dot sólido grande, ring desaparece
+ * - Reset on navigate: si el variant queda sticky cuando un componente que
+ *   lo seteó se desmonta por route change (ej. ProjectCard al click), el
+ *   cursor se quedaba en `view` para siempre. El effect que escucha
+ *   pathname lo resetea a `default` en cada navegación.
  * - prefers-reduced-motion: cursor nativo (no renderea).
  */
 export function CursorProvider({ children }: { children: React.ReactNode }) {
   const [variant, setVariant] = useState<CursorVariant>('default')
   const [hasFinePointer, setHasFinePointer] = useState(false)
   const reduced = useReducedMotion()
+  const pathname = usePathname()
 
   useEffect(() => {
     const mq = window.matchMedia('(pointer: fine)')
@@ -37,13 +44,27 @@ export function CursorProvider({ children }: { children: React.ReactNode }) {
     return () => mq.removeEventListener('change', onChange)
   }, [])
 
+  // Reset variant en cada cambio de ruta — evita el bug de "cursor sticky"
+  // cuando hacés click en un link y el componente que seteó el variant
+  // se desmonta antes de que dispare onMouseLeave.
+  useEffect(() => {
+    setVariant('default')
+  }, [pathname])
+
   const showCursor = hasFinePointer && !reduced
 
   return (
-    <CursorContext.Provider value={{ variant, setVariant }}>
-      {children}
-      {showCursor && <CursorRender variant={variant} />}
-    </CursorContext.Provider>
+    // MotionConfig reducedMotion="user" hace que TODAS las animaciones de
+    // Framer Motion respeten prefers-reduced-motion del usuario. Sin esto,
+    // Framer ignora la regla CSS @media (prefers-reduced-motion: reduce)
+    // de globals.css porque sus animaciones son JS-driven (rAF), no CSS.
+    // Con "user", reduced motion → animaciones instantáneas.
+    <MotionConfig reducedMotion="user">
+      <CursorContext.Provider value={{ variant, setVariant }}>
+        {children}
+        {showCursor && <CursorRender variant={variant} />}
+      </CursorContext.Provider>
+    </MotionConfig>
   )
 }
 
@@ -83,10 +104,14 @@ function CursorRender({ variant }: { variant: CursorVariant }) {
 
   return (
     <>
-      {/* Dot */}
+      {/* Dot — terracota sólido en ambos modos. Antes usábamos
+          mix-blend-difference para invertir contra cualquier fondo, pero
+          sobre el beige cálido del light mode (#EDE2CD) la difference con
+          ink-primary daba un beige casi idéntico → invisible. Sólido es
+          más predecible y se ve bien en ambos themes. */}
       <motion.div
         aria-hidden="true"
-        className="pointer-events-none fixed top-0 left-0 z-[9999] rounded-full bg-[var(--color-accent)] mix-blend-difference"
+        className="pointer-events-none fixed top-0 left-0 z-9999 rounded-full bg-accent"
         style={{
           x: dotSpringX,
           y: dotSpringY,
@@ -99,15 +124,22 @@ function CursorRender({ variant }: { variant: CursorVariant }) {
         transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
       />
 
-      {/* Ring */}
+      {/* Ring — borde + fondo translúcido cálido del tema. El bg
+          semi-transparente (color-mix con bg-primary 50%) suma un panel
+          sutil detrás del texto "VIEW" para que se lea bien sin tener
+          que ser opaco. */}
       <motion.div
         aria-hidden="true"
-        className="pointer-events-none fixed top-0 left-0 z-[9999] rounded-full border border-[var(--ink-primary)] mix-blend-difference flex items-center justify-center"
+        className="pointer-events-none fixed top-0 left-0 z-9999 rounded-full border border-(--ink-primary) flex items-center justify-center"
         style={{
           x: ringSpringX,
           y: ringSpringY,
           translateX: '-50%',
           translateY: '-50%',
+          backgroundColor:
+            variant === 'view'
+              ? 'color-mix(in srgb, var(--bg-primary) 80%, transparent)'
+              : 'transparent',
         }}
         animate={{
           width: ringSize,
@@ -117,7 +149,7 @@ function CursorRender({ variant }: { variant: CursorVariant }) {
         transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
       >
         {variant === 'view' && (
-          <span className="font-mono text-[10px] tracking-widest uppercase text-[var(--ink-primary)]">
+          <span className="font-mono text-[10px] tracking-widest uppercase text-(--ink-primary) font-semibold">
             View
           </span>
         )}

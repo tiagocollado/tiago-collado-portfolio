@@ -16,6 +16,7 @@
 import { useTranslations } from 'next-intl'
 import { motion } from 'framer-motion'
 import FadeInSection from '../ui/FadeInSection'
+import SplitText from '../ui/SplitText'
 
 const TOOLKIT_ITEMS = [
   { num: '01', titleKey: 'toolkit_1_title' },
@@ -63,13 +64,20 @@ export default function About() {
                 >
                   {t('hybrid_path')}
                 </p>
-                {/* Hook — focal point en bold + display */}
-                <p
-                  className="font-display text-xl md:text-2xl font-semibold leading-snug"
-                  style={{ color: 'var(--ink-primary)' }}
-                >
-                  {t('hook')}
-                </p>
+                {/* Hook — focal point con SplitText char reveal en viewport.
+                    Stagger lento (0.025) y blur-in para que se sienta el peso
+                    del párrafo como argumento principal del About. */}
+                <SplitText
+                  as="p"
+                  text={t('hook')}
+                  stagger={0.025}
+                  delay={0.2}
+                  yFrom={12}
+                  blurFrom={4}
+                  duration={0.6}
+                  whileInView
+                  className="font-display text-xl md:text-2xl font-semibold leading-snug block text-(--ink-primary)"
+                />
                 <p
                   className="text-lg md:text-xl leading-relaxed"
                   style={{ color: 'var(--ink-secondary)' }}

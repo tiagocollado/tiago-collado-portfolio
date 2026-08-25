@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useRef } from 'react'
+import { useCursor } from '@/hooks/useCursor'
 
 /**
  * Bloque de imagen contextual para el layout Awwwards-style.
@@ -54,6 +55,7 @@ export default function CaseStudyImage({
   prompt,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null)
+  const { setVariant } = useCursor()
 
   // Parallax: cuando el bloque entra/sale del viewport, la imagen se mueve
   // verticalmente. offset ['start end','end start'] = empieza el progress
@@ -81,14 +83,16 @@ export default function CaseStudyImage({
               className="text-[11px] font-mono uppercase tracking-[0.18em]"
               style={{ color: 'var(--color-accent)' }}
             >
-              TODO · Imagen pendiente
+              · BUILDING ·
             </p>
-            {description && (
+            {/* Mostramos description si existe, alt como fallback. Esto sirve
+                de guía al usuario para saber qué imagen tiene que ir acá. */}
+            {(description || alt) && (
               <p
                 className="text-sm md:text-base font-display"
                 style={{ color: 'var(--ink-primary)' }}
               >
-                {description}
+                {description || alt}
               </p>
             )}
             {prompt && (
@@ -115,7 +119,19 @@ export default function CaseStudyImage({
   }
 
   return (
-    <figure ref={ref} className="relative w-full">
+    <motion.figure
+      ref={ref}
+      className="relative w-full"
+      onMouseEnter={() => setVariant('view')}
+      onMouseLeave={() => setVariant('default')}
+      // Blur-in cuando entra al viewport: la imagen arranca borrosa + un
+      // pelín achicada y se enfoca a medida que aparece. Refuerza el feeling
+      // editorial de "foto que se va resolviendo". Una sola vez (`once: true`).
+      initial={{ opacity: 0, filter: 'blur(12px)', scale: 0.98 }}
+      whileInView={{ opacity: 1, filter: 'blur(0px)', scale: 1 }}
+      viewport={{ once: true, margin: '-15% 0px' }}
+      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+    >
       <div
         className={`${ASPECT_CLASSES[aspectRatio]} relative w-full rounded-xl overflow-hidden`}
         style={{ backgroundColor: 'var(--color-surface)' }}
@@ -140,6 +156,6 @@ export default function CaseStudyImage({
           {caption}
         </figcaption>
       )}
-    </figure>
+    </motion.figure>
   )
 }

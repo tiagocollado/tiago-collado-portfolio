@@ -1,9 +1,13 @@
+'use client'
+
+import { useTranslations } from 'next-intl'
+import { motion, type Variants } from 'framer-motion'
 import { Project, Locale } from '@/types'
-import { getTranslations } from 'next-intl/server'
+import { useCursor } from '@/hooks/useCursor'
 
 /**
  * Sidebar de metadata para el layout Awwwards-style de case studies.
- * Server component — no necesita estado ni efectos.
+ * Client component — anima cada bloque con stagger en mount.
  *
  * Se renderea solo si `project.metadata` existe. Cada bloque (cliente, año,
  * rol, duración, equipo, stack, nda) se muestra solo si tiene valor.
@@ -13,15 +17,37 @@ import { getTranslations } from 'next-intl/server'
  *
  * Patrón visual: label mono uppercase chiquito (eyebrow) + value en font-display.
  * Inspirado en Mediasignal / LinkBoard (ver public/images/references/casestudy*).
+ *
+ * Stagger: container con `staggerChildren: 0.06` + delayChildren 0.5 para que
+ * arranque después de que el header termine su cascade. Cada bloque entra con
+ * fade + slide-up 12px.
  */
-export default async function CaseStudySidebar({
+
+const container: Variants = {
+  hidden: { opacity: 1 },
+  visible: {
+    transition: { staggerChildren: 0.06, delayChildren: 0.5 },
+  },
+}
+
+const item: Variants = {
+  hidden: { opacity: 0, y: 12 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+  },
+}
+
+export default function CaseStudySidebar({
   project,
   locale,
 }: {
   project: Project
   locale: Locale
 }) {
-  const t = await getTranslations('case_study')
+  const t = useTranslations('case_study')
+  const { setVariant } = useCursor()
   if (!project.metadata) return null
 
   const m = project.metadata
@@ -44,7 +70,15 @@ export default async function CaseStudySidebar({
   // position los mantiene accesibles mientras el lector scrollea la copy.
   const linkItems: Array<{ href: string; label: string }> = []
   if (project.links.live) {
-    linkItems.push({ href: project.links.live, label: t('view_live') })
+    // `live` puede ser un string (caso normal) o un array de {url, label}
+    // (proyectos con múltiples demos, ej. sitios-wordpress con Pulso + Govah).
+    if (typeof project.links.live === 'string') {
+      linkItems.push({ href: project.links.live, label: t('view_live') })
+    } else {
+      project.links.live.forEach((item) => {
+        linkItems.push({ href: item.url, label: item.label })
+      })
+    }
   }
   if (project.links.github) {
     linkItems.push({ href: project.links.github, label: t('view_github_frontend') })
@@ -54,11 +88,16 @@ export default async function CaseStudySidebar({
   }
 
   return (
-    <aside className="lg:sticky lg:top-28 lg:self-start space-y-8">
+    <motion.aside
+      initial="hidden"
+      animate="visible"
+      variants={container}
+      className="lg:sticky lg:top-28 lg:self-start space-y-8"
+    >
       {blocks
         .filter((b) => b.value !== null)
         .map((b) => (
-          <div key={b.label}>
+          <motion.div key={b.label} variants={item}>
             <p
               className="text-[11px] font-mono uppercase tracking-[0.18em] mb-2"
               style={{ color: 'var(--ink-muted)' }}
@@ -67,30 +106,35 @@ export default async function CaseStudySidebar({
             </p>
             {Array.isArray(b.value) ? (
               <ul className="space-y-1">
-                {b.value.map((item) => (
+                {b.value.map((it) => (
                   <li
-                    key={item}
+                    key={it}
                     className="text-sm md:text-base font-display"
                     style={{ color: 'var(--ink-primary)' }}
                   >
-                    {item}
+                    {it}
                   </li>
                 ))}
               </ul>
             ) : (
               <p
-                className="text-sm md:text-base font-display leading-snug"
+                // `whitespace-pre-line` permite que un `\n` en el string del
+                // metadata renderee como salto de línea (ej. team con
+                // `Govah: ...\nPulso: ...`). Strings sin `\n` se renderean
+                // igual que antes — la regla solo respeta los newlines
+                // explícitos, no los espacios.
+                className="text-sm md:text-base font-display leading-snug whitespace-pre-line"
                 style={{ color: 'var(--ink-primary)' }}
               >
                 {b.value}
               </p>
             )}
-          </div>
+          </motion.div>
         ))}
 
       {/* Bloque Links al final del sidebar — solo si el proyecto tiene alguno */}
       {linkItems.length > 0 && (
-        <div>
+        <motion.div variants={item}>
           <p
             className="text-[11px] font-mono uppercase tracking-[0.18em] mb-2"
             style={{ color: 'var(--ink-muted)' }}
@@ -104,6 +148,8 @@ export default async function CaseStudySidebar({
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onMouseEnter={() => setVariant('link')}
+                  onMouseLeave={() => setVariant('default')}
                   className="group inline-flex items-center gap-2 text-sm md:text-base font-display leading-snug transition-colors duration-300 hover:text-accent"
                   style={{ color: 'var(--ink-primary)' }}
                 >
@@ -119,8 +165,8 @@ export default async function CaseStudySidebar({
               </li>
             ))}
           </ul>
-        </div>
+        </motion.div>
       )}
-    </aside>
+    </motion.aside>
   )
 }
