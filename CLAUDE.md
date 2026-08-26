@@ -200,9 +200,17 @@ Tiago sigue estudiando y la programación no es su fuerte. **El código tiene qu
 
 **Imágenes de case study**: en mobile se ven completas y quietas (sin crop ni parallax); el recorte y el parallax arrancan en `md+`. No tienen hover ni cursor custom porque no abren nada.
 
-**Open Graph**: `src/app/[locale]/opengraph-image.tsx` genera un PNG 1200×630 de marca en build time, en **Space Grotesk real** (los TTF viven en `src/app/[locale]/fonts/`) y **localizado**: cada idioma sale con su lema y su eyebrow. Al vivir en el segmento `[locale]` aplica también a `/projects/[slug]`: compartir cualquier link muestra el logotipo, no una captura del proyecto.
+**Open Graph**: `src/app/[locale]/opengraph-image.tsx` genera un PNG 1200×630 en build time: **solo la marca G centrada** sobre el fondo oscuro, **sin texto**. Al vivir en el segmento `[locale]` aplica también a `/projects/[slug]`: compartir cualquier link muestra la marca, no una captura del proyecto.
 
-> ⚠️ El lema está **duplicado**: vive en `hero.headline` / `hero.subheadline` de los JSON y otra vez, hardcodeado, en `opengraph-image.tsx`. Es a propósito — `getTranslations` necesita el request context de next-intl, que en un archivo de imagen (que no es una page) es una dependencia frágil para ganar poco. **Si cambiás el lema, tocalo en los dos lados.**
+> **Por qué sin texto.** La versión anterior tenía eyebrow + wordmark + lema alineados a la izquierda. WhatsApp (y varios clientes de chat) no muestran la card ancha: **recortan un cuadrado del centro**, que entraba por la mitad del wordmark y dejaba un "ya" con texto ilegible alrededor. Una marca centrada sobrevive cualquier recorte. De yapa, al no haber texto la imagen **ya no depende de la tipografía**, así que F3 dejó de arrastrarla y los TTF de `src/app/[locale]/fonts/` se borraron del repo.
+
+> El SVG se lee de `src/app/icon.svg` — **el mismo archivo que el favicon**, no una copia. Cambiar el logotipo actualiza las dos cosas a la vez. Va como data URI en un `<img>` porque es lo que satori soporta de forma confiable.
+
+> ⚠️ Las dos imágenes (`es` / `en`) ahora son **idénticas byte a byte, a propósito**: sin texto no hay nada que localizar. No confundir con §9.15, que describe exactamente ese síntoma como un bug — ahí la causa era no leer `params`.
+
+> Medidas reales, verificadas decodificando el PNG: el `<img>` es de 460px pero la **tinta** mide 316×344 (el `icon.svg` tiene margen interno y la G está abierta a la derecha), o sea ~50% del cuadro que recorta WhatsApp. Por esa abertura la G no es simétrica y su centro cae ~16px a la izquierda del centro del lienzo. Es intencional, no lo "arregles".
+
+> ✅ El lema **ya no está duplicado**. Vivía hardcodeado en `opengraph-image.tsx` además de en `hero.headline` / `hero.subheadline`, y había que acordarse de tocarlo en los dos lados. Al sacarle el texto a la OG image, la única fuente de verdad volvieron a ser los JSON.
 
 **i18n**: next-intl con paridad total ES/EN. **Regla**: toda key nueva va en los dos archivos.
 
@@ -261,7 +269,7 @@ Solo lo que Tiago pueda defender en una entrevista.
 ### Diseño
 | ID | Tarea | Esfuerzo | Notas |
 |---|---|---|---|
-| **F3** | Tipografía principal nueva | 30 min + 10 | Reemplazar Space Grotesk + Geist. Opciones: Inter, Manrope, Satoshi, General Sans, Aeonik, Cabinet Grotesk. **Charlar el combo antes de codear.** Toca `layout.tsx` + `@theme`. ⚠️ **Arrastra la OG image**: los TTF de `src/app/[locale]/fonts/` y el `fontFamily` de `opengraph-image.tsx` son la fuente vieja. Si no se rehace, la miniatura que ve todo el mundo al compartir el link queda con una tipografía que el sitio ya no usa. Ver §9.14 para cómo conseguir los TTF. |
+| **F3** | Tipografía principal nueva | 30 min | Reemplazar Space Grotesk + Geist. Opciones: Inter, Manrope, Satoshi, General Sans, Aeonik, Cabinet Grotesk. **Charlar el combo antes de codear.** Toca `layout.tsx` + `@theme`. ✅ **Ya no arrastra la OG image**: al quedar sin texto dejó de depender de la tipografía (§6). Antes había que rehacerla o la miniatura quedaba con la fuente vieja. |
 
 ### Técnico
 | ID | Tarea | Notas |
@@ -294,9 +302,10 @@ Solo lo que Tiago pueda defender en una entrevista.
 11. **Lenis no resetea el scroll entre rutas**: forzar `lenis.scrollTo(0, { immediate: true })` en cada cambio de `pathname`.
 12. **Contextos "sticky" tras navegar**: si un componente setea estado en `mouseEnter` y confía en `mouseLeave` para limpiarlo, al navegar nunca se limpia. Resetear en el provider por `pathname`.
 13. **`ImageResponse` (satori) exige `display: flex` explícito** en todo `div` con más de un hijo, y conviene prerenderear la imagen con `generateStaticParams`: mientras la ruta es dinámica el error no aparece en build y explota recién en producción.
-14. **Satori NO soporta WOFF2** — que es justo lo único que baja `next/font/google`. Para embeber una fuente en `ImageResponse` hace falta **TTF/OTF/WOFF**, commiteado en el repo y leído con `fs`. Los TTF de Google se consiguen pidiéndole a la API de fonts con un user-agent viejo: `curl -A "Mozilla/4.0" ".../css2?family=..."` devuelve URLs `.ttf` en vez de `.woff2`.
-15. **`params` también es Promise en `opengraph-image.tsx`**, no solo en las pages. Si no lo leés, la imagen sale igual para todos los locales y **nadie se entera**: el build pasa y las dos imágenes quedan idénticas byte a byte. Se detecta comparando los hashes de `.next/server/app/{es,en}/opengraph-image.body`.
+14. **Satori NO soporta WOFF2** — que es justo lo único que baja `next/font/google`. Para embeber una fuente en `ImageResponse` hace falta **TTF/OTF/WOFF**, commiteado en el repo y leído con `fs`. Los TTF de Google se consiguen pidiéndole a la API de fonts con un user-agent viejo: `curl -A "Mozilla/4.0" ".../css2?family=..."` devuelve URLs `.ttf` en vez de `.woff2`. *(Hoy la OG image no lleva texto, así que esto no aplica al repo — vale si alguna vez se le vuelve a poner.)*
+15. **`params` también es Promise en `opengraph-image.tsx`**, no solo en las pages. Si no lo leés, la imagen sale igual para todos los locales y **nadie se entera**: el build pasa y las dos imágenes quedan idénticas byte a byte. Se detecta comparando los hashes de `.next/server/app/{es,en}/opengraph-image.body`. *(Hoy las dos SON idénticas a propósito, ver §6: sin texto no hay nada que localizar.)*
 16. **Adobe no está en simple-icons** (licencia). Para Ps/Ai/Pr usamos cuadrados bordeados con iniciales.
+26. **Un `<img>` que satori no puede resolver NO rompe el build**: la imagen sale igual, con ese elemento vacío. Un build verde no prueba que el gráfico se haya dibujado. Para verificarlo hay que **decodificar el PNG generado** y contar píxeles del color esperado — `.next/server/app/{es,en}/opengraph-image.body` es un PNG común y se parsea con `struct` + `zlib`, sin PIL. Así se descubrió que la tinta real de la marca ocupa solo ~69% del box del `<img>` (el `icon.svg` tiene margen interno), dato que ningún build iba a avisar.
 
 ### HTML, layout y accesibilidad
 22. **`max-w` + padding en el mismo elemento desalinea** — ver §2. El síntoma no es un `max-w` raro: el Stack tenía el valor correcto (`7xl`) y estaba igual de roto. Auditar *dónde* vive el padding, no qué número tiene el `max-w`.

@@ -1,101 +1,68 @@
 import { ImageResponse } from 'next/og'
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import type { Locale } from '@/types'
 
 /**
- * Imagen de Open Graph generada en build time.
+ * Imagen de Open Graph generada en build time: la marca G sobre el fondo
+ * oscuro, centrada. Nada más.
  *
- * Por qué existe: antes no había ninguna og:image declarada, así que cuando
- * alguien compartía el link, el scraper de la red social agarraba la primera
- * imagen grande que encontraba en el HTML (el cover de un case study). Este
- * archivo fuerza que SIEMPRE se use el logotipo de la marca.
+ * Por qué existe: sin una og:image declarada, el scraper de la red social
+ * agarra la primera imagen grande del HTML (el cover de un case study).
+ * Este archivo fuerza que SIEMPRE se use la marca.
+ *
+ * ⚠️ Por qué NO lleva texto (la versión anterior sí)
+ * --------------------------------------------------
+ * 1. **El recorte.** WhatsApp y varios clientes de chat no muestran la card
+ *    ancha de 1200x630: recortan un CUADRADO del centro (x de ~285 a ~915).
+ *    La composición anterior estaba alineada a la izquierda, así que ese
+ *    recorte entraba por la mitad del wordmark y se leía "ya" con el resto
+ *    del texto ilegible. Una marca centrada sobrevive cualquier recorte.
+ *
+ * 2. **La tipografía.** Al no haber texto, esta imagen ya no depende de
+ *    Space Grotesk. Antes cargaba los TTF del repo y por eso F3 (cambio de
+ *    tipografía) la arrastraba: si se cambiaba la fuente sin rehacer la OG,
+ *    la miniatura quedaba con una tipografía que el sitio ya no usa. Ahora
+ *    F3 no la toca.
+ *
+ * 3. **Redundancia.** WhatsApp, LinkedIn y X ya muestran el título
+ *    ("Gotya by Tiago Collado") y la descripción como TEXTO al lado de la
+ *    miniatura. Repetirlos adentro de la imagen no sumaba información.
+ *
+ * ⚠️ Las dos imágenes (es / en) ahora son IDÉNTICAS byte a byte, y está
+ * bien: al no haber texto no hay nada que localizar. Ojo con §9.15 de
+ * CLAUDE.md, que describe imágenes idénticas entre locales como el síntoma
+ * de un bug — ese caso era no leer `params`. Acá es intencional.
  *
  * Al vivir en app/[locale]/, la convención de Next hace que aplique a este
- * segmento y a todos los de abajo (incluido /projects/[slug]), salvo que un
- * segmento más profundo declare su propia imagen.
- *
- * Nota: no usamos el icon.svg directamente porque la mayoría de las redes
- * (WhatsApp, LinkedIn, X) no renderean SVG en preview. Esto sale como PNG.
+ * segmento y a todos los de abajo (incluido /projects/[slug]).
  */
 
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 export const alt = 'Gotya by Tiago Collado'
 
-// Pre-genera la imagen para ambos locales en build time en vez de
-// renderearla on-demand en cada scrape de red social.
+// Prerenderea la imagen en build time en vez de generarla on-demand en cada
+// scrape. Además evita el bug de §9.13: mientras la ruta es dinámica, los
+// errores de satori no aparecen en el build y explotan recién en producción.
 export function generateStaticParams() {
   return [{ locale: 'en' }, { locale: 'es' }]
 }
 
-// Mismos tokens que globals.css en dark mode, hardcodeados porque
-// ImageResponse no tiene acceso a las CSS variables del sitio.
+// Mismo token que globals.css en dark mode, hardcodeado porque ImageResponse
+// no tiene acceso a las CSS variables del sitio.
 const BG = '#111110'
-const INK = '#F0EDE8'
-const MUTED = '#A8A49F'
-const ACCENT = '#C96A3A'
 
-/**
- * El lema, por idioma.
- *
- * Va hardcodeado y no por next-intl a propósito: `getTranslations` necesita
- * el request context de next-intl, que en un archivo de imagen (que no es
- * una page) es una dependencia frágil para ganar muy poco. Son dos frases
- * que ya viven en `hero.headline` / `hero.subheadline` de los JSON; si las
- * cambiás allá, acordate de tocarlas acá.
- */
-const MOTTO: Record<Locale, { line1: string; line2: string }> = {
-  es: {
-    line1: 'Diseñar experiencias con empatía.',
-    line2: 'Crearlas con precisión.',
-  },
-  en: {
-    line1: 'Designing experiences with empathy.',
-    line2: 'Building them with precision.',
-  },
-}
-
-const EYEBROW: Record<Locale, string> = {
-  es: 'Diseño UX/UI y Desarrollo Web',
-  en: 'UX/UI Design & Web Development',
-}
-
-/**
- * Carga los TTF de Space Grotesk desde el repo.
- *
- * ⚠️ Tienen que ser TTF (u OTF/WOFF): satori —el motor detrás de
- * ImageResponse— NO soporta WOFF2, que es justamente lo único que baja
- * `next/font/google`. Por eso los archivos están commiteados en `fonts/`
- * en vez de reusar los que Next ya descarga.
- *
- * Se leen del filesystem y no por fetch para que el build no dependa de la
- * red ni de que Google Fonts esté arriba.
- */
-async function loadFonts() {
-  const dir = join(process.cwd(), 'src', 'app', '[locale]', 'fonts')
-  const [regular, bold] = await Promise.all([
-    readFile(join(dir, 'SpaceGrotesk-Regular.ttf')),
-    readFile(join(dir, 'SpaceGrotesk-Bold.ttf')),
-  ])
-  return [
-    { name: 'Space Grotesk', data: regular, weight: 400 as const, style: 'normal' as const },
-    { name: 'Space Grotesk', data: bold, weight: 700 as const, style: 'normal' as const },
-  ]
-}
-
-export default async function OpenGraphImage({
-  params,
-}: {
-  params: Promise<{ locale: Locale }>
-}) {
-  // `params` es una Promise en Next 16 — también acá, no solo en las pages.
-  const { locale } = await params
-  // Si llegara un locale raro, caemos a inglés en vez de romper el build.
-  const lang: Locale = locale === 'es' ? 'es' : 'en'
-
-  const motto = MOTTO[lang]
-  const fonts = await loadFonts()
+export default async function OpenGraphImage() {
+  /**
+   * La marca se lee del MISMO archivo que el favicon, no se duplica el path
+   * del SVG acá. Si algún día cambia el logotipo, se toca `icon.svg` y esta
+   * imagen se actualiza sola.
+   *
+   * Va como data URI en un <img> y no como <svg> inline porque es el camino
+   * que satori soporta de forma más confiable.
+   */
+  const svg = await readFile(join(process.cwd(), 'src', 'app', 'icon.svg'))
+  const mark = `data:image/svg+xml;base64,${svg.toString('base64')}`
 
   return new ImageResponse(
     (
@@ -104,83 +71,22 @@ export default async function OpenGraphImage({
           width: '100%',
           height: '100%',
           display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
+          alignItems: 'center',
+          justifyContent: 'center',
           backgroundColor: BG,
-          padding: '80px',
-          fontFamily: 'Space Grotesk',
         }}
       >
-        {/* Marca de agua: la G del logotipo, gigante y recortada por el borde */}
-        <div
-          style={{
-            position: 'absolute',
-            right: '-60px',
-            bottom: '-160px',
-            fontSize: '520px',
-            fontWeight: 700,
-            color: ACCENT,
-            opacity: 0.12,
-            letterSpacing: '-0.05em',
-          }}
-        >
-          G
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <div style={{ width: '48px', height: '6px', backgroundColor: ACCENT }} />
-          <div
-            style={{
-              fontSize: '24px',
-              color: MUTED,
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
-            }}
-          >
-            {EYEBROW[lang]}
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div
-            style={{
-              fontSize: '128px',
-              fontWeight: 700,
-              color: INK,
-              letterSpacing: '-0.04em',
-              lineHeight: 1,
-            }}
-          >
-            Gotya
-          </div>
-          <div
-            style={{
-              fontSize: '32px',
-              color: MUTED,
-              marginTop: '16px',
-              letterSpacing: '-0.01em',
-            }}
-          >
-            by Tiago Collado
-          </div>
-        </div>
-
-        {/* Satori exige display:flex explícito en todo div con más de un
-            hijo, así que el lema va en dos divs apilados en vez de un <br />. */}
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            fontSize: '30px',
-            maxWidth: '860px',
-            lineHeight: 1.35,
-          }}
-        >
-          <div style={{ color: INK }}>{motto.line1}</div>
-          <div style={{ color: ACCENT }}>{motto.line2}</div>
-        </div>
+        {/* Ojo: el box de 460 NO es el tamaño de la marca. El icon.svg tiene
+            margen interno (trazo de 5 sobre viewBox de 32) y la G está
+            abierta a la derecha, así que la tinta real ocupa ~69% del box:
+            ~315x345 px medidos sobre el PNG generado. Sobre el recorte
+            cuadrado de 630 que hace WhatsApp, eso es ~50% del cuadro.
+            Por la abertura derecha la G no es simétrica y su centro
+            geométrico cae ~15px a la izquierda del centro del lienzo; a
+            simple vista no se nota y el centrado óptico incluso mejora. */}
+        <img src={mark} width={460} height={460} alt="" />
       </div>
     ),
-    { ...size, fonts }
+    size
   )
 }
