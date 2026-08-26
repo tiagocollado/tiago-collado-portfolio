@@ -55,11 +55,8 @@ export default function Stack() {
             {stackLoop.map((item, index) => (
               <div
                 key={`${item.name}-${index}`}
-                className="carousel-item flex items-center gap-3 px-5 py-3 md:px-6 md:py-4 rounded-full border transition-colors duration-300 hover:border-accent"
-                style={{
-                  borderColor: 'var(--border-default)',
-                  backgroundColor: 'var(--color-surface)',
-                }}
+                className="carousel-item flex items-center gap-3 px-5 py-3 md:px-6 md:py-4 rounded-full border transition-colors duration-300 border-(--border-default) hover:border-accent"
+                style={{ backgroundColor: 'var(--color-surface)' }}
               >
                 <span style={{ color: 'var(--ink-secondary)' }}>
                   <StackIcon name={item.name} size={18} />

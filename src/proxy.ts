@@ -5,7 +5,7 @@ import createMiddleware from 'next-intl/middleware'
 // and redirect/rewrite to the correct [locale] segment.
 export const proxy = createMiddleware({
   locales: ['es', 'en'],
-  defaultLocale: 'es'
+  defaultLocale: 'en'
 })
 
 export const config = {

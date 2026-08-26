@@ -1,3 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <path d="M3 3H29V11H20V29H12V11H3Z" fill="#C96A3A"/>
+  <!--
+    Wordmark "G" de Gotya (antes era la "T" de Tiago Collado, previa al rebranding).
+
+    Geometria: circunferencia de radio 9.5 centrada en (16,16), abierta a la
+    derecha entre -38 y +38 grados. El arco arranca arriba-derecha, gira en
+    sentido antihorario los 280 grados largos (large-arc=1, sweep=0) y cierra
+    abajo-derecha; de ahi sube al eje y corta hacia la izquierda: esa L es la
+    barra de la G.
+
+    Trazo de 5 sobre radio 9.5 => 24 de diametro sobre 32 de caja, con 4 de
+    margen. Va grueso a proposito: un favicon se ve a 16px y cualquier detalle
+    fino desaparece. Sin fondo, para que funcione igual en pestanas claras y
+    oscuras. `butt` + `miter` mantienen el corte duro de la marca.
+  -->
+  <path
+    d="M23.5 10.2 A9.5 9.5 0 1 0 23.5 21.8 L23.5 16 L16 16"
+    fill="none"
+    stroke="#C96A3A"
+    stroke-width="5"
+    stroke-linecap="butt"
+    stroke-linejoin="miter"
+  />
 </svg>

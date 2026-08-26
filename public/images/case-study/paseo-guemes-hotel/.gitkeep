@@ -1,0 +1,23 @@
+# Imágenes contextuales del case study "Paseo Güemes Hotel".
+#
+# Pendiente: Tiago sube 4 imágenes acá, con estos nombres exactos:
+#
+#   01-hero.jpg        — Hero del sitio con video del Monumento a Güemes
+#                        y el CTA de reserva.
+#   02-challenge.jpg   — Wireframes de desktop y mobile en Figma.
+#   03-decisions.jpg   — Sistema visual aplicado: paleta, tipografías y
+#                        versiones del logo.
+#   04-delivered.jpg   — Sitio en mobile: habitaciones, reserva directa
+#                        y WhatsApp flotante.
+#
+# Los nombres salen de los `alt` ya escritos en imageBriefs[] de
+# src/data/projects.ts. Si cambiás qué va en cada slot, actualizá el alt.
+#
+# Specs: 16:10 (1920×1200 o similar), JPG, menos de 500kb cada una.
+#
+# Cuando estén, hay que agregar `src: '/images/case-study/paseo-guemes-hotel/
+# 01-hero.jpg'` (y los otros tres) a cada imageBrief en projects.ts. Sin `src`
+# el case study renderea el placeholder "BUILDING".
+#
+# El cover de la card del home es aparte y va en:
+#   public/images/covers/paseo-guemes-hotel-cover.jpg

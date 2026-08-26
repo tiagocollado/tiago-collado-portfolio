@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation'
 import { projects } from '@/data/projects'
 import { Locale } from '@/types'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import Gallery from '@/components/sections/Gallery'
 import CaseStudySidebar from '@/components/case-study/CaseStudySidebar'
 import CaseStudySection from '@/components/case-study/CaseStudySection'
 import CaseStudyImage from '@/components/case-study/CaseStudyImage'
@@ -20,10 +19,10 @@ export async function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }))
 }
 
-// Devuelve el siguiente proyecto en el carrusel, saltando comingSoon
-// y haciendo wrap-around al primero cuando estamos en el último.
+// Devuelve el siguiente proyecto en el carrusel, con wrap-around al
+// primero cuando estamos en el último.
 function getNextProject(currentOrder: number) {
-  const eligible = projects.filter((p) => !p.comingSoon).sort((a, b) => a.order - b.order)
+  const eligible = [...projects].sort((a, b) => a.order - b.order)
   const idx = eligible.findIndex((p) => p.order === currentOrder)
   return eligible[(idx + 1) % eligible.length]
 }
@@ -38,15 +37,14 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const cs = await getTranslations('case_study')
 
   // Cargar contenido del caso de estudio (shape Awwwards: intro/challenge/
-  // decision_1-3/delivered_1-3/closing). Si las keys no existen — ej. el
-  // proyecto está en comingSoon, o por algún motivo el case_study_<slug>
-  // bloque no fue creado en i18n — el catch deja hasCaseStudy en false y
-  // el body simplemente no se renderea.
+  // decision_1-3/delivered_1-3/closing). Si falta alguna key — porque el
+  // bloque case_study_<slug> no fue creado en i18n — el catch deja
+  // hasCaseStudy en false y el body simplemente no se renderea.
   const caseStudyKey = `case_study_${slug}`
   let hasCaseStudy = false
   const awwwardsContent: Record<string, string> = {}
 
-  if (!project.comingSoon && project.awwwardsLayout) {
+  if (project.awwwardsLayout) {
     try {
       const t = await getTranslations(caseStudyKey)
       const awwwardsKeys = [
@@ -61,6 +59,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       for (const key of awwwardsKeys) {
         awwwardsContent[key] = t(key)
       }
+      // 'process' es opcional: solo algunos case studies cuentan el cómo
+      // arrancaron antes de listar las decisiones. t.has() evita que un
+      // proyecto sin la key tire y apague el case study entero.
+      if (t.has('process')) awwwardsContent.process = t('process')
       hasCaseStudy = true
     } catch {
       hasCaseStudy = false
@@ -82,8 +84,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
       {/* ============ CASE STUDY BODY (Awwwards layout) ============
           Solo se renderea si el proyecto tiene awwwardsLayout: true Y se
-          pudieron cargar todas las keys i18n. Para coming-soon (Retro Kicks)
-          no hay body — solo header + project navigation abajo. */}
+          pudieron cargar todas las keys i18n. Si no, queda solo el header
+          + la navegación de abajo. */}
       {project.awwwardsLayout && hasCaseStudy && (
         <div className="px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32 mt-12 md:mt-16">
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
@@ -136,6 +138,17 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
               {/* CÓMO LO RESOLVÍ — 3 decisiones (titulo + body) intercaladas con 2 imágenes */}
               <CaseStudySection label={cs('cs_decisions')}>
+                {/* Bajada opcional: cómo encaré el proyecto antes de entrar
+                    en las decisiones puntuales. Si el case study no define
+                    'process', no se renderea nada. */}
+                {awwwardsContent.process && (
+                  <p
+                    className="text-lg md:text-xl leading-relaxed max-w-2xl text-pretty"
+                    style={{ color: 'var(--ink-secondary)' }}
+                  >
+                    {awwwardsContent.process}
+                  </p>
+                )}
                 <ol className="space-y-12 md:space-y-16 list-none">
                   {[1, 2, 3].map((i) => (
                     <li key={i} className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
@@ -226,14 +239,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             </div>
           </div>
         </div>
-      )}
-
-      {/* ============ GALERÍA ============
-          Solo cuando NO awwwardsLayout. En el layout Awwwards las imágenes
-          se intercalan dentro de las secciones (CaseStudyImage), así que
-          repetirlas al final es ruido. */}
-      {!project.awwwardsLayout && project.gallery && project.gallery.length > 0 && (
-        <Gallery slug={slug} images={project.gallery} />
       )}
 
       {/* ============ PROJECT NAVIGATION ============

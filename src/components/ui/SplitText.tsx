@@ -13,6 +13,8 @@ type Props = {
   duration?: number
   className?: string
   charClassName?: string
+  /** Se pasa tal cual al elemento raiz — util para aria-labelledby. */
+  id?: string
   /** Si true, anima al entrar al viewport en lugar de en el mount. */
   whileInView?: boolean
 }
@@ -46,6 +48,7 @@ export default function SplitText({
   duration = 0.6,
   className,
   charClassName,
+  id,
   whileInView = false,
 }: Props) {
   const reduced = useReducedMotion()
@@ -87,7 +90,7 @@ export default function SplitText({
   const animateState = inView ? visibleState : initialState
 
   return (
-    <Tag className={className}>
+    <Tag id={id} className={className}>
       <span className="sr-only">{text}</span>
       <span ref={containerRef} aria-hidden="true">
         {words.map((word, wi) => {

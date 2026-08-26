@@ -14,8 +14,20 @@ export default function Home() {
       <Projects />
       <About />
       <Stack />
-      <Contact />
-      <Footer />
+      {/* Bloque de cierre a pantalla completa.
+          Al clickear "Hablemos" en el navbar el ancla #contact scrollea hasta
+          el tope de Contact; si el bloque mide menos que el viewport, quedaba
+          medio vacio y el footer caia fuera de cuadro. Con min-h-screen +
+          justify-between el conjunto ocupa exactamente una pantalla: Contact
+          arriba y la barra del footer pegada abajo.
+
+          El wrapper es un <div> a proposito: un <section> o <main> convertiria
+          al <footer> en descendiente suyo y le sacaria el rol de landmark
+          contentinfo. Un div no scopea nada, asi que el landmark sobrevive. */}
+      <div className="min-h-screen flex flex-col justify-between">
+        <Contact />
+        <Footer />
+      </div>
     </>
   )
 }

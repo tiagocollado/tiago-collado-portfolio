@@ -100,8 +100,8 @@ export default function Navbar() {
               onMouseEnter={onCursorEnter}
               onMouseLeave={onCursorLeave}
               aria-label={theme === 'dark' ? 'Modo claro' : 'Modo oscuro'}
-              className="flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-300 hover:bg-(--bg-secondary) hover:scale-105"
-              style={{ color: 'var(--ink-secondary)', backgroundColor: 'transparent' }}
+              className="flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-300 bg-transparent hover:bg-(--bg-secondary) hover:scale-105"
+              style={{ color: 'var(--ink-secondary)' }}
             >
               {theme === 'dark' ? (
                 <Sun size={18} className="transition-transform duration-300 hover:rotate-12" />
@@ -258,8 +258,7 @@ function DropdownLink({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       variants={{ hidden: { opacity: 0, y: -4 }, visible: { opacity: 1, y: 0 } }}
-      className="block px-4 py-2 text-sm font-medium no-underline transition-colors duration-200 hover:bg-(--bg-secondary) hover:text-(--ink-primary)"
-      style={{ color: 'var(--ink-secondary)' }}
+      className="block px-4 py-2 text-sm font-medium no-underline transition-colors duration-200 text-(--ink-secondary) hover:bg-(--bg-secondary) hover:text-(--ink-primary)"
     >
       {children}
     </motion.a>

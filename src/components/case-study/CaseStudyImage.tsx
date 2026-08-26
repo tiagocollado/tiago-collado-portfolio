@@ -1,8 +1,7 @@
 'use client'
 
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { useRef } from 'react'
-import { useCursor } from '@/hooks/useCursor'
+import { useEffect, useRef, useState } from 'react'
 
 /**
  * Bloque de imagen contextual para el layout Awwwards-style.
@@ -11,8 +10,11 @@ import { useCursor } from '@/hooks/useCursor'
  * suave: la imagen se mueve verticalmente ~24px relativo al scroll mientras
  * está en viewport, creando una sensación de profundidad sin ruido visual.
  *
+ * ⚠️ El parallax y el recorte 3:2 son SOLO desktop (md+). En mobile la
+ * imagen se renderea completa, en flujo normal y quieta — ver notas abajo.
+ *
  * Modos:
- * 1. Imagen real: pasar `src` + `alt`. Renderea <img> con parallax.
+ * 1. Imagen real: pasar `src` + `alt`. Renderea <img>.
  * 2. Placeholder: si `src` es undefined, muestra un cuadrado con border
  *    dashed + el contenido de `description` y `prompt` como guía para que
  *    Tiago genere la imagen y la reemplace después.
@@ -22,7 +24,7 @@ import { useCursor } from '@/hooks/useCursor'
  * - `alt`: texto alternativo (a11y) — siempre obligatorio.
  * - `caption?`: texto que aparece debajo de la imagen como pie de foto.
  * - `aspectRatio?`: "video" (16/9) | "square" (1/1) | "wide" (3/2 — default)
- *                   | "portrait" (3/4). Controla la altura del bloque.
+ *                   | "portrait" (3/4). Controla la altura del bloque EN DESKTOP.
  * - `description?`: SOLO en modo placeholder — qué imagen tiene que ir.
  * - `prompt?`: SOLO en modo placeholder — prompt sugerido para Nano Banana
  *              o Gemini Pro.
@@ -30,11 +32,45 @@ import { useCursor } from '@/hooks/useCursor'
 
 type AspectRatio = 'video' | 'square' | 'wide' | 'portrait'
 
+// Usado por el placeholder: ahí SÍ queremos una caja de altura fija en
+// cualquier viewport, porque no hay imagen que dicte la altura.
 const ASPECT_CLASSES: Record<AspectRatio, string> = {
   video:    'aspect-video',
   square:   'aspect-square',
   wide:     'aspect-[3/2]',
   portrait: 'aspect-[3/4]',
+}
+
+// Usado por la imagen real: el recorte arranca recién en md+.
+// En mobile el container no tiene aspect fijo, así que la imagen se ve
+// entera (sin crop) y define ella misma la altura del bloque.
+const MD_ASPECT_CLASSES: Record<AspectRatio, string> = {
+  video:    'md:aspect-video',
+  square:   'md:aspect-square',
+  wide:     'md:aspect-[3/2]',
+  portrait: 'md:aspect-[3/4]',
+}
+
+/**
+ * Devuelve true cuando el viewport es md+ (768px).
+ *
+ * Arranca en false a propósito: el HTML que Next pre-renderea es el mismo
+ * para todos, así que si asumiéramos desktop tendríamos un mismatch de
+ * hidratación. El layout de mobile-a-desktop lo resuelve CSS (clases md:),
+ * así que este hook solo decide si el parallax corre o no.
+ */
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(false)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)')
+    const update = () => setIsDesktop(mq.matches)
+    update()
+    mq.addEventListener('change', update)
+    return () => mq.removeEventListener('change', update)
+  }, [])
+
+  return isDesktop
 }
 
 interface Props {
@@ -55,7 +91,7 @@ export default function CaseStudyImage({
   prompt,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null)
-  const { setVariant } = useCursor()
+  const isDesktop = useIsDesktop()
 
   // Parallax: cuando el bloque entra/sale del viewport, la imagen se mueve
   // verticalmente. offset ['start end','end start'] = empieza el progress
@@ -122,8 +158,10 @@ export default function CaseStudyImage({
     <motion.figure
       ref={ref}
       className="relative w-full"
-      onMouseEnter={() => setVariant('view')}
-      onMouseLeave={() => setVariant('default')}
+      // Sin cursor variant ni hover: estas imágenes no abren lightbox ni
+      // navegan a ningún lado. Un cursor "VIEW" prometía una interacción
+      // que no existe.
+      //
       // Blur-in cuando entra al viewport: la imagen arranca borrosa + un
       // pelín achicada y se enfoca a medida que aparece. Refuerza el feeling
       // editorial de "foto que se va resolviendo". Una sola vez (`once: true`).
@@ -133,19 +171,24 @@ export default function CaseStudyImage({
       transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
     >
       <div
-        className={`${ASPECT_CLASSES[aspectRatio]} relative w-full rounded-xl overflow-hidden`}
+        className={`${MD_ASPECT_CLASSES[aspectRatio]} relative w-full rounded-xl overflow-hidden`}
         style={{ backgroundColor: 'var(--color-surface)' }}
       >
-        {/* La imagen es 48px más alta que el container y arranca con top:-24px.
-            Eso le da 24px de "extra" arriba y 24px abajo para absorber el rango
-            de parallax (y va de +24 a -24). Sin ese extra, el parallax exponía
-            el fondo del container arriba/abajo cuando se desplazaba. */}
+        {/*
+          MOBILE (default): la imagen va en flujo normal, `h-auto`, sin crop.
+          Se ve completa y no se mueve al scrollear.
+
+          DESKTOP (md+): pasa a `absolute` y se recorta al aspect del
+          container. Es 48px más alta (`h-[calc(100%+48px)]`) y arranca en
+          `-top-6` (-24px), para que el parallax (y va de +24 a -24) tenga
+          margen y no exponga el fondo del container arriba/abajo.
+        */}
         <motion.img
           src={src}
           alt={alt}
           loading="lazy"
-          style={{ y, top: -24, height: 'calc(100% + 48px)' }}
-          className="absolute left-0 w-full object-cover"
+          style={isDesktop ? { y } : undefined}
+          className="block w-full h-auto md:absolute md:left-0 md:-top-6 md:h-[calc(100%+48px)] md:object-cover"
         />
       </div>
       {caption && (

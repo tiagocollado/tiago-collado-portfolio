@@ -1,7 +1,7 @@
 import { getRequestConfig } from 'next-intl/server'
 
 export default getRequestConfig(async ({ requestLocale }) => {
-  const locale = (await requestLocale) ?? 'es'
+  const locale = (await requestLocale) ?? 'en'
 
   // Explicit imports (not template literal) so webpack bundles both files
   // correctly in production. Template literals can cause missing-module errors

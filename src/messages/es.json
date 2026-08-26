@@ -1,31 +1,31 @@
 {
   "nav": {
     "projects": "Proyectos",
-    "about": "Sobre mí",
+    "about": "Sobre Gotya",
     "contact": "Contacto",
     "download_cv": "Descargar CV",
     "contact_marquee": "Hablemos"
   },
   "hero": {
-    "name": "Tiago Collado",
+    "name": "Gotya",
     "role": "UX/UI Designer & Frontend Developer",
     "availability": "Disponible para colaborar",
-    "headline": "Diseño experiencias con empatía.",
-    "subheadline": "Las construyo con precisión.",
+    "headline": "Diseñar experiencias con empatía.",
+    "subheadline": "Crearlas con precisión.",
     "cta_projects": "Ver proyectos",
     "cta_contact": "Contactar",
     "cta_cv": "Descargar CV"
   },
   "contact": {
     "label": "CONTACTO",
-    "title": "¿Trabajamos juntos?",
-    "body": "Escribime para charlar sobre proyectos, oportunidades o lo que quieras.",
-    "location_label": "Ubicación",
-    "location": "Buenos Aires, Argentina"
+    "title": "¿Por dónde arrancamos?",
+    "email_label": "EMAIL",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "download_cv": "Descargar CV"
   },
   "case_study": {
     "back": "Volver al inicio",
-    "gallery_title": "Galería",
     "next_project_label": "Próximo proyecto",
     "view_all_projects": "Ver todos los proyectos",
     "view_live": "Ver demo en vivo",
@@ -45,9 +45,8 @@
     "cs_closing": "Cierre"
   },
   "projects": {
-    "label": "TRABAJO SELECCIONADO",
+    "label": "PROYECTOS",
     "statement": "Proceso, criterio y ejecución.",
-    "coming_soon": "En construcción",
     "view_case": "Ver caso de estudio",
     "view_live": "Ver demo en vivo",
     "view_github": "Ver código"
@@ -122,33 +121,17 @@
     "delivered_3": "Prototipo Figma alta fidelidad con todas las pantallas principales",
     "closing": "El diseño inclusivo no es una capa estética que agregás al final, es la base de una buena experiencia. Diseñar para los 3 entrevistados, con sus limitaciones visuales y memoria secuencial frágil, terminó creando un producto más claro y robusto para cualquiera. Si volviera a hacerlo: un 'Sistema de Tranquilidad Familiar' que vincule la app con los hijos para reducir ansiedad familiar y reforzar la red de apoyo."
   },
-  "case_study_sitios-wordpress": {
-    "intro": "Dos sitios WordPress con scopes muy distintos: una landing simple para un vino kosher y una web institucional con plugins funcionales. Mismo proceso en los dos: diseñar primero en Figma, implementar después.",
-    "challenge": "Cada cliente venía con un brief distinto. Govah necesitaba una landing one-page para presentar el producto y captar contacto. Pulso Creativo pedía una web institucional con secciones, formularios y un canal directo a WhatsApp. La pregunta era cómo mantener prolijo el proceso de diseño sin que Elementor termine dictando las decisiones visuales.",
-    "decision_1_title": "Figma primero, Elementor después",
-    "decision_1_body": "En ambos casos arranqué con wireframes y UI en Figma antes de tocar WordPress. Eso permitió validar tipografía, jerarquía y layout antes de pelearme con limitaciones del builder. Cuando llegó el momento de implementar, Elementor se volvió una herramienta de ejecución, no de exploración.",
-    "decision_2_title": "Plugins funcionales sin sobrecargar el sitio",
-    "decision_2_body": "Pulso pedía formulario de contacto + integración a WhatsApp. Elegí WPForms (lightweight, sin bloat) y un plugin de WhatsApp con CTA flotante. Nada de page builders extra ni librerías que enlentecieran la carga: el sitio sigue rápido y los formularios llegan al mail del cliente sin intermediarios.",
-    "decision_3_title": "Hosting end-to-end en Pulso",
-    "decision_3_body": "En Pulso me hice cargo del setup completo: Hostinger para hosting y mail, dominio en NIC.ar, certificados SSL. Eso significó ser el único punto de contacto del cliente para todo el ciclo de vida del sitio. En Govah el scope fue más acotado: diseño UI + colaboración con otro dev en la implementación con Elementor.",
-    "delivered_1": "Govah, landing one-page (govah.com.ar) con CTA prominente y bloque de contacto.",
-    "delivered_2": "Pulso Creativo, web institucional multi-sección (pulsocreativo.com.ar) con formulario integrado y CTA flotante de WhatsApp.",
-    "delivered_3": "Setup operativo en Pulso: hosting, dominio y mails configurados para el cliente.",
-    "closing": "Lo que me llevo de los dos proyectos: WordPress no es una limitación si el diseño viene resuelto antes. Elementor pasa de ser un cuello de botella a una herramienta razonable cuando entrás con la decisión visual ya tomada en Figma."
-  },
   "about": {
-    "title": "Sobre mí",
-    "background": "Mi primer rol profesional fue armar de cero la marca digital del Hotel Real Cafayate: posicionamiento, estrategia y operación de comunicación durante casi tres años. Hoy el hotel mantiene una presencia activa y automatizada con las bases que dejé. Entendí qué hace que una audiencia se quede — y entendí también que quería estar del otro lado: armando las plataformas, no solo usándolas. Hoy estoy cerrando la Licenciatura en Tecnología Multimedial en la Universidad Maimónides.",
-    "hybrid_path": "En la misma universidad fui Auxiliar de Docencia en Diseño de Interfaces — comunicar usabilidad y arquitectura de información a otros me obligó a entender los fundamentos en profundidad. En lo profesional vinieron Qualita Studio (Diseñador Web Jr.) y FutbolTalentPro, donde diseñé el MVP mobile-first colaborando directo con desarrolladores.",
-    "hook": "No solo diseño interfaces. Las prototipo en Figma, las valido con usuarios y las codifico en React.",
-    "mission": "Busco equipos de producto donde diseño y desarrollo no se hablen por traductor. Mi objetivo: cerrar la brecha entre UX y código — handoffs limpios, decisiones de diseño técnicamente viables desde el día uno.",
-    "toolkit_label": "Lo que traigo",
-    "toolkit_1_title": "Diseño de producto",
-    "toolkit_1_desc": "Research, IA, sistemas y prototipado. De insight a interfaz.",
-    "toolkit_2_title": "Frontend con criterio",
-    "toolkit_2_desc": "React, Next, Tailwind. Handoff sin traducción.",
-    "toolkit_3_title": "Producto end-to-end",
-    "toolkit_3_desc": "De research a deploy. Decisiones de diseño viables desde el día uno."
+    "title": "SOBRE GOTYA",
+    "based": "BASED IN BUENOS AIRES / WORLDWIDE",
+    "claim_1": "El punto exacto donde el",
+    "claim_2": "diseño",
+    "claim_3": "entiende al",
+    "claim_4": "negocio.",
+    "body_1": "Diseñar para humanos implica salir del mood de diseño. Significa sentarse en cualquier mesa y entender la dinámica de las demás áreas para aportar valor de verdad.",
+    "body_2": "Gotya viene de gotcha (“entendido”). Es la confirmación de que la esencia está captada. Ese entendimiento es lo que convierte un objetivo de negocio en una experiencia que la gente recuerda.",
+    "signature": "Gotya. Entendido.",
+    "byline": "by Tiago Collado"
   },
   "services": {
     "label": "Servicios que ofrezco",
@@ -165,7 +148,37 @@
     "title": "Tecnologías que Utilizo"
   },
   "footer": {
-    "download_cv": "Descargar CV",
-    "rights": "Tiago Collado. Todos los derechos reservados."
+    "credit": "Diseñado y desarrollado por Tiago Collado",
+    "back_to_top": "Volver arriba"
+  },
+  "case_study_paseo-guemes-hotel": {
+    "intro": "Paseo Güemes Hotel es un hotel 3 estrellas en el corazón de la Ciudad de Salta, en la zona de bares y a pasos del casco histórico. Abrió en febrero de 2026, así que llegué a un negocio nuevo, todavía definiendo su público entre turismo nacional, internacional y un segmento corporativo.",
+    "challenge": "En lo digital el punto de partida era mínimo: dominio, hosting y WordPress instalados, y el motor de reservas ya funcionando, pero ninguna web armada. Sin sitio propio, el hotel dependía de las OTAs y sus comisiones, perdía reservas directas y recibía las consultas dispersas en mensajes que se perdían sin contexto. Las restricciones marcaron el camino: presupuesto acotado, una web que el propio hotel pudiera mantener, hosting y dominio heredados, contenido que llegaba de a poco y un motor de reservas al que no tenía acceso directo, porque lo administra la gerenta.",
+    "process": "No fui directo a maquetar. Arranqué con un brief al dueño (negocio, objetivos, competencia y público), hice un análisis del mercado hotelero salteño con mapa de posicionamiento y definición del huésped ideal, y recién con eso armé los wireframes de desktop y mobile en Figma.",
+    "decision_1_title": "Reserva directa primero, OTAs en segundo plano",
+    "decision_1_body": "Todo el sitio empuja al motor de reservas propio y las OTAs quedan como vidriera de captación, no como canal principal. El objetivo del negocio era reducir comisiones y dejar de perder reservas directas, así que el mensaje y los CTAs se ordenaron alrededor de eso.",
+    "decision_2_title": "Stack editable por el cliente, no desarrollo a medida",
+    "decision_2_body": "Con presupuesto acotado y la necesidad de que el hotel mantuviera la web sin depender de mí, un stack editable le ganaba a un desarrollo hecho a mano. Elegí un tema liviano con constructor de cabecera y pie incluido para cuidar la performance en mobile sin sumar licencias.",
+    "decision_3_title": "Jerarquía del hero y CTAs repartidos por recorrido",
+    "decision_3_body": "Hero con video del Monumento a Güemes, porque la ubicación es el activo número uno del hotel, y un único CTA fuerte de reserva. Los llamados secundarios se repartieron por sección para no gastar el botón de reservar repitiéndolo en cada bloque. Para las consultas sumé un botón flotante de WhatsApp en lugar de depender de mensajes de Instagram: llega con contexto y no se pierde.",
+    "delivered_1": "Sitio mobile-first con Inicio, Habitaciones, Beneficios, Ubicación y Contacto",
+    "delivered_2": "Identidad aplicada de punta a punta: paleta extraída del logo, sistema tipográfico y logo en versiones para fondo claro y oscuro",
+    "delivered_3": "Reserva directa integrada, WhatsApp y formularios, más base de SEO local, backups automáticos y rendimiento optimizado",
+    "closing": "El sitio está por publicarse, así que todavía no hay métricas duras y prefiero no inventarlas. Lo observable sí es claro: el hotel pasa de depender de las OTAs a tener un canal de reserva directa propio, gana una presencia digital que antes no existía y las consultas entran por WhatsApp con contexto en lugar de perderse. Construir con contenido que llegaba de a poco me obligó a trabajar por bloques y a dejar tapones provisorios en vez de bloquearme esperando. También aprendí a elegir el flujo robusto por sobre el vistoso: no forzar el motor de reservas dentro del hero y resolverlo con un botón directo. Si lo hiciera de nuevo, cerraría antes las fotos reales, que son el activo que más convierte, y pediría los accesos del motor desde el arranque."
+  },
+  "case_study_pulso-creativo": {
+    "intro": "Pulso Creativo es una consultora B2B con más de 25 años de trayectoria en marketing, branding y coaching. Necesitaban una plataforma institucional que funcionara como carta de presentación digital y reflejara su nivel de expertise ante tomadores de decisiones.",
+    "challenge": "La falta de un canal digital propio les hacía perder oportunidades de exhibir autoridad: no tenían un espacio centralizado para mostrar clientes de peso ni un flujo preparado para recibir consultas comerciales con el contexto necesario para perfilar leads B2B. A eso se sumaban dos restricciones concretas: las plantillas nativas de WordPress chocaban con la maquetación del constructor visual (páginas de legales desalineadas, problemas con la cabecera transparente) y el cliente entregó un volumen de texto muy denso para los casos de éxito, que amenazaba la legibilidad en mobile.",
+    "process": "El armado partió de una maquetación por bloques, priorizando carruseles y grillas. Sobre esa base trabajé de forma iterativa la interfaz y el copywriting, transformando párrafos extensos en formatos escaneables y ajustando el comportamiento del layout para garantizar un responsive fluido.",
+    "decision_1_title": "WhatsApp flotante ruteado por servicio",
+    "decision_1_body": "En lugar de depender solo de un formulario estático, configuré un CTA dinámico que captura la página que el visitante está mirando. Así las consultoras saben exactamente qué servicio miraba el prospecto antes de escribir, un contexto comercial que vale oro para el cierre.",
+    "decision_2_title": "Casos de éxito en viñetas, no en bloques de texto",
+    "decision_2_body": "Descarté el texto continuo que llegó del cliente y lo pasé a un listado con íconos. El usuario corporativo no lee, escanea: la decisión baja la carga cognitiva, mejora la longitud de línea en desktop, evita el scroll infinito en mobile y deja los resultados duros a la vista.",
+    "decision_3_title": "Contraste corporativo y ancho de lectura limitado",
+    "decision_3_body": "Pie oscuro y fondos sólidos en las secciones burocráticas, con el texto limitado a 800px de ancho. Evita la fatiga visual de las líneas de lado a lado, separa con claridad las jerarquías de información y le da al sitio un cierre visual premium.",
+    "delivered_1": "Sitio responsivo full-width con sistema de contacto dual: formulario y WhatsApp",
+    "delivered_2": "Rediseño UX del contenido entregado por el cliente, de texto denso a formato escaneable",
+    "delivered_3": "Optimización de rendimiento en servidor y puesta en producción con indexación orgánica en Google Search Console",
+    "closing": "El negocio proyecta autoridad desde el primer scroll y el embudo de contacto quedó optimizado: las consultas ingresan perfiladas y directas. El carrusel de marcas, con comportamiento táctil nativo, valida la trayectoria de la consultora en los primeros segundos de navegación. El aprendizaje más grande fue la negociación UX con el cliente: mediar entre la necesidad del negocio de contar todo su esfuerzo operativo y la necesidad del usuario final de consumir datos rápidos y concisos."
   }
 }

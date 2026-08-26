@@ -1,32 +1,33 @@
 'use client'
 
 /**
- * About — versión 3.0
- * -------------------
- *  Layout 2 columnas en lg+:
- *   - IZQUIERDA: 4 bloques de copy (Miller — chunks) + ubicación al final.
- *   - DERECHA: 3 cards distribuidas en grid-rows-3 — ocupan la misma
- *     altura que la columna izquierda (Similitud + Proximidad).
+ * About — versión 4.0 (rebranding Gotya)
+ * --------------------------------------
+ *  Estructura tomada de la referencia POSTA (public/images/references):
+ *   1. Fila de micro-labels: "SOBRE GOTYA" a la izquierda, ubicación a la
+ *      derecha. Marca los bordes de la sección y da el respiro superior.
+ *   2. Claim display grande, alineado a la izquierda, con dos fragmentos en
+ *      bold. La mezcla de pesos es lo que le da ritmo a la frase.
+ *   3. Mucho aire.
+ *   4. Bloque de copy chico, alineado a la DERECHA, cerrado por el remate
+ *      de marca en bold y una byline mono debajo. La asimetría (claim izq /
+ *      copy der) es el gesto editorial de la referencia.
  *
- *  Sin H2 claim — la copy entra directo (Estética-Usabilidad: menos
- *  cromo, más contenido). El eyebrow "Sobre mí" es el h2 semántico
- *  (mono micro), section marker, no protagonista.
+ *  El claim viaja partido en 4 keys de i18n (claim_1..claim_4) en vez de
+ *  meter HTML dentro del string: las pares van en bold. Así se traduce sin
+ *  romper el markup.
+ *
+ *  Heurísticas: Miller (2 párrafos, no 4), Estética-Usabilidad (aire y menos
+ *  cromo), Proximidad (label + claim arriba, copy + firma abajo).
  */
 
 import { useTranslations } from 'next-intl'
 import { motion } from 'framer-motion'
-import FadeInSection from '../ui/FadeInSection'
-import SplitText from '../ui/SplitText'
 
-const TOOLKIT_ITEMS = [
-  { num: '01', titleKey: 'toolkit_1_title' },
-  { num: '02', titleKey: 'toolkit_2_title' },
-  { num: '03', titleKey: 'toolkit_3_title' },
-] as const
+const EASE = [0.16, 1, 0.3, 1] as const
 
 export default function About() {
   const t = useTranslations('about')
-  const tc = useTranslations('contact')
 
   return (
     <section
@@ -34,124 +35,93 @@ export default function About() {
       aria-labelledby="about-heading"
       className="pt-16 md:pt-20 lg:pt-28 pb-8 md:pb-10 lg:pb-12 px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32"
     >
-      <div className="max-w-6xl mx-auto">
-        <FadeInSection>
+      <div className="max-w-7xl mx-auto">
 
-          {/* Section marker — el h2 semántico es el eyebrow micro */}
+        {/* 1 · Fila de micro-labels */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.6, ease: EASE }}
+          className="flex items-start justify-between gap-6"
+        >
           <h2
             id="about-heading"
-            className="text-xs font-mono tracking-[0.2em] uppercase mb-10 md:mb-14"
+            className="text-xs font-mono tracking-[0.2em] uppercase"
             style={{ color: 'var(--color-accent)' }}
           >
             {t('title')}
           </h2>
+          <p
+            className="text-xs font-mono tracking-[0.2em] uppercase text-right"
+            style={{ color: 'var(--ink-muted)' }}
+          >
+            {t('based')}
+          </p>
+        </motion.div>
 
-          {/* Grid 2 columnas: copy/ubicación · cards distribuidas */}
-          <div className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-12 lg:gap-16 items-stretch">
+        {/* 2 · Claim — los fragmentos pares van en bold */}
+        <motion.p
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.7, delay: 0.1, ease: EASE }}
+          className="font-display text-3xl md:text-4xl lg:text-5xl leading-[1.15] tracking-tight max-w-4xl mt-12 md:mt-16 lg:mt-20 text-pretty"
+          style={{ color: 'var(--ink-primary)' }}
+        >
+          {/* Los separadores son espacio duro (\u00a0), no espacio normal.
+              En ES esas uniones son "el diseño" y "al negocio": un quiebre
+              de línea ahí dejaría el artículo colgando solo al final del
+              renglón. El CSS no sabe de gramática — text-balance corta por
+              largo de línea y rompería justo ahí — así que el corte bueno se
+              fija a mano y aguanta cualquier ancho de pantalla. */}
+          {t('claim_1')}{'\u00a0'}
+          <strong className="font-semibold">{t('claim_2')}</strong>{' '}
+          {t('claim_3')}{'\u00a0'}
+          <strong className="font-semibold">{t('claim_4')}</strong>
+        </motion.p>
 
-            {/* Izquierda: copy + ubicación al final */}
-            <div className="flex flex-col">
-              <div className="space-y-6 max-w-prose">
-                <p
-                  className="text-lg md:text-xl leading-relaxed"
-                  style={{ color: 'var(--ink-secondary)' }}
-                >
-                  {t('background')}
-                </p>
-                <p
-                  className="text-lg md:text-xl leading-relaxed"
-                  style={{ color: 'var(--ink-secondary)' }}
-                >
-                  {t('hybrid_path')}
-                </p>
-                {/* Hook — focal point con SplitText char reveal en viewport.
-                    Stagger lento (0.025) y blur-in para que se sienta el peso
-                    del párrafo como argumento principal del About. */}
-                <SplitText
-                  as="p"
-                  text={t('hook')}
-                  stagger={0.025}
-                  delay={0.2}
-                  yFrom={12}
-                  blurFrom={4}
-                  duration={0.6}
-                  whileInView
-                  className="font-display text-xl md:text-2xl font-semibold leading-snug block text-(--ink-primary)"
-                />
-                <p
-                  className="text-lg md:text-xl leading-relaxed"
-                  style={{ color: 'var(--ink-secondary)' }}
-                >
-                  {t('mission')}
-                </p>
-              </div>
-
-              {/* Ubicación al final de la columna izquierda */}
+        {/* 4 · Copy + firma, empujados a la derecha */}
+        <div className="flex justify-end mt-16 md:mt-20 lg:mt-24">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.7, delay: 0.15, ease: EASE }}
+            className="max-w-xl space-y-6 md:text-right"
+          >
+            <p
+              className="text-base md:text-lg leading-relaxed text-pretty"
+              style={{ color: 'var(--ink-secondary)' }}
+            >
+              {t('body_1')}
+            </p>
+            <p
+              className="text-base md:text-lg leading-relaxed text-pretty"
+              style={{ color: 'var(--ink-secondary)' }}
+            >
+              {t('body_2')}
+            </p>
+            {/* Remate + byline. El remate cierra la sección y es la última
+                palabra visual; "by Tiago Collado" baja a una línea mono
+                chica, para no perder la firma de marca (CLAUDE.md 5). */}
+            <div className="pt-2">
               <p
-                className="flex items-center gap-3 text-sm font-mono tracking-wide mt-10 md:mt-12"
+                className="font-display text-xl md:text-2xl font-semibold"
+                style={{ color: 'var(--ink-primary)' }}
+              >
+                {t('signature')}
+              </p>
+              <p
+                className="text-xs font-mono tracking-[0.2em] uppercase mt-3"
                 style={{ color: 'var(--ink-muted)' }}
               >
-                <span className="uppercase tracking-[0.18em]">{tc('location_label')}</span>
-                <span aria-hidden>·</span>
-                <span style={{ color: 'var(--ink-secondary)' }}>{tc('location')}</span>
+                {t('byline')}
               </p>
             </div>
+          </motion.div>
+        </div>
 
-            {/* Derecha: 3 cards content-height, gap generoso, animación
-                decorativa one-shot en scroll-in (no hover — no son botones) */}
-            <div className="flex flex-col gap-8 md:gap-12">
-              {TOOLKIT_ITEMS.map(({ num, titleKey }, i) => (
-                <motion.article
-                  key={num}
-                  initial={{ opacity: 0, y: 24 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-50px' }}
-                  transition={{
-                    duration: 0.6,
-                    delay: i * 0.12,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                  className="flex flex-col p-5 md:p-6 rounded-xl"
-                  style={{
-                    border: '1px solid var(--border-default)',
-                    backgroundColor: 'var(--color-surface)',
-                  }}
-                >
-                  <span
-                    className="font-mono text-xs tracking-wider"
-                    style={{ color: 'var(--color-accent)' }}
-                  >
-                    {num}
-                  </span>
-                  {/* Línea accent decorativa — se dibuja de izq a der */}
-                  <motion.div
-                    initial={{ scaleX: 0 }}
-                    whileInView={{ scaleX: 1 }}
-                    viewport={{ once: true, margin: '-50px' }}
-                    transition={{
-                      duration: 0.6,
-                      delay: 0.3 + i * 0.12,
-                      ease: [0.16, 1, 0.3, 1],
-                    }}
-                    className="h-px w-8 mt-3"
-                    style={{
-                      backgroundColor: 'var(--color-accent)',
-                      transformOrigin: 'left',
-                    }}
-                  />
-                  <h3
-                    className="font-display text-base md:text-lg font-semibold leading-tight mt-4"
-                    style={{ color: 'var(--ink-primary)' }}
-                  >
-                    {t(titleKey)}
-                  </h3>
-                </motion.article>
-              ))}
-            </div>
-
-          </div>
-
-        </FadeInSection>
       </div>
     </section>
   )

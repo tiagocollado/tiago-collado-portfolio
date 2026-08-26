@@ -70,15 +70,7 @@ export default function CaseStudySidebar({
   // position los mantiene accesibles mientras el lector scrollea la copy.
   const linkItems: Array<{ href: string; label: string }> = []
   if (project.links.live) {
-    // `live` puede ser un string (caso normal) o un array de {url, label}
-    // (proyectos con múltiples demos, ej. sitios-wordpress con Pulso + Govah).
-    if (typeof project.links.live === 'string') {
-      linkItems.push({ href: project.links.live, label: t('view_live') })
-    } else {
-      project.links.live.forEach((item) => {
-        linkItems.push({ href: item.url, label: item.label })
-      })
-    }
+    linkItems.push({ href: project.links.live, label: t('view_live') })
   }
   if (project.links.github) {
     linkItems.push({ href: project.links.github, label: t('view_github_frontend') })
@@ -150,8 +142,7 @@ export default function CaseStudySidebar({
                   rel="noopener noreferrer"
                   onMouseEnter={() => setVariant('link')}
                   onMouseLeave={() => setVariant('default')}
-                  className="group inline-flex items-center gap-2 text-sm md:text-base font-display leading-snug transition-colors duration-300 hover:text-accent"
-                  style={{ color: 'var(--ink-primary)' }}
+                  className="group inline-flex items-center gap-2 text-sm md:text-base font-display leading-snug transition-colors duration-300 text-(--ink-primary) hover:text-accent"
                 >
                   <span>{link.label}</span>
                   <span

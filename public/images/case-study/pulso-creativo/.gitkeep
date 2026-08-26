@@ -1,0 +1,21 @@
+# Imágenes contextuales del case study "Pulso Creativo".
+#
+# Pendiente: Tiago sube 4 imágenes acá, con estos nombres exactos:
+#
+#   01-hero.jpg        — Home del sitio institucional en desktop.
+#   02-challenge.jpg   — Carrusel de marcas con comportamiento táctil.
+#   03-decisions.jpg   — Casos de éxito en formato de viñetas con íconos.
+#   04-delivered.jpg   — Sistema de contacto dual: formulario y WhatsApp
+#                        ruteado por servicio.
+#
+# Los nombres salen de los `alt` ya escritos en imageBriefs[] de
+# src/data/projects.ts. Si cambiás qué va en cada slot, actualizá el alt.
+#
+# Specs: 16:10 (1920×1200 o similar), JPG, menos de 500kb cada una.
+#
+# Cuando estén, hay que agregar `src: '/images/case-study/pulso-creativo/
+# 01-hero.jpg'` (y los otros tres) a cada imageBrief en projects.ts. Sin `src`
+# el case study renderea el placeholder "BUILDING".
+#
+# El cover de la card del home es aparte y va en:
+#   public/images/covers/pulso-creativo-cover.jpg

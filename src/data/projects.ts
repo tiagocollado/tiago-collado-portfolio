@@ -2,6 +2,120 @@ import { Project } from '@/types'
 
 export const projects: Project[] = [
   {
+    slug: 'paseo-guemes-hotel',
+    title: 'Paseo Güemes Hotel',
+    tagline: {
+      es: 'Sitio mobile-first para un hotel 3 estrellas que necesitaba dejar de depender de las OTAs.',
+      en: 'Mobile-first site for a 3-star hotel that needed to stop depending on OTAs.',
+    },
+    description: {
+      es: 'Análisis de mercado, wireframes en Figma e implementación en WordPress, con reserva directa integrada y foco en conversión mobile.',
+      en: 'Market analysis, Figma wireframes, and WordPress implementation, with direct booking integrated and a focus on mobile conversion.',
+    },
+    tags: ['UX Research', 'UI Design', 'WordPress', 'Mobile-first', 'SEO local'],
+    type: 'wordpress',
+    links: {
+      live: 'https://paseoguemeshotel.com.ar',
+    },
+    // Cover listo. De las 4 contextuales solo está 01-hero: los imageBriefs
+    // sin `src` siguen mostrando el placeholder BUILDING.
+    coverImage: '/images/covers/paseo-guemes-hotel-cover.jpg',
+    year: 2026,
+    featured: false,
+    order: 2,
+    awwwardsLayout: true,
+    metadata: {
+      client:   { es: 'Paseo Güemes Hotel · Salta',                          en: 'Paseo Güemes Hotel · Salta' },
+      role:     { es: 'Diseño UX/UI e implementación web',                   en: 'UX/UI Design & web implementation' },
+      duration: { es: '2 meses',                                             en: '2 months' },
+      team:     { es: 'Proyecto individual · contacto directo con el dueño', en: 'Solo project · direct contact with the owner' },
+      stack:    ['Figma', 'WordPress', 'Elementor', 'Rank Math', 'WPForms', 'LiteSpeed Cache'],
+    },
+    imageBriefs: [
+      {
+        alt: {
+          es: 'Hero del sitio con video del Monumento a Güemes y el CTA de reserva',
+          en: 'Site hero with video of the Güemes Monument and the booking CTA',
+        },
+        src: '/images/case-study/paseo-guemes-hotel/01-hero.jpg',
+      },
+      {
+        alt: {
+          es: 'Wireframes de desktop y mobile en Figma',
+          en: 'Desktop and mobile wireframes in Figma',
+        },
+      },
+      {
+        alt: {
+          es: 'Sistema visual aplicado: paleta, tipografías y versiones del logo',
+          en: 'Applied visual system: palette, typefaces, and logo versions',
+        },
+      },
+      {
+        alt: {
+          es: 'Sitio en mobile: habitaciones, reserva directa y WhatsApp flotante',
+          en: 'Site on mobile: rooms, direct booking, and floating WhatsApp',
+        },
+      },
+    ],
+  },
+  {
+    slug: 'pulso-creativo',
+    title: 'Pulso Creativo',
+    tagline: {
+      es: 'Plataforma institucional para una consultora B2B con más de 25 años de trayectoria.',
+      en: 'Institutional platform for a B2B consultancy with over 25 years of track record.',
+    },
+    description: {
+      es: 'Sitio institucional con foco en autoridad corporativa: rediseño UX del contenido, contacto dual y captación de leads con contexto.',
+      en: 'Institutional site focused on corporate authority: UX rewrite of the content, dual contact flow, and lead capture with context.',
+    },
+    tags: ['WordPress', 'Elementor', 'UX Writing', 'UI Design', 'B2B'],
+    type: 'wordpress',
+    links: {
+      live: 'https://pulsocreativo.com.ar',
+    },
+    coverImage: '/images/covers/pulso-creativo-cover.jpg',
+    year: 2026,
+    featured: true,
+    order: 1,
+    awwwardsLayout: true,
+    metadata: {
+      client:   { es: 'Pulso Creativo',                                            en: 'Pulso Creativo' },
+      role:     { es: 'Diseño UX/UI y Desarrollo Frontend · Freelance',            en: 'UX/UI Design & Frontend Development · Freelance' },
+      duration: { es: '3 meses',                                                   en: '3 months' },
+      team:     { es: 'Trabajo individual · contacto directo con las consultoras', en: 'Solo project · direct contact with the consultants' },
+      stack:    ['WordPress', 'Elementor', 'WPForms', 'Joinchat', 'LiteSpeed Cache'],
+    },
+    imageBriefs: [
+      {
+        alt: {
+          es: 'Home del sitio institucional en desktop',
+          en: 'Institutional site home on desktop',
+        },
+        src: '/images/case-study/pulso-creativo/01-hero.jpg',
+      },
+      {
+        alt: {
+          es: 'Carrusel de marcas con comportamiento táctil',
+          en: 'Client logo carousel with touch behavior',
+        },
+      },
+      {
+        alt: {
+          es: 'Casos de éxito en formato de viñetas con íconos',
+          en: 'Success cases in a bulleted format with icons',
+        },
+      },
+      {
+        alt: {
+          es: 'Sistema de contacto dual: formulario y WhatsApp ruteado por servicio',
+          en: 'Dual contact system: form and WhatsApp routed by service',
+        },
+      },
+    ],
+  },
+  {
     slug: 'futbol-talent-pro',
     title: 'FutbolTalentPro',
     tagline: {
@@ -17,11 +131,10 @@ export const projects: Project[] = [
     links: {
       figma: undefined,
     },
-    coverImage: '/images/covers/futboltalentpro-cover.jpg',
-    gallery: ['/images/case-study/futbol-talent-pro/1.jpg'],
+    coverImage: '/images/covers/futbol-talent-pro-cover.jpg',
     year: 2025,
-    featured: true,
-    order: 1,
+    featured: false,
+    order: 3,
     awwwardsLayout: true,
     metadata: {
       client:   { es: 'FutbolTalent.Pro',                    en: 'FutbolTalent.Pro' },
@@ -34,29 +147,29 @@ export const projects: Project[] = [
     imageBriefs: [
       {
         alt: {
-          es: 'Hero shot — pantalla principal de FutbolTalentPro mostrando explorador de jugadores',
-          en: 'Hero shot — main FutbolTalentPro screen showing player explorer',
+          es: 'Pantalla de plataforma móvil',
+          en: 'Mobile platform screen',
         },
         src: '/images/case-study/futbol-talent-pro/01-hero.jpg',
       },
       {
         alt: {
-          es: 'Wireframes lo-fi mostrando el flujo de acceso progresivo',
-          en: 'Lo-fi wireframes showing the progressive access flow',
+          es: 'Wireframes de baja fidelidad',
+          en: 'Low-fidelity wireframes',
         },
         src: '/images/case-study/futbol-talent-pro/02-challenge.jpg',
       },
       {
         alt: {
-          es: 'Design system de FutbolTalentPro: tokens, componentes, light/dark',
-          en: 'FutbolTalentPro design system: tokens, components, light/dark',
+          es: 'Sistema de componentes UI',
+          en: 'UI component system',
         },
         src: '/images/case-study/futbol-talent-pro/03-decisions.jpg',
       },
       {
         alt: {
-          es: 'User personas y flujos del MVP — material no NDA',
-          en: 'User personas and MVP flows — non-NDA material',
+          es: 'Flujos de usuario y documentación de handoff',
+          en: 'User flows and handoff documentation',
         },
         src: '/images/case-study/futbol-talent-pro/04-delivered.jpg',
       },
@@ -81,10 +194,9 @@ export const projects: Project[] = [
       live:       'https://el-ritual-del-tono.vercel.app',
     },
     coverImage: '/images/covers/el-ritual-del-tono-cover.jpg',
-    gallery: ['/images/case-study/el-ritual-del-tono/1.jpg'],
     year: 2025,
-    featured: false,
-    order: 2,
+    featured: true,
+    order: 4,
     awwwardsLayout: true,
     metadata: {
       client:   { es: 'Proyecto personal',                   en: 'Personal project' },
@@ -139,10 +251,9 @@ export const projects: Project[] = [
     type: 'ux',
     links: {},
     coverImage: '/images/covers/cabify-music-match-cover.jpg',
-    gallery: ['/images/case-study/cabify-music-match/1.jpg'],
     year: 2023,
     featured: false,
-    order: 3,
+    order: 7,
     awwwardsLayout: true,
     metadata: {
       client:   { es: 'Concept · Cabify',                    en: 'Concept · Cabify' },
@@ -198,11 +309,10 @@ export const projects: Project[] = [
     links: {
       figma: undefined,
     },
-    coverImage: '/images/covers/multibrand-cover.jpg',
-    gallery: ['/images/case-study/multibrand-design-system/1.jpg'],
+    coverImage: '/images/covers/multibrand-design-system-cover.jpg',
     year: 2025,
     featured: false,
-    order: 4,
+    order: 5,
     awwwardsLayout: true,
     metadata: {
       client:   { es: 'Simulación · No Country',             en: 'Simulation · No Country' },
@@ -259,10 +369,9 @@ export const projects: Project[] = [
       figma: undefined,
     },
     coverImage: '/images/covers/recuerdalo-cover.jpg',
-    gallery: ['/images/case-study/recuerdalo/1.jpg'],
     year: 2025,
     featured: false,
-    order: 5,
+    order: 6,
     awwwardsLayout: true,
     metadata: {
       client:   { es: 'Proyecto universitario · Maimónides', en: 'University project · Maimónides' },
@@ -299,93 +408,6 @@ export const projects: Project[] = [
           en: 'Accessibility comparison: standard UI vs Recuérdalo with enlarged typography and touch targets',
         },
         src: '/images/case-study/recuerdalo/04-delivered.jpg',
-      },
-    ],
-  },
-  {
-    slug: 'retro-kicks',
-    title: 'Retro Kicks',
-    tagline: {
-      es: 'Tienda de sneakers retro — en construcción.',
-      en: 'Retro sneaker store — coming soon.',
-    },
-    description: {
-      es: 'E-commerce colaborativo de sneakers retro con stack full-stack. Actualmente en proceso de resolución de integración con MongoDB Atlas.',
-      en: 'Collaborative retro sneaker e-commerce with full-stack architecture. Currently resolving MongoDB Atlas integration.',
-    },
-    tags: ['Next.js', 'Tailwind CSS', 'Node.js', 'Express', 'MongoDB'],
-    type: 'coming-soon',
-    links: {
-      github: 'https://github.com/tiagocollado',
-    },
-    coverImage: null,
-    year: 2025,
-    featured: false,
-    order: 6,
-    comingSoon: true,
-  },
-  {
-    slug: 'sitios-wordpress',
-    title: 'Sitios WordPress',
-    tagline: {
-      es: 'Dos sitios WordPress: una landing de vino kosher y una web institucional con plugins funcionales y hosting propio.',
-      en: 'Two WordPress sites: a kosher wine landing and an institutional site with functional plugins and self-managed hosting.',
-    },
-    description: {
-      es: 'Govah + Pulso Creativo. Diseño UI en Figma + implementación con Elementor.',
-      en: 'Govah + Pulso Creativo. UI design in Figma + Elementor implementation.',
-    },
-    tags: ['WordPress', 'Elementor', 'UI Design', 'Landing Page', 'Web Institucional', 'WPForms'],
-    type: 'wordpress',
-    // Dos demos en vivo (Pulso Creativo y Govah). El sidebar itera el array
-    // y renderea un link por entry con su label específico.
-    links: {
-      live: [
-        { url: 'https://pulsocreativo.com.ar', label: 'Pulso Creativo' },
-        { url: 'https://govah.com.ar',         label: 'Govah' },
-      ],
-    },
-    // Cover y las 4 imágenes contextuales pendientes — Tiago las sube a
-    // public/images/covers/sitios-wordpress-cover.jpg y a
-    // public/images/case-study/sitios-wordpress/{01..04}-*.jpg.
-    // Mientras tanto: coverImage:null para que la card no muestre 404,
-    // y los imageBriefs sin `src` activan el placeholder "BUILDING" del CaseStudyImage.
-    coverImage: null,
-    year: 2026,
-    featured: true,
-    order: 7,
-    awwwardsLayout: true,
-    metadata: {
-      client:   { es: 'Govah · Pulso Creativo',                                                en: 'Govah · Pulso Creativo' },
-      role:     { es: 'Product Design',                                                         en: 'Product Design' },
-      duration: { es: '2024 — 2026 (proyectos independientes)',                                en: '2024 — 2026 (independent projects)' },
-      team:     { es: 'Govah: en pareja con un dev.\nPulso: trabajo individual end-to-end.',   en: 'Govah: paired with a dev.\nPulso: solo end-to-end.' },
-      stack:    ['WordPress', 'Elementor', 'Figma'],
-    },
-    imageBriefs: [
-      {
-        alt: {
-          es: 'Hero shot — Pulso Creativo en desktop, vista principal de la web institucional',
-          en: 'Hero shot — Pulso Creativo on desktop, main view of the institutional site',
-        },
-      },
-      {
-        alt: {
-          es: 'Govah — landing one-page de vino kosher en desktop',
-          en: 'Govah — kosher wine landing in desktop',
-        },
-      },
-      {
-        alt: {
-          es: 'Detalle de plugins en Pulso: formulario WPForms y CTA flotante de WhatsApp',
-          en: 'Plugins detail in Pulso: WPForms contact form and floating WhatsApp CTA',
-        },
-      },
-      {
-        alt: {
-          es: 'Ambos sitios en mobile: responsive y rendimiento similar',
-          en: 'Both sites on mobile: responsive and similar performance',
-        },
       },
     ],
   },

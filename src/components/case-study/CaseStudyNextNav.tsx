@@ -40,11 +40,8 @@ export default function CaseStudyNextNav({
           href={`/${locale}/projects/${nextProject.slug}`}
           onMouseEnter={onEnter}
           onMouseLeave={onLeave}
-          className="group block p-6 md:p-8 lg:p-10 rounded-2xl border transition-all duration-300 hover:-translate-y-2 hover:border-accent hover:shadow-2xl hover:shadow-accent/15"
-          style={{
-            borderColor: 'var(--border-default)',
-            backgroundColor: 'var(--color-surface)',
-          }}
+          className="group block p-6 md:p-8 lg:p-10 rounded-2xl border transition-all duration-300 hover:-translate-y-2 border-(--border-default) hover:border-accent hover:shadow-2xl hover:shadow-accent/15"
+          style={{ backgroundColor: 'var(--color-surface)' }}
         >
           <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 md:gap-10 items-center">
             <div>
@@ -94,12 +91,8 @@ export default function CaseStudyNextNav({
             href={`/${locale}#projects`}
             onMouseEnter={onEnter}
             onMouseLeave={onLeave}
-            className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border transition-all duration-300 hover:-translate-y-0.5 hover:border-accent hover:text-(--ink-primary)"
-            style={{
-              borderColor: 'var(--border-default)',
-              backgroundColor: 'var(--color-surface)',
-              color: 'var(--ink-secondary)',
-            }}
+            className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border transition-all duration-300 hover:-translate-y-0.5 border-(--border-default) text-(--ink-secondary) hover:border-accent hover:text-(--ink-primary)"
+            style={{ backgroundColor: 'var(--color-surface)' }}
           >
             <span
               aria-hidden

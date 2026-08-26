@@ -25,6 +25,10 @@ export default function Hero() {
 
   return (
     <section
+      // `id="top"` es el ancla del back-to-top del Footer. Lenis monta con
+      // `anchors: true`, así que intercepta el `href="#top"` y hace el
+      // scroll suave él mismo (ver nota en Footer.tsx).
+      id="top"
       // `flex flex-col` para que el wrapper interno pueda usar `flex-1` y
       // estirarse verticalmente — necesario para que el grid 2-col tenga
       // suficiente alto y `self-center` funcione en la columna del CTA.
@@ -73,7 +77,7 @@ export default function Hero() {
               yFrom={16}
               blurFrom={4}
               duration={0.6}
-              className="font-display text-2xl md:text-4xl lg:text-5xl font-semibold tracking-tight leading-[1.1] text-balance block"
+              className="font-display text-xl md:text-2xl lg:text-3xl font-semibold tracking-tight leading-[1.2] block"
             />
             <SplitText
               as="p"
@@ -83,7 +87,7 @@ export default function Hero() {
               yFrom={16}
               blurFrom={4}
               duration={0.6}
-              className="font-display text-xl md:text-2xl lg:text-3xl font-medium tracking-tight leading-[1.15] block"
+              className="font-display text-xl md:text-2xl lg:text-3xl font-medium tracking-tight leading-[1.2] block"
               charClassName="text-(--ink-secondary)"
             />
           </div>
@@ -107,11 +111,11 @@ export default function Hero() {
               // transition-all es más fácil que un transition-[letter-spacing]
               // arbitrario; las únicas otras props animadas son color (que ya
               // tiene 300ms igual).
-              className="text-base md:text-lg font-mono font-semibold uppercase transition-all duration-300 group-hover:text-accent"
-              style={{
-                color: 'var(--ink-primary)',
-                letterSpacing: ctaHovered ? '0.3em' : '0.25em',
-              }}
+              className="text-base md:text-lg font-mono font-semibold uppercase transition-all duration-300 text-(--ink-primary) group-hover:text-accent"
+              // Solo queda el letter-spacing, que es dinamico y no tiene
+              // contraparte en hover:. El color se fue a utility porque el
+              // inline le ganaba al group-hover (CLAUDE.md 1).
+              style={{ letterSpacing: ctaHovered ? '0.3em' : '0.25em' }}
             >
               {t('cta_projects')}
             </span>

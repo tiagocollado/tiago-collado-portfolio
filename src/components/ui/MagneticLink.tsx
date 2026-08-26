@@ -7,6 +7,8 @@ import { useCursor, type CursorVariant } from '@/hooks/useCursor'
 
 type Props = ComponentProps<typeof motion.a> & {
   factor?: number
+  /** Tope en px del desplazamiento — ver useMagneticHover. */
+  max?: number
   cursorVariant?: CursorVariant
 }
 
@@ -19,6 +21,7 @@ type Props = ComponentProps<typeof motion.a> & {
  */
 export default function MagneticLink({
   factor = 0.3,
+  max,
   cursorVariant = 'link',
   onMouseEnter,
   onMouseLeave,
@@ -26,7 +29,7 @@ export default function MagneticLink({
   children,
   ...rest
 }: Props) {
-  const { ref, x, y } = useMagneticHover<HTMLAnchorElement>({ factor })
+  const { ref, x, y } = useMagneticHover<HTMLAnchorElement>({ factor, max })
   const { setVariant } = useCursor()
 
   return (

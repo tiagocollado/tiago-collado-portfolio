@@ -85,12 +85,8 @@ export default function CaseStudyHeader({
           href={`/${locale}`}
           onMouseEnter={onLinkEnter}
           onMouseLeave={onLinkLeave}
-          className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border transition-all duration-300 hover:-translate-y-0.5 hover:border-accent hover:text-(--ink-primary)"
-          style={{
-            borderColor: 'var(--border-default)',
-            backgroundColor: 'var(--color-surface)',
-            color: 'var(--ink-secondary)',
-          }}
+          className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border transition-all duration-300 hover:-translate-y-0.5 border-(--border-default) text-(--ink-secondary) hover:border-accent hover:text-(--ink-primary)"
+          style={{ backgroundColor: 'var(--color-surface)' }}
         >
           <span
             aria-hidden
@@ -156,11 +152,7 @@ export default function CaseStudyHeader({
           viven en el sidebar. */}
       {!project.awwwardsLayout && hasLinks && (
         <motion.div variants={item} className="flex flex-wrap gap-3 mb-12 md:mb-16">
-          {/* Type guard: links.live ahora puede ser string | Array. En este
-              path (non-awwwards) solo soportamos el caso single string —
-              para projects con array (sitios-wordpress) los links viven en
-              el sidebar de awwwards layout. */}
-          {typeof project.links.live === 'string' && (
+          {project.links.live && (
             <a
               href={project.links.live}
               target="_blank"
@@ -189,11 +181,8 @@ export default function CaseStudyHeader({
               rel="noopener noreferrer"
               onMouseEnter={onLinkEnter}
               onMouseLeave={onLinkLeave}
-              className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border transition-all duration-300 hover:-translate-y-0.5 hover:border-accent"
-              style={{
-                borderColor: 'var(--border-default)',
-                color: 'var(--ink-primary)',
-              }}
+              className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border transition-all duration-300 hover:-translate-y-0.5 border-(--border-default) hover:border-accent"
+              style={{ color: 'var(--ink-primary)' }}
             >
               <span>{cs('view_github_frontend')}</span>
               <span
@@ -211,11 +200,8 @@ export default function CaseStudyHeader({
               rel="noopener noreferrer"
               onMouseEnter={onLinkEnter}
               onMouseLeave={onLinkLeave}
-              className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border transition-all duration-300 hover:-translate-y-0.5 hover:border-accent"
-              style={{
-                borderColor: 'var(--border-default)',
-                color: 'var(--ink-primary)',
-              }}
+              className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border transition-all duration-300 hover:-translate-y-0.5 border-(--border-default) hover:border-accent"
+              style={{ color: 'var(--ink-primary)' }}
             >
               <span>{cs('view_github_backend')}</span>
               <span

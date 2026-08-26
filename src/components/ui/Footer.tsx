@@ -1,132 +1,139 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
-import { motion, type Variants } from 'framer-motion'
-import { useCursor } from '@/hooks/useCursor'
-
 /**
- * Footer — links + divider + copyright.
+ * Footer — versión 3.1 (redesign G1 + D1, referencia isadeburgh)
+ * --------------------------------------------------------------
+ *  Ya no es "una sección más y después el footer": Contact no cierra su
+ *  padding inferior y este bloque arranca pegado, así los dos se leen como
+ *  un único cierre de página. Sigue siendo un `<footer>` aparte porque
+ *  tiene que ser hijo directo del body para contar como landmark
+ *  `contentinfo` (anidado dentro de un `<section>` perdería ese rol).
  *
- * Stagger granular: el footer entero tiene un container variant con
- * `staggerChildren: 0.08`, y cada link/divider/copyright es un motion
- * child que respeta el orden visual. El cursor cambia a `link` al
- * hoverear los iconos sociales y la descarga del CV.
+ *  Es una sola barra de tres zonas: copyright · back-to-top · crédito.
+ *  El back-to-top muestra dos flechas apiladas que suben en loop mientras
+ *  el mouse está encima.
+ *  Proximidad — cada cosa en su zona, no todas apiladas al centro como en
+ *  el footer viejo.
+ *
+ *  Se fue el divider de 96px del footer viejo: el `border-t` de la barra ya
+ *  marca el corte, así que una línea más era cromo repetido
+ *  (Estética-Usabilidad).
+ *
+ *  ⚠️ Back-to-top: es un `<a href="#top">`, NO un `window.scrollTo`. El
+ *  SmoothScrollProvider monta Lenis con `anchors: true`, así que Lenis
+ *  intercepta el click y hace el scroll suave él mismo — un scrollTo por JS
+ *  pelearía contra su animación. Y cuando Lenis no existe
+ *  (prefers-reduced-motion), degrada solo a un salto nativo instantáneo,
+ *  que es exactamente lo que corresponde. El `id="top"` vive en el
+ *  <section> del Hero.
  */
 
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      duration: 0.4,
-      ease: [0.16, 1, 0.3, 1],
-      staggerChildren: 0.08,
-    },
-  },
-}
+import { useTranslations } from 'next-intl'
+import { motion, type Variants } from 'framer-motion'
+import { useState } from 'react'
+import { ArrowUp } from 'lucide-react'
+import { useCursor } from '@/hooks/useCursor'
 
-const childVariants: Variants = {
+const EASE = [0.16, 1, 0.3, 1] as const
+
+/**
+ * `staggerChildren` solo alcanza a hijos motion DIRECTOS — con wrappers de
+ * layout en el medio no propaga (CLAUDE.md 9.7). El footer viejo tenía ese
+ * bug: el stagger llegaba al div contenedor y sus hijos aparecían todos
+ * juntos. Acá cada hijo calcula su delay a mano.
+ */
+const fadeUp = (delay: number): Variants => ({
   hidden: { opacity: 0, y: 16 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.5, ease: EASE, delay },
   },
-}
+})
 
 export default function Footer() {
   const t = useTranslations('footer')
   const { setVariant } = useCursor()
+  const [hovered, setHovered] = useState(false)
 
   const onEnter = () => setVariant('link')
   const onLeave = () => setVariant('default')
 
   return (
     <motion.footer
-      className="py-10 md:py-14 border-t"
-      style={{
-        borderColor: 'var(--border-default)',
-      }}
+      // El `pt` grande es el aire que separa de los canales de Contact: la
+      // separación la da el espacio, no una línea de borde arriba.
+      className="pt-16 md:pt-20 pb-10 md:pb-12 px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: '-50px' }}
-      variants={containerVariants}
     >
-      <div className="flex flex-col items-center px-6">
-
-        {/* Links con iconos */}
-        <motion.div variants={childVariants} className="flex flex-wrap justify-center gap-10">
-          {/* LinkedIn */}
-          <motion.a
-            href="https://www.linkedin.com/in/tiagocollado/"
-            target="_blank"
-            rel="noopener noreferrer"
-            variants={childVariants}
-            onMouseEnter={onEnter}
-            onMouseLeave={onLeave}
-            className="group flex items-center gap-3 text-base transition-all duration-300 hover:-translate-y-1 hover:text-(--color-accent)"
-            style={{ color: 'var(--ink-secondary)' }}
-          >
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.047c.475-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.771v20.451C0 23.225.792 24 1.771 24h20.451C23.2 24 24 23.225 24 22.225V1.771C24 .774 23.2 0 22.222 0h.003z"/>
-            </svg>
-            <span className="font-medium">LinkedIn</span>
-          </motion.a>
-
-          {/* GitHub */}
-          <motion.a
-            href="https://github.com/tiagocollado"
-            target="_blank"
-            rel="noopener noreferrer"
-            variants={childVariants}
-            onMouseEnter={onEnter}
-            onMouseLeave={onLeave}
-            className="group flex items-center gap-3 text-base transition-all duration-300 hover:-translate-y-1 hover:text-(--color-accent)"
-            style={{ color: 'var(--ink-secondary)' }}
-          >
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.236 1.839 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.536-1.527.114-3.176 0 0 1.008-.322 3.301 1.23.956-.276 1.981-.413 2.999-.413 1.018 0 2.043.137 2.999.413 2.291-1.552 3.297-1.23 3.297-1.23.653 1.649.241 2.873.117 3.176.77.84 1.235 1.91 1.235 3.221 0 4.609-2.807 5.628-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-            </svg>
-            <span className="font-medium">GitHub</span>
-          </motion.a>
-
-          {/* CV / Descarga */}
-          <motion.a
-            href="/cv-tiago-collado.pdf"
-            download
-            variants={childVariants}
-            onMouseEnter={onEnter}
-            onMouseLeave={onLeave}
-            className="group flex items-center gap-3 text-base transition-all duration-300 hover:-translate-y-1 hover:text-(--color-accent)"
-            style={{ color: 'var(--ink-secondary)' }}
-          >
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-              <polyline points="14 2 14 8 20 8"/>
-              <line x1="16" y1="13" x2="8" y2="13"/>
-              <line x1="16" y1="17" x2="8" y2="17"/>
-              <polyline points="10 9 9 9 8 9"/>
-            </svg>
-            <span className="font-medium">{t('download_cv')}</span>
-          </motion.a>
-        </motion.div>
-
-        {/* Divider corto entre links y copyright */}
-        <motion.div
-          variants={childVariants}
-          className="w-24 h-px my-6"
-          style={{ backgroundColor: 'var(--border-strong)' }}
-        />
-
-        {/* Copyright centrado */}
+      {/* Barra de tres zonas. En mobile se apila; desde sm+ es una grilla de
+          3 columnas para que el back-to-top quede realmente centrado
+          respecto del ancho, y no "al lado" del copyright. */}
+      <div
+        className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 items-center gap-6 pt-8 border-t"
+        style={{ borderColor: 'var(--border-default)' }}
+      >
         <motion.p
-          variants={childVariants}
-          className="text-sm text-center"
+          variants={fadeUp(0)}
+          className="text-[11px] font-mono uppercase tracking-[0.18em]"
           style={{ color: 'var(--ink-muted)' }}
         >
-          © 2026 Tiago Collado. Todos los derechos reservados.
+          © 2026 Copyright Gotya
         </motion.p>
 
+        {/* Back-to-top — patrón conocido (Jakob).
+
+            Se ven DOS flechas apiladas y, mientras hay hover, suben en
+            loop continuo. La técnica es la misma del MarqueeLink: el track
+            tiene 4 flechas idénticas y la ventana muestra 2 (h-7 = 2 × 14px).
+            Animar `y` de 0% a -25% desplaza exactamente una flecha (25% de
+            56px), así que al reiniciar el ciclo la imagen es idéntica y el
+            salto no se ve. Sin hover vuelve a 0% y quedan quietas.
+
+            El `reducedMotion="user"` global del layout desactiva este loop
+            solo para quien lo pidió a nivel sistema. */}
+        <motion.div variants={fadeUp(0.1)} className="flex sm:justify-center">
+          <a
+            href="#top"
+            aria-label={t('back_to_top')}
+            onMouseEnter={() => {
+              onEnter()
+              setHovered(true)
+            }}
+            onMouseLeave={() => {
+              onLeave()
+              setHovered(false)
+            }}
+            className="group inline-flex items-center justify-center w-12 h-12 rounded-full border transition-colors duration-300 border-(--border-strong) text-(--ink-secondary) hover:border-accent hover:text-accent"
+          >
+            <span aria-hidden className="relative h-7 w-3.5 overflow-hidden">
+              <motion.span
+                className="absolute inset-x-0 top-0 flex flex-col"
+                animate={hovered ? { y: ['0%', '-25%'] } : { y: '0%' }}
+                transition={
+                  hovered
+                    ? { duration: 0.7, ease: 'linear', repeat: Infinity }
+                    : { duration: 0.3, ease: EASE }
+                }
+              >
+                <ArrowUp className="w-3.5 h-3.5 shrink-0" />
+                <ArrowUp className="w-3.5 h-3.5 shrink-0" />
+                <ArrowUp className="w-3.5 h-3.5 shrink-0" />
+                <ArrowUp className="w-3.5 h-3.5 shrink-0" />
+              </motion.span>
+            </span>
+          </a>
+        </motion.div>
+
+        <motion.p
+          variants={fadeUp(0.2)}
+          className="text-[11px] font-mono uppercase tracking-[0.18em] sm:text-right"
+          style={{ color: 'var(--ink-muted)' }}
+        >
+          {t('credit')}
+        </motion.p>
       </div>
     </motion.footer>
   )

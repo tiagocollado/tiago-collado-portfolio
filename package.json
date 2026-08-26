@@ -9,7 +9,6 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.38.0",
     "lenis": "^1.3.23",
     "lucide-react": "^1.11.0",

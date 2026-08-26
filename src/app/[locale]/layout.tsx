@@ -29,12 +29,36 @@ const spaceGrotesk = Space_Grotesk({
 // Without this, pages are rendered dynamically and the locale context
 // may not be available when next-intl's getMessages() runs on Vercel.
 export function generateStaticParams() {
-  return [{ locale: 'es' }, { locale: 'en' }]
+  return [{ locale: 'en' }, { locale: 'es' }]
 }
 
+const SITE_URL = 'https://tiagocollado.vercel.app'
+const BRAND = 'Gotya by Tiago Collado'
+const TAGLINE = 'Designing experiences with empathy. Building them with precision.'
+
 export const metadata: Metadata = {
-  title: 'Tiago Collado — UX/UI Designer & Frontend Developer',
-  description: 'Diseño experiencias con empatía. Las construyo con precisión.',
+  // metadataBase es obligatorio para que Next resuelva og:image a una URL
+  // absoluta. Sin esto, las redes sociales reciben una ruta relativa y no
+  // pueden descargar la imagen.
+  metadataBase: new URL(SITE_URL),
+  title: BRAND + ' — UX/UI Design & Web Development',
+  description: TAGLINE,
+  openGraph: {
+    title: BRAND,
+    description: TAGLINE,
+    siteName: 'Gotya',
+    url: SITE_URL,
+    type: 'website',
+    // La imagen NO se declara acá: la genera el archivo opengraph-image.tsx
+    // de este mismo segmento (file convention de Next). Al vivir en
+    // app/[locale]/, aplica también a /projects/[slug], así que compartir
+    // cualquier case study usa el logotipo y no una captura del proyecto.
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: BRAND,
+    description: TAGLINE,
+  },
 }
 
 export default async function LocaleLayout({
@@ -57,7 +81,7 @@ export default async function LocaleLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable}`}
     >
       <body>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <NextIntlClientProvider messages={messages}>
             <SmoothScrollProvider>
               <CursorProvider>

@@ -12,31 +12,19 @@ export interface Project {
     en: string
   }
   tags: string[]
-  type: 'ux' | 'fullstack' | 'wordpress' | 'coming-soon'
+  type: 'ux' | 'fullstack' | 'wordpress'
   links: {
     github?:     string
     githubBack?: string
-    /**
-     * URL del live demo. Acepta una URL string (caso normal — un único demo)
-     * o un array de objetos `{ url, label }` cuando el proyecto tiene varios
-     * demos relacionados (ej. dos sitios cliente bajo el mismo case study).
-     * El sidebar itera el array y renderea un link por entry.
-     */
-    live?:       string | Array<{ url: string; label: string }>
+    /** URL del live demo del proyecto. */
+    live?:       string
     figma?:      string
   }
   coverImage: string | null
-  /**
-   * Paths absolutos (desde /public) a imágenes de galería del caso de estudio.
-   * Si está vacío o undefined, el componente Gallery no renderiza nada.
-   * Para agregar más imágenes a un proyecto, sumar paths acá — no hay probe automático.
-   */
-  gallery?: string[]
   /** Año de realización (ej. 2025). Se muestra en la card como label arriba. */
   year?: number
   featured: boolean
   order: number
-  comingSoon?: boolean
   /**
    * Si es true, el case study renderea con el layout Awwwards-style (sidebar
    * metadata + main editorial, secciones intro/challenge/decisions/delivered/closing).

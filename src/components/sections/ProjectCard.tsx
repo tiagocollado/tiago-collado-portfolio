@@ -46,8 +46,7 @@ export default function ProjectCard({ project, locale, index = 0 }: ProjectCardP
   const typeLabel =
     project.type === 'ux' ? 'UX / UI'
     : project.type === 'fullstack' ? 'FULL-STACK'
-    : project.type === 'wordpress' ? 'WORDPRESS'
-    : 'DESIGN'
+    : 'WORDPRESS'
 
   return (
     <motion.article
@@ -59,23 +58,18 @@ export default function ProjectCard({ project, locale, index = 0 }: ProjectCardP
         delay: index * 0.08,
         ease: [0.16, 1, 0.3, 1],
       }}
-      onMouseEnter={() => !project.comingSoon && setVariant('view')}
+      onMouseEnter={() => setVariant('view')}
       onMouseLeave={() => setVariant('default')}
       className={`${spanClasses} relative rounded-2xl overflow-hidden group border transition-all duration-500 ease-out
-                  hover:-translate-y-2 hover:shadow-2xl hover:shadow-accent/25 hover:border-accent`}
-      style={{
-        backgroundColor: 'var(--color-surface)',
-        borderColor: 'var(--border-default)',
-      }}
+                  border-(--border-default) hover:-translate-y-2 hover:shadow-2xl hover:shadow-accent/25 hover:border-accent`}
+      style={{ backgroundColor: 'var(--color-surface)' }}
     >
-      {/* Link invisible que cubre toda la card (no aplica si está coming-soon) */}
-      {!project.comingSoon && (
-        <Link
-          href={`/${locale}/projects/${project.slug}`}
-          className="absolute inset-0 z-30"
-          aria-label={`Ver caso de estudio: ${project.title}`}
-        />
-      )}
+      {/* Link invisible que cubre toda la card */}
+      <Link
+        href={`/${locale}/projects/${project.slug}`}
+        className="absolute inset-0 z-30"
+        aria-label={`Ver caso de estudio: ${project.title}`}
+      />
 
       {/* Cover image — desaturada en idle, color en hover */}
       {project.coverImage && (
@@ -103,103 +97,78 @@ export default function ProjectCard({ project, locale, index = 0 }: ProjectCardP
         </div>
       )}
 
-      {/* Coming soon overlay (también theme-aware) */}
-      {project.comingSoon && (
-        <div
-          className="absolute inset-0 backdrop-blur-sm flex items-center justify-center z-20"
-          style={{
-            backgroundColor: 'color-mix(in srgb, var(--bg-primary) 70%, transparent)',
-          }}
-        >
-          <span
-            className="px-5 py-2.5 rounded-full font-medium text-xs tracking-widest uppercase border"
-            style={{
-              backgroundColor: 'var(--color-surface)',
-              color: 'var(--ink-primary)',
-              borderColor: 'var(--border-default)',
-            }}
-          >
-            {t('coming_soon')}
-          </span>
-        </div>
-      )}
-
       {/* Tag arriba-izquierda — pills bordeadas para garantizar legibilidad
           sobre cualquier cover (el bg semi-translúcido aísla del fondo). */}
-      {!project.comingSoon && (
-        <div className="absolute top-5 left-5 z-10 flex items-center gap-2">
+      <div className="absolute top-5 left-5 z-10 flex items-center gap-2">
+        <span
+          className="inline-flex items-center px-2.5 py-1 rounded-full border text-[10px] font-mono font-semibold tracking-[0.15em] uppercase"
+          style={{
+            color: 'var(--color-accent)',
+            borderColor: 'var(--color-accent)',
+            backgroundColor: 'color-mix(in srgb, var(--bg-primary) 70%, transparent)',
+            backdropFilter: 'blur(4px)',
+          }}
+        >
+          {typeLabel}
+        </span>
+        {project.year && (
           <span
-            className="inline-flex items-center px-2.5 py-1 rounded-full border text-[10px] font-mono font-semibold tracking-[0.15em] uppercase"
+            className="inline-flex items-center px-2.5 py-1 rounded-full border text-[10px] font-mono font-semibold tracking-[0.15em]"
             style={{
-              color: 'var(--color-accent)',
-              borderColor: 'var(--color-accent)',
+              color: 'var(--ink-primary)',
+              borderColor: 'var(--border-strong)',
               backgroundColor: 'color-mix(in srgb, var(--bg-primary) 70%, transparent)',
               backdropFilter: 'blur(4px)',
             }}
           >
-            {typeLabel}
+            {project.year}
           </span>
-          {project.year && (
-            <span
-              className="inline-flex items-center px-2.5 py-1 rounded-full border text-[10px] font-mono font-semibold tracking-[0.15em]"
-              style={{
-                color: 'var(--ink-primary)',
-                borderColor: 'var(--border-strong)',
-                backgroundColor: 'color-mix(in srgb, var(--bg-primary) 70%, transparent)',
-                backdropFilter: 'blur(4px)',
-              }}
-            >
-              {project.year}
-            </span>
-          )}
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Bloque inferior — título + reveal en hover (tags + CTA) */}
-      {!project.comingSoon && (
-        <div className="absolute bottom-5 left-5 right-5 z-10">
-          {/* Título — siempre visible, dominante */}
-          <h3
-            className={`font-display font-semibold leading-[1.05] uppercase ${titleSize}`}
-            style={{ color: 'var(--ink-primary)' }}
-          >
-            {project.title}
-          </h3>
+      <div className="absolute bottom-5 left-5 right-5 z-10">
+        {/* Título — siempre visible, dominante */}
+        <h3
+          className={`font-display font-semibold leading-[1.05] uppercase ${titleSize}`}
+          style={{ color: 'var(--ink-primary)' }}
+        >
+          {project.title}
+        </h3>
 
-          {/* Reveal en hover: tags pills + CTA pill SÓLIDO */}
-          <div className="mt-4 flex flex-col gap-3 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 ease-out">
-            <div className="flex flex-wrap gap-2">
-              {project.tags.slice(0, project.featured ? 4 : 3).map((tag) => (
-                <span
-                  key={tag}
-                  className="text-[10px] font-mono tracking-wide rounded-full border px-3 py-1.5"
-                  style={{
-                    color: 'var(--ink-secondary)',
-                    borderColor: 'var(--border-strong)',
-                    backgroundColor: 'color-mix(in srgb, var(--color-surface) 80%, transparent)',
-                  }}
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-
-            {/* CTA pill SÓLIDO — bg accent + texto blanco + flecha animada */}
-            <span
-              className="inline-flex items-center gap-2 text-sm font-semibold rounded-full px-5 py-2.5 w-fit"
-              style={{
-                backgroundColor: 'var(--color-accent)',
-                color: '#FFFFFF',
-              }}
-            >
-              {t('view_case')}
-              <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
-                →
+        {/* Reveal en hover: tags pills + CTA pill SÓLIDO */}
+        <div className="mt-4 flex flex-col gap-3 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 ease-out">
+          <div className="flex flex-wrap gap-2">
+            {project.tags.slice(0, project.featured ? 4 : 3).map((tag) => (
+              <span
+                key={tag}
+                className="text-[10px] font-mono tracking-wide rounded-full border px-3 py-1.5"
+                style={{
+                  color: 'var(--ink-secondary)',
+                  borderColor: 'var(--border-strong)',
+                  backgroundColor: 'color-mix(in srgb, var(--color-surface) 80%, transparent)',
+                }}
+              >
+                {tag}
               </span>
-            </span>
+            ))}
           </div>
+
+          {/* CTA pill SÓLIDO — bg accent + texto blanco + flecha animada */}
+          <span
+            className="inline-flex items-center gap-2 text-sm font-semibold rounded-full px-5 py-2.5 w-fit"
+            style={{
+              backgroundColor: 'var(--color-accent)',
+              color: '#FFFFFF',
+            }}
+          >
+            {t('view_case')}
+            <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
+              →
+            </span>
+          </span>
         </div>
-      )}
+      </div>
     </motion.article>
   )
 }
