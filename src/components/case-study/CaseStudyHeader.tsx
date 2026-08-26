@@ -72,7 +72,7 @@ export default function CaseStudyHeader({
       initial="hidden"
       animate="visible"
       variants={container}
-      className="max-w-4xl mx-auto"
+      className="max-w-7xl mx-auto"
     >
       {/* 1. Back link — pill ghost con flecha que se desliza 4px a la
           izquierda en hover. Mismo lenguaje visual que las pills del resto
@@ -117,7 +117,7 @@ export default function CaseStudyHeader({
         yFrom={20}
         blurFrom={6}
         duration={0.7}
-        className="font-display text-5xl md:text-7xl font-semibold tracking-tight leading-[1.05] mb-6 md:mb-8 text-balance block text-(--ink-primary)"
+        className="font-display text-5xl md:text-7xl font-semibold tracking-tight leading-[1.05] mb-6 md:mb-8 max-w-4xl text-balance block text-(--ink-primary)"
       />
 
       {/* 4. Tags (solo non-awwwards layout) */}

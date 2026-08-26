@@ -46,7 +46,7 @@ export default function Hero() {
       {/* NameLogo gigante — primer bloque en flujo, sticky al top, shrink-on-scroll.
           Su z-10 lo mantiene encima del dotgrid. Hace cross-fade con el NavLogo
           del navbar cuando el usuario scrollea (ver NameLogo.tsx). */}
-      <div className="relative z-10">
+      <div className="max-w-7xl mx-auto w-full relative z-10">
         <NameLogo />
       </div>
 
@@ -55,7 +55,7 @@ export default function Hero() {
           que el grid interno tenga altura suficiente para que `self-center`
           y `self-end` se separen visualmente. */}
       <motion.div
-        className="max-w-6xl w-full relative z-10 flex-1 flex"
+        className="max-w-7xl mx-auto w-full relative z-10 flex-1 flex"
         style={{ y }}
       >
         <div

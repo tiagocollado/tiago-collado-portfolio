@@ -65,6 +65,25 @@ elegí la más restrained y la mejor terminada, nunca la más cargada.
 | Párrafo → CTA | `mt-8` |
 | Entre párrafos | `space-y-6` |
 
+### Escalera de anchos (`max-w`) — 3 niveles, no inventar un cuarto
+| Nivel | Ancho | Para qué |
+|---|---|---|
+| **Shell** | `max-w-7xl` (1280px) | **Todo** contenedor de sección, el navbar y el footer. Una sola columna vertical en toda la página. |
+| **Editorial** | `max-w-3xl` (768) títulos · `max-w-2xl` (672) body | Medida de lectura. Va **adentro** del Shell, nunca lo reemplaza. |
+| **Excepción** | `max-w-xl` (576) | Solo el body desplazado del About (referencia `about_reference2`). Es la única. |
+
+⚠️ **El `max-w` y el gutter NUNCA van en el mismo elemento.** Con `box-sizing: border-box` el padding cuenta *dentro* del `max-w`, así que el contenido termina corrido respecto de las secciones que sí los separan. El patrón correcto es siempre:
+
+```jsx
+<section className="px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32">
+  <div className="max-w-7xl mx-auto"> ... </div>
+</section>
+```
+
+Este bug vivió meses en el Navbar (`max-w-400` + padding juntos) y en el Stack, y daba **seis bordes izquierdos distintos** a 1920px. El gutter es siempre ese string exacto, idéntico en todos lados.
+
+> Ojo al auditar: el error no se ve buscando valores de `max-w` raros. El Stack ya tenía `max-w-7xl` y estaba igual de roto — el problema era *dónde* estaba el padding, no el número.
+
 ### Tipografía
 - Display (H1/H2): `leading-tight` (1.15)
 - Body: `leading-relaxed` (1.625) — **nunca menos**
@@ -161,11 +180,17 @@ Tiago sigue estudiando y la programación no es su fuerte. **El código tiene qu
 
 **Home**: Navbar `h-16` fijo (NavLogo izq · links centrados · LanguageToggle + tema der · hamburger en `<lg`) · Hero con NameLogo GOTYA sticky que achica con el scroll y hace handoff al navbar, lema en dos líneas, CTA magnético con chevrons e `InteractiveDotGrid` · ServicesMarquee con fondo invertido · grilla Bento de proyectos · About 4.0 (micro-labels, claim con bold, copy a la derecha, firma) · Stack con carrusel infinito · **bloque de cierre unificado** (ver abajo).
 
-**Bloque de cierre** (Contact + Footer): se leen como una sola pieza. Contact no cierra su padding inferior y el Footer arranca pegado, sin `border-t` entre medio. Contact lleva el micro-label, una **pregunta corta sin párrafo de body** (quien llega acá ya hizo click en "Hablemos": viene con intención, no hay que volver a venderle), el mail en **mono grande** con botón de copiar al portapapeles, y los 4 canales (LinkedIn / GitHub / WhatsApp / CV). El Footer es una única barra de tres zonas: copyright · back-to-top · crédito. Siguen siendo dos componentes porque `<footer>` tiene que ser hijo directo del body para contar como landmark `contentinfo`.
+**Bloque de cierre** (Contact + Footer): se leen como una sola pieza. Contact no cierra su padding inferior y el Footer arranca pegado, sin `border-t` entre medio. Contact lleva el micro-label, una **pregunta corta sin párrafo de body** (quien llega acá ya hizo click en "Hablemos": viene con intención, no hay que volver a venderle), el mail en **mono grande** con botón de copiar al portapapeles, y los 4 canales (LinkedIn / GitHub / WhatsApp / CV). El Footer es una única barra de tres zonas: copyright · back-to-top · crédito. **En mobile (`<sm`) esa barra pasa a 2 columnas**: copyright y crédito apilados a la izquierda, back-to-top a la derecha abarcando las dos filas (`row-span-2`) y centrado contra ellas — la mitad derecha es la zona de menor costo motor para el pulgar (Fitts). Las posiciones van explícitas (`col-start`/`row-start`) y se resetean con `sm:*-auto`, porque el orden del DOM es copyright → botón → crédito y el auto-placement pondría el crédito en el lugar equivocado.
 
-> El bloque va dentro de un `<div className="min-h-screen flex flex-col justify-between">` en `page.tsx`: al entrar por el ancla `#contact` ocupa exactamente una pantalla, con la barra del footer pegada abajo. Es un `div` y no un `section`/`main` a propósito — esos volverían al `<footer>` descendiente suyo y le sacarían el landmark.
+> El bloque va dentro de un `<div className="min-h-screen flex flex-col justify-between">` en `page.tsx`: al entrar por el ancla `#contact` ocupa exactamente una pantalla, con la barra del footer pegada abajo. Es un `div` y no un `section`/`main` a propósito — esos scopearían al `<footer>` y le sacarían el landmark.
 
-> El `<Footer />` se renderea **solo en el home**. Los case studies terminan en `CaseStudyNextNav` y no tienen pie — es deliberado: la card de "próximo proyecto" es el cierre.
+> ⚠️ **Ese razonamiento estaba anulado un nivel más arriba**: `layout.tsx` envuelve todo en `<main className="pt-16">`, y un `<footer>` descendiente de `<main>` pierde el rol `contentinfo` por spec — cuidar el wrapper del home no alcanzaba. **Se resuelve con `role="contentinfo"` explícito en el `<footer>`**, que le gana al mapeo implícito. Ese atributo **no es redundante: si se saca, el landmark desaparece** y no lo avisa ni el build ni el linter.
+
+**El `<Footer />` cierra el home Y los seis case studies.** Antes era solo del home (la card de "próximo proyecto" oficiaba de cierre), pero al pie de un case study largo faltaba el camino de vuelta arriba. El cierre del case study es entonces `CaseStudyNextNav` + `Footer`.
+
+> ⚠️ **`id="top"` es requisito, no detalle.** El back-to-top es un `<a href="#top">`; toda página que renderee el `<Footer />` necesita ese id o el botón queda **muerto sin dar ningún error** — el build pasa, no hay warning, simplemente no scrollea. Hoy vive en el `<section>` del Hero (home) y en el `<div>` raíz del case study.
+
+**Cierre del case study**: los dos paths van en **una sola fila** desde `md+` — pill ghost "Ver todos los proyectos" en columna `auto` a la izquierda, card "Próximo proyecto" en `1fr` a la derecha. La card es el CTA primario inequívoco (tamaño, fondo, thumbnail, glow en hover); la pill no compite (Hick). La card va **primero en el DOM** y las columnas se cruzan con `md:order-*`: así el apilado en mobile sale correcto sin `order`, y el primario encabeza el orden de tabulación.
 
 **Back-to-top**: `<a href="#top">` con el `id="top"` en el `<section>` del Hero. Lenis monta con `anchors: true`, así que lo intercepta y hace el scroll suave él. Nunca `window.scrollTo`: pelearía contra su animación. Las dos flechas apiladas suben en loop mientras hay hover.
 
@@ -237,11 +262,11 @@ Solo lo que Tiago pueda defender en una entrevista.
 | ID | Tarea | Esfuerzo | Notas |
 |---|---|---|---|
 | **F3** | Tipografía principal nueva | 30 min + 10 | Reemplazar Space Grotesk + Geist. Opciones: Inter, Manrope, Satoshi, General Sans, Aeonik, Cabinet Grotesk. **Charlar el combo antes de codear.** Toca `layout.tsx` + `@theme`. ⚠️ **Arrastra la OG image**: los TTF de `src/app/[locale]/fonts/` y el `fontFamily` de `opengraph-image.tsx` son la fuente vieja. Si no se rehace, la miniatura que ve todo el mundo al compartir el link queda con una tipografía que el sitio ya no usa. Ver §9.14 para cómo conseguir los TTF. |
-| **C3** | Escalera intencional de `max-w` | 30-45 min | Hoy cada sección usa un `max-w` distinto de forma accidental (el About pasó a `7xl`). Definir el ritmo antes de tocar nada. |
 
 ### Técnico
 | ID | Tarea | Notas |
 |---|---|---|
+| **A11Y-2** | Auditar el resto de los landmarks y el foco | Se resolvió el `contentinfo` (§6), pero nunca se auditó el resto: ¿hay un solo `<main>`?, ¿el `<nav>` del navbar expone `navigation`?, ¿hay skip-link?, ¿el foco se ve en todos los interactivos?, ¿el custom cursor no rompe el foco de teclado? Manual, con el árbol de accesibilidad de DevTools. |
 | **D3** | Migrar a `next/image` | `ProjectCard` y `CaseStudyImage` usan `<img>`. Es la mejora de LCP más grande disponible. Hacer cuando estén los covers definitivos. |
 | **T2** | Lighthouse audit real | Manual en DevTools. No hay números del bundle post-rework. |
 | **T3** | ¿Mover `CLAUDE.md` y `AGENTS.md` a un `.docs/` privado? | Decisión pendiente de Tiago para cuando el repo público madure. Revisar también el `.gitignore`. |
@@ -272,6 +297,12 @@ Solo lo que Tiago pueda defender en una entrevista.
 14. **Satori NO soporta WOFF2** — que es justo lo único que baja `next/font/google`. Para embeber una fuente en `ImageResponse` hace falta **TTF/OTF/WOFF**, commiteado en el repo y leído con `fs`. Los TTF de Google se consiguen pidiéndole a la API de fonts con un user-agent viejo: `curl -A "Mozilla/4.0" ".../css2?family=..."` devuelve URLs `.ttf` en vez de `.woff2`.
 15. **`params` también es Promise en `opengraph-image.tsx`**, no solo en las pages. Si no lo leés, la imagen sale igual para todos los locales y **nadie se entera**: el build pasa y las dos imágenes quedan idénticas byte a byte. Se detecta comparando los hashes de `.next/server/app/{es,en}/opengraph-image.body`.
 16. **Adobe no está en simple-icons** (licencia). Para Ps/Ai/Pr usamos cuadrados bordeados con iniciales.
+
+### HTML, layout y accesibilidad
+22. **`max-w` + padding en el mismo elemento desalinea** — ver §2. El síntoma no es un `max-w` raro: el Stack tenía el valor correcto (`7xl`) y estaba igual de roto. Auditar *dónde* vive el padding, no qué número tiene el `max-w`.
+23. **Un `<footer>` dentro de `<main>` NO es landmark `contentinfo`.** El rol se pierde si es descendiente de `article`, `aside`, `main`, `nav` o `section` — y no hay warning de build ni de linter. Cuidado con "arreglarlo" un nivel y darlo por hecho: el wrapper del home ya era un `div` a propósito, pero el `<main>` de `layout.tsx` lo anulaba igual. **Un `role` explícito le gana siempre al mapeo implícito**, así que `role="contentinfo"` lo resuelve sin reestructurar el DOM. Vale para todos los landmarks, no solo este.
+24. **Un ancla rota es silenciosa.** `<a href="#top">` sin un `id="top"` en la página no tira error, no rompe el build, no loguea nada: simplemente no pasa nada al clickear. Al reusar un componente con anclas internas en una página nueva, verificar el destino en el HTML generado (`grep -o 'id="top"' .next/server/app/**/*.html`).
+25. **Con `grid-cols` de 2 columnas y 3 hijos, el auto-placement miente.** Si el orden del DOM no coincide con el visual, hay que poner `col-start`/`row-start` explícitos y resetearlos en el breakpoint de arriba (`sm:col-start-auto`). Preferir siempre dejar el elemento primario **primero en el DOM** y cruzar con `order` en desktop: así el apilado mobile sale gratis y el orden de tabulación arranca por el CTA principal.
 
 ### Git y edición de archivos
 17. **`npm run build` compila el árbol de trabajo, no el commit.** Un build verde local no prueba que un commit parcial sea auto-consistente. Antes de pushear un commit acotado: `git show --stat <sha>` y comparar contra `git show origin/main:<archivo>`.

@@ -13,30 +13,38 @@ export default function Stack() {
 
   return (
     <section className="pt-8 md:pt-10 lg:pt-12 pb-16 md:pb-20 lg:pb-28">
-      <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32">
-        <FadeInSection>
-          <div className="max-w-3xl">
-            <p
-              className="text-xs font-mono tracking-[0.2em] uppercase mb-5"
-              style={{ color: 'var(--color-accent)' }}
-            >
-              STACK
-            </p>
-            {/* H2 con gradient text: ink-primary → accent terracota.
-                `bg-clip-text` + `text-transparent` recortan el gradiente al
-                glyph — clásico portfolio premium. Funciona theme-aware
-                porque ambos colores son CSS vars. */}
-            <h2
-              className="font-display text-4xl md:text-5xl font-semibold tracking-tight leading-tight bg-clip-text text-transparent"
-              style={{
-                backgroundImage:
-                  'linear-gradient(120deg, var(--ink-primary) 0%, var(--ink-primary) 60%, var(--color-accent) 100%)',
-              }}
-            >
-              {t('title')}
-            </h2>
-          </div>
-        </FadeInSection>
+      {/* Gutter afuera, max-w adentro — mismo patron que el resto de las
+          secciones. Antes ambos vivian en este mismo div y el padding contaba
+          dentro del max-w (border-box), asi que el encabezado del Stack
+          arrancaba corrido respecto de Projects / About / Contact.
+          El padding NO puede ir en el <section> porque el carrusel de abajo
+          es hermano full-bleed y perderia el sangrado. */}
+      <div className="px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32">
+        <div className="max-w-7xl mx-auto">
+          <FadeInSection>
+            <div className="max-w-3xl">
+              <p
+                className="text-xs font-mono tracking-[0.2em] uppercase mb-5"
+                style={{ color: 'var(--color-accent)' }}
+              >
+                STACK
+              </p>
+              {/* H2 con gradient text: ink-primary → accent terracota.
+                  `bg-clip-text` + `text-transparent` recortan el gradiente al
+                  glyph — clásico portfolio premium. Funciona theme-aware
+                  porque ambos colores son CSS vars. */}
+              <h2
+                className="font-display text-4xl md:text-5xl font-semibold tracking-tight leading-tight bg-clip-text text-transparent"
+                style={{
+                  backgroundImage:
+                    'linear-gradient(120deg, var(--ink-primary) 0%, var(--ink-primary) 60%, var(--color-accent) 100%)',
+                }}
+              >
+                {t('title')}
+              </h2>
+            </div>
+          </FadeInSection>
+        </div>
       </div>
 
       {/* Carrusel full-bleed */}

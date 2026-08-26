@@ -54,12 +54,18 @@ export default function Navbar() {
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 h-16 backdrop-blur-md"
+      className="fixed top-0 left-0 right-0 z-50 h-16 backdrop-blur-md px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32"
       style={{
         backgroundColor: 'color-mix(in srgb, var(--bg-primary) 85%, transparent)',
       }}
     >
-      <nav className="max-w-400 mx-auto px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32 h-16 flex items-center justify-between gap-4 relative">
+      {/* Gutter afuera (en el header), max-w adentro (en el nav) — misma
+          estructura que las secciones del home. Antes ambos vivian en el
+          MISMO elemento y, como el padding cuenta dentro del max-w
+          (border-box), el logo caia corrido respecto de la columna de
+          contenido. El fondo con blur sigue siendo full-width porque el
+          header conserva `left-0 right-0`. */}
+      <nav className="max-w-7xl mx-auto h-16 flex items-center justify-between gap-4 relative">
         {/* Izquierda: logo monoespaciado, fade-in scroll-driven en home. */}
         <NavLogo />
 

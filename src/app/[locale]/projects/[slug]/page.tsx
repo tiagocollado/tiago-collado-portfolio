@@ -7,6 +7,7 @@ import CaseStudySection from '@/components/case-study/CaseStudySection'
 import CaseStudyImage from '@/components/case-study/CaseStudyImage'
 import CaseStudyHeader from '@/components/case-study/CaseStudyHeader'
 import CaseStudyNextNav from '@/components/case-study/CaseStudyNextNav'
+import Footer from '@/components/ui/Footer'
 
 interface ProjectPageProps {
   params: Promise<{
@@ -72,7 +73,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const nextProject = getNextProject(project.order)
 
   return (
-    <div className="min-h-screen pb-24 md:pb-32">
+    // `id="top"` es el ancla del back-to-top del Footer, que ahora tambien
+    // cierra los case studies. Sin este id el ancla no existe y el boton
+    // queda muerto sin dar ningun error (ver Footer.tsx).
+    // El `pb` de abajo se fue: el propio Footer aporta el aire final con su
+    // `pt-16 md:pt-20` + `pb-10 md:pb-12`, igual que en el home.
+    <div id="top" className="min-h-screen">
 
       {/* ============ HEADER ============
           Cabecera entera (back link + type + h1 con SplitText + tags + tagline
@@ -245,6 +251,13 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           Card prominente "Próximo proyecto" + pill ghost "Ver todos".
           Encapsulado en client component para tener cursor variants en hover. */}
       <CaseStudyNextNav nextProject={nextProject} locale={locale} />
+
+      {/* ============ FOOTER ============
+          Antes el case study cerraba en la card de "proximo proyecto" y no
+          tenia pie. Ahora comparte el mismo cierre que el home, sobre todo
+          por el back-to-top: al pie de un case study largo era el unico
+          camino de vuelta arriba que faltaba. */}
+      <Footer />
 
     </div>
   )

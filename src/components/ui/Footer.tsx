@@ -5,9 +5,18 @@
  * --------------------------------------------------------------
  *  Ya no es "una sección más y después el footer": Contact no cierra su
  *  padding inferior y este bloque arranca pegado, así los dos se leen como
- *  un único cierre de página. Sigue siendo un `<footer>` aparte porque
- *  tiene que ser hijo directo del body para contar como landmark
- *  `contentinfo` (anidado dentro de un `<section>` perdería ese rol).
+ *  un único cierre de página. Sigue siendo un componente aparte de Contact
+ *  para no scopear el `<footer>` dentro de un `<section>`.
+ *
+ *  ⚠️ El `role="contentinfo"` de abajo es OBLIGATORIO, no redundante.
+ *  Un `<footer>` sólo mapea a ese landmark cuando NO es descendiente de
+ *  `article`/`aside`/`main`/`nav`/`section`, y `layout.tsx` envuelve todo
+ *  en `<main className="pt-16">`. Es decir: el mapeo implícito acá no
+ *  ocurre, y un `role` explícito siempre le gana al implícito. Durante un
+ *  tiempo el comentario de este archivo afirmaba que el landmark existía
+ *  "por ser hijo directo del body" — era falso, y no lo detecta ningún
+ *  build ni linter. Si algún día el footer sale de `<main>`, el atributo
+ *  pasa a ser redundante pero sigue siendo correcto.
  *
  *  Es una sola barra de tres zonas: copyright · back-to-top · crédito.
  *  El back-to-top muestra dos flechas apiladas que suben en loop mientras
@@ -24,8 +33,12 @@
  *  intercepta el click y hace el scroll suave él mismo — un scrollTo por JS
  *  pelearía contra su animación. Y cuando Lenis no existe
  *  (prefers-reduced-motion), degrada solo a un salto nativo instantáneo,
- *  que es exactamente lo que corresponde. El `id="top"` vive en el
- *  <section> del Hero.
+ *  que es exactamente lo que corresponde.
+ *
+ *  ⚠️ El `id="top"` NO es opcional: toda página que renderee este footer
+ *  tiene que tenerlo, o el back-to-top queda muerto (el ancla no existe y
+ *  el click no hace nada, sin ningún error visible). Hoy vive en el
+ *  <section> del Hero (home) y en el div raíz del case study.
  */
 
 import { useTranslations } from 'next-intl'
@@ -61,6 +74,10 @@ export default function Footer() {
 
   return (
     <motion.footer
+      // Explícito y no heredado: ver la nota del docblock. Sin este atributo
+      // el elemento no expone landmark alguno, porque `layout.tsx` lo deja
+      // dentro de `<main>`.
+      role="contentinfo"
       // El `pt` grande es el aire que separa de los canales de Contact: la
       // separación la da el espacio, no una línea de borde arriba.
       className="pt-16 md:pt-20 pb-10 md:pb-12 px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32"
@@ -68,16 +85,27 @@ export default function Footer() {
       whileInView="visible"
       viewport={{ once: true, margin: '-50px' }}
     >
-      {/* Barra de tres zonas. En mobile se apila; desde sm+ es una grilla de
-          3 columnas para que el back-to-top quede realmente centrado
-          respecto del ancho, y no "al lado" del copyright. */}
+      {/* Barra de tres zonas, con DOS layouts.
+
+          Mobile — grilla de 2 columnas: copyright y crédito apilados a la
+          izquierda, back-to-top a la derecha abarcando las dos filas
+          (`row-span-2`) y centrado contra ellas. Antes los tres hijos se
+          apilaban en una sola columna y el botón quedaba huérfano en la
+          fila del medio. Las posiciones van explícitas (`col-start` /
+          `row-start`) porque el orden del DOM es copyright → botón →
+          crédito, y el auto-placement pondría el crédito arriba a la
+          derecha en vez de abajo a la izquierda.
+
+          sm+ — vuelve a la grilla de 3 columnas para que el back-to-top
+          quede centrado respecto del ancho total, y no "al lado" del
+          copyright. Cada hijo resetea su posición con `sm:*-auto`. */}
       <div
-        className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 items-center gap-6 pt-8 border-t"
+        className="max-w-7xl mx-auto grid grid-cols-[1fr_auto] gap-x-6 gap-y-3 sm:grid-cols-3 sm:gap-6 items-center pt-8 border-t"
         style={{ borderColor: 'var(--border-default)' }}
       >
         <motion.p
           variants={fadeUp(0)}
-          className="text-[11px] font-mono uppercase tracking-[0.18em]"
+          className="col-start-1 row-start-1 sm:col-start-auto sm:row-start-auto text-[11px] font-mono uppercase tracking-[0.18em]"
           style={{ color: 'var(--ink-muted)' }}
         >
           © 2026 Copyright Gotya
@@ -94,7 +122,14 @@ export default function Footer() {
 
             El `reducedMotion="user"` global del layout desactiva este loop
             solo para quien lo pidió a nivel sistema. */}
-        <motion.div variants={fadeUp(0.1)} className="flex sm:justify-center">
+        {/* En mobile va en la columna derecha, abarcando las dos filas de
+            texto: la mitad derecha es la zona de menor costo motor para el
+            pulgar (Fitts / thumb zone). Desde sm+ vuelve a ser una celda
+            normal de la grilla de 3 y se centra. */}
+        <motion.div
+          variants={fadeUp(0.1)}
+          className="col-start-2 row-start-1 row-span-2 sm:col-start-auto sm:row-start-auto sm:row-span-1 flex items-center justify-end sm:justify-center"
+        >
           <a
             href="#top"
             aria-label={t('back_to_top')}
@@ -129,7 +164,7 @@ export default function Footer() {
 
         <motion.p
           variants={fadeUp(0.2)}
-          className="text-[11px] font-mono uppercase tracking-[0.18em] sm:text-right"
+          className="col-start-1 row-start-2 sm:col-start-auto sm:row-start-auto text-[11px] font-mono uppercase tracking-[0.18em] sm:text-right"
           style={{ color: 'var(--ink-muted)' }}
         >
           {t('credit')}
