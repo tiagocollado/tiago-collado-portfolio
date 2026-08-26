@@ -6,6 +6,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { Space_Grotesk } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/ui/Navbar'
+import SkipLink from '@/components/ui/SkipLink'
 import SmoothScrollProvider from '@/components/ui/SmoothScrollProvider'
 import { CursorProvider } from '@/components/ui/CustomCursor'
 
@@ -85,8 +86,16 @@ export default async function LocaleLayout({
           <NextIntlClientProvider messages={messages}>
             <SmoothScrollProvider>
               <CursorProvider>
+                <SkipLink />
                 <Navbar />
-                <main className="pt-16">
+                {/* `id="main"` es el destino del SkipLink y `tabIndex={-1}` lo
+                    hace focusable por script sin meterlo en el orden de
+                    tabulación. El `focus:outline-none` es una excepción
+                    deliberada a "nunca suprimir el focus ring": acá el foco
+                    llega solo de forma programática, y un contorno alrededor
+                    de todo el contenido de la página se lee como un bug, no
+                    como feedback. Los controles reales conservan su ring. */}
+                <main id="main" tabIndex={-1} className="pt-16 focus:outline-none">
                   {children}
                 </main>
               </CursorProvider>

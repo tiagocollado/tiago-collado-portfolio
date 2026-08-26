@@ -19,7 +19,7 @@ export const projects: Project[] = [
     },
     // Cover listo. De las 4 contextuales solo está 01-hero: los imageBriefs
     // sin `src` siguen mostrando el placeholder BUILDING.
-    coverImage: '/images/covers/paseo-guemes-hotel-cover.jpg',
+    coverImage: null,
     year: 2026,
     featured: false,
     order: 2,
@@ -37,7 +37,6 @@ export const projects: Project[] = [
           es: 'Hero del sitio con video del Monumento a Güemes y el CTA de reserva',
           en: 'Site hero with video of the Güemes Monument and the booking CTA',
         },
-        src: '/images/case-study/paseo-guemes-hotel/01-hero.jpg',
       },
       {
         alt: {
@@ -75,7 +74,7 @@ export const projects: Project[] = [
     links: {
       live: 'https://pulsocreativo.com.ar',
     },
-    coverImage: '/images/covers/pulso-creativo-cover.jpg',
+    coverImage: null,
     year: 2026,
     featured: true,
     order: 1,
@@ -93,7 +92,6 @@ export const projects: Project[] = [
           es: 'Home del sitio institucional en desktop',
           en: 'Institutional site home on desktop',
         },
-        src: '/images/case-study/pulso-creativo/01-hero.jpg',
       },
       {
         alt: {
@@ -131,7 +129,7 @@ export const projects: Project[] = [
     links: {
       figma: undefined,
     },
-    coverImage: '/images/covers/futbol-talent-pro-cover.jpg',
+    coverImage: null,
     year: 2025,
     featured: false,
     order: 3,
@@ -150,28 +148,24 @@ export const projects: Project[] = [
           es: 'Pantalla de plataforma móvil',
           en: 'Mobile platform screen',
         },
-        src: '/images/case-study/futbol-talent-pro/01-hero.jpg',
       },
       {
         alt: {
           es: 'Wireframes de baja fidelidad',
           en: 'Low-fidelity wireframes',
         },
-        src: '/images/case-study/futbol-talent-pro/02-challenge.jpg',
       },
       {
         alt: {
           es: 'Sistema de componentes UI',
           en: 'UI component system',
         },
-        src: '/images/case-study/futbol-talent-pro/03-decisions.jpg',
       },
       {
         alt: {
           es: 'Flujos de usuario y documentación de handoff',
           en: 'User flows and handoff documentation',
         },
-        src: '/images/case-study/futbol-talent-pro/04-delivered.jpg',
       },
     ],
   },
@@ -193,7 +187,7 @@ export const projects: Project[] = [
       githubBack: 'https://github.com/tiagocollado/el-ritual-del-tono-backend',
       live:       'https://el-ritual-del-tono.vercel.app',
     },
-    coverImage: '/images/covers/el-ritual-del-tono-cover.jpg',
+    coverImage: null,
     year: 2025,
     featured: true,
     order: 4,
@@ -211,28 +205,24 @@ export const projects: Project[] = [
           es: 'Hero shot — página principal de El Ritual del Tono mostrando un artista y su cadena de señal',
           en: 'Hero shot — El Ritual del Tono main page showing an artist and their signal chain',
         },
-        src: '/images/case-study/el-ritual-del-tono/01-hero.jpg',
       },
       {
         alt: {
           es: 'Esquema de las 3 colecciones MongoDB del proyecto: Artists con Songs como subdocumentos, Gears reutilizables y Orders',
           en: 'MongoDB schema diagram with 3 collections: Artists with Songs subdocuments, reusable Gears, and Orders',
         },
-        src: '/images/case-study/el-ritual-del-tono/02-challenge.jpg',
       },
       {
         alt: {
           es: 'Página de canción mostrando la cadena de señal: guitarra, pedales y amplificador en orden',
           en: 'Song page showing the signal chain: guitar, pedals, and amp in order',
         },
-        src: '/images/case-study/el-ritual-del-tono/03-decisions.jpg',
       },
       {
         alt: {
           es: 'Carrito y checkout simulado mostrando el setup completo de un tono',
           en: 'Cart and simulated checkout showing the complete tone setup',
         },
-        src: '/images/case-study/el-ritual-del-tono/04-delivered.jpg',
       },
     ],
   },
@@ -250,7 +240,7 @@ export const projects: Project[] = [
     tags: ['UX Research', 'UI Design', 'Prototyping', 'Figma'],
     type: 'ux',
     links: {},
-    coverImage: '/images/covers/cabify-music-match-cover.jpg',
+    coverImage: null,
     year: 2023,
     featured: false,
     order: 7,
@@ -268,28 +258,24 @@ export const projects: Project[] = [
           es: 'Hero shot — prototipo iPhone 14 mostrando la pantalla principal de Music Match con la playlist fusionada',
           en: 'Hero shot — iPhone 14 prototype showing the main Music Match screen with the merged playlist',
         },
-        src: '/images/case-study/cabify-music-match/01-hero.jpg',
       },
       {
         alt: {
           es: 'Diagrama del algoritmo de fusión: dos perfiles Spotify con géneros y artistas convergen en una playlist compartida',
           en: 'Merge algorithm diagram: two Spotify profiles with genres and artists converge into a shared playlist',
         },
-        src: '/images/case-study/cabify-music-match/02-challenge.jpg',
       },
       {
         alt: {
           es: 'User flow del onboarding skippable de Spotify, en 3 pantallas mobile',
           en: 'Skippable Spotify onboarding user flow across 3 mobile screens',
         },
-        src: '/images/case-study/cabify-music-match/03-decisions.jpg',
       },
       {
         alt: {
           es: 'Tres estados clave de Music Match: fusión, playlist por mood y modo silencio',
           en: 'Three key Music Match states: merge, mood playlist, and silence mode',
         },
-        src: '/images/case-study/cabify-music-match/04-delivered.jpg',
       },
     ],
   },
@@ -309,7 +295,7 @@ export const projects: Project[] = [
     links: {
       figma: undefined,
     },
-    coverImage: '/images/covers/multibrand-design-system-cover.jpg',
+    coverImage: null,
     year: 2025,
     featured: false,
     order: 5,
@@ -327,28 +313,24 @@ export const projects: Project[] = [
           es: 'Hero shot — tablero Figma del Design System con paleta, componentes y tipografía',
           en: 'Hero shot — Figma board of the Design System with palette, components, and typography',
         },
-        src: '/images/case-study/multibrand-design-system/01-hero.jpg',
       },
       {
         alt: {
           es: 'Diagrama 70/30 mostrando el core invariante vs los tokens personalizables',
           en: '70/30 diagram showing the invariant core vs customizable tokens',
         },
-        src: '/images/case-study/multibrand-design-system/02-challenge.jpg',
       },
       {
         alt: {
           es: 'Misma UI aplicada con dos marcas distintas: una formal/académica y una dinámica/innovadora',
           en: 'Same UI applied with two different brands: one formal/academic, one dynamic/innovative',
         },
-        src: '/images/case-study/multibrand-design-system/03-decisions.jpg',
       },
       {
         alt: {
           es: 'Documentación del design system en Notion: guías, checklist de accesibilidad y proceso de creación de submarcas',
           en: 'Design system documentation in Notion: guides, accessibility checklist, and sub-brand creation process',
         },
-        src: '/images/case-study/multibrand-design-system/04-delivered.jpg',
       },
     ],
   },
@@ -368,7 +350,7 @@ export const projects: Project[] = [
     links: {
       figma: undefined,
     },
-    coverImage: '/images/covers/recuerdalo-cover.jpg',
+    coverImage: null,
     year: 2025,
     featured: false,
     order: 6,
@@ -386,28 +368,24 @@ export const projects: Project[] = [
           es: 'Hero shot — pantalla principal de Recuérdalo con las 4 categorías emergentes del card sorting',
           en: 'Hero shot — Recuérdalo main screen with the 4 categories that emerged from card sorting',
         },
-        src: '/images/case-study/recuerdalo/01-hero.jpg',
       },
       {
         alt: {
           es: 'Card sorting documentado: 15 tarjetas de funcionalidades agrupadas por usuarios mayores en 4 categorías emocionales',
           en: 'Documented card sorting: 15 feature cards grouped by older users into 4 emotional categories',
         },
-        src: '/images/case-study/recuerdalo/02-challenge.jpg',
       },
       {
         alt: {
           es: 'Secuencia de pasos reversibles: indicador numérico, botón Volver grande y confirmación visual inmediata',
           en: 'Reversible steps sequence: numeric indicator, large Back button, and immediate visual confirmation',
         },
-        src: '/images/case-study/recuerdalo/03-decisions.jpg',
       },
       {
         alt: {
           es: 'Comparación de accesibilidad: UI estándar versus Recuérdalo con tipografía y touch targets aumentados',
           en: 'Accessibility comparison: standard UI vs Recuérdalo with enlarged typography and touch targets',
         },
-        src: '/images/case-study/recuerdalo/04-delivered.jpg',
       },
     ],
   },

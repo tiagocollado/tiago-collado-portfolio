@@ -54,14 +54,21 @@ export default function CaseStudySection({
       viewport={{ once: true, margin: '-15% 0px' }}
       variants={sectionVariants}
     >
+      {/* El label es un <h2>, no un <p>, aunque se vea como un micro-label.
+          Era un <p>, y por eso el outline del case study salía h1 -> h3: los
+          títulos de decisión (h3) quedaban colgando del título del proyecto
+          sin nivel intermedio, y el único h2 del documento terminaba siendo
+          la card de "próximo proyecto" del pie. Quien navega por headings
+          con un lector de pantalla no tenía forma de saber en qué sección
+          estaba. El tamaño chico es una decisión visual, no jerárquica. */}
       {label && (
-        <motion.p
+        <motion.h2
           variants={labelVariants}
           className="text-[11px] font-mono uppercase tracking-[0.18em] mb-6 md:mb-8"
           style={{ color: 'var(--color-accent)' }}
         >
           {label}
-        </motion.p>
+        </motion.h2>
       )}
       <div className="space-y-8 md:space-y-10">
         {children}

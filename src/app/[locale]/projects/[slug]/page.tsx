@@ -104,6 +104,17 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             {/* Main editorial — col-span-9, secciones con imágenes intercaladas */}
             <div className="lg:col-span-9 space-y-20 md:space-y-28">
 
+              {/* ⚠️ Las cuatro imágenes se rendean solo si el brief tiene
+                  `src` — de ahí el `?.src &&` en vez de un `?.[n] &&` pelado.
+                  Sin esa guarda, un brief sin imagen cae al placeholder
+                  "BUILDING" de CaseStudyImage, y con las 28 imágenes
+                  provisorias dadas de baja eso llenaba el sitio de cajas
+                  punteadas "en obra": una señal peor que la que se quiso
+                  evitar, en un portfolio que ya está circulando entre
+                  reclutadores. Los `imageBriefs` siguen en `projects.ts`
+                  documentando qué va en cada slot; al agregarle `src` a uno,
+                  la imagen vuelve a aparecer sola. */}
+
               {/* INTRO — sin label, hook 2-3 líneas + 1ª imagen */}
               <CaseStudySection label={null}>
                 <p
@@ -112,7 +123,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 >
                   {awwwardsContent.intro}
                 </p>
-                {project.imageBriefs?.[0] && (
+                {project.imageBriefs?.[0]?.src && (
                   <CaseStudyImage
                     alt={project.imageBriefs[0].alt[locale]}
                     aspectRatio="wide"
@@ -131,7 +142,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 >
                   {awwwardsContent.challenge}
                 </p>
-                {project.imageBriefs?.[1] && (
+                {project.imageBriefs?.[1]?.src && (
                   <CaseStudyImage
                     alt={project.imageBriefs[1].alt[locale]}
                     aspectRatio="wide"
@@ -183,7 +194,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 </ol>
 
                 {/* Imagen contextual entre decisiones — material que ilustra UNA de las decisiones */}
-                {project.imageBriefs?.[2] && (
+                {project.imageBriefs?.[2]?.src && (
                   <CaseStudyImage
                     alt={project.imageBriefs[2].alt[locale]}
                     aspectRatio="wide"
@@ -221,7 +232,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 </ul>
 
                 {/* Imagen final — outputs/entregables del proyecto */}
-                {project.imageBriefs?.[3] && (
+                {project.imageBriefs?.[3]?.src && (
                   <CaseStudyImage
                     alt={project.imageBriefs[3].alt[locale]}
                     aspectRatio="wide"

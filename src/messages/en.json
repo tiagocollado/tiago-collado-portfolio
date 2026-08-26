@@ -1,4 +1,7 @@
 {
+  "a11y": {
+    "skip_to_content": "Skip to content"
+  },
   "nav": {
     "projects": "Projects",
     "about": "About Gotya",

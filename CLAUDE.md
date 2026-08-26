@@ -84,6 +84,32 @@ Este bug vivió meses en el Navbar (`max-w-400` + padding juntos) y en el Stack,
 
 > Ojo al auditar: el error no se ve buscando valores de `max-w` raros. El Stack ya tenía `max-w-7xl` y estaba igual de roto — el problema era *dónde* estaba el padding, no el número.
 
+### Imágenes — medidas para diseñar en Figma
+Medido contra el layout real, no estimado. **Diseñar a 1× y exportar @2×.**
+
+**Covers del home** · frame `960 × 600` → export **@2× = 1920 × 1200**
+
+Las cards tienen **altura fija** y ancho variable, así que el mismo archivo cae en recortes muy distintos:
+
+| Slot | Recorte | Aspect |
+|---|---|---|
+| Featured (2 col) | 845 × 320 | **2,64:1** |
+| Normal (1 col) | 411 × 320 | **1,28:1** |
+| Mobile 375px | 327 × 280 | 1,17:1 |
+| Mobile 320px | 272 × 280 | **0,97:1** (vertical) |
+
+⚠️ Entre el recorte más ancho y el más angosto, lo único que sobrevive siempre es el **60% central**. **Zona segura: rectángulo centrado de `580 × 360`** (en el frame de 960×600). Nada esencial afuera de ahí.
+Sin texto (la card superpone tag, año y título) y tiene que funcionar en escala de grises: en reposo van desaturadas.
+
+**Imágenes de case study** · frame `1200 × 800` (3:2) → export **@2× = 2400 × 1600**
+
+Las 4 usan `aspectRatio="wide"`. La columna editorial mide 944px como máximo. Margen de seguridad: **72px en los cuatro lados** (el recorte con parallax se come ~3,5% de cada borde en desktop).
+
+⚠️ **En mobile la imagen se muestra COMPLETA y sin recortar, a ~330px de ancho** — el frame de 1200 se ve al **27%**. Por eso **todo texto adentro de la imagen tiene que medir 36px o más** en el frame de 1200×800; menos que eso es ilegible en celular. Para mostrar pantallas con texto chico va un zoom o un detalle recortado, nunca la pantalla entera.
+
+**Exportación (ambas)**: WebP calidad 80 · **≤ 250 KB** por archivo.
+El peso importa porque hoy se usa `<img>` sin `srcset` (ver D3): **el celular baja el archivo completo igual que el desktop**, y un case study puede descargar ~2 MB de imágenes.
+
 ### Tipografía
 - Display (H1/H2): `leading-tight` (1.15)
 - Body: `leading-relaxed` (1.625) — **nunca menos**
@@ -140,7 +166,7 @@ Cuando el cambio sea de copy o estructura, mencionar la ley aplicada en el commi
 - **NO ocultar** `metadata.client` (`FutbolTalent.Pro`), el `title` ni el `slug`: el vínculo laboral ya es público y el NDA no lo restringe.
 - **Material permitido**: wireframes de baja/media, flujos, design system, user personas. **Nunca** pantallas finales del producto.
 
-> ⏳ **Pendiente legal**: las imágenes de `public/images/case-study/futbol-talent-pro/` y su cover **todavía muestran UI real**. La purga fue solo textual hasta que Tiago suba las versiones "Marca Blanca" hechas en Figma.
+> ✅ **Pendiente legal — resuelto.** Las imágenes de FutbolTalent mostraban UI real del producto y siguieron publicadas un tiempo después de la purga textual. Se borraron del repo junto con el resto de las provisorias, así que ya no están ni en la página ni accesibles por URL directa en el deploy. **Cuando subas las versiones "Marca Blanca", valen las mismas reglas de esta sección**: wireframes, flujos, design system y personas sí; pantallas finales del producto no.
 
 **Tono general del copy**: directo, sin narrativas forzadas de Silicon Valley. La confidencialidad se menciona solo dentro del case study de FTP, nunca en el About.
 
@@ -212,7 +238,14 @@ Tiago sigue estudiando y la programación no es su fuerte. **El código tiene qu
 
 > ✅ El lema **ya no está duplicado**. Vivía hardcodeado en `opengraph-image.tsx` además de en `hero.headline` / `hero.subheadline`, y había que acordarse de tocarlo en los dos lados. Al sacarle el texto a la OG image, la única fuente de verdad volvieron a ser los JSON.
 
-**i18n**: next-intl con paridad total ES/EN. **Regla**: toda key nueva va en los dos archivos.
+**i18n**: next-intl con paridad total ES/EN (17 namespaces). **Regla**: toda key nueva va en los dos archivos.
+
+**Accesibilidad** (auditado sobre el HTML generado, no sobre el código):
+- Un solo `<main>`, `<nav>`, `<header>` y `<footer>` por página · `lang` correcto por locale · 12 imágenes, **cero sin `alt`** · 17 `aria-label` cubriendo los controles de solo ícono.
+- **Nada suprime el focus ring del browser**, así que el foco de teclado se ve en todo. La única excepción es `<main>`, que lo suprime a propósito: recibe foco solo por script desde el skip link, y un contorno alrededor de toda la página se lee como un bug. **No agregar más excepciones.**
+- El cursor custom **no** oculta el nativo (no hay ninguna regla `cursor: none`), así que no interfiere con el foco.
+- **Skip link** (`SkipLink.tsx`): primer elemento focusable, invisible hasta recibir foco. Es un client component con `onClick` + `preventDefault` en vez de un `<a href="#main">` pelado, porque Lenis intercepta las anclas y puede comerse el movimiento de foco nativo — que acá es lo único que importa, ya que `<main>` arranca al tope y no hay nada que scrollear.
+- **Jerarquía de headings**: el case study da `h1 → h2 → h3` sin saltos. Ojo: el label de `CaseStudySection` es un **`<h2>` que se ve como micro-label**. Era un `<p>`, y por eso el outline salía `h1 → h3` con el único `h2` siendo la card del pie. El tamaño chico es decisión visual, no jerárquica — **no lo devuelvas a `<p>`**.
 
 ---
 
@@ -257,9 +290,7 @@ Solo lo que Tiago pueda defender en una entrevista.
 ### Bloqueado por contenido de Tiago
 | ID | Tarea | Notas |
 |---|---|---|
-| **NDA-img** | Imágenes "Marca Blanca" de FutbolTalent | **Prioridad legal.** Las 4 contextuales + el cover, en versión anonimizada de Figma. |
-| **WP-img** | Faltan `02-challenge`, `03-decisions` y `04-delivered` × 2 (Paseo Güemes y Pulso) | Covers y `01-hero` ya están cableados. Los tres slots restantes de cada caso siguen mostrando el placeholder "BUILDING"; el `alt` de cada `imageBrief` describe qué va en cada uno. |
-| **B1** | Covers definitivos de FTP / Multibrand / Recuérdalo | Los actuales son provisorios y se ven débiles. |
+| **IMG-1** | **Rehacer las 35 imágenes** — 7 covers + 28 de case study | Reemplaza a NDA-img, WP-img y B1, que quedaron sin objeto al darse de baja todas las provisorias (§10). 📋 **La hoja de ruta completa está en `BRIEF-IMAGENES.md`** (raíz del repo): formatos, naming, dirección de arte por proyecto, la lista de las 35 con checkbox y cómo cablear cada una. **Ese archivo se borra cuando estén todas.** Las medidas permanentes están en §2. |
 | **B3** | Métricas reales de FutbolTalentPro | Sin data el caso cierra sin impacto duro. |
 
 ### Marca
@@ -274,8 +305,7 @@ Solo lo que Tiago pueda defender en una entrevista.
 ### Técnico
 | ID | Tarea | Notas |
 |---|---|---|
-| **A11Y-2** | Auditar el resto de los landmarks y el foco | Se resolvió el `contentinfo` (§6), pero nunca se auditó el resto: ¿hay un solo `<main>`?, ¿el `<nav>` del navbar expone `navigation`?, ¿hay skip-link?, ¿el foco se ve en todos los interactivos?, ¿el custom cursor no rompe el foco de teclado? Manual, con el árbol de accesibilidad de DevTools. |
-| **D3** | Migrar a `next/image` | `ProjectCard` y `CaseStudyImage` usan `<img>`. Es la mejora de LCP más grande disponible. Hacer cuando estén los covers definitivos. |
+| **D3** | Migrar a `next/image` | `ProjectCard` y `CaseStudyImage` usan `<img>`. Es la mejora de LCP más grande disponible. ⚠️ **Conviene hacerlo ANTES de IMG-1, no después** — la nota vieja decía lo contrario. Con `next/image`, Next genera los tamaños y convierte a WebP/AVIF solo: Tiago exporta una vez, grande, y se olvida del peso y del `srcset`. Al revés, optimiza 31 imágenes a mano y esa optimización queda redundante. Además ahora no hay imágenes que migrar, así que es el momento más barato. |
 | **T2** | Lighthouse audit real | Manual en DevTools. No hay números del bundle post-rework. |
 | **T3** | ¿Mover `CLAUDE.md` y `AGENTS.md` a un `.docs/` privado? | Decisión pendiente de Tiago para cuando el repo público madure. Revisar también el `.gitignore`. |
 | **E** | Easter egg · Vercel Analytics · dominio NIC.ar | Cuando haya ganas. |
@@ -344,7 +374,8 @@ src/
 │   │                 # About · Stack · Contact
 │   └── ui/           # Navbar · NameLogo · NavLogo · MarqueeLink · Footer ·
 │                     # CustomCursor · SplitText · MagneticLink · StackIcon ·
-│                     # InteractiveDotGrid · LanguageToggle · SmoothScrollProvider
+│                     # InteractiveDotGrid · LanguageToggle · SmoothScrollProvider ·
+│                     # SkipLink
 ├── data/             # projects.ts · stack.ts
 ├── hooks/            # useCursor · useMagneticHover
 ├── i18n/request.ts   # config de next-intl
@@ -353,7 +384,13 @@ src/
 └── types/index.ts    # Project · StackItem · Locale
 ```
 
-**Imágenes**: `public/images/covers/{slug}-cover.jpg` (cards del home) · `public/images/case-study/{slug}/0[1-4]-*.jpg` (contextuales, 1920×1200, JPG <500kb) · `public/images/references/` (refs visuales).
+**Imágenes**: `public/images/covers/{slug}-cover.*` (cards del home) · `public/images/case-study/{slug}/0[1-4]-*.*` (contextuales). **Las medidas para diseñarlas están en §2 ("Imágenes — medidas para diseñar en Figma")** — no improvisar tamaños acá. Nada más va en `public/`: **todo lo que está ahí se sirve en producción** (ver §11).
+
+> ⚠️ **Hoy NO hay ninguna imagen en el repo.** Las 31 que había (7 covers + 24 de case study) eran provisorias, se leían como generadas con IA y se dieron de baja: en un portfolio de UX/UI una imagen que parece IA contradice el argumento del portfolio más fuerte de lo que un hueco lo debilita. Se borraron los archivos **y** las referencias (`coverImage: null` y sin `src` en los `imageBriefs`).
+
+> **Cómo volver a ponerlas, de a una**: subís el archivo a la ruta que corresponde y le agregás el `src` al brief (o el `coverImage` al proyecto). No hace falta tocar ningún componente — `ProjectCard` envuelve el cover en `{project.coverImage && …}` y la page rendea cada `CaseStudyImage` solo si el brief tiene `src`. 📋 **Hoja de ruta completa en `BRIEF-IMAGENES.md`** (documento temporal, se borra al terminar).
+
+> **Por qué no quedaron los placeholders "BUILDING"**: sin las imágenes, esas cajas punteadas aparecían **28 veces** (4 × 7 case studies) y convertían el sitio en una obra en construcción — otra señal negativa, y encima el texto está hardcodeado en inglés también en la versión ES. El componente sigue soportando el modo placeholder; simplemente no se usa mientras falten las imágenes.
 Los covers **no deben tener texto** (la card ya superpone tag, año y título) y tienen que funcionar en escala de grises, porque en idle van desaturados.
 
 **Íconos**: `lucide-react` para UI · `simple-icons` para marcas del Stack · Adobe como cuadrados con iniciales. El Footer ya no usa SVGs de marca: sus links son mono + glifo (↗ navega, ↓ descarga). Para sumar uno nuevo, editar `SIMPLE_ICONS`, `LUCIDE_ICONS` o `ADOBE_INITIALS` en `StackIcon.tsx`. Todo monocromo con `currentColor`.
@@ -368,7 +405,11 @@ Los covers **no deben tener texto** (la card ya superpone tag, año y título) y
 
 **Case studies Awwwards** (copy super corta en todos, sidebar de metadata, tipografía protagonista): [mikekus](https://mikekus.com/) · [joonassandell](https://joonassandell.com/) · [henriheymans](https://henriheymans.com/) · [silviasguotti](https://silviasguotti.design/) · [alejandromejias](https://www.alejandromejias.com.au/) · [yaremenko](https://yaremenko.design/) · (https://abhishekjha.me/?ref=lapaninja)
 
-**Screenshots en `public/images/references/`**: `hero_reference` (POSTA: tipografía gigante, mucho aire) · `navbar_reference` · `card_reference_desactive` (tag arriba, título display abajo, CTA pill) · `about_reference` + `about_reference2` (POSTA: claim con palabras en bold, body chico desplazado a la derecha — **ya aplicado en About 4.0**) · `casestudy_reference` (Mediasignal: sidebar de metadata) · `casestudy(2)` y `(3)` (LinkBoard: micro-labels arriba, copy gigante abajo) · `toggle_language_reference`.
+**Ya no hay screenshots de referencia en el repo.** Los últimos cuatro (`navbarshrink_reference` y variantes) se borraron: describían el navbar que se achica con el scroll, algo ya resuelto con el handoff sticky NameLogo → NavLogo. Antes de eso, esta sección listaba otras nueve (`hero_reference`, `about_reference2`, `casestudy_reference`, etc.) que hacía rato no existían.
+
+> ⚠️ **Si volvés a sumar refs visuales, NO las pongas en `public/`.** Ahí Next las sirve en producción: las cuatro anteriores eran navegables en `tiagocollado.vercel.app/images/references/*.png` (verificado, HTTP 200) y sumaban 2,6 MB al deploy sin que las usara ningún código. Van fuera de `public/` y, si no aportan al portfolio, directamente fuera del repo.
+
+> Las decisiones de diseño que salieron de esas referencias ya están escritas en §2 y §6, así que no hay nada que recuperar. Si alguna hiciera falta, sigue en el historial: `git show <sha>:public/images/references/<archivo>`.
 
 ---
 
