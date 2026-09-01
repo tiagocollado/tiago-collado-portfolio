@@ -84,6 +84,15 @@ export default async function OpenGraphImage() {
             Por la abertura derecha la G no es simétrica y su centro
             geométrico cae ~15px a la izquierda del centro del lienzo; a
             simple vista no se nota y el centrado óptico incluso mejora. */}
+        {/* Este <img> NO se migra a next/image y la regla se apaga a mano.
+            Acá no rendea el browser sino satori, que arma el PNG en build
+            time y solo entiende un subset de HTML/CSS: no ejecuta React ni
+            sabe nada del optimizador de imágenes de Next. Un <Image /> saldría
+            como un elemento vacío y el PNG se generaría igual, sin la marca
+            (ver CLAUDE.md 9.26 — un build verde no prueba que se haya
+            dibujado). Es la única excepción del repo: el resto de los <img>
+            ya son next/image. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={mark} width={460} height={460} alt="" />
       </div>
     ),

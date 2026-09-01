@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl'
 import { Project, Locale } from '@/types'
 import { useCursor } from '@/hooks/useCursor'
+import Image from 'next/image'
 
 /**
  * CaseStudyNextNav — bloque al pie del case study con dos paths:
@@ -83,11 +84,13 @@ export default function CaseStudyNextNav({
 
               {nextProject.coverImage && (
                 <div className="relative w-full md:w-32 lg:w-40 aspect-square rounded-xl overflow-hidden shrink-0">
-                  <img
+                  <Image
                     src={nextProject.coverImage}
                     alt=""
                     aria-hidden
-                    className="absolute inset-0 w-full h-full object-cover
+                    fill
+                    sizes="(max-width: 768px) 100vw, 160px"
+                    className="object-cover
                                opacity-70 grayscale scale-105
                                transition-all duration-500 ease-out
                                group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-110"

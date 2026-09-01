@@ -107,8 +107,9 @@ Las 4 usan `aspectRatio="wide"`. La columna editorial mide 944px como máximo. M
 
 ⚠️ **En mobile la imagen se muestra COMPLETA y sin recortar, a ~330px de ancho** — el frame de 1200 se ve al **27%**. Por eso **todo texto adentro de la imagen tiene que medir 36px o más** en el frame de 1200×800; menos que eso es ilegible en celular. Para mostrar pantallas con texto chico va un zoom o un detalle recortado, nunca la pantalla entera.
 
-**Exportación (ambas)**: WebP calidad 80 · **≤ 250 KB** por archivo.
-El peso importa porque hoy se usa `<img>` sin `srcset` (ver D3): **el celular baja el archivo completo igual que el desktop**, y un case study puede descargar ~2 MB de imágenes.
+**Exportación (ambas)**: **PNG o JPG calidad 90+**, sin presupuesto de KB (referencia sana: que ninguno pase de ~1 MB, por el peso del repo).
+
+> ⚠️ Esto **cambió con D3**. La regla vieja era "WebP calidad 80, ≤ 250 KB" porque se usaba `<img>` pelado sin `srcset` y el celular bajaba el archivo completo. Con `next/image`, Next genera 8 anchos (640→3840) y los convierte a WebP en el momento: el archivo del repo es el **master del que Next recorta**, no lo que ve el visitante. Comprimirlo a mano ya no le ahorra nada al usuario y suma pérdida de calidad, porque se re-comprime igual.
 
 ### Tipografía
 - Display (H1/H2): `leading-tight` (1.15)
@@ -290,7 +291,7 @@ Solo lo que Tiago pueda defender en una entrevista.
 ### Bloqueado por contenido de Tiago
 | ID | Tarea | Notas |
 |---|---|---|
-| **IMG-1** | **Rehacer las 35 imágenes** — 7 covers + 28 de case study | Reemplaza a NDA-img, WP-img y B1, que quedaron sin objeto al darse de baja todas las provisorias (§10). 📋 **La hoja de ruta completa está en `BRIEF-IMAGENES.md`** (raíz del repo): formatos, naming, dirección de arte por proyecto, la lista de las 35 con checkbox y cómo cablear cada una. **Ese archivo se borra cuando estén todas.** Las medidas permanentes están en §2. |
+| **IMG-1** | **Rehacer las 35 imágenes** — 7 covers + 28 de case study | Reemplaza a NDA-img, WP-img y B1, que quedaron sin objeto al darse de baja todas las provisorias (§10). 📋 **La hoja de ruta completa está en `BRIEF-IMAGENES.md`** (raíz del repo): formatos, naming, dirección de arte por proyecto, la lista de las 35 con checkbox y cómo cablear cada una. **Ese archivo se borra cuando estén todas.** Las medidas permanentes están en §2. ✅ **D3 ya está hecho**, así que el cableado es solo agregar el `src`: no hay que optimizar nada a mano ni pensar en `srcset`. |
 | **B3** | Métricas reales de FutbolTalentPro | Sin data el caso cierra sin impacto duro. |
 
 ### Marca
@@ -305,7 +306,6 @@ Solo lo que Tiago pueda defender en una entrevista.
 ### Técnico
 | ID | Tarea | Notas |
 |---|---|---|
-| **D3** | Migrar a `next/image` | `ProjectCard` y `CaseStudyImage` usan `<img>`. Es la mejora de LCP más grande disponible. ⚠️ **Conviene hacerlo ANTES de IMG-1, no después** — la nota vieja decía lo contrario. Con `next/image`, Next genera los tamaños y convierte a WebP/AVIF solo: Tiago exporta una vez, grande, y se olvida del peso y del `srcset`. Al revés, optimiza 31 imágenes a mano y esa optimización queda redundante. Además ahora no hay imágenes que migrar, así que es el momento más barato. |
 | **T2** | Lighthouse audit real | Manual en DevTools. No hay números del bundle post-rework. |
 | **T3** | ¿Mover `CLAUDE.md` y `AGENTS.md` a un `.docs/` privado? | Decisión pendiente de Tiago para cuando el repo público madure. Revisar también el `.gitignore`. |
 | **E** | Easter egg · Vercel Analytics · dominio NIC.ar | Cuando haya ganas. |
@@ -342,6 +342,10 @@ Solo lo que Tiago pueda defender en una entrevista.
 23. **Un `<footer>` dentro de `<main>` NO es landmark `contentinfo`.** El rol se pierde si es descendiente de `article`, `aside`, `main`, `nav` o `section` — y no hay warning de build ni de linter. Cuidado con "arreglarlo" un nivel y darlo por hecho: el wrapper del home ya era un `div` a propósito, pero el `<main>` de `layout.tsx` lo anulaba igual. **Un `role` explícito le gana siempre al mapeo implícito**, así que `role="contentinfo"` lo resuelve sin reestructurar el DOM. Vale para todos los landmarks, no solo este.
 24. **Un ancla rota es silenciosa.** `<a href="#top">` sin un `id="top"` en la página no tira error, no rompe el build, no loguea nada: simplemente no pasa nada al clickear. Al reusar un componente con anclas internas en una página nueva, verificar el destino en el HTML generado (`grep -o 'id="top"' .next/server/app/**/*.html`).
 25. **Con `grid-cols` de 2 columnas y 3 hijos, el auto-placement miente.** Si el orden del DOM no coincide con el visual, hay que poner `col-start`/`row-start` explícitos y resetearlos en el breakpoint de arriba (`sm:col-start-auto`). Preferir siempre dejar el elemento primario **primero en el DOM** y cruzar con `order` en desktop: así el apilado mobile sale gratis y el orden de tabulación arranca por el CTA principal.
+
+27. **`next/image` emite el atributo como `srcSet` (camelCase) en el HTML estático**, no `srcset`. Un `grep srcset` case-sensitive sobre `.next/server/app/*.html` da cero resultados y parece que la migración no funcionó. Buscar con `grep -i`. El browser no se entera: los atributos HTML son case-insensitive.
+28. **`motion.create(Image)` va a nivel de módulo, nunca adentro del componente.** `motion.img` no sirve una vez que el `<img>` lo rendea Next, así que el parallax de `CaseStudyImage` necesita envolver el componente. Si esa llamada quedara dentro del render, React vería un tipo de componente distinto en cada pasada, desmontaría el `<img>` y la imagen se recargaría entera en cada re-render.
+29. **Sin `sizes`, migrar a `next/image` no sirve de nada.** El browser asume `100vw` y baja del `srcset` la variante más grande — exactamente el problema que la migración venía a resolver. Es obligatorio en todo `fill` y en toda imagen que CSS haga responsive; el valor sale del layout real (§2), no a ojo.
 
 ### Git y edición de archivos
 17. **`npm run build` compila el árbol de trabajo, no el commit.** Un build verde local no prueba que un commit parcial sea auto-consistente. Antes de pushear un commit acotado: `git show --stat <sha>` y comparar contra `git show origin/main:<archivo>`.
@@ -392,6 +396,8 @@ src/
 
 > **Por qué no quedaron los placeholders "BUILDING"**: sin las imágenes, esas cajas punteadas aparecían **28 veces** (4 × 7 case studies) y convertían el sitio en una obra en construcción — otra señal negativa, y encima el texto está hardcodeado en inglés también en la versión ES. El componente sigue soportando el modo placeholder; simplemente no se usa mientras falten las imágenes.
 Los covers **no deben tener texto** (la card ya superpone tag, año y título) y tienen que funcionar en escala de grises, porque en idle van desaturados.
+
+> **Todas las imágenes pasan por `next/image`** (D3, hecho). Los tres puntos donde se rendean son `ProjectCard` (cover, modo `fill`), `CaseStudyNextNav` (thumb, modo `fill`) y `CaseStudyImage` (modo `width`/`height`, porque en mobile la imagen va en flujo normal y `fill` la pondría absolute siempre). La **única** excepción es el `<img>` de `opengraph-image.tsx`, que rendea satori y no el browser — tiene su `eslint-disable` con el porqué al lado.
 
 **Íconos**: `lucide-react` para UI · `simple-icons` para marcas del Stack · Adobe como cuadrados con iniciales. El Footer ya no usa SVGs de marca: sus links son mono + glifo (↗ navega, ↓ descarga). Para sumar uno nuevo, editar `SIMPLE_ICONS`, `LUCIDE_ICONS` o `ADOBE_INITIALS` en `StackIcon.tsx`. Todo monocromo con `currentColor`.
 

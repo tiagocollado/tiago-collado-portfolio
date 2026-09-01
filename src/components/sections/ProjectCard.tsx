@@ -17,6 +17,7 @@ import { Project, Locale } from '@/types'
 import { useTranslations } from 'next-intl'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useCursor } from '@/hooks/useCursor'
 
 interface ProjectCardProps {
@@ -42,6 +43,22 @@ export default function ProjectCard({ project, locale, index = 0 }: ProjectCardP
   const titleSize = project.featured
     ? 'text-3xl md:text-4xl lg:text-5xl'
     : 'text-2xl md:text-3xl lg:text-4xl'
+
+  /*
+   * `sizes` le dice al browser cuánto espacio va a ocupar la imagen ANTES de
+   * conocer el ancho real, y con eso elige cuál bajar del srcset que genera
+   * next/image. Si no se pasa, el browser asume 100vw y baja siempre el
+   * archivo más grande — justo el problema que esta migración venía a
+   * resolver, así que sin `sizes` el cambio no sirve de nada.
+   *
+   * Los anchos salen del layout real (CLAUDE.md 2): grilla de 3 columnas
+   * dentro del shell `max-w-7xl`. La card featured ocupa 2 columnas (~66%),
+   * la normal 1 (~33%). Arriba de 1280px el shell deja de crecer, así que
+   * el valor pasa a px fijos en vez de seguir escalando con el viewport.
+   */
+  const coverSizes = project.featured
+    ? '(max-width: 768px) 100vw, (max-width: 1280px) 66vw, 850px'
+    : '(max-width: 768px) 100vw, (max-width: 1280px) 33vw, 420px'
 
   const typeLabel =
     project.type === 'ux' ? 'UX / UI'
@@ -74,10 +91,12 @@ export default function ProjectCard({ project, locale, index = 0 }: ProjectCardP
       {/* Cover image — desaturada en idle, color en hover */}
       {project.coverImage && (
         <div className="absolute inset-0 overflow-hidden">
-          <img
+          <Image
             src={project.coverImage}
             alt={project.title}
-            className="absolute inset-0 w-full h-full object-cover
+            fill
+            sizes={coverSizes}
+            className="object-cover
                        opacity-50 grayscale scale-105
                        transition-all duration-700 ease-out
                        group-hover:opacity-80 group-hover:grayscale-0 group-hover:scale-100"

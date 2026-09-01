@@ -2,6 +2,20 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
+
+/*
+ * next/image envuelto en framer-motion.
+ *
+ * `motion.create()` es la forma de animar un componente que NO es una etiqueta
+ * HTML suelta. Hace falta acá porque el parallax aplica un motion value (`y`)
+ * sobre la imagen, y `motion.img` ya no sirve: el <img> ahora lo rendea Next.
+ *
+ * Va a nivel de módulo, NO adentro del componente: si se creara en cada render,
+ * React vería un tipo de componente distinto cada vez, desmontaría el <img> y
+ * la imagen volvería a cargar en cada re-render.
+ */
+const MotionImage = motion.create(Image)
 
 /**
  * Bloque de imagen contextual para el layout Awwwards-style.
@@ -49,6 +63,25 @@ const MD_ASPECT_CLASSES: Record<AspectRatio, string> = {
   square:   'md:aspect-square',
   wide:     'md:aspect-[3/2]',
   portrait: 'md:aspect-[3/4]',
+}
+
+/*
+ * Dimensiones nominales del archivo por aspect ratio.
+ *
+ * next/image pide `width` + `height` (o `fill`). Acá NO se puede usar `fill`:
+ * `fill` posiciona la imagen en absolute siempre, y en mobile la necesitamos
+ * en flujo normal para que se vea entera y sin recortar (ver el bloque de
+ * abajo). Con width/height, Next usa esa proporción para reservar el alto
+ * antes de que la imagen cargue y evitar el salto de layout (CLS).
+ *
+ * Lo único que importa es la PROPORCIÓN, no que los números coincidan con los
+ * píxeles reales del archivo. `wide` usa el frame de 1200x800 de CLAUDE.md 2.
+ */
+const FRAME_SIZES: Record<AspectRatio, { width: number; height: number }> = {
+  video:    { width: 1600, height:  900 },
+  square:   { width: 1200, height: 1200 },
+  wide:     { width: 1200, height:  800 },
+  portrait: { width:  900, height: 1200 },
 }
 
 /**
@@ -183,9 +216,17 @@ export default function CaseStudyImage({
           `-top-6` (-24px), para que el parallax (y va de +24 a -24) tenga
           margen y no exponga el fondo del container arriba/abajo.
         */}
-        <motion.img
+        <MotionImage
           src={src}
           alt={alt}
+          width={FRAME_SIZES[aspectRatio].width}
+          height={FRAME_SIZES[aspectRatio].height}
+          /*
+            La columna editorial mide 944px como maximo (CLAUDE.md 2); en
+            mobile la imagen ocupa todo el ancho. Sin `sizes` el browser
+            asumiria 100vw y en un celular bajaria el archivo de desktop.
+          */
+          sizes="(max-width: 768px) 100vw, 944px"
           loading="lazy"
           style={isDesktop ? { y } : undefined}
           className="block w-full h-auto md:absolute md:left-0 md:-top-6 md:h-[calc(100%+48px)] md:object-cover"

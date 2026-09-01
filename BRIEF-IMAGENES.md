@@ -14,9 +14,22 @@
 | **Cover** | `960 x 600` | @2x | `1920 x 1200` |
 | **Case study** | `1200 x 800` (3:2) | @2x | `2400 x 1600` |
 
-**Ambas**: WebP calidad 80 · **<= 250 KB** por archivo.
+**Ambas**: exportar **PNG o JPG calidad 90+**, sin presupuesto de KB.
 
-El peso importa porque hoy se usa `<img>` sin `srcset`: **el celular baja el archivo completo igual que el desktop**.
+> ⚠️ **Esto cambio con la migracion a `next/image` (D3).** Antes decia "WebP
+> calidad 80, maximo 250 KB por archivo", porque se usaba un `<img>` pelado sin
+> `srcset` y el celular bajaba el mismo archivo que el desktop.
+>
+> Ahora **Next genera los tamanos solo**: de cada archivo saca 8 variantes
+> (640, 750, 828, 1080, 1200, 1920, 2048 y 3840 px de ancho), las convierte a
+> WebP y le sirve a cada dispositivo la que le corresponde. Un celular de 375px
+> baja la de 750w, no la de 1920.
+>
+> Por eso conviene exportar **una sola vez, grande y con poca compresion**: el
+> archivo del repo es el master del que Next recorta, no lo que ve el visitante.
+> Comprimirlo a mano ya no ahorra nada al usuario y encima suma perdida de
+> calidad (el archivo se re-comprime igual). Como referencia sana, que ninguno
+> pase de ~1 MB para no inflar el repo.
 
 ---
 
