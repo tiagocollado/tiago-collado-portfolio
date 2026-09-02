@@ -76,14 +76,15 @@ export default async function OpenGraphImage() {
           backgroundColor: BG,
         }}
       >
-        {/* Ojo: el box de 460 NO es el tamaño de la marca. El icon.svg tiene
-            margen interno (trazo de 5 sobre viewBox de 32) y la G está
-            abierta a la derecha, así que la tinta real ocupa ~69% del box:
-            ~315x345 px medidos sobre el PNG generado. Sobre el recorte
-            cuadrado de 630 que hace WhatsApp, eso es ~50% del cuadro.
-            Por la abertura derecha la G no es simétrica y su centro
-            geométrico cae ~15px a la izquierda del centro del lienzo; a
-            simple vista no se nota y el centrado óptico incluso mejora. */}
+        {/* Medidas verificadas decodificando el PNG generado, no estimadas.
+            La tinta real de la marca mide 315x314 px dentro de este box de
+            460, o sea ~68%: el icon.svg tiene su propio encuadre interno.
+            Sobre el recorte cuadrado de 630 que hace WhatsApp eso es ~50%
+            del cuadro, que es el objetivo. El centro de la tinta cae a 1px
+            del centro del lienzo, asi que la marca se lee centrada.
+            Si cambia el path de icon.svg, volver a medir: satori dibuja un
+            <img> que no puede resolver como elemento vacio y el build pasa
+            igual (CLAUDE.md 9.26). */}
         {/* Este <img> NO se migra a next/image y la regla se apaga a mano.
             Acá no rendea el browser sino satori, que arma el PNG en build
             time y solo entiende un subset de HTML/CSS: no ejecuta React ni

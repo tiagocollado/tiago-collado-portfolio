@@ -145,8 +145,8 @@ export const projects: Project[] = [
     imageBriefs: [
       {
         alt: {
-          es: 'Pantalla de plataforma móvil',
-          en: 'Mobile platform screen',
+          es: 'Arquitectura de información de la plataforma',
+          en: 'Platform information architecture',
         },
       },
       {

@@ -167,6 +167,8 @@ Cuando el cambio sea de copy o estructura, mencionar la ley aplicada en el commi
 - **NO ocultar** `metadata.client` (`FutbolTalent.Pro`), el `title` ni el `slug`: el vínculo laboral ya es público y el NDA no lo restringe.
 - **Material permitido**: wireframes de baja/media, flujos, design system, user personas. **Nunca** pantallas finales del producto.
 
+> ⚠️ Los `alt` de los `imageBriefs` también cuentan: son el brief con el que se diseña la imagen. El de `01` decía *"Pantalla de plataforma móvil"* — o sea, pedía justo el material prohibido — y se cambió por *"Arquitectura de información de la plataforma"*. **Al escribir un brief nuevo para FTP, revisar que el alt no prometa producto real.**
+
 > ✅ **Pendiente legal — resuelto.** Las imágenes de FutbolTalent mostraban UI real del producto y siguieron publicadas un tiempo después de la purga textual. Se borraron del repo junto con el resto de las provisorias, así que ya no están ni en la página ni accesibles por URL directa en el deploy. **Cuando subas las versiones "Marca Blanca", valen las mismas reglas de esta sección**: wireframes, flujos, design system y personas sí; pantallas finales del producto no.
 
 **Tono general del copy**: directo, sin narrativas forzadas de Silicon Valley. La confidencialidad se menciona solo dentro del case study de FTP, nunca en el About.
@@ -191,6 +193,7 @@ Tiago sigue estudiando y la programación no es su fuerte. **El código tiene qu
 - **Accent**: terracota `#C96A3A` (hover `#B05A2E`)
 - **Light**: bg `#EDE2CD` · surface `#F4EAD5` · ink `#111110`
 - **Dark**: bg `#111110` · ink `#F0EDE8` — **es el tema por defecto**
+- **Símbolo**: la "G" de Gotya en `src/app/icon.svg` — **vector real exportado de Illustrator**, un único path relleno. Chaflán hexagonal a la izquierda, esquina superior derecha redondeada y una diagonal que sube apuntando al codo de la transversal: esa es la flecha. Su `viewBox` está recortado respecto del artboard original (§6). Reemplazó a la G de trazo circular.
 - **Radius** 12px cards / 999px pills · **Easing** `cubic-bezier(0.16, 1, 0.3, 1)`
 - **Tipografía**: Space Grotesk (display) + Geist (body) + Geist Mono (labels) → *pendiente de reemplazo, ver F3*
 - Concepto: "minimalismo técnico pero cálido".
@@ -235,7 +238,7 @@ Tiago sigue estudiando y la programación no es su fuerte. **El código tiene qu
 
 > ⚠️ Las dos imágenes (`es` / `en`) ahora son **idénticas byte a byte, a propósito**: sin texto no hay nada que localizar. No confundir con §9.15, que describe exactamente ese síntoma como un bug — ahí la causa era no leer `params`.
 
-> Medidas reales, verificadas decodificando el PNG: el `<img>` es de 460px pero la **tinta** mide 316×344 (el `icon.svg` tiene margen interno y la G está abierta a la derecha), o sea ~50% del cuadro que recorta WhatsApp. Por esa abertura la G no es simétrica y su centro cae ~16px a la izquierda del centro del lienzo. Es intencional, no lo "arregles".
+> Medidas reales, verificadas decodificando el PNG: el `<img>` es de 460px pero la **tinta** mide 315×314 (el `icon.svg` tiene su propio encuadre interno), o sea **~50% del cuadro que recorta WhatsApp**, que es el objetivo. El centro de la tinta cae a 2px del centro del lienzo. **Si se toca el path de `icon.svg`, volver a medir**: el encuadre se ajusta con el `viewBox`, no moviendo coordenadas.
 
 > ✅ El lema **ya no está duplicado**. Vivía hardcodeado en `opengraph-image.tsx` además de en `hero.headline` / `hero.subheadline`, y había que acordarse de tocarlo en los dos lados. Al sacarle el texto a la OG image, la única fuente de verdad volvieron a ser los JSON.
 
@@ -346,6 +349,10 @@ Solo lo que Tiago pueda defender en una entrevista.
 27. **`next/image` emite el atributo como `srcSet` (camelCase) en el HTML estático**, no `srcset`. Un `grep srcset` case-sensitive sobre `.next/server/app/*.html` da cero resultados y parece que la migración no funcionó. Buscar con `grep -i`. El browser no se entera: los atributos HTML son case-insensitive.
 28. **`motion.create(Image)` va a nivel de módulo, nunca adentro del componente.** `motion.img` no sirve una vez que el `<img>` lo rendea Next, así que el parallax de `CaseStudyImage` necesita envolver el componente. Si esa llamada quedara dentro del render, React vería un tipo de componente distinto en cada pasada, desmontaría el `<img>` y la imagen se recargaría entera en cada re-render.
 29. **Sin `sizes`, migrar a `next/image` no sirve de nada.** El browser asume `100vw` y baja del `srcset` la variante más grande — exactamente el problema que la migración venía a resolver. Es obligatorio en todo `fill` y en toda imagen que CSS haga responsive; el valor sale del layout real (§2), no a ojo.
+
+30. **No traces un logo a ojo: pedí el vector.** Se perdieron dos intentos dibujando la G a mano desde un PNG — uno como path relleno (las anchuras se iban solas y la mitad inferior quedaba como una mancha) y otro como `stroke` monolineal. Ninguno daba con la forma. El export de Illustrator la resolvió en un paso. **Si no hay vector, pedilo antes de empezar**; un logo "parecido pero mal" es peor que no cambiarlo.
+31. **Para ver un SVG sin buildear, rasterizalo a ASCII.** Un scanline fill de 40 líneas en Python imprime la silueta en la terminal. Sirvió para descubrir que el remate en flecha estaba mal, algo que leyendo el `d` no se ve y que el build no reporta. **Corolario**: nunca edites coordenadas de un path a ciegas.
+32. **Un export de Illustrator no entra tal cual al repo.** El de la G traía: un `<metadata>` con un manifiesto **C2PA de procedencia que puede pesar decenas de KB** — mucho más que el dibujo, que es un path de ~1 KB; un `<rect>` de 98.76×0.3 px en un tercer color (`#b77455`), una astilla para tapar una costura; el fill en `#c4663b` en vez del token `#C96A3A`; y el `<style>` con clases, que conviene pasar a atributo porque este SVG lo rendea satori. **Y el artboard tenía 50% de margen**: la marca salía al 36% del recorte de WhatsApp en vez del 50%. Se arregla con el `viewBox`, sin tocar coordenadas.
 
 ### Git y edición de archivos
 17. **`npm run build` compila el árbol de trabajo, no el commit.** Un build verde local no prueba que un commit parcial sea auto-consistente. Antes de pushear un commit acotado: `git show --stat <sha>` y comparar contra `git show origin/main:<archivo>`.
