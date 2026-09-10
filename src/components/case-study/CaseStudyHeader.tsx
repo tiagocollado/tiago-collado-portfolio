@@ -54,14 +54,10 @@ export default function CaseStudyHeader({
   const onLinkEnter = () => setVariant('link')
   const onLinkLeave = () => setVariant('default')
 
-  const typeLabel =
-    project.type === 'ux'
-      ? 'UX / UI Case Study'
-      : project.type === 'fullstack'
-      ? 'Full-stack Project'
-      : project.type === 'wordpress'
-      ? 'WordPress Project'
-      : 'Design Project'
+  // Categorías del servicio prestado, en formato de agencia. Reemplazó al
+  // label derivado de `project.type` ("UX / UI Case Study"), que describía
+  // a Tiago en vez del trabajo. El `&` es el separador de la marca.
+  const servicesLabel = project.services[locale].join(' & ')
 
   const hasLinks = Boolean(
     project.links.live || project.links.github || project.links.githubBack
@@ -98,13 +94,13 @@ export default function CaseStudyHeader({
         </motion.a>
       </div>
 
-      {/* 2. Tipo de proyecto */}
+      {/* 2. Categorías del servicio prestado */}
       <motion.p
         variants={item}
         className="text-xs font-mono tracking-[0.2em] uppercase mb-5"
         style={{ color: 'var(--color-accent)' }}
       >
-        {typeLabel}
+        {servicesLabel}
       </motion.p>
 
       {/* 3. Título — SplitText char reveal. El delay arranca después del

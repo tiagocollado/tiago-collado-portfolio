@@ -31,7 +31,7 @@
     "back": "Volver al inicio",
     "next_project_label": "Próximo proyecto",
     "view_all_projects": "Ver todos los proyectos",
-    "view_live": "Ver demo en vivo",
+    "view_live": "Ver producto final",
     "view_github_frontend": "Ver código (Frontend)",
     "view_github_backend": "Ver código (Backend)",
     "meta_client": "Cliente",
@@ -50,9 +50,8 @@
   "projects": {
     "label": "PROYECTOS",
     "statement": "Proceso, criterio y ejecución.",
-    "view_case": "Ver caso de estudio",
-    "view_live": "Ver demo en vivo",
-    "view_github": "Ver código"
+    "view_project": "Ver proyecto",
+    "view_all": "Ver todos los proyectos"
   },
   "case_study_futbol-talent-pro": {
     "intro": "Diseñé la experiencia de usuario y arquitectura de información para el MVP de una plataforma mobile-first enfocada en scouting deportivo.",

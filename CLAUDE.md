@@ -87,29 +87,68 @@ Este bug vivió meses en el Navbar (`max-w-400` + padding juntos) y en el Stack,
 ### Imágenes — medidas para diseñar en Figma
 Medido contra el layout real, no estimado. **Diseñar a 1× y exportar @2×.**
 
-**Covers del home** · frame `960 × 600` → export **@2× = 1920 × 1200**
+**Dos formatos de cover, no uno.** La grilla del home es **masonry**: dos columnas
+que fluyen por separado y terminan a distinta altura.
 
-Las cards tienen **altura fija** y ancho variable, así que el mismo archivo cae en recortes muy distintos:
+| | Frame | Export @2× | Proporción |
+|---|---|---|---|
+| **Cover ancho** | `1200 × 900` | `2400 × 1800` | 4:3 |
+| **Cover cuadrado** | `1200 × 1200` | `2400 × 2400` | 1:1 |
+| **Case study** | `1200 × 800` | `2400 × 1600` | 3:2 |
 
-| Slot | Recorte | Aspect |
-|---|---|---|
-| Featured (2 col) | 845 × 320 | **2,64:1** |
-| Normal (1 col) | 411 × 320 | **1,28:1** |
-| Mobile 375px | 327 × 280 | 1,17:1 |
-| Mobile 320px | 272 × 280 | **0,97:1** (vertical) |
+La forma de cada proyecto vive en `cardShape` (`src/data/projects.ts`). ✅ **Con
+masonry el aspect de la card es el mismo que el de la imagen en todos los
+breakpoints, así que `object-cover` no recorta nada.**
 
-⚠️ Entre el recorte más ancho y el más angosto, lo único que sobrevive siempre es el **60% central**. **Zona segura: rectángulo centrado de `580 × 360`** (en el frame de 960×600). Nada esencial afuera de ahí.
-Sin texto (la card superpone tag, año y título) y tiene que funcionar en escala de grises: en reposo van desaturadas.
+La dirección de arte de cada imagen vive en `BRIEF-IMAGENES.md`; acá van solo las medidas.
 
-**Imágenes de case study** · frame `1200 × 800` (3:2) → export **@2× = 2400 × 1600**
+> ⚠️ **Los covers eran `960 × 600` con zona segura de `580 × 360`** — o sea, solo sobrevivía el **60% central**. La grilla era bento de 3 columnas y el mismo archivo caía en recortes de **2,64:1** y **1,28:1**. Con masonry de dos formas fijas eso desapareció: cada card tiene el aspect exacto de su imagen.
 
-Las 4 usan `aspectRatio="wide"`. La columna editorial mide 944px como máximo. Margen de seguridad: **72px en los cuatro lados** (el recorte con parallax se come ~3,5% de cada borde en desktop).
+⚠️ **Todas las medidas van en las dos escalas.** Se diseña en el frame de 1× y se exporta @2×, así que el archivo final tiene todo
+al doble. Confundir las dos columnas ya generó un brief mal escrito una vez:
+
+| | Frame `1200×800` | **Master `2400×1600`** | Por qué |
+|---|---|---|---|
+| **Margen lateral del cover** | 96px | **192px** | Aire de composición. Solo recorta si la imagen no viene con el aspect exacto de su slot. |
+| **Margen vertical del cover** | 64px | **128px** | Aire de composición, no zona de rescate: con masonry no hay recorte. |
+| **Margen del case study** (4 lados) | 72px | **144px** | El parallax de desktop se come ~3,5% de cada borde. |
+| **Texto mínimo** | 36px | **72px** | La imagen se ve a ~330px en celular. Menos que eso es una mancha gris. |
+
+**Covers** — cuatro reglas. Las reglas 2 y 3 parecen pelearse y no se pelean:
+
+1. **El texto de la pantalla tiene que ser REAL.** Ver §9.33 — es la regla que
+   más caro sale romper y la que menos se nota al mirar por encima.
+2. **La imagen no puede compartir la luminancia del fondo de página.** El sitio es
+   dual-theme (`#111110` oscuro por defecto, `#EDE2CD` claro) y el cover es el
+   mismo archivo en los dos: si el borde coincide en valor con alguno, la card se
+   disuelve. En la práctica: **entorno gris neutro de valor medio** (hormigón,
+   yeso), que contrasta contra los dos.
+3. **Rango tonal obligatorio.** El hover aplica un duotono terracota por CSS: si la
+   imagen es pareja, el cambio no se percibe como interacción. Se consigue con luz
+   dura y direccional, no aclarando el fondo. Medible: rango p95−p05 ≥ **120**.
+
+> ⚠️ La regla 2 decía antes **"el fondo va oscuro, siempre"**. Fue la corrección
+> correcta cuando el primer cover era negro sobre negro, pero era demasiado
+> absoluta: prohibía justo lo que hace la referencia y lo que terminó funcionando.
+> Lo que importaba nunca fue que el fondo fuera oscuro, sino que no se confundiera
+> con la página y que tuviera recorrido de valores.
+4. **Sin texto propio.** En reposo la card no muestra NADA encima de la imagen;
+   en hover superpone nombre, "VER PROYECTO" y categoría. Ojo con las capturas:
+   un titular grande del sitio compite con el nombre.
+
+Ya **no** hace falta que funcionen en escala de grises como pieza terminada: en idle van a color y a 100% de opacidad.
+
+**Case study** — las 4 usan `aspectRatio="wide"`; la columna editorial mide 944px como máximo.
 
 ⚠️ **En mobile la imagen se muestra COMPLETA y sin recortar, a ~330px de ancho** — el frame de 1200 se ve al **27%**. Por eso **todo texto adentro de la imagen tiene que medir 36px o más** en el frame de 1200×800; menos que eso es ilegible en celular. Para mostrar pantallas con texto chico va un zoom o un detalle recortado, nunca la pantalla entera.
 
-**Exportación (ambas)**: **PNG o JPG calidad 90+**, sin presupuesto de KB (referencia sana: que ninguno pase de ~1 MB, por el peso del repo).
+**Exportación**: escala **2×**, sin sufijo. **JPG** para lo fotográfico o con degradados · **PNG** para lo plano y gráfico. Sin presupuesto de KB (referencia sana: que ninguno pase de ~1 MB, por el peso del repo).
+
+> ⚠️ **No pidas "JPG calidad 90+": Figma no expone control de calidad.** El panel de export solo tiene formato y escala. La elección real es JPG vs PNG, y se decide **por peso, no por calidad**: el master se re-comprime a WebP igual, así que un PNG sin pérdida es el mejor input — pero un PNG fotográfico de 2400×1600 pesa 5-8 MB y son 35 archivos.
 
 > ⚠️ Esto **cambió con D3**. La regla vieja era "WebP calidad 80, ≤ 250 KB" porque se usaba `<img>` pelado sin `srcset` y el celular bajaba el archivo completo. Con `next/image`, Next genera 8 anchos (640→3840) y los convierte a WebP en el momento: el archivo del repo es el **master del que Next recorta**, no lo que ve el visitante. Comprimirlo a mano ya no le ahorra nada al usuario y suma pérdida de calidad, porque se re-comprime igual.
+>
+> Corolario de naming: la extensión del archivo en `projects.ts` tiene que ser la **real** (`.jpg` / `.png`). El `.webp` lo genera Next; escribirlo a mano en el path apunta a un archivo que no existe.
 
 ### Tipografía
 - Display (H1/H2): `leading-tight` (1.15)
@@ -208,13 +247,24 @@ Tiago sigue estudiando y la programación no es su fuerte. **El código tiene qu
 
 **Capa "frontend creativo"**: Lenis smooth scroll (con reset de scroll en cambio de ruta) · custom cursor dot+ring con variants `default | link | view | drag` · SplitText char reveal · magnetic hover + `<MagneticLink>` · grain SVG global · scrollbar custom terracota · `<MotionConfig reducedMotion="user">` global.
 
-**Home**: Navbar `h-16` fijo (NavLogo izq · links centrados · LanguageToggle + tema der · hamburger en `<lg`) · Hero con NameLogo GOTYA sticky que achica con el scroll y hace handoff al navbar, lema en dos líneas, CTA magnético con chevrons e `InteractiveDotGrid` · ServicesMarquee con fondo invertido · grilla Bento de proyectos · About 4.0 (micro-labels, claim con bold, copy a la derecha, firma) · Stack con carrusel infinito · **bloque de cierre unificado** (ver abajo).
+**Home**: Navbar `h-16` fijo (NavLogo izq · links centrados · LanguageToggle + tema der · hamburger en `<lg`) · Hero con NameLogo GOTYA sticky que achica con el scroll y hace handoff al navbar, lema en dos líneas, CTA magnético con chevrons e `InteractiveDotGrid` · ServicesMarquee con fondo invertido · grilla masonry de proyectos (2 columnas, 4 cards, covers a sangre sin texto) · About 4.0 (micro-labels, claim con bold, copy a la derecha, firma) · Stack con carrusel infinito · **bloque de cierre unificado** (ver abajo).
 
 **Bloque de cierre** (Contact + Footer): se leen como una sola pieza. Contact no cierra su padding inferior y el Footer arranca pegado, sin `border-t` entre medio. Contact lleva el micro-label, una **pregunta corta sin párrafo de body** (quien llega acá ya hizo click en "Hablemos": viene con intención, no hay que volver a venderle), el mail en **mono grande** con botón de copiar al portapapeles, y los 4 canales (LinkedIn / GitHub / WhatsApp / CV). El Footer es una única barra de tres zonas: copyright · back-to-top · crédito. **En mobile (`<sm`) esa barra pasa a 2 columnas**: copyright y crédito apilados a la izquierda, back-to-top a la derecha abarcando las dos filas (`row-span-2`) y centrado contra ellas — la mitad derecha es la zona de menor costo motor para el pulgar (Fitts). Las posiciones van explícitas (`col-start`/`row-start`) y se resetean con `sm:*-auto`, porque el orden del DOM es copyright → botón → crédito y el auto-placement pondría el crédito en el lugar equivocado.
 
 > El bloque va dentro de un `<div className="min-h-screen flex flex-col justify-between">` en `page.tsx`: al entrar por el ancla `#contact` ocupa exactamente una pantalla, con la barra del footer pegada abajo. Es un `div` y no un `section`/`main` a propósito — esos scopearían al `<footer>` y le sacarían el landmark.
 
 > ⚠️ **Ese razonamiento estaba anulado un nivel más arriba**: `layout.tsx` envuelve todo en `<main className="pt-16">`, y un `<footer>` descendiente de `<main>` pierde el rol `contentinfo` por spec — cuidar el wrapper del home no alcanzaba. **Se resuelve con `role="contentinfo"` explícito en el `<footer>`**, que le gana al mapeo implícito. Ese atributo **no es redundante: si se saca, el landmark desaparece** y no lo avisa ni el build ni el linter.
+
+**Cards de proyecto**: en reposo son SOLO la imagen del cover, a sangre y sin una
+palabra encima. En hover el lavado terracota **barre de izquierda a derecha**
+(`scale-x` con `origin-left`, no un fade) y después entran nombre, "VER PROYECTO",
+categoría y las escuadras de las 4 esquinas.
+
+> ⚠️ **En táctil no hay hover, así que no hay lavado**: el nombre y la categoría
+> van DEBAJO de la card como texto normal. Se decide por `(hover: none)` y no por
+> ancho de pantalla, porque una tablet en horizontal es ancha y tampoco tiene hover.
+> Antes el overlay quedaba fijo en mobile y se veía como si la card estuviera
+> siempre en hover, con el lavado tapando el cover.
 
 **El `<Footer />` cierra el home Y los seis case studies.** Antes era solo del home (la card de "próximo proyecto" oficiaba de cierre), pero al pie de un case study largo faltaba el camino de vuelta arriba. El cierre del case study es entonces `CaseStudyNextNav` + `Footer`.
 
@@ -255,23 +305,68 @@ Tiago sigue estudiando y la programación no es su fuerte. **El código tiene qu
 
 ## 7. Proyectos del portfolio
 
-Orden del grid = campo `order`; el ancho lo define `featured` (grilla de 3 columnas, `featured` ocupa 2).
+Orden = campo `order`. Qué se muestra en el home lo decide `showOnHome`; la forma de la card, `cardShape` (`wide` 4:3 · `square` 1:1). La grilla es masonry de dos columnas.
 
-| # | Proyecto | Año | Grid | Qué es |
-|---|---|---|---|---|
-| 1 | **Pulso Creativo** | 2026 | 2 col | Consultora B2B 25+ años. Sitio institucional, contacto dual, rediseño UX del contenido. |
-| 2 | **Paseo Güemes Hotel** | 2026 | 1 col | Hotel 3★ en Salta. UX/UI + WordPress, reserva directa contra OTAs. |
-| 3 | **FutbolTalentPro** | 2025 | 1 col | UX/UI de plataforma de scouting. **Bajo NDA — ver sección 4.** |
-| 4 | **El Ritual del Tono** | 2025 | 2 col | Full-stack MERN con demo en vivo. |
-| 5 | **Multibrand Design System** | 2025 | 1 col | Simulación laboral No Country, equipo de 6. |
-| 6 | **Recuérdalo** | 2025 | 1 col | Proyecto universitario, UX inclusivo para adultos 70+. |
-| 7 | **Cabify Music Match** | 2023 | 1 col | Concept UX/UI, prototipo iPhone 14. |
+| # | Proyecto | Año | Home | Forma | Qué es |
+|---|---|---|---|---|---|
+| 1 | **Paseo Güemes Hotel** | 2026 | ✅ | ancha | Hotel 3★ en Salta. UX/UI + WordPress, reserva directa contra OTAs. |
+| 2 | **Pulso Creativo** | 2026 | ✅ | **cuadrada** | Consultora B2B 25+ años. Sitio institucional, contacto dual, rediseño UX del contenido. |
+| 3 | **FutbolTalent.Pro** | 2025 | ✅ | ancha | UX/UI de plataforma de scouting. **Bajo NDA — ver sección 4.** |
+| 4 | **El Ritual del Tono** | 2025 | ✅ | ancha | Full-stack MERN con demo en vivo. |
+| 5 | **Multibrand Design System** | 2025 | — | ancha | Simulación laboral No Country, equipo de 6. |
+| 6 | **Recuérdalo** | 2025 | — | **cuadrada** | Proyecto universitario, UX inclusivo para adultos 70+. |
+| 7 | **Cabify Music Match** | 2023 | — | ancha | Concept UX/UI, prototipo iPhone 14. |
 
-Las tres filas cierran exactas: `[2+1] · [1+2] · [1+1+1]` — el ancho alterna entre filas, no se repite.
+La grilla es **masonry**: `Projects.tsx` rendea dos columnas `flex-col`
+independientes y reparte los proyectos **alternando** — el 1 y el 3 a la
+izquierda, el 2 y el 4 a la derecha.
+
+| Columna | Proyectos | Alto |
+|---|---|---|
+| izquierda | Paseo Güemes (ancha) · FutbolTalent.Pro (ancha) | 966px |
+| derecha | Pulso Creativo (**cuadrada**) · El Ritual del Tono (ancha) | 1123px |
+
+**Las columnas terminan a distinta altura a propósito.** Eso es lo que la hace
+masonry. El primer intento usó `grid-auto-rows` + `row-span` y alineaba las filas:
+se veía como una grilla, no como la referencia.
+
+✅ **El orden de lectura en mobile está resuelto.** Alternar dejaba 1·3·2·4 al
+apilarse, porque ese es el orden del DOM. Se arregla con `display: contents` en
+las columnas abajo de `md`: los `<div>` desaparecen del layout, las 4 cards pasan
+a ser hijas directas del grid y el `order` de cada una las ordena 1·2·3·4. En
+desktop las columnas vuelven a `flex` y el `order` no molesta.
 
 **Fuera del portfolio**: Retro Kicks, Govah, SoundCloud Redesign, Rick & Morty Explorer.
 
 **Regla**: salvo que se diga "académico" o "universitario", se asume que el proyecto es real. Hoy solo Recuérdalo está flageado como universitario.
+
+### Cómo se rotula cada proyecto — formato de agencia
+
+El título de la card da la marca y el campo **`services`** da la categoría, como hacen las agencias (`Colonial Helados` / `Social Media & Producción Audiovisual`). Se rendea en dos lugares: bajo el título en la card y sobre el título en el header del case study. Separador: ` & `.
+
+| Proyecto | `services` ES | `services` EN | `metadata.role` ES |
+|---|---|---|---|
+| Pulso Creativo | Diseño Web | Website Design | Diseño UX/UI e implementación en WordPress |
+| Paseo Güemes Hotel | Diseño Web & Dirección de Arte | Website Design & Art Direction | Dirección de arte, diseño UX/UI e implementación en WordPress |
+| FutbolTalent.Pro | Aplicaciones Móviles & Design System | Mobile Apps & Design System | Diseñador UX/UI |
+| El Ritual del Tono | Diseño Web & Desarrollo de Producto | Website Design & Product Development | Diseño UI y Desarrollo Full-stack |
+| Multibrand Design System | Design System | Design System | Diseño UX/UI y Design System |
+| Recuérdalo | Aplicaciones Móviles | Mobile Apps | Investigación UX y Diseño Inclusivo |
+| Cabify Music Match | Aplicaciones Móviles | Mobile Apps | Diseño UX/UI y Prototipado |
+
+**Las tres reglas del rótulo:**
+
+1. **`services` lleva CATEGORÍAS, nunca roles.** "Diseño Web", "Aplicaciones Móviles", "Design System", "Branding" — jamás "Diseño UX/UI", "Full-stack" ni "WordPress". Eso describe *cómo* se hizo y vive en `role` y en `stack`. Reemplazó al campo `type`, que salía igual en 5 de las 7 cards y describía a Tiago en vez del trabajo.
+2. **Máximo 2 categorías.** Con 3 la línea se parte en dos renglones en la card y deja de escanearse.
+3. **`role` no lleva "Freelance".** No aporta nada profesional y es lo primero que un reclutador descuenta.
+
+> **Precisión de los títulos, para poder defenderlos en una entrevista.** *UX/UI Designer* diseña pantallas y flujos con el problema ya definido; *Product Designer* participa en decidir **qué** construir (priorización, métricas, definición del problema); *Desarrollo de Producto* incluye ingeniería, así que no aplica si no lo programaste. FTP dice `Diseñador UX/UI` por eso: lo contrataron para hacer las pantallas.
+>
+> Mismo criterio con **Branding vs Dirección de Arte**: en Paseo Güemes el logo se lo dieron y él definió paleta, tipografías y el sistema visual — eso es dirección de arte. Decir "Branding" invita a la repregunta "¿hiciste el logo?", y la respuesta resta.
+
+> **`team` describe alcance, no cantidad de gente.** "Responsable único" y "Trabajo individual" señalan que no había nadie más; "Diseño y ejecución end-to-end · trato directo con el cliente" describe lo mismo como control sobre el proyecto. Misma realidad, lectura opuesta. No hace falta variar la redacción entre proyectos: **el campo solo se ve en el sidebar de un case study a la vez**, nunca dos juntos.
+
+> **`stack` lleva solo herramientas core.** UX Research, Card Sorting y Design System son *actividades*, no stack: viven en `role` y en el cuerpo del caso. Cuatro proyectos quedan en `Figma` a secas y está bien — inflar la lista con actividades le quita credibilidad a la parte que sí es herramienta.
 
 ### Stack que se muestra en el carrusel
 Solo lo que Tiago pueda defender en una entrevista.
@@ -283,7 +378,7 @@ Solo lo que Tiago pueda defender en una entrevista.
 
 > Excepción: en el case study de El Ritual del Tono sí se nombran Mongo/Node/Express porque son el contexto de ese proyecto. Distinto a promocionarlos como habilidad general.
 
-> **Herramientas propias**: no nombrar los temas de WordPress que usa (decisión de Tiago). En la copy va "un tema liviano" y el porqué de la elección. El resto del stack (Elementor, WPForms, Rank Math, LiteSpeed) sí se nombra.
+> **Herramientas propias**: no nombrar los temas de WordPress que usa (decisión de Tiago). En la copy va "un tema liviano" y el porqué de la elección. Elementor, WPForms, Rank Math y LiteSpeed sí se pueden nombrar **en el cuerpo del case study**, pero ya **no van en `metadata.stack`**: ese campo quedó podado a lo core (`Figma · WordPress`), porque una lista de plugins en el sidebar tapa la herramienta que importa.
 
 ---
 
@@ -294,8 +389,89 @@ Solo lo que Tiago pueda defender en una entrevista.
 ### Bloqueado por contenido de Tiago
 | ID | Tarea | Notas |
 |---|---|---|
-| **IMG-1** | **Rehacer las 35 imágenes** — 7 covers + 28 de case study | Reemplaza a NDA-img, WP-img y B1, que quedaron sin objeto al darse de baja todas las provisorias (§10). 📋 **La hoja de ruta completa está en `BRIEF-IMAGENES.md`** (raíz del repo): formatos, naming, dirección de arte por proyecto, la lista de las 35 con checkbox y cómo cablear cada una. **Ese archivo se borra cuando estén todas.** Las medidas permanentes están en §2. ✅ **D3 ya está hecho**, así que el cableado es solo agregar el `src`: no hay que optimizar nada a mano ni pensar en `srcset`. |
-| **B3** | Métricas reales de FutbolTalentPro | Sin data el caso cierra sin impacto duro. |
+| **IMG-1** | **Rehacer las 35 imágenes** — 7 covers + 28 de case study | Reemplaza a NDA-img, WP-img y B1, que quedaron sin objeto al darse de baja todas las provisorias (§10). 📋 **La dirección de arte está en `BRIEF-IMAGENES.md`** (raíz del repo), que es *solo* eso: cómo tiene que verse cada imagen. **Ese archivo se borra cuando estén todas.** Las medidas permanentes están en §2, el cableado en §10 y las prioridades acá abajo. ✅ **D3 ya está hecho**, así que el cableado es solo agregar el `src`: no hay que optimizar nada a mano ni pensar en `srcset`. |
+| **B3** | Métricas reales de FutbolTalent.Pro | Sin data el caso cierra sin impacto duro. |
+
+**Orden de las 35** — hechas en este orden, el sitio queda presentable después del primer bloque en vez de después del último:
+
+| | Bloque | Cant. | Por qué en ese orden |
+|---|---|---|---|
+| **P0** | Los 4 covers del home (Pulso Creativo, Paseo Güemes, FutbolTalent.Pro, El Ritual del Tono) | 4 | Es lo único que ve alguien que entra y no scrollea. **`pulso-creativo-cover` desbloquea la tarea P-3.** |
+| **P1** | Las 16 de case study de esos 4 | 16 | Son los 4 casos que reciben tráfico desde el home. |
+| **P2** | Los 3 covers restantes | 3 | Solo se ven entrando a `/projects`. |
+| **P3** | Las 12 de case study restantes | 12 | Cola larga. |
+
+Progreso: **8 / 35** · P0 **`4/4` ✅** · P1 `4/16` · P2 `0/3` · P3 `0/12`
+
+✅ **Los 4 covers del home están hechos y cableados.** Los 4 son mockup de
+dispositivo sobre hormigón con luz dura, generados con Nano Banana Pro y
+compuestos en Figma. Specs verificados: `2400×1800` (4:3) los tres anchos,
+rango tonal 164-196. Cada uno tiene su propio protagonista para que la serie
+no se lea repetida: Paseo va con celular adelante (el caso es mobile-first),
+Ritual suma un Fender y un pedal con la sombra del mástil en la pared, y
+FutbolTalent es un celular con el logo sobre la sombra de una red de arco.
+
+### Rework de Projects — plan en fases (acordado, con check-in entre cada una)
+
+Sale de la referencia [mikekus.com](https://mikekus.com/): el home muestra 4-6 proyectos destacados, el resto vive en una página aparte, y el cover muestra **el producto a color** que en hover se transforma. Hoy el sitio hace lo contrario en las tres cosas.
+
+**Decidido**: 4 proyectos en el home — los reales para clientes (Pulso Creativo, Paseo Güemes, FutbolTalent.Pro, El Ritual del Tono); los otros 3 (simulación, universitario, concept) solo en `/projects` · página, no carrusel · label en dos líneas · título visible en idle.
+
+| ID | Tarea | Toca | Notas |
+|---|---|---|---|
+| ~~**P-4**~~ | ~~Label `nombre + servicios`~~ | — | ✅ **Hecha.** El campo `type` se borró; la convención y la tabla de los 7 viven ahora en §7. |
+| **P-1** 🔒 | Página `/projects` con los 7 + un 8º tile de CTA | `app/[locale]/projects/page.tsx` (nueva) · `Projects.tsx` | ⚠️ **`id="top"` obligatorio** en el div raíz: renderea el `<Footer />` y sin ese id el back-to-top queda muerto sin dar error (§9.24). El build tiene que pasar de 21 a **23 páginas SSG**. |
+| ~~**P-2**~~ | ~~Home a 4 cards~~ | — | ✅ **Hecha.** `featured` → `showOnHome`. La grilla uniforme 3:2 duró poco: se reemplazó por el bento de dos formas (`cardShape`) en P-3. |
+| ~~**P-3**~~ | ~~Dirección de arte de la card~~ | — | ✅ **Hecha.** Reposo: solo la imagen, cero texto. Hover: lavado + nombre + VER PROYECTO + categoría + escuadras. Grilla bento de dos formas. |
+| **P-5** | Cierre de docs: §6, §7 y §10 | `CLAUDE.md` | Esas tres describen "qué existe hoy" — se actualizan recién cuando el código exista, no antes. |
+
+⚠️ **P-1 está congelada por decisión de Tiago** hasta resolver la página de case
+study. **El link "Ver todos los proyectos ↗" se sacó del home**, porque tiraba 404.
+Cuando se retome P-1 hay que volver a ponerlo en el header de `Projects.tsx` — la
+key `projects.view_all` **sigue en los dos JSON**, así que no hay que crearla de
+nuevo. En el componente quedó un comentario en el lugar exacto donde iba.
+
+**Lo próximo NO es P-1**, es repensar la página individual del case study: las
+imágenes que se idearon no convencen y hay que rediseñar la página antes de
+producir más. Referencias que trajo Tiago: los case studies de Studio Dizzy
+(deliverables como checklist + screenshots largos a sangre + next project) y de
+mikekus/MIXD (barra de metadata arriba, series de imágenes full-width, lista de
+servicios en dos columnas).
+
+⚠️ **Deuda conocida en los covers: el texto de las pantallas está generado, no**
+**capturado** (§9.33). Afecta a Paseo, Pulso y Ritual; FutbolTalent no, porque su
+pantalla es solo el logo.
+
+**No es bloqueante y se decidió publicarlos así.** Medido al ancho real de la
+card (628px), las palabras rotas son de 3-4px y no se leen; lo que sí se lee a
+ese tamaño —los titulares— está bien escrito. Conviene rehacerlos cuando haya
+tiempo, y **solo hay que reemplazar el contenido de la pantalla**: la composición
+está bien.
+
+✅ **El cover de Pulso ya está reencuadrado** a `1200×1200` (cuadrado, rango 202).
+
+⚠️ **Las 4 imágenes de case study de Pulso son PROVISORIAS.** Están cableadas y se
+ven, pero se rehacen enteras siguiendo las referencias de Studio Dizzy y
+mikekus/MIXD — no es un retoque, es un rediseño de la página de case study que
+decide después qué imágenes hacen falta. **No producir más imágenes de case study**
+hasta resolver esa página.
+
+Diagnóstico de las 4 actuales, para cuando se rehagan:
+
+| | Problema |
+|---|---|
+| `01-hero` | Es la misma imagen que el cover, solo que con menos margen. Y tiene una cuña blanca en la esquina inferior derecha. |
+| `02-challenge` | Mete tres ideas (logos + CTA + dos cards). Las cards no se leen a 330px. |
+| `03-decisions` | La peor: a 330px solo se lee el título y toda la lista de bullets es textura. Además le falta el "antes" que la decisión describe. |
+| `04-delivered` | ✅ La mejor de las cuatro y el estándar a igualar: es un diagrama, así que su significado está en la estructura y sobrevive al 27% de escala. |
+
+**Pendiente que dejó P-4** — el link a un prototipo de Figma **no se renderea**. El campo `links.figma` está declarado en `types/index.ts` y documentado ahí, pero hoy ningún proyecto tiene uno y Tiago decidió no cablearlo por ahora. Si alguna vez se agrega, hacen falta **tres** cosas y ninguna avisa si falta:
+
+1. el `push` a `linkItems` en `CaseStudySidebar.tsx` (hoy solo empuja `live`, `github` y `githubBack`),
+2. la key `view_prototype` en los **dos** JSON — sugerido: *"Interactuar con el prototipo"* / *"Explore the prototype"*,
+3. la URL real en el `links` del proyecto.
+
+> Los `figma: undefined` que había en tres proyectos se borraron: eran idénticos a no tener la key.
 
 ### Marca
 | ID | Tarea | Notas |
@@ -354,6 +530,55 @@ Solo lo que Tiago pueda defender en una entrevista.
 31. **Para ver un SVG sin buildear, rasterizalo a ASCII.** Un scanline fill de 40 líneas en Python imprime la silueta en la terminal. Sirvió para descubrir que el remate en flecha estaba mal, algo que leyendo el `d` no se ve y que el build no reporta. **Corolario**: nunca edites coordenadas de un path a ciegas.
 32. **Un export de Illustrator no entra tal cual al repo.** El de la G traía: un `<metadata>` con un manifiesto **C2PA de procedencia que puede pesar decenas de KB** — mucho más que el dibujo, que es un path de ~1 KB; un `<rect>` de 98.76×0.3 px en un tercer color (`#b77455`), una astilla para tapar una costura; el fill en `#c4663b` en vez del token `#C96A3A`; y el `<style>` con clases, que conviene pasar a atributo porque este SVG lo rendea satori. **Y el artboard tenía 50% de margen**: la marca salía al 36% del recorte de WhatsApp en vez del 50%. Se arregla con el `viewBox`, sin tocar coordenadas.
 
+### Imágenes y mockups
+33. **El texto adentro de un mockup tiene que ser una captura REAL, nunca generado.**
+    Los dos primeros covers buenos (Pulso y Paseo) tenían el copy de la pantalla
+    inventado: `SERVICIOS` salía `REMITIOOS`, `UBICACIÓN` salía `IWESCIÓN`, y el
+    párrafo decía *"a paseo del cueʟeo Intóniico y la zona de bosar"*. Es la firma
+    inconfundible de una imagen generada, y es **exactamente** el motivo por el que
+    se dieron de baja las 31 imágenes anteriores (§10): en un portfolio de UX/UI,
+    una interfaz con el copy inventado contradice el argumento del portfolio.
+
+    **El proceso correcto**: capturar el sitio real (DevTools → *Capture full size
+    screenshot*) y **componer** esa captura dentro de la pantalla del mockup en
+    Figma. El marco del dispositivo, el fondo y la luz pueden ser generados; el
+    contenido de la pantalla, no.
+
+    ⚠️ **Y la parte que más cuesta**: esto pasó desapercibido en DOS revisiones
+    mientras se medían rango tonal, contraste y proporciones con tres decimales.
+    Un número verde no dice nada del contenido. **El control es abrir el export al
+    100% y leer el texto más chico en voz alta**; si alguna palabra no existe, la
+    imagen no sirve. Hacerlo ANTES de medir nada.
+
+34. **`sr-only` es invisible pero SIGUE siendo seleccionable, así que duplica el
+    copiado.** `SplitText` deja el texto dos veces en el DOM: una copia `sr-only`
+    para lectores de pantalla y los chars visibles animados. Al seleccionar y
+    copiar el lema del Hero, el portapapeles traía **cada línea repetida**:
+    *"Diseñar experiencias con empatía.Diseñar experiencias con empatía."*.
+
+    Se arregla con **`select-none` en la copia `sr-only`**: `user-select: none`
+    la saca de la selección sin sacarla del árbol de accesibilidad, así que el
+    lector de pantalla la sigue leyendo y el portapapeles no. Vale para cualquier
+    patrón que duplique texto por accesibilidad, no solo para SplitText.
+
+    ⚠️ **Ningún build, linter ni auditoría de a11y lo detecta**: el HTML es
+    correcto y el texto accesible también. Solo se ve copiando y pegando.
+
+35. **Una imagen se juzga al tamaño en que se muestra, no abriendo el archivo.**
+    Con los covers pasó dos veces, en las dos direcciones: primero el texto
+    generado se escapó porque nadie lo leyó al 100%, y después se declaró
+    bloqueante mirando el archivo al 100% cuando al ancho real de la card (628px)
+    esas palabras miden 3-4px y son invisibles.
+
+    **Las dos revisiones hacen falta y son distintas**: al 100% se controla el
+    CONTENIDO (que el texto exista, que no haya artefactos); al tamaño de render
+    se controla el IMPACTO (qué se lee de verdad, si algo molesta). Un problema
+    real al 100% puede ser irrelevante a 628px, y al revés.
+
+    Para renderizar al tamaño real, `sharp` alcanza:
+    `sharp(f).resize(628, 471)` para una card ancha, `resize(330)` para simular
+    una imagen de case study en celular.
+
 ### Git y edición de archivos
 17. **`npm run build` compila el árbol de trabajo, no el commit.** Un build verde local no prueba que un commit parcial sea auto-consistente. Antes de pushear un commit acotado: `git show --stat <sha>` y comparar contra `git show origin/main:<archivo>`.
 18. **Nunca parsear bloques de `projects.ts` buscando el próximo `},`**: esa línea es el cierre de `tagline`, no el del proyecto. Hay que **contar llaves** desde la apertura. Un parser ingenuo ya corrompió el archivo dos veces; la recuperación limpia es `git show HEAD:<archivo>` a un temporal y reconstruir encima.
@@ -399,10 +624,25 @@ src/
 
 > ⚠️ **Hoy NO hay ninguna imagen en el repo.** Las 31 que había (7 covers + 24 de case study) eran provisorias, se leían como generadas con IA y se dieron de baja: en un portfolio de UX/UI una imagen que parece IA contradice el argumento del portfolio más fuerte de lo que un hueco lo debilita. Se borraron los archivos **y** las referencias (`coverImage: null` y sin `src` en los `imageBriefs`).
 
-> **Cómo volver a ponerlas, de a una**: subís el archivo a la ruta que corresponde y le agregás el `src` al brief (o el `coverImage` al proyecto). No hace falta tocar ningún componente — `ProjectCard` envuelve el cover en `{project.coverImage && …}` y la page rendea cada `CaseStudyImage` solo si el brief tiene `src`. 📋 **Hoja de ruta completa en `BRIEF-IMAGENES.md`** (documento temporal, se borra al terminar).
+> **Cómo volver a ponerlas, de a una**: subís el archivo a la ruta que corresponde y le agregás el `src` al brief (o el `coverImage` al proyecto). **No hace falta tocar ningún componente** — `ProjectCard` envuelve el cover en `{project.coverImage && …}` y la page rendea cada `CaseStudyImage` solo si el brief tiene `src`.
+>
+> ```ts
+> // Cover — en el entry del proyecto:
+> coverImage: '/images/covers/pulso-creativo-cover.jpg',
+>
+> // Case study — en el imageBrief que corresponda:
+> {
+>   alt: { es: '…', en: '…' },
+>   src: '/images/case-study/pulso-creativo/02-challenge.jpg',   // <- agregar
+> },
+> ```
+>
+> ⚠️ La extensión tiene que ser la **real** del archivo (`.jpg` / `.png`), no `.webp`: el WebP lo genera Next al vuelo y no existe en el repo.
+>
+> 📋 La **dirección de arte** de cada imagen está en `BRIEF-IMAGENES.md` (documento temporal, se borra al terminar). Las medidas en §2, el orden de prioridad en §8.
 
 > **Por qué no quedaron los placeholders "BUILDING"**: sin las imágenes, esas cajas punteadas aparecían **28 veces** (4 × 7 case studies) y convertían el sitio en una obra en construcción — otra señal negativa, y encima el texto está hardcodeado en inglés también en la versión ES. El componente sigue soportando el modo placeholder; simplemente no se usa mientras falten las imágenes.
-Los covers **no deben tener texto** (la card ya superpone tag, año y título) y tienen que funcionar en escala de grises, porque en idle van desaturados.
+Los covers **no llevan texto propio** (la card superpone el nombre y la categoría en hover) y **en reposo se ven a color y al 100%** — ya no van desaturados. Las reglas completas están en §2.
 
 > **Todas las imágenes pasan por `next/image`** (D3, hecho). Los tres puntos donde se rendean son `ProjectCard` (cover, modo `fill`), `CaseStudyNextNav` (thumb, modo `fill`) y `CaseStudyImage` (modo `width`/`height`, porque en mobile la imagen va en flujo normal y `fill` la pondría absolute siempre). La **única** excepción es el `<img>` de `opengraph-image.tsx`, que rendea satori y no el browser — tiene su `eslint-disable` con el porqué al lado.
 

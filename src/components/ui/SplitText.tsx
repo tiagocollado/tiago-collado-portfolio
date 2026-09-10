@@ -33,7 +33,9 @@ type Props = {
  *    de Framer no propaga a través de spans intermedios sin variants, y
  *    necesitamos los spans intermedios para el word grouping.
  *  - a11y: el texto plano queda accesible vía `sr-only`; los chars visibles
- *    se marcan `aria-hidden` para no leerse letra a letra.
+ *    se marcan `aria-hidden` para no leerse letra a letra. El `sr-only` lleva
+ *    además `select-none` para que copiar el texto no lo devuelva duplicado
+ *    (está dos veces en el DOM y las dos copias entraban en la selección).
  *  - `prefers-reduced-motion`: render directo sin animación ni delays.
  *  - `whileInView`: usa una sola IntersectionObserver al container — no una
  *    por char (sería muy caro con muchos chars).
@@ -91,7 +93,16 @@ export default function SplitText({
 
   return (
     <Tag id={id} className={className}>
-      <span className="sr-only">{text}</span>
+      {/*
+        Copia accesible del texto. `select-none` NO es opcional: sin eso el texto
+        queda en el DOM dos veces (acá y en los chars visibles) y ambos entran en
+        la selección, así que copiar y pegar daba el texto DUPLICADO.
+
+        `user-select: none` lo saca de la selección sin sacarlo del árbol de
+        accesibilidad, que es exactamente lo que hace falta: el lector de pantalla
+        lo sigue leyendo, el portapapeles no.
+      */}
+      <span className="sr-only select-none">{text}</span>
       <span ref={containerRef} aria-hidden="true">
         {words.map((word, wi) => {
           const startIdx = wordStartIdx[wi]
