@@ -39,24 +39,28 @@ export const projects: Project[] = [
           es: 'Hero del sitio con video del Monumento a Güemes y el CTA de reserva',
           en: 'Site hero with video of the Güemes Monument and the booking CTA',
         },
+        src: '/images/case-study/paseo-guemes-hotel/01-hero.jpg',
       },
       {
         alt: {
-          es: 'Wireframes de desktop y mobile en Figma',
-          en: 'Desktop and mobile wireframes in Figma',
+          es: 'Página de Beneficios en mobile: gastronomía y agencias de turismo recomendadas',
+          en: 'Benefits page on mobile: recommended restaurants and tour agencies',
         },
+        src: '/images/case-study/paseo-guemes-hotel/02-challenge.jpg',
       },
       {
         alt: {
-          es: 'Sistema visual aplicado: paleta, tipografías y versiones del logo',
-          en: 'Applied visual system: palette, typefaces, and logo versions',
+          es: 'Habitaciones, Beneficios, Ubicación y Contacto en desktop, con el mismo sistema visual',
+          en: 'Rooms, Benefits, Location, and Contact pages on desktop, sharing one visual system',
         },
+        src: '/images/case-study/paseo-guemes-hotel/03-decisions.jpg',
       },
       {
         alt: {
           es: 'Sitio en mobile: habitaciones, reserva directa y WhatsApp flotante',
           en: 'Site on mobile: rooms, direct booking, and floating WhatsApp',
         },
+        src: '/images/case-study/paseo-guemes-hotel/04-delivered.jpg',
       },
     ],
   },
