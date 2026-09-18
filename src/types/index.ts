@@ -1,5 +1,87 @@
 export type Locale = 'es' | 'en'
 
+/**
+ * Vocabulario de imagenes del case study.
+ *
+ * Reemplaza a la cuota de "4 imagenes por caso". Cada valor define que
+ * muestra la imagen y, por consecuencia, como se rendea. La direccion de
+ * arte completa de cada uno esta en `.claude/rules/imagenes.md`.
+ *
+ * - `mockup`         El mockup del sitio en un entorno real, panoramico.
+ *                    Es el HERO de cada case study y la MISMA composicion
+ *                    que el cover del home, en otro encuadre. Va A SANGRE.
+ * - `long-strip`     La pagina entera capturada, completa: en una columna
+ *                    o partida en columnas lado a lado. Muestra alcance sin
+ *                    explicar nada. Va A SANGRE.
+ * - `screen-cluster` Dos o tres pantallas juntas sobre un plano de color.
+ * - `palette`        Bandas de color con su nombre (sistema visual).
+ * - `diagram`        Una decision con estructura: flujos, arquitectura, 70/30.
+ * - `detail`         Un recorte o zoom de UNA pantalla, no la pantalla entera.
+ *
+ * Lo que queda FUERA del vocabulario: cualquier imagen que haya que LEER
+ * (screenshots con parrafos, bullets o cards de texto adentro). Ver la regla
+ * de comprension a 330px en `.claude/rules/imagenes.md`.
+ */
+export type CaseStudyImageType =
+  | 'mockup'
+  | 'long-strip'
+  | 'screen-cluster'
+  | 'palette'
+  | 'diagram'
+  | 'detail'
+
+/**
+ * Donde cae la imagen en la pagina. Es placement puro: el ancho y el
+ * recorte los decide `type`, no esto.
+ *
+ * `hero` va arriba de todo, ANTES del primer parrafo (en desktop, debajo de
+ * la barra de metadata; en mobile la barra baja despues del intro). Los
+ * demas valores nombran la seccion editorial despues de la cual entra la
+ * imagen. `end` es el cierre de la pagina.
+ *
+ * ⚠️ El slot NO decide el ancho. Que el hero vaya a sangre sale de su
+ * `type` (`mockup`), no de estar en `hero`: asi un slot sigue siendo
+ * placement puro y el nombre del archivo puede decir QUE es la imagen.
+ *
+ * Es obligatorio a proposito: si fuera opcional, una imagen sin `slot`
+ * no se rendearia en ningun lado y no lo avisaria nada. Asi lo caza TS.
+ */
+export type CaseStudyImageSlot =
+  | 'hero'
+  | 'intro'
+  | 'challenge'
+  | 'decisions'
+  | 'delivered'
+  | 'end'
+
+export interface CaseStudyImageBrief {
+  /** Que muestra la imagen. Decide ancho, recorte y parallax. */
+  type: CaseStudyImageType
+  /** Donde cae en la pagina. Varias imagenes pueden compartir slot. */
+  slot: CaseStudyImageSlot
+  /** Texto alternativo (a11y), bilingue. Siempre obligatorio. */
+  alt: { es: string; en: string }
+  /**
+   * Proporcion real del archivo, para los tipos SIN recorte (`long-strip`
+   * y `mockup`).
+   *
+   * Los demas tipos tienen un recorte fijo, asi que su proporcion sale del
+   * tipo. Los que no se recortan muestran el archivo tal cual, y su
+   * proporcion depende de la pieza: una tira mide lo que mida la pagina
+   * capturada. `next/image` usa este dato para reservar el alto antes de
+   * que cargue y evitar el salto de layout (CLS). Si no se declara, se usa
+   * el default del tipo (1:3 la tira, 21:9 el mockup): la imagen se ve igual
+   * de bien, pero si no coincide la pagina pega un salto al cargar.
+   */
+  frame?: { width: number; height: number }
+  /** SOLO mientras la imagen no existe: que imagen tiene que ir. */
+  description?: string
+  /** SOLO mientras la imagen no existe: prompt sugerido. */
+  prompt?: string
+  /** Path absoluto desde /public cuando la imagen ya existe. */
+  src?: string
+}
+
 export interface Project {
   slug: string
   title: string
@@ -110,27 +192,24 @@ export interface Project {
     nda?:      { es: string; en: string }
   }
   /**
-   * Briefs de las 4 imágenes contextuales del layout Awwwards-style.
-   * Orden fijo: [0] intro · [1] desafío · [2] entre decisiones · [3] entregado.
+   * Imagenes del case study. NO hay cantidad fija: cada proyecto usa los
+   * tipos que necesita, pueden ser 2 o 6.
    *
-   * Cada brief lleva:
-   * - `alt`: texto alternativo (a11y), bilingüe.
-   * - `description?`: SOLO mientras la imagen no existe — qué imagen tiene
-   *   que ir. Aparece visible en el placeholder.
-   * - `prompt?`: SOLO mientras la imagen no existe — prompt sugerido para
-   *   Nano Banana / Gemini Pro. Aparece en el placeholder.
-   * - `src?`: path absoluto desde /public cuando la imagen ya existe. Si
-   *   está, se renderea la imagen real y se ignoran description/prompt.
+   * Reemplazo del array de 4 posiciones fijas (`[0]` intro - `[1]` desafio -
+   * `[2]` decisiones - `[3]` entregado). Esa cuota se decidio antes de saber
+   * que necesitaba cada caso y obligaba a inventar que poner en cada slot.
+   * Ahora cada imagen declara DOS cosas:
    *
-   * Cuando Tiago genera y sube una imagen, solo agrega `src` al brief
-   * correspondiente — los otros campos quedan como documentación viva.
+   * - `type`  -> QUE es y COMO se rendea (ancho, recorte, parallax).
+   * - `slot`  -> DONDE cae en la pagina.
+   *
+   * Varias imagenes pueden compartir `slot`: eso es lo que produce los
+   * grupos de 2-3 imagenes seguidas sin texto entre medio, en vez de la
+   * alternancia 1 a 1 parrafo-imagen que tenia el layout viejo.
+   *
+   * Las reglas de arte de cada `type` viven en `.claude/rules/imagenes.md`.
    */
-  imageBriefs?: Array<{
-    alt:          { es: string; en: string }
-    description?: string
-    prompt?:      string
-    src?:         string
-  }>
+  imageBriefs?: CaseStudyImageBrief[]
 }
 
 export interface StackItem {

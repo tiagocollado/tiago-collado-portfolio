@@ -6,26 +6,40 @@ import { Project, Locale } from '@/types'
 import { useCursor } from '@/hooks/useCursor'
 
 /**
- * Sidebar de metadata para el layout Awwwards-style de case studies.
- * Client component — anima cada bloque con stagger en mount.
+ * Barra de metadata del case study — Cliente / Año / Rol / Duración / Equipo
+ * / Stack / NDA / Links, en una franja horizontal debajo del título.
  *
- * Se renderea solo si `project.metadata` existe. Cada bloque (cliente, año,
- * rol, duración, equipo, stack, nda) se muestra solo si tiene valor.
+ * ⚠️ Reemplaza a `CaseStudySidebar`, que era una columna sticky de 3/12.
+ * Tres razones, ninguna cosmética:
  *
- * En desktop (lg+) queda sticky en el top mientras el lector scrollea el
- * main column. Implementación con `position: sticky` puro CSS — sin JS.
+ * 1. **Liberaba el ancho.** El sidebar se quedaba con 272px + 64px de gap de
+ *    forma permanente, así que la columna editorial medía 944px y ninguna
+ *    imagen podía pasar de ahí. En una pantalla de 1920px eso era menos de
+ *    la mitad del viewport, y entre una laptop de 1440 y un monitor de 1920
+ *    la diferencia era de 24px: el desktop no ofrecía nada que justificara
+ *    la pantalla grande.
+ * 2. **El orden de lectura en mobile estaba invertido.** Con `grid-cols-1`
+ *    el sidebar caía full-width ARRIBA del hook de intro, así que lo primero
+ *    que leías de un proyecto era su duración y su stack, no de qué se trata.
+ *    Hoy en mobile la barra va DEBAJO del intro (el cruce de orden vive en la
+ *    page, con `md:order-first`), y en desktop arriba.
+ * 3. **No había nada que defendiera el sidebar.** Su única justificación
+ *    escrita apuntaba a screenshots de referencia que ya se borraron del repo.
+ *    Las cinco referencias del proyecto usan barra superior.
  *
- * Patrón visual: label mono uppercase chiquito (eyebrow) + value en font-display.
- * Inspirado en Mediasignal / LinkBoard (ver public/images/references/casestudy*).
+ * Miller: hasta 8 bloques es demasiado para una línea, así que la grilla los
+ * parte en 2 filas de 4 en `lg+` (y de 2 o 3 más abajo). Dos chunks de 4 se
+ * escanean; ocho en fila no.
  *
- * Stagger: container con `staggerChildren: 0.06` + delayChildren 0.5 para que
- * arranque después de que el header termine su cascade. Cada bloque entra con
- * fade + slide-up 12px.
+ * Se renderea solo si `project.metadata` existe. Cada bloque aparece solo si
+ * tiene valor, así que un proyecto sin NDA o sin equipo no deja un hueco.
  */
 
 const container: Variants = {
   hidden: { opacity: 1 },
   visible: {
+    // `delayChildren` arranca después de que el header termine su cascade,
+    // para que la página entre en un solo movimiento y no en dos.
     transition: { staggerChildren: 0.06, delayChildren: 0.5 },
   },
 }
@@ -39,7 +53,7 @@ const item: Variants = {
   },
 }
 
-export default function CaseStudySidebar({
+export default function CaseStudyMetaBar({
   project,
   locale,
 }: {
@@ -52,8 +66,8 @@ export default function CaseStudySidebar({
 
   const m = project.metadata
 
-  // Cada bloque queda como [labelKey, value]. Si value es null/undefined, no se renderea.
-  // Esto evita columnas vacías cuando un proyecto no tiene NDA o no tiene team.
+  // Cada bloque queda como [label, value]. Si value es null/undefined, no se
+  // renderea: evita celdas vacías cuando un proyecto no tiene NDA o equipo.
   const blocks: Array<{ label: string; value: string | string[] | null }> = [
     { label: t('meta_client'),   value: m.client?.[locale]   ?? null },
     { label: t('meta_year'),     value: project.year ? String(project.year) : null },
@@ -64,10 +78,9 @@ export default function CaseStudySidebar({
     { label: t('meta_nda'),      value: m.nda?.[locale]      ?? null },
   ]
 
-  // Links del proyecto (live demo, repos). Se renderean como bloque final del
-  // sidebar — son CTAs pero con tratamiento sobrio (texto + flecha externa)
-  // para no chocar con la jerarquía editorial del main column. La sticky
-  // position los mantiene accesibles mientras el lector scrollea la copy.
+  // Links del proyecto (live demo, repos). Son los únicos elementos
+  // interactivos de la barra, así que van al final: el ojo llega a ellos
+  // después de haber escaneado el contexto.
   const linkItems: Array<{ href: string; label: string }> = []
   if (project.links.live) {
     linkItems.push({ href: project.links.live, label: t('view_live') })
@@ -82,9 +95,22 @@ export default function CaseStudySidebar({
   return (
     <motion.aside
       initial="hidden"
-      animate="visible"
+      // `whileInView` y no `animate`: en mobile la barra quedó debajo del
+      // intro, fuera de la primera pantalla. Con `animate` hacía su entrada
+      // al cargar, donde nadie la veía, y cuando llegabas ya estaba quieta.
+      // En desktop está a la vista desde el inicio, así que se dispara igual
+      // que antes, con el mismo delay detrás del header.
+      //
+      // Sin `margin` negativo, a diferencia de las secciones: con él, en una
+      // laptop baja la barra podía quedar fuera del área observada al cargar
+      // y no entrar hasta el primer scroll.
+      whileInView="visible"
+      viewport={{ once: true }}
       variants={container}
-      className="lg:sticky lg:top-28 lg:self-start space-y-8"
+      // `border-y` arriba y abajo: es lo que la hace leer como una barra y
+      // no como una fila más de contenido.
+      className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-8 py-8 md:py-10 border-y"
+      style={{ borderColor: 'var(--border-default)' }}
     >
       {blocks
         .filter((b) => b.value !== null)
@@ -113,8 +139,7 @@ export default function CaseStudySidebar({
                 // `whitespace-pre-line` permite que un `\n` en el string del
                 // metadata renderee como salto de línea (ej. team con
                 // `Govah: ...\nPulso: ...`). Strings sin `\n` se renderean
-                // igual que antes — la regla solo respeta los newlines
-                // explícitos, no los espacios.
+                // igual — la regla solo respeta los newlines explícitos.
                 className="text-sm md:text-base font-display leading-snug whitespace-pre-line"
                 style={{ color: 'var(--ink-primary)' }}
               >
@@ -124,7 +149,6 @@ export default function CaseStudySidebar({
           </motion.div>
         ))}
 
-      {/* Bloque Links al final del sidebar — solo si el proyecto tiene alguno */}
       {linkItems.length > 0 && (
         <motion.div variants={item}>
           <p

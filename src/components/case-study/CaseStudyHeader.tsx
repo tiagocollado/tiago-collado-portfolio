@@ -68,7 +68,8 @@ export default function CaseStudyHeader({
       initial="hidden"
       animate="visible"
       variants={container}
-      className="max-w-7xl mx-auto"
+      // Sin `max-w-7xl` propio: el ancho lo da el <Shell> de la page, igual
+      // que en todos los demas bloques del case study.
     >
       {/* 1. Back link — pill ghost con flecha que se desliza 4px a la
           izquierda en hover. Mismo lenguaje visual que las pills del resto

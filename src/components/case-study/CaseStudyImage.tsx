@@ -3,6 +3,13 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
+import { CaseStudyImageType } from '@/types'
+import {
+  AspectRatio,
+  IMAGE_TYPE_SPEC,
+  SIZES_BLEED,
+  SIZES_SHELL,
+} from './imageSpec'
 
 /*
  * next/image envuelto en framer-motion.
@@ -18,35 +25,38 @@ import Image from 'next/image'
 const MotionImage = motion.create(Image)
 
 /**
- * Bloque de imagen contextual para el layout Awwwards-style.
+ * Bloque de imagen del case study.
  *
- * Client component porque usa `useScroll` + `useTransform` para parallax
- * suave: la imagen se mueve verticalmente ~24px relativo al scroll mientras
- * está en viewport, creando una sensación de profundidad sin ruido visual.
+ * ⚠️ El componente ya NO decide cómo se ve la imagen: eso lo decide su
+ * `type`, vía `imageSpec.ts`. Antes recibía `aspectRatio` y la page le pasaba
+ * `"wide"` hardcodeado en los cuatro slots, así que las cuatro imágenes de
+ * todos los case studies medían exactamente lo mismo (2400x1600) y no había
+ * jerarquía: el ojo no sabía qué mirar primero.
  *
- * ⚠️ El parallax y el recorte 3:2 son SOLO desktop (md+). En mobile la
- * imagen se renderea completa, en flujo normal y quieta — ver notas abajo.
+ * Lo que sale del `type`:
+ * - el ancho (a sangre vs shell de 1280px),
+ * - el recorte en desktop (o ninguno, en la tira larga),
+ * - el parallax (solo si hay recorte que lo contenga),
+ * - el `sizes` que necesita `next/image`,
+ * - el radius (0 a sangre: una imagen de viewport completo con esquinas
+ *   redondeadas se lee como un bug, no como una decisión).
+ *
+ * ⚠️ El ancho de a sangre lo da el wrapper, no este componente: quien decide
+ * si la imagen va adentro o afuera del shell es `CaseStudyImageRun`. Acá solo
+ * se usa `bleed` para el radius y el `sizes`.
+ *
+ * En mobile, cualquier tipo se renderea completo, en flujo normal y quieto:
+ * sin recorte y sin parallax. Es la razón por la que la regla de comprensión
+ * a 330px existe (ver `.claude/rules/imagenes.md`).
  *
  * Modos:
- * 1. Imagen real: pasar `src` + `alt`. Renderea <img>.
- * 2. Placeholder: si `src` es undefined, muestra un cuadrado con border
- *    dashed + el contenido de `description` y `prompt` como guía para que
- *    Tiago genere la imagen y la reemplace después.
- *
- * Props:
- * - `src`: path absoluto desde /public (ej. "/images/case-study/...").
- * - `alt`: texto alternativo (a11y) — siempre obligatorio.
- * - `caption?`: texto que aparece debajo de la imagen como pie de foto.
- * - `aspectRatio?`: "video" (16/9) | "square" (1/1) | "wide" (3/2 — default)
- *                   | "portrait" (3/4). Controla la altura del bloque EN DESKTOP.
- * - `description?`: SOLO en modo placeholder — qué imagen tiene que ir.
- * - `prompt?`: SOLO en modo placeholder — prompt sugerido para Nano Banana
- *              o Gemini Pro.
+ * 1. Imagen real: pasar `src`. Renderea <img>.
+ * 2. Placeholder: sin `src`, muestra una caja dashed con `description` y
+ *    `prompt` como guía. Hoy no se usa — la page filtra los briefs sin `src`
+ *    para no llenar el sitio de cajas "en obra".
  */
 
-type AspectRatio = 'video' | 'square' | 'wide' | 'portrait'
-
-// Usado por el placeholder: ahí SÍ queremos una caja de altura fija en
+// Recorte del placeholder: ahí SÍ queremos una caja de altura fija en
 // cualquier viewport, porque no hay imagen que dicte la altura.
 const ASPECT_CLASSES: Record<AspectRatio, string> = {
   video:    'aspect-video',
@@ -55,7 +65,7 @@ const ASPECT_CLASSES: Record<AspectRatio, string> = {
   portrait: 'aspect-[3/4]',
 }
 
-// Usado por la imagen real: el recorte arranca recién en md+.
+// Recorte de la imagen real: arranca recién en md+.
 // En mobile el container no tiene aspect fijo, así que la imagen se ve
 // entera (sin crop) y define ella misma la altura del bloque.
 const MD_ASPECT_CLASSES: Record<AspectRatio, string> = {
@@ -63,25 +73,6 @@ const MD_ASPECT_CLASSES: Record<AspectRatio, string> = {
   square:   'md:aspect-square',
   wide:     'md:aspect-[3/2]',
   portrait: 'md:aspect-[3/4]',
-}
-
-/*
- * Dimensiones nominales del archivo por aspect ratio.
- *
- * next/image pide `width` + `height` (o `fill`). Acá NO se puede usar `fill`:
- * `fill` posiciona la imagen en absolute siempre, y en mobile la necesitamos
- * en flujo normal para que se vea entera y sin recortar (ver el bloque de
- * abajo). Con width/height, Next usa esa proporción para reservar el alto
- * antes de que la imagen cargue y evitar el salto de layout (CLS).
- *
- * Lo único que importa es la PROPORCIÓN, no que los números coincidan con los
- * píxeles reales del archivo. `wide` usa el frame de 1200x800 de CLAUDE.md 2.
- */
-const FRAME_SIZES: Record<AspectRatio, { width: number; height: number }> = {
-  video:    { width: 1600, height:  900 },
-  square:   { width: 1200, height: 1200 },
-  wide:     { width: 1200, height:  800 },
-  portrait: { width:  900, height: 1200 },
 }
 
 /**
@@ -107,24 +98,37 @@ function useIsDesktop() {
 }
 
 interface Props {
-  src?:         string
-  alt:          string
-  caption?:     string
-  aspectRatio?: AspectRatio
+  /** Tipo del vocabulario. Decide ancho, recorte, parallax, sizes y radius. */
+  type:        CaseStudyImageType
+  src?:        string
+  alt:         string
+  caption?:    string
+  /** Proporción real del archivo. Para los tipos sin recorte (ver types). */
+  frame?:      { width: number; height: number }
+  /** `true` en la imagen del slot `hero`: es la candidata a LCP de la página. */
+  priority?:   boolean
   description?: string
-  prompt?:      string
+  prompt?:     string
 }
 
 export default function CaseStudyImage({
+  type,
   src,
   alt,
   caption,
-  aspectRatio = 'wide',
+  frame,
+  priority = false,
   description,
   prompt,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const isDesktop = useIsDesktop()
+
+  const spec = IMAGE_TYPE_SPEC[type]
+  const dimensions = frame ?? spec.frame
+  const sizes = spec.bleed ? SIZES_BLEED : SIZES_SHELL
+  // A sangre el radius va a 0. Adentro del shell, el de cards de la marca.
+  const radius = spec.bleed ? '' : 'rounded-xl'
 
   // Parallax: cuando el bloque entra/sale del viewport, la imagen se mueve
   // verticalmente. offset ['start end','end start'] = empieza el progress
@@ -136,12 +140,22 @@ export default function CaseStudyImage({
   })
   const y = useTransform(scrollYProgress, [0, 1], [24, -24])
 
+  // Entrada compartida por los dos modos: la imagen arranca borrosa + un
+  // pelín achicada y se enfoca a medida que aparece. Refuerza el feeling
+  // editorial de "foto que se va resolviendo". Una sola vez (`once: true`).
+  const reveal = {
+    initial:     { opacity: 0, filter: 'blur(12px)', scale: 0.98 },
+    whileInView: { opacity: 1, filter: 'blur(0px)',  scale: 1 },
+    viewport:    { once: true, margin: '-15% 0px' },
+    transition:  { duration: 0.9, ease: [0.16, 1, 0.3, 1] as const },
+  }
+
   // Modo placeholder — sin src, mostramos guía visual de qué imagen falta.
   if (!src) {
     return (
       <figure ref={ref} className="relative w-full">
         <div
-          className={`${ASPECT_CLASSES[aspectRatio]} w-full rounded-xl border-2 border-dashed flex items-center justify-center p-8`}
+          className={`${ASPECT_CLASSES[spec.aspect ?? 'portrait']} w-full rounded-xl border-2 border-dashed flex items-center justify-center p-8`}
           style={{
             borderColor: 'var(--border-strong)',
             backgroundColor: 'var(--color-surface)',
@@ -154,8 +168,6 @@ export default function CaseStudyImage({
             >
               · BUILDING ·
             </p>
-            {/* Mostramos description si existe, alt como fallback. Esto sirve
-                de guía al usuario para saber qué imagen tiene que ir acá. */}
             {(description || alt) && (
               <p
                 className="text-sm md:text-base font-display"
@@ -187,6 +199,44 @@ export default function CaseStudyImage({
     )
   }
 
+  /*
+   * TIPOS SIN RECORTE (`mockup` y `long-strip`).
+   *
+   * La imagen va en flujo normal en todos los breakpoints, `h-auto`, entera.
+   * No hay container de alto fijo, así que no hay recorte ni parallax: la
+   * tira significa su largo y el mockup es una composición cerrada. Se ven
+   * igual en mobile y en desktop, solo más anchas.
+   */
+  if (spec.aspect === null) {
+    return (
+      <motion.figure ref={ref} className="relative w-full" {...reveal}>
+        <div
+          className={`${radius} relative w-full overflow-hidden`}
+          style={{ backgroundColor: 'var(--color-surface)' }}
+        >
+          <Image
+            src={src}
+            alt={alt}
+            width={dimensions.width}
+            height={dimensions.height}
+            sizes={sizes}
+            priority={priority}
+            loading={priority ? undefined : 'lazy'}
+            className="block w-full h-auto"
+          />
+        </div>
+        {caption && (
+          <figcaption
+            className="mt-3 text-xs font-mono"
+            style={{ color: 'var(--ink-muted)' }}
+          >
+            {caption}
+          </figcaption>
+        )}
+      </motion.figure>
+    )
+  }
+
   return (
     <motion.figure
       ref={ref}
@@ -194,17 +244,10 @@ export default function CaseStudyImage({
       // Sin cursor variant ni hover: estas imágenes no abren lightbox ni
       // navegan a ningún lado. Un cursor "VIEW" prometía una interacción
       // que no existe.
-      //
-      // Blur-in cuando entra al viewport: la imagen arranca borrosa + un
-      // pelín achicada y se enfoca a medida que aparece. Refuerza el feeling
-      // editorial de "foto que se va resolviendo". Una sola vez (`once: true`).
-      initial={{ opacity: 0, filter: 'blur(12px)', scale: 0.98 }}
-      whileInView={{ opacity: 1, filter: 'blur(0px)', scale: 1 }}
-      viewport={{ once: true, margin: '-15% 0px' }}
-      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+      {...reveal}
     >
       <div
-        className={`${MD_ASPECT_CLASSES[aspectRatio]} relative w-full rounded-xl overflow-hidden`}
+        className={`${MD_ASPECT_CLASSES[spec.aspect]} ${radius} relative w-full overflow-hidden`}
         style={{ backgroundColor: 'var(--color-surface)' }}
       >
         {/*
@@ -219,16 +262,12 @@ export default function CaseStudyImage({
         <MotionImage
           src={src}
           alt={alt}
-          width={FRAME_SIZES[aspectRatio].width}
-          height={FRAME_SIZES[aspectRatio].height}
-          /*
-            La columna editorial mide 944px como maximo (CLAUDE.md 2); en
-            mobile la imagen ocupa todo el ancho. Sin `sizes` el browser
-            asumiria 100vw y en un celular bajaria el archivo de desktop.
-          */
-          sizes="(max-width: 768px) 100vw, 944px"
-          loading="lazy"
-          style={isDesktop ? { y } : undefined}
+          width={dimensions.width}
+          height={dimensions.height}
+          sizes={sizes}
+          priority={priority}
+          loading={priority ? undefined : 'lazy'}
+          style={isDesktop && spec.parallax ? { y } : undefined}
           className="block w-full h-auto md:absolute md:left-0 md:-top-6 md:h-[calc(100%+48px)] md:object-cover"
         />
       </div>

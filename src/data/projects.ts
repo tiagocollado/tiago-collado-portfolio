@@ -21,6 +21,8 @@ export const projects: Project[] = [
       live: 'https://paseoguemeshotel.com.ar',
     },
     cardShape: 'wide',
+    // Cover limpio: `2400x1800` (4:3, la forma de esta card) con las dos
+    // pantallas en captura real y sin composicion en perspectiva.
     coverImage: '/images/covers/paseo-guemes-hotel-cover.jpg',
     year: 2026,
     showOnHome: true,
@@ -33,34 +35,56 @@ export const projects: Project[] = [
       team:     { es: 'Diseño y ejecución end-to-end · trato directo con el cliente', en: 'End-to-end design & delivery · direct client relationship' },
       stack:    ['Figma', 'WordPress'],
     },
+    /*
+     * Cuatro imagenes con el vocabulario. El nombre del archivo dice QUE es;
+     * el `slot` decide DONDE cae.
+     *
+     * - Va SIN diagrama, a proposito. Sus decisiones (reserva directa sobre
+     *   las OTAs, un stack que el cliente puede editar, la jerarquia del hero
+     *   y los CTAs por recorrido) no tienen una estructura que valga la pena
+     *   dibujar. Forzar un diagrama seria volver a la cuota.
+     * - `challenge` tampoco lleva imagen.
+     * - El cluster va sobre el marron de marca `#6A442E` (§4.1 de las rules).
+     */
     imageBriefs: [
       {
+        type: 'mockup',
+        slot: 'hero',
         alt: {
-          es: 'Hero del sitio con video del Monumento a Güemes y el CTA de reserva',
-          en: 'Site hero with video of the Güemes Monument and the booking CTA',
+          es: 'Laptop y celular sobre hormigón con la home de Paseo Güemes Hotel en pantalla',
+          en: 'Laptop and phone on concrete showing the Paseo Güemes Hotel home page',
         },
-        src: '/images/case-study/paseo-guemes-hotel/01-hero.jpg',
+        src: '/images/case-study/paseo-guemes-hotel/00-mockup.jpg',
       },
       {
+        type: 'long-strip',
+        slot: 'intro',
+        // Tira partida en columnas: la home desktop en dos y la mobile en
+        // tres, lado a lado. Por eso es 16:9 y no una tira vertical.
+        frame: { width: 1440, height: 810 },
         alt: {
-          es: 'Página de Beneficios en mobile: gastronomía y agencias de turismo recomendadas',
-          en: 'Benefits page on mobile: recommended restaurants and tour agencies',
+          es: 'La home completa, de punta a punta, en desktop y en mobile, partida en columnas',
+          en: 'The full home page, top to bottom, on desktop and mobile, split into columns',
         },
-        src: '/images/case-study/paseo-guemes-hotel/02-challenge.jpg',
+        src: '/images/case-study/paseo-guemes-hotel/01-tira.jpg',
       },
       {
+        type: 'screen-cluster',
+        slot: 'decisions',
         alt: {
-          es: 'Habitaciones, Beneficios, Ubicación y Contacto en desktop, con el mismo sistema visual',
-          en: 'Rooms, Benefits, Location, and Contact pages on desktop, sharing one visual system',
+          es: 'Tres pantallas mobile sobre el marrón de la marca: la home, Beneficios locales y la página de ubicación',
+          en: 'Three mobile screens on the brand brown: the home page, Local Benefits, and the location page',
         },
-        src: '/images/case-study/paseo-guemes-hotel/03-decisions.jpg',
+        src: '/images/case-study/paseo-guemes-hotel/02-cluster.jpg',
       },
       {
+        type: 'palette',
+        slot: 'delivered',
         alt: {
-          es: 'Sitio en mobile: habitaciones, reserva directa y WhatsApp flotante',
-          en: 'Site on mobile: rooms, direct booking, and floating WhatsApp',
+          es: 'Paleta extraída del logo, con el logo al lado: marrón marca, marrón claro, crema, negro y blanco',
+          en: 'Palette taken from the logo, shown next to it: brand brown, light brown, cream, black, and white',
         },
-        src: '/images/case-study/paseo-guemes-hotel/04-delivered.jpg',
+        src: '/images/case-study/paseo-guemes-hotel/03-paleta.jpg',
       },
     ],
   },
@@ -68,12 +92,12 @@ export const projects: Project[] = [
     slug: 'pulso-creativo',
     title: 'Pulso Creativo',
     tagline: {
-      es: 'Plataforma institucional para una consultora B2B con más de 25 años de trayectoria.',
-      en: 'Institutional platform for a B2B consultancy with over 25 years of track record.',
+      es: 'Sitio institucional para una consultora B2B con más de 25 años de trayectoria.',
+      en: 'Institutional website for a B2B consultancy with over 25 years of experience.',
     },
     description: {
-      es: 'Sitio institucional con foco en autoridad corporativa: rediseño UX del contenido, contacto dual y captación de leads con contexto.',
-      en: 'Institutional site focused on corporate authority: UX rewrite of the content, dual contact flow, and lead capture with context.',
+      es: 'Sitio institucional con los clientes a la vista y casos de éxito reescritos para leerse de un vistazo.',
+      en: 'Institutional site that puts the clients up front and rewrites the success stories to read at a glance.',
     },
     tags: ['WordPress', 'Elementor', 'UX Writing', 'UI Design', 'B2B'],
     services: {
@@ -96,34 +120,67 @@ export const projects: Project[] = [
       team:     { es: 'Diseño y ejecución end-to-end · trato directo con el cliente', en: 'End-to-end design & delivery · direct client relationship' },
       stack:    ['Figma', 'WordPress'],
     },
+    /*
+     * Primer case study cerrado con el vocabulario: cinco imagenes, cada una
+     * de un tipo distinto. El nombre del archivo dice QUE es; el `slot`
+     * decide DONDE cae.
+     *
+     * - `challenge` queda SIN imagen, a proposito: el desafio era texto denso
+     *   del cliente y conflictos de plantillas de WordPress, y no hay nada
+     *   visual honesto que mostrar. No es un hueco por completar.
+     * - 02 y 03 comparten `decisions`: van seguidas, como grupo.
+     * - El cluster va sobre el verde de marca y la paleta sobre charcoal. No
+     *   son acromaticas y esta bien: eso es regla de los covers, no de las
+     *   imagenes de case study (`.claude/rules/imagenes.md` §4.1).
+     */
     imageBriefs: [
       {
+        type: 'mockup',
+        slot: 'hero',
         alt: {
-          es: 'Home del sitio institucional en desktop',
-          en: 'Institutional site home on desktop',
+          es: 'Laptop sobre hormigón con la home de Pulso Creativo en pantalla',
+          en: 'Laptop on concrete showing the Pulso Creativo home page',
         },
-        src: '/images/case-study/pulso-creativo/01-hero.jpg',
+        src: '/images/case-study/pulso-creativo/00-mockup.jpg',
       },
       {
+        type: 'long-strip',
+        slot: 'intro',
+        // Tira partida en columnas: la home desktop en dos y la mobile en
+        // dos, lado a lado. Por eso es 16:9 y no una tira vertical.
+        frame: { width: 1440, height: 810 },
         alt: {
-          es: 'Carrusel de marcas con comportamiento táctil',
-          en: 'Client logo carousel with touch behavior',
+          es: 'La home completa, de punta a punta, en desktop y en mobile',
+          en: 'The full home page, top to bottom, on desktop and mobile',
         },
-        src: '/images/case-study/pulso-creativo/02-challenge.jpg',
+        src: '/images/case-study/pulso-creativo/01-tira.jpg',
       },
       {
+        type: 'screen-cluster',
+        slot: 'decisions',
         alt: {
-          es: 'Casos de éxito en formato de viñetas con íconos',
-          en: 'Success cases in a bulleted format with icons',
+          es: 'Tres pantallas mobile sobre el verde de la marca: el hero, las cards de servicios y la metodología',
+          en: 'Three mobile screens on the brand green: the hero, the service cards, and the methodology',
         },
-        src: '/images/case-study/pulso-creativo/03-decisions.jpg',
+        src: '/images/case-study/pulso-creativo/02-cluster.jpg',
       },
       {
+        type: 'palette',
+        slot: 'decisions',
         alt: {
-          es: 'Sistema de contacto dual: formulario y WhatsApp ruteado por servicio',
-          en: 'Dual contact system: form and WhatsApp routed by service',
+          es: 'Paleta extraída del logo: verde acción, verde marca, grafito, negro y blanco',
+          en: 'Palette taken from the logo: action green, brand green, graphite, black, and white',
         },
-        src: '/images/case-study/pulso-creativo/04-delivered.jpg',
+        src: '/images/case-study/pulso-creativo/03-paleta.jpg',
+      },
+      {
+        type: 'diagram',
+        slot: 'delivered',
+        alt: {
+          es: 'Diagrama de las dos vías de contacto: WhatsApp para consultas rápidas y formulario para las detalladas',
+          en: 'Diagram of the two contact paths: WhatsApp for quick questions, a form for detailed ones',
+        },
+        src: '/images/case-study/pulso-creativo/04-diagrama.jpg',
       },
     ],
   },
@@ -145,6 +202,9 @@ export const projects: Project[] = [
     },
     links: {},
     cardShape: 'wide',
+    // ❌ TEXTO INVENTADO EN LA PANTALLA (confirmado). Se corrige en la tanda
+    // de imagenes de este proyecto. Por el NDA, en pantalla va SOLO el logo
+    // real, nunca UI del producto. Ver `.claude/rules/imagenes.md` §1.1.
     coverImage: '/images/covers/futbol-talent-pro-cover.jpg',
     year: 2025,
     showOnHome: true,
@@ -160,24 +220,32 @@ export const projects: Project[] = [
     },
     imageBriefs: [
       {
+        type: 'diagram',
+        slot: 'hero',
         alt: {
           es: 'Arquitectura de información de la plataforma',
           en: 'Platform information architecture',
         },
       },
       {
+        type: 'screen-cluster',
+        slot: 'challenge',
         alt: {
           es: 'Wireframes de baja fidelidad',
           en: 'Low-fidelity wireframes',
         },
       },
       {
+        type: 'screen-cluster',
+        slot: 'decisions',
         alt: {
           es: 'Sistema de componentes UI',
           en: 'UI component system',
         },
       },
       {
+        type: 'diagram',
+        slot: 'delivered',
         alt: {
           es: 'Flujos de usuario y documentación de handoff',
           en: 'User flows and handoff documentation',
@@ -207,6 +275,9 @@ export const projects: Project[] = [
       live:       'https://el-ritual-del-tono.vercel.app',
     },
     cardShape: 'wide',
+    // ❌ TEXTO INVENTADO EN LA PANTALLA (confirmado). Se corrige en la tanda
+    // de imagenes de este proyecto, junto con el mockup del hero: la tanda no
+    // esta cerrada mientras esto siga asi. Ver `.claude/rules/imagenes.md` §1.1.
     coverImage: '/images/covers/el-ritual-del-tono-cover.jpg',
     year: 2025,
     showOnHome: true,
@@ -221,24 +292,32 @@ export const projects: Project[] = [
     },
     imageBriefs: [
       {
+        type: 'detail',
+        slot: 'hero',
         alt: {
           es: 'Hero shot — página principal de El Ritual del Tono mostrando un artista y su cadena de señal',
           en: 'Hero shot — El Ritual del Tono main page showing an artist and their signal chain',
         },
       },
       {
+        type: 'diagram',
+        slot: 'challenge',
         alt: {
           es: 'Esquema de las 3 colecciones MongoDB del proyecto: Artists con Songs como subdocumentos, Gears reutilizables y Orders',
           en: 'MongoDB schema diagram with 3 collections: Artists with Songs subdocuments, reusable Gears, and Orders',
         },
       },
       {
+        type: 'detail',
+        slot: 'decisions',
         alt: {
           es: 'Página de canción mostrando la cadena de señal: guitarra, pedales y amplificador en orden',
           en: 'Song page showing the signal chain: guitar, pedals, and amp in order',
         },
       },
       {
+        type: 'screen-cluster',
+        slot: 'delivered',
         alt: {
           es: 'Carrito y checkout simulado mostrando el setup completo de un tono',
           en: 'Cart and simulated checkout showing the complete tone setup',
@@ -278,24 +357,32 @@ export const projects: Project[] = [
     },
     imageBriefs: [
       {
+        type: 'detail',
+        slot: 'hero',
         alt: {
           es: 'Hero shot — prototipo iPhone 14 mostrando la pantalla principal de Music Match con la playlist fusionada',
           en: 'Hero shot — iPhone 14 prototype showing the main Music Match screen with the merged playlist',
         },
       },
       {
+        type: 'diagram',
+        slot: 'challenge',
         alt: {
           es: 'Diagrama del algoritmo de fusión: dos perfiles Spotify con géneros y artistas convergen en una playlist compartida',
           en: 'Merge algorithm diagram: two Spotify profiles with genres and artists converge into a shared playlist',
         },
       },
       {
+        type: 'screen-cluster',
+        slot: 'decisions',
         alt: {
           es: 'User flow del onboarding skippable de Spotify, en 3 pantallas mobile',
           en: 'Skippable Spotify onboarding user flow across 3 mobile screens',
         },
       },
       {
+        type: 'screen-cluster',
+        slot: 'delivered',
         alt: {
           es: 'Tres estados clave de Music Match: fusión, playlist por mood y modo silencio',
           en: 'Three key Music Match states: merge, mood playlist, and silence mode',
@@ -335,24 +422,32 @@ export const projects: Project[] = [
     },
     imageBriefs: [
       {
+        type: 'palette',
+        slot: 'hero',
         alt: {
           es: 'Hero shot — tablero Figma del Design System con paleta, componentes y tipografía',
           en: 'Hero shot — Figma board of the Design System with palette, components, and typography',
         },
       },
       {
+        type: 'diagram',
+        slot: 'challenge',
         alt: {
           es: 'Diagrama 70/30 mostrando el core invariante vs los tokens personalizables',
           en: '70/30 diagram showing the invariant core vs customizable tokens',
         },
       },
       {
+        type: 'screen-cluster',
+        slot: 'decisions',
         alt: {
           es: 'Misma UI aplicada con dos marcas distintas: una formal/académica y una dinámica/innovadora',
           en: 'Same UI applied with two different brands: one formal/academic, one dynamic/innovative',
         },
       },
       {
+        type: 'detail',
+        slot: 'delivered',
         alt: {
           es: 'Documentación del design system en Notion: guías, checklist de accesibilidad y proceso de creación de submarcas',
           en: 'Design system documentation in Notion: guides, accessibility checklist, and sub-brand creation process',
@@ -392,24 +487,32 @@ export const projects: Project[] = [
     },
     imageBriefs: [
       {
+        type: 'detail',
+        slot: 'hero',
         alt: {
           es: 'Hero shot — pantalla principal de Recuérdalo con las 4 categorías emergentes del card sorting',
           en: 'Hero shot — Recuérdalo main screen with the 4 categories that emerged from card sorting',
         },
       },
       {
+        type: 'diagram',
+        slot: 'challenge',
         alt: {
           es: 'Card sorting documentado: 15 tarjetas de funcionalidades agrupadas por usuarios mayores en 4 categorías emocionales',
           en: 'Documented card sorting: 15 feature cards grouped by older users into 4 emotional categories',
         },
       },
       {
+        type: 'screen-cluster',
+        slot: 'decisions',
         alt: {
           es: 'Secuencia de pasos reversibles: indicador numérico, botón Volver grande y confirmación visual inmediata',
           en: 'Reversible steps sequence: numeric indicator, large Back button, and immediate visual confirmation',
         },
       },
       {
+        type: 'screen-cluster',
+        slot: 'delivered',
         alt: {
           es: 'Comparación de accesibilidad: UI estándar versus Recuérdalo con tipografía y touch targets aumentados',
           en: 'Accessibility comparison: standard UI vs Recuérdalo with enlarged typography and touch targets',

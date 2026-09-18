@@ -1,10 +1,10 @@
 import { notFound } from 'next/navigation'
 import { projects } from '@/data/projects'
-import { Locale } from '@/types'
+import { CaseStudyImageSlot, Locale } from '@/types'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import CaseStudySidebar from '@/components/case-study/CaseStudySidebar'
+import CaseStudyMetaBar from '@/components/case-study/CaseStudyMetaBar'
 import CaseStudySection from '@/components/case-study/CaseStudySection'
-import CaseStudyImage from '@/components/case-study/CaseStudyImage'
+import CaseStudyImageRun from '@/components/case-study/CaseStudyImageRun'
 import CaseStudyHeader from '@/components/case-study/CaseStudyHeader'
 import CaseStudyNextNav from '@/components/case-study/CaseStudyNextNav'
 import Footer from '@/components/ui/Footer'
@@ -18,6 +18,25 @@ interface ProjectPageProps {
 
 export async function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }))
+}
+
+/**
+ * El shell de la marca: gutter afuera, ancho máximo adentro.
+ *
+ * ⚠️ El `max-w` y el gutter NUNCA van en el mismo elemento — con
+ * `box-sizing: border-box` el padding cuenta adentro del `max-w` y el
+ * contenido queda corrido (ver `.claude/rules/design-tokens.md`). Existe como
+ * componente y no como string suelto para que el gutter sea literalmente el
+ * mismo en los seis bloques de la página.
+ *
+ * Todo lo que NO es una imagen a sangre vive adentro de un Shell.
+ */
+function Shell({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32">
+      <div className="max-w-7xl mx-auto">{children}</div>
+    </div>
+  )
 }
 
 // Devuelve el siguiente proyecto en el carrusel, con wrap-around al
@@ -72,189 +91,212 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
   const nextProject = getNextProject(project.order)
 
+  /*
+   * Las imágenes ya NO están atadas a cuatro posiciones fijas.
+   *
+   * Antes la page leía `imageBriefs[0]` … `[3]` en cuatro puntos hardcodeados,
+   * uno por sección. Esa cuota de 4 se decidió antes de saber qué necesitaba
+   * cada caso, así que obligaba a inventar qué poner en cada slot — y una
+   * quinta imagen no se rendeaba en ningún lado sin dar error.
+   *
+   * Ahora cada brief declara su `slot` y la page pregunta por slot. De ahí
+   * salen las dos cosas que el layout viejo no podía dar:
+   * - cantidad libre por proyecto (pueden ser 2 o 6),
+   * - varias imágenes en el mismo slot, o sea grupos de 2-3 seguidas sin
+   *   texto entre medio, en vez de la alternancia 1 a 1 párrafo-imagen.
+   *
+   * El filtro por `src` es el mismo de antes: un brief sin imagen no renderea
+   * el placeholder "BUILDING". Con 28 imágenes por producir, esas cajas
+   * punteadas convertían el sitio en una obra en construcción. Los briefs
+   * sin `src` siguen en `projects.ts` documentando qué va en cada lugar.
+   */
+  const imagesIn = (slot: CaseStudyImageSlot) =>
+    (project.imageBriefs ?? []).filter((b) => b.slot === slot && b.src)
+
   return (
-    // `id="top"` es el ancla del back-to-top del Footer, que ahora tambien
-    // cierra los case studies. Sin este id el ancla no existe y el boton
-    // queda muerto sin dar ningun error (ver Footer.tsx).
-    // El `pb` de abajo se fue: el propio Footer aporta el aire final con su
-    // `pt-16 md:pt-20` + `pb-10 md:pb-12`, igual que en el home.
+    // `id="top"` es el ancla del back-to-top del Footer, que también cierra
+    // los case studies. Sin este id el ancla no existe y el botón queda
+    // muerto sin dar ningún error (ver Footer.tsx).
     <div id="top" className="min-h-screen">
 
       {/* ============ HEADER ============
-          Cabecera entera (back link + type + h1 con SplitText + tags + tagline
+          Cabecera entera (back link + servicios + h1 con SplitText + tagline
           + CTAs) en un client component que orquesta cascade entrance via
           variants stagger. La page sigue siendo server (SEO / SSG). */}
-      <div className="px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32 pt-16 md:pt-20">
-        <CaseStudyHeader project={project} locale={locale} />
+      <div className="pt-16 md:pt-20">
+        <Shell>
+          <CaseStudyHeader project={project} locale={locale} />
+        </Shell>
       </div>
 
-      {/* ============ CASE STUDY BODY (Awwwards layout) ============
+      {/* ============ CASE STUDY BODY ============
           Solo se renderea si el proyecto tiene awwwardsLayout: true Y se
           pudieron cargar todas las keys i18n. Si no, queda solo el header
-          + la navegación de abajo. */}
+          + la navegación de abajo.
+
+          ⚠️ La página ya no es una grilla de 12 columnas con sidebar: es una
+          secuencia vertical de bloques hermanos, y cada uno declara su propio
+          ancho. Ese cambio es lo que permite que una imagen vaya a sangre:
+          mientras todo vivía adentro de `col-span-9`, ninguna imagen podía
+          pasar de 944px. El `gap` de acá es el ritmo entre bloques; las
+          imágenes agrupadas de un mismo slot van más juntas entre sí.
+
+          ⚠️ Es `flex` + `gap` y no `space-y` porque la barra de metadata
+          cambia de lugar según el breakpoint (ver METADATA abajo), y eso se
+          hace con `order`. `space-y` pone el margen según el orden del DOM,
+          no el visual: con `order` el bloque que sube quedaría sin separación
+          y el que baja con margen de más. `gap` separa según el orden visual. */}
       {project.awwwardsLayout && hasCaseStudy && (
-        <div className="px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32 mt-12 md:mt-16">
-          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+        <div className="mt-12 md:mt-16 flex flex-col gap-20 md:gap-28">
 
-            {/* Sidebar metadata — col-span-3 sticky en lg+, full-width arriba en mobile */}
-            <div className="lg:col-span-3">
-              <CaseStudySidebar project={project} locale={locale} />
-            </div>
+          {/* HERO — el mockup del sitio, a sangre. Es la misma composición
+              que el cover del home en encuadre panorámico: hacés clic en la
+              card y aterrizás en la misma imagen, ahora grande y completa. */}
+          <CaseStudyImageRun briefs={imagesIn('hero')} locale={locale} priority />
 
-            {/* Main editorial — col-span-9, secciones con imágenes intercaladas */}
-            <div className="lg:col-span-9 space-y-20 md:space-y-28">
+          {/* INTRO — sin label, hook de 2-3 líneas */}
+          <Shell>
+            <CaseStudySection label={null}>
+              <p
+                className="font-display text-2xl md:text-3xl lg:text-4xl leading-tight tracking-tight max-w-3xl text-balance"
+                style={{ color: 'var(--ink-primary)' }}
+              >
+                {awwwardsContent.intro}
+              </p>
+            </CaseStudySection>
+          </Shell>
 
-              {/* ⚠️ Las cuatro imágenes se rendean solo si el brief tiene
-                  `src` — de ahí el `?.src &&` en vez de un `?.[n] &&` pelado.
-                  Sin esa guarda, un brief sin imagen cae al placeholder
-                  "BUILDING" de CaseStudyImage, y con las 28 imágenes
-                  provisorias dadas de baja eso llenaba el sitio de cajas
-                  punteadas "en obra": una señal peor que la que se quiso
-                  evitar, en un portfolio que ya está circulando entre
-                  reclutadores. Los `imageBriefs` siguen en `projects.ts`
-                  documentando qué va en cada slot; al agregarle `src` a uno,
-                  la imagen vuelve a aparecer sola. */}
+          {/* METADATA — barra horizontal, reemplaza al sidebar sticky.
 
-              {/* INTRO — sin label, hook 2-3 líneas + 1ª imagen */}
-              <CaseStudySection label={null}>
-                <p
-                  className="font-display text-2xl md:text-3xl lg:text-4xl leading-tight tracking-tight max-w-3xl text-balance"
-                  style={{ color: 'var(--ink-primary)' }}
-                >
-                  {awwwardsContent.intro}
-                </p>
-                {project.imageBriefs?.[0]?.src && (
-                  <CaseStudyImage
-                    alt={project.imageBriefs[0].alt[locale]}
-                    aspectRatio="wide"
-                    src={project.imageBriefs[0].src}
-                    description={project.imageBriefs[0].description}
-                    prompt={project.imageBriefs[0].prompt}
-                  />
-                )}
-              </CaseStudySection>
+              En MOBILE va debajo del intro; en DESKTOP, arriba de todo.
+              La primera pantalla del celular es la que decide si alguien
+              sigue scrolleando, y ahí tiene que estar la frase que explica
+              el proyecto, no cuatro filas de metadata. Los estudios de
+              referencia ponen la barra arriba porque ya tienen nombre; un
+              portfolio que todavía no lo tiene necesita el gancho primero.
+              En desktop se queda arriba, como en las referencias: ahí son
+              dos filas anchas que se escanean de un vistazo, no cuatro
+              filas apiladas que empujan todo lo demás.
 
-              {/* EL DESAFÍO — label + 1 párrafo + 2ª imagen */}
-              <CaseStudySection label={cs('cs_challenge')}>
+              Por qué el DOM va en el orden de MOBILE y desktop se cruza con
+              `md:order-first`, y no al revés: el hero y el intro no tienen
+              nada enfocable, así que el orden de tabulación es el mismo en
+              los dos breakpoints (back link → links de la barra). Y un lector
+              de pantalla escucha primero de qué se trata el proyecto.
+
+              El wrapper existe solo para llevar el `order`: tiene que ser
+              hijo directo del flex. */}
+          <div className="md:order-first">
+            <Shell>
+              <CaseStudyMetaBar project={project} locale={locale} />
+            </Shell>
+          </div>
+
+          <CaseStudyImageRun briefs={imagesIn('intro')} locale={locale} />
+
+          {/* EL DESAFÍO */}
+          <Shell>
+            <CaseStudySection label={cs('cs_challenge')}>
+              <p
+                className="text-lg md:text-xl leading-relaxed max-w-2xl text-pretty"
+                style={{ color: 'var(--ink-secondary)' }}
+              >
+                {awwwardsContent.challenge}
+              </p>
+            </CaseStudySection>
+          </Shell>
+          {/* Pulso no tiene imagen acá, a propósito: su desafío era texto
+              denso y conflictos de plantillas, y no hay nada visual honesto
+              que mostrar. El run devuelve `null` y no deja hueco. */}
+          <CaseStudyImageRun briefs={imagesIn('challenge')} locale={locale} />
+
+          {/* CÓMO LO RESOLVÍ — 3 decisiones (título + body) */}
+          <Shell>
+            <CaseStudySection label={cs('cs_decisions')}>
+              {/* Bajada opcional: cómo encaré el proyecto antes de entrar
+                  en las decisiones puntuales. Si el case study no define
+                  'process', no se renderea nada. */}
+              {awwwardsContent.process && (
                 <p
                   className="text-lg md:text-xl leading-relaxed max-w-2xl text-pretty"
                   style={{ color: 'var(--ink-secondary)' }}
                 >
-                  {awwwardsContent.challenge}
+                  {awwwardsContent.process}
                 </p>
-                {project.imageBriefs?.[1]?.src && (
-                  <CaseStudyImage
-                    alt={project.imageBriefs[1].alt[locale]}
-                    aspectRatio="wide"
-                    src={project.imageBriefs[1].src}
-                    description={project.imageBriefs[1].description}
-                    prompt={project.imageBriefs[1].prompt}
-                  />
-                )}
-              </CaseStudySection>
-
-              {/* CÓMO LO RESOLVÍ — 3 decisiones (titulo + body) intercaladas con 2 imágenes */}
-              <CaseStudySection label={cs('cs_decisions')}>
-                {/* Bajada opcional: cómo encaré el proyecto antes de entrar
-                    en las decisiones puntuales. Si el case study no define
-                    'process', no se renderea nada. */}
-                {awwwardsContent.process && (
-                  <p
-                    className="text-lg md:text-xl leading-relaxed max-w-2xl text-pretty"
-                    style={{ color: 'var(--ink-secondary)' }}
-                  >
-                    {awwwardsContent.process}
-                  </p>
-                )}
-                <ol className="space-y-12 md:space-y-16 list-none">
-                  {[1, 2, 3].map((i) => (
-                    <li key={i} className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
-                      <span
-                        className="md:col-span-1 text-xs font-mono"
-                        style={{ color: 'var(--color-accent)' }}
-                      >
-                        0{i}
-                      </span>
-                      <div className="md:col-span-11 space-y-3">
-                        <h3
-                          className="font-display text-xl md:text-2xl tracking-tight text-balance"
-                          style={{ color: 'var(--ink-primary)' }}
-                        >
-                          {awwwardsContent[`decision_${i}_title`]}
-                        </h3>
-                        <p
-                          className="text-base md:text-lg leading-relaxed max-w-2xl text-pretty"
-                          style={{ color: 'var(--ink-secondary)' }}
-                        >
-                          {awwwardsContent[`decision_${i}_body`]}
-                        </p>
-                      </div>
-                    </li>
-                  ))}
-                </ol>
-
-                {/* Imagen contextual entre decisiones — material que ilustra UNA de las decisiones */}
-                {project.imageBriefs?.[2]?.src && (
-                  <CaseStudyImage
-                    alt={project.imageBriefs[2].alt[locale]}
-                    aspectRatio="wide"
-                    src={project.imageBriefs[2].src}
-                    description={project.imageBriefs[2].description}
-                    prompt={project.imageBriefs[2].prompt}
-                  />
-                )}
-              </CaseStudySection>
-
-              {/* LO ENTREGADO — lista visual de outputs */}
-              <CaseStudySection label={cs('cs_delivered')}>
-                <ul className="space-y-4 list-none max-w-2xl">
-                  {[1, 2, 3].map((i) => (
-                    <li
-                      key={i}
-                      className="flex gap-4 items-baseline pb-4 border-b"
-                      style={{ borderColor: 'var(--border-default)' }}
+              )}
+              <ol className="space-y-12 md:space-y-16 list-none">
+                {[1, 2, 3].map((i) => (
+                  <li key={i} className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
+                    <span
+                      className="md:col-span-1 text-xs font-mono"
+                      style={{ color: 'var(--color-accent)' }}
                     >
-                      <span
-                        aria-hidden
-                        className="text-xs font-mono shrink-0"
-                        style={{ color: 'var(--color-accent)' }}
-                      >
-                        →
-                      </span>
-                      <span
-                        className="text-base md:text-lg font-display"
+                      0{i}
+                    </span>
+                    <div className="md:col-span-11 space-y-3">
+                      <h3
+                        className="font-display text-xl md:text-2xl tracking-tight text-balance"
                         style={{ color: 'var(--ink-primary)' }}
                       >
-                        {awwwardsContent[`delivered_${i}`]}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+                        {awwwardsContent[`decision_${i}_title`]}
+                      </h3>
+                      <p
+                        className="text-base md:text-lg leading-relaxed max-w-2xl text-pretty"
+                        style={{ color: 'var(--ink-secondary)' }}
+                      >
+                        {awwwardsContent[`decision_${i}_body`]}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </CaseStudySection>
+          </Shell>
+          <CaseStudyImageRun briefs={imagesIn('decisions')} locale={locale} />
 
-                {/* Imagen final — outputs/entregables del proyecto */}
-                {project.imageBriefs?.[3]?.src && (
-                  <CaseStudyImage
-                    alt={project.imageBriefs[3].alt[locale]}
-                    aspectRatio="wide"
-                    src={project.imageBriefs[3].src}
-                    description={project.imageBriefs[3].description}
-                    prompt={project.imageBriefs[3].prompt}
-                  />
-                )}
-              </CaseStudySection>
+          {/* LO ENTREGADO — lista visual de outputs */}
+          <Shell>
+            <CaseStudySection label={cs('cs_delivered')}>
+              <ul className="space-y-4 list-none max-w-2xl">
+                {[1, 2, 3].map((i) => (
+                  <li
+                    key={i}
+                    className="flex gap-4 items-baseline pb-4 border-b"
+                    style={{ borderColor: 'var(--border-default)' }}
+                  >
+                    <span
+                      aria-hidden
+                      className="text-xs font-mono shrink-0"
+                      style={{ color: 'var(--color-accent)' }}
+                    >
+                      →
+                    </span>
+                    <span
+                      className="text-base md:text-lg font-display"
+                      style={{ color: 'var(--ink-primary)' }}
+                    >
+                      {awwwardsContent[`delivered_${i}`]}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </CaseStudySection>
+          </Shell>
+          <CaseStudyImageRun briefs={imagesIn('delivered')} locale={locale} />
 
-              {/* CIERRE — 2-3 líneas */}
-              <CaseStudySection label={cs('cs_closing')}>
-                <p
-                  className="text-lg md:text-xl leading-relaxed max-w-2xl text-pretty"
-                  style={{ color: 'var(--ink-secondary)' }}
-                >
-                  {awwwardsContent.closing}
-                </p>
-              </CaseStudySection>
+          {/* CIERRE — 2-3 líneas */}
+          <Shell>
+            <CaseStudySection label={cs('cs_closing')}>
+              <p
+                className="text-lg md:text-xl leading-relaxed max-w-2xl text-pretty"
+                style={{ color: 'var(--ink-secondary)' }}
+              >
+                {awwwardsContent.closing}
+              </p>
+            </CaseStudySection>
+          </Shell>
+          <CaseStudyImageRun briefs={imagesIn('end')} locale={locale} />
 
-            </div>
-          </div>
         </div>
       )}
 

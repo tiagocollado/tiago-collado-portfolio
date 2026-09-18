@@ -1,200 +1,36 @@
 @AGENTS.md
 # Portfolio Tiago Collado — marca **Gotya**
 
-> **Cómo usar este archivo**: las secciones 1-4 son reglas que hay que respetar sí o sí. La 5-7 es contexto. La 8 es lo que falta hacer. La 9 son errores ya cometidos, no los repitas. El historial de qué se hizo y cuándo vive en `git log`, no acá.
-
----
-
-## 1. ⚠️ Trampas del stack — leer antes de tocar código
-
-### Tailwind v4 + CSS Cascade Layers (el bug más caro del proyecto)
-Las utilities (`px-*`, `mt-*`, etc.) viven dentro de `@layer utilities`. Una regla **fuera** de cualquier `@layer` gana siempre, sin importar la especificidad. Una sola línea `* { padding: 0 }` unlayered mata todas las utilities de padding del proyecto.
-
-- ❌ Nunca `padding`/`margin` en una regla universal `* { }` sin layer.
-- ✅ El preflight de Tailwind ya resetea los elementos correctos (h1-h6, p, ul, ol). No hace falta replicarlo.
-- ✅ Reset custom → dentro de `@layer base { }`.
-- ✅ Los inline styles siempre ganan (specificity 1,0,0,0): son el escape hatch, pero indican un bug abajo.
-- ⚠️ **Corolario que ya mordió 14 veces (T4, ya saneado)**: si una propiedad cambia en `hover:`, su valor base NO puede venir de `style` inline — el hover no se ve nunca, y el build no lo detecta. El valor base va como utility (`text-(--ink-secondary)`, `border-(--border-default)`, `bg-transparent`) para que la variante `hover:` pueda ganarle por especificidad. Las props que NO cambian en hover pueden seguir en `style` sin problema.
-- 🔍 Para auditarlo: buscar etiquetas JSX que tengan a la vez una utility `hover:text-*` / `hover:border-*` / `hover:bg-*` y un `style` inline con `color` / `borderColor` / `backgroundColor`. Ojo con parsear la etiqueta hasta el primer `>`: los `=>` de los handlers la cortan al medio y se escapan casos.
-- 🔍 Si algo "no cambia nada", **revisar `globals.css` buscando reglas universales antes de seguir debuggeando**.
-
-### Next.js 16 — no es el Next que conocés
-- El middleware se llama **`proxy.ts`** (en `src/`), no `middleware.ts`, y exporta `proxy`.
-- `params` es una **Promise**: siempre `const { locale } = await params`.
-- Ante cualquier duda de API, leer `node_modules/next/dist/docs/` antes de escribir código (regla de AGENTS.md).
-
-### Otras
-- **Turbopack cachea**: si un cambio de CSS "no se ve", probar `Ctrl+Shift+R` antes de buscar el bug.
-- **Comentarios CSS**: evitar la secuencia `*/` dentro del cuerpo (escribir "px y py", no `px-*/py-*`), rompe el parser.
-- **`lucide-react` es 1.x**, no 0.x. Misma API, no busques doc de `0.x`.
+> **Cómo usar este archivo**: las reglas de diseño, la ley UX y el NDA
+> son obligatorias. El resto es contexto del proyecto. Lo que falta hacer
+> está en la sección "Qué falta hacer". El historial vive en `git log`.
+> Las trampas del stack y los tokens de diseño están importados al final.
 
 ---
 
 ## 2. 🎨 Reglas de diseño
 
-**Antes de cualquier cambio visual, releer esta sección. Si algo no está cubierto acá, preguntar antes de improvisar valores.**
+### Imágenes
 
-### Rol y vara de calidad
-Trabajás como Senior Frontend Developer + Director de Arte UI/UX. La vara es
-producto premium / nivel Awwwards, con la sensibilidad de Linear (precisión),
-Vercel (contención) y Apple (terminación). Esta vara NO reemplaza las reglas
-de abajo ni las secciones 3 y 5: las interpreta. Ante dos soluciones válidas,
-elegí la más restrained y la mejor terminada, nunca la más cargada.
+📋 **Todas las reglas de imagen viven en `.claude/rules/imagenes.md`**, que se
+importa al final de este archivo: vocabulario de tipos, medidas de cada frame,
+dirección de arte de los covers, la regla de comprensión a 330px, exportación y
+naming.
 
-- La calidad vive en el detalle: consistencia de spacing, estados bien
-  resueltos, coherencia del conjunto. No en sumar efectos.
-- Menos elementos mejor resueltos > más features a medias. Ante la duda,
-  sacar antes que agregar.
-- Usá los tokens de marca (sección 5) y las escalas de esta sección.
-  Prohibido inventar valores sueltos o caer en defaults de Tailwind
-  (blue-500, gap-12 arbitrario, etc.).
-- Todo lo que entra tiene que poder defenderse con una ley UX (sección 3).
+Estaban partidas entre esta sección y un `BRIEF-IMAGENES.md` que se dio de baja
+(tenía una idea escrita para cada una de las 35 y ninguna servía; si hace falta
+ver qué decía: `git show 045fd0e:BRIEF-IMAGENES.md`). Con el vocabulario de
+tipos ya son un sistema, así que se consolidaron en un solo lugar. **No
+dupliques medidas ni reglas de arte acá.**
 
-### Spacing — siempre múltiplos de 4
-`xs 4 · sm 8 · md 16 · lg 24 · xl 32 · 2xl 48 · 3xl 64 · 4xl 96 · 5xl 128`
+Lo único que se queda en este archivo, porque es estructura y no arte:
 
-### Padding vertical de secciones
-`py-20` mobile · `md:py-28` tablet · `lg:py-36` desktop
-
-### Gaps mínimos
-| De → a | Mínimo |
+| | |
 |---|---|
-| H1 → párrafo | `mt-6` |
-| H1 → CTA | `mt-10 md:mt-12` |
-| H2 → contenido | `mt-8 md:mt-10` |
-| Párrafo → CTA | `mt-8` |
-| Entre párrafos | `space-y-6` |
+| Forma de la card del home | `cardShape` en `src/data/projects.ts` (`wide` 4:3 · `square` 1:1). La grilla es masonry, así que la card tiene el aspect exacto de su imagen y no recorta nada |
+| Qué imágenes tiene un case study | `imageBriefs` en `src/data/projects.ts`. **Sin cantidad fija**: cada brief declara su `type` (qué es) y su `slot` (dónde cae) |
+| Traducción de `type` a layout | `src/components/case-study/imageSpec.ts` |
 
-### Escalera de anchos (`max-w`) — 3 niveles, no inventar un cuarto
-| Nivel | Ancho | Para qué |
-|---|---|---|
-| **Shell** | `max-w-7xl` (1280px) | **Todo** contenedor de sección, el navbar y el footer. Una sola columna vertical en toda la página. |
-| **Editorial** | `max-w-3xl` (768) títulos · `max-w-2xl` (672) body | Medida de lectura. Va **adentro** del Shell, nunca lo reemplaza. |
-| **Excepción** | `max-w-xl` (576) | Solo el body desplazado del About (referencia `about_reference2`). Es la única. |
-
-⚠️ **El `max-w` y el gutter NUNCA van en el mismo elemento.** Con `box-sizing: border-box` el padding cuenta *dentro* del `max-w`, así que el contenido termina corrido respecto de las secciones que sí los separan. El patrón correcto es siempre:
-
-```jsx
-<section className="px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32">
-  <div className="max-w-7xl mx-auto"> ... </div>
-</section>
-```
-
-Este bug vivió meses en el Navbar (`max-w-400` + padding juntos) y en el Stack, y daba **seis bordes izquierdos distintos** a 1920px. El gutter es siempre ese string exacto, idéntico en todos lados.
-
-> Ojo al auditar: el error no se ve buscando valores de `max-w` raros. El Stack ya tenía `max-w-7xl` y estaba igual de roto — el problema era *dónde* estaba el padding, no el número.
-
-### Imágenes — medidas para diseñar en Figma
-Medido contra el layout real, no estimado. **Diseñar a 1× y exportar @2×.**
-
-**Dos formatos de cover, no uno.** La grilla del home es **masonry**: dos columnas
-que fluyen por separado y terminan a distinta altura.
-
-| | Frame | Export @2× | Proporción |
-|---|---|---|---|
-| **Cover ancho** | `1200 × 900` | `2400 × 1800` | 4:3 |
-| **Cover cuadrado** | `1200 × 1200` | `2400 × 2400` | 1:1 |
-| **Case study** | `1200 × 800` | `2400 × 1600` | 3:2 |
-
-La forma de cada proyecto vive en `cardShape` (`src/data/projects.ts`). ✅ **Con
-masonry el aspect de la card es el mismo que el de la imagen en todos los
-breakpoints, así que `object-cover` no recorta nada.**
-
-La dirección de arte de cada imagen vive en `BRIEF-IMAGENES.md`; acá van solo las medidas.
-
-> ⚠️ **Los covers eran `960 × 600` con zona segura de `580 × 360`** — o sea, solo sobrevivía el **60% central**. La grilla era bento de 3 columnas y el mismo archivo caía en recortes de **2,64:1** y **1,28:1**. Con masonry de dos formas fijas eso desapareció: cada card tiene el aspect exacto de su imagen.
-
-⚠️ **Todas las medidas van en las dos escalas.** Se diseña en el frame de 1× y se exporta @2×, así que el archivo final tiene todo
-al doble. Confundir las dos columnas ya generó un brief mal escrito una vez:
-
-| | Frame `1200×800` | **Master `2400×1600`** | Por qué |
-|---|---|---|---|
-| **Margen lateral del cover** | 96px | **192px** | Aire de composición. Solo recorta si la imagen no viene con el aspect exacto de su slot. |
-| **Margen vertical del cover** | 64px | **128px** | Aire de composición, no zona de rescate: con masonry no hay recorte. |
-| **Margen del case study** (4 lados) | 72px | **144px** | El parallax de desktop se come ~3,5% de cada borde. |
-| **Texto mínimo** | 36px | **72px** | La imagen se ve a ~330px en celular. Menos que eso es una mancha gris. |
-
-**Covers** — cuatro reglas. Las reglas 2 y 3 parecen pelearse y no se pelean:
-
-1. **El texto de la pantalla tiene que ser REAL.** Ver §9.33 — es la regla que
-   más caro sale romper y la que menos se nota al mirar por encima.
-2. **La imagen no puede compartir la luminancia del fondo de página.** El sitio es
-   dual-theme (`#111110` oscuro por defecto, `#EDE2CD` claro) y el cover es el
-   mismo archivo en los dos: si el borde coincide en valor con alguno, la card se
-   disuelve. En la práctica: **entorno gris neutro de valor medio** (hormigón,
-   yeso), que contrasta contra los dos.
-3. **Rango tonal obligatorio.** El hover aplica un duotono terracota por CSS: si la
-   imagen es pareja, el cambio no se percibe como interacción. Se consigue con luz
-   dura y direccional, no aclarando el fondo. Medible: rango p95−p05 ≥ **120**.
-
-> ⚠️ La regla 2 decía antes **"el fondo va oscuro, siempre"**. Fue la corrección
-> correcta cuando el primer cover era negro sobre negro, pero era demasiado
-> absoluta: prohibía justo lo que hace la referencia y lo que terminó funcionando.
-> Lo que importaba nunca fue que el fondo fuera oscuro, sino que no se confundiera
-> con la página y que tuviera recorrido de valores.
-4. **Sin texto propio.** En reposo la card no muestra NADA encima de la imagen;
-   en hover superpone nombre, "VER PROYECTO" y categoría. Ojo con las capturas:
-   un titular grande del sitio compite con el nombre.
-
-Ya **no** hace falta que funcionen en escala de grises como pieza terminada: en idle van a color y a 100% de opacidad.
-
-**Case study** — las 4 usan `aspectRatio="wide"`; la columna editorial mide 944px como máximo.
-
-⚠️ **En mobile la imagen se muestra COMPLETA y sin recortar, a ~330px de ancho** — el frame de 1200 se ve al **27%**. Por eso **todo texto adentro de la imagen tiene que medir 36px o más** en el frame de 1200×800; menos que eso es ilegible en celular. Para mostrar pantallas con texto chico va un zoom o un detalle recortado, nunca la pantalla entera.
-
-**Exportación**: escala **2×**, sin sufijo. **JPG** para lo fotográfico o con degradados · **PNG** para lo plano y gráfico. Sin presupuesto de KB (referencia sana: que ninguno pase de ~1 MB, por el peso del repo).
-
-> ⚠️ **No pidas "JPG calidad 90+": Figma no expone control de calidad.** El panel de export solo tiene formato y escala. La elección real es JPG vs PNG, y se decide **por peso, no por calidad**: el master se re-comprime a WebP igual, así que un PNG sin pérdida es el mejor input — pero un PNG fotográfico de 2400×1600 pesa 5-8 MB y son 35 archivos.
-
-> ⚠️ Esto **cambió con D3**. La regla vieja era "WebP calidad 80, ≤ 250 KB" porque se usaba `<img>` pelado sin `srcset` y el celular bajaba el archivo completo. Con `next/image`, Next genera 8 anchos (640→3840) y los convierte a WebP en el momento: el archivo del repo es el **master del que Next recorta**, no lo que ve el visitante. Comprimirlo a mano ya no le ahorra nada al usuario y suma pérdida de calidad, porque se re-comprime igual.
->
-> Corolario de naming: la extensión del archivo en `projects.ts` tiene que ser la **real** (`.jpg` / `.png`). El `.webp` lo genera Next; escribirlo a mano en el path apunta a un archivo que no existe.
-
-### Tipografía
-- Display (H1/H2): `leading-tight` (1.15)
-- Body: `leading-relaxed` (1.625) — **nunca menos**
-- Bloques narrativos: `max-w-prose` (~65ch) o `max-w-2xl`
-
-### Animación
-- Duración estándar `0.6s` · mínimo `0.3s` · easing `[0.16, 1, 0.3, 1]` (expo-out, ya en globals.css)
-- Stagger entre hijos: `0.08–0.12s`
-- Scroll-in: fade + `y: 24 → 0` (no menos de 24px)
-- Hover scale en cards: máximo `1.02` (más se ve barato)
-
-### Hover states obligatorios
-- Cards: `shadow-lg → shadow-2xl` + glow accent terracota
-- Botones primarios: `bg-accent-hover` + `-translate-y-0.5`
-- Links de texto: underline con offset animado (`underline-offset-4 → 8`)
-- Toggles: `scale 1.1` + rotate sutil
-
-### Animation polish (no negociable)
-El portfolio es de un UX/UI Designer: **la página tiene que sentirse viva**. Todo bloque nuevo suma al menos una animación.
-- **No interactivo** (cards informativas, badges, marcadores): animación one-shot al entrar en viewport, sin hover, cursor default. No prometas interacción que no existe.
-- **Interactivo**: hover explícito + transition ≥ 0.3s.
-- Decorativas continuas (ambient, breathing, parallax) bienvenidas si no son ruido.
-- ❌ **Nunca** una sección o componente puramente estático. Si no se mueve nada, no terminó.
-
-### Antes de decir "listo", auditar
-1. ¿Los gaps siguen la escala de 4? 2. ¿Padding vertical correcto? 3. ¿`mt-6` mínimo bajo los títulos? 4. ¿Hover en todo lo clickeable? 5. ¿Funciona en `sm`, `md` y `lg`?
-Si alguna respuesta es "no", no está listo.
-
----
-
-## 3. 🧠 Principio UX/UI — el portfolio es la prueba
-
-**Cada decisión de copy, layout, jerarquía, agrupación e interacción debe poder defenderse con una ley UX reconocida.** Si no podés explicar el porqué en términos de Miller, Jakob, Estética-Usabilidad, Similitud, Proximidad, Hick o Fitts, no está listo.
-
-No es decoración intelectual: es la prueba, sin discurso, de que el dueño del portfolio sabe lo que hace. Los reclutadores de producto reconocen estos patrones aunque no los citen.
-
-- **Miller (7±2)**: chunks de 4-5 items máximo. Si son 9, agrupar en 3 de 3.
-- **Jakob**: patrones conocidos (timeline CV, breadcrumbs, X arriba a la derecha) bajan la carga cognitiva. No reinventar UI básica.
-- **Estética-Usabilidad**: lo que se ve cuidado se percibe como funcional. Spacing prolijo y menos cromo > features extra mal terminadas.
-- **Similitud / Proximidad**: agrupar visualmente lo del mismo tipo; lo relacionado va junto.
-- **Hick**: menos opciones, decisión más rápida. No saturar el Hero de CTAs.
-
-Cuando el cambio sea de copy o estructura, mencionar la ley aplicada en el commit. Así la justificación queda en el git log.
-
----
 
 ## 4. 🔒 Confidencialidad y NDA — FutbolTalent
 
@@ -274,11 +110,23 @@ categoría y las escuadras de las 4 esquinas.
 
 **Back-to-top**: `<a href="#top">` con el `id="top"` en el `<section>` del Hero. Lenis monta con `anchors: true`, así que lo intercepta y hace el scroll suave él. Nunca `window.scrollTo`: pelearía contra su animación. Las dos flechas apiladas suben en loop mientras hay hover.
 
-**Case studies** (layout Awwwards, los 7): grid 12-col con sidebar sticky (Cliente / Año / Rol / Duración / Equipo / Stack / NDA / Links) + main editorial con 4 secciones — **Intro → El desafío → Cómo lo resolví → Lo entregado + Cierre**. Componentes en `src/components/case-study/`.
+**Case studies** (los 7): **secuencia vertical de bloques hermanos**, cada uno declarando su propio ancho — barra de metadata (Cliente / Año / Rol / Duración / Equipo / Stack / NDA / Links; **en mobile va debajo del intro**, ver §8) + hero a sangre + 5 secciones editoriales — **Intro → El desafío → Cómo lo resolví → Lo entregado → Cierre** — con tiradas de imágenes entre medio. Componentes en `src/components/case-study/`.
 
-**Convención de contenido**: un case study real necesita `awwwardsLayout: true` + 12 keys en ambos JSON (`intro`, `challenge`, `decision_1-3_title/body`, `delivered_1-3`, `closing`). La key **`process`** es opcional (bajada de "Cómo lo resolví") y se carga con `t.has()`. Si falta una obligatoria, el catch deja `hasCaseStudy: false` y el cuerpo no se renderea.
+> ⚠️ **Era una grilla de 12 columnas con sidebar sticky** (`col-span-3` + `col-span-9`), y eso tenía tres consecuencias que se arrastraron hasta que se midieron: la columna editorial quedaba clavada en **944px**, así que ninguna imagen podía ir a sangre; entre una laptop de 1440 y un monitor de 1920 la imagen crecía **24px** (el desktop no ofrecía nada que justificara la pantalla grande); y en mobile el sidebar caía full-width **arriba del hook de intro**, así que lo primero que leías de un proyecto era su duración.
+>
+> **El cap del `max-w-7xl` pesaba más que el sidebar**: en 1920px el sidebar se comía 336px y el cap 384px. Por eso sacar el sidebar no alcanzaba para ir a sangre — hacía falta que los bloques fueran hermanos y cada uno eligiera su ancho. Hoy el texto vive en un shell de 1280 y **solo `mockup` y `long-strip` salen del shell**.
 
-**Imágenes de case study**: en mobile se ven completas y quietas (sin crop ni parallax); el recorte y el parallax arrancan en `md+`. No tienen hover ni cursor custom porque no abren nada.
+**El ancho de una imagen lo decide su `type`, no el componente ni el `slot`.** `mockup` (el hero) y `long-strip` van a sangre (viewport completo, sin recorte, sin parallax, radio 0); el resto va al shell de 1280. La traducción de tipo a layout está en `src/components/case-study/imageSpec.ts` y el arte en `.claude/rules/imagenes.md`.
+
+> ⚠️ **`sizes` sale del ancho real y hay que moverlo con él.** Estuvo hardcodeado en `944px` mientras existía el sidebar; con la barra arriba pasó a 1280 y el valor viejo quedaba mintiendo 336px. Sin `sizes` correcto, `next/image` no sirve de nada.
+
+**Convención de contenido**: un case study real necesita `awwwardsLayout: true` + 12 keys de TEXTO en ambos JSON (`intro`, `challenge`, `decision_1-3_title/body`, `delivered_1-3`, `closing`). La key **`process`** es opcional (bajada de "Cómo lo resolví") y se carga con `t.has()`. Si falta una obligatoria, el catch deja `hasCaseStudy: false` y el cuerpo no se renderea.
+
+**Imágenes de case study**: **no hay cantidad fija** — cada proyecto usa los tipos que necesita, pueden ser 2 o 6. Cada brief declara `type` (qué es: `mockup` · `long-strip` · `screen-cluster` · `palette` · `diagram` · `detail`) y `slot` (dónde cae: `hero` · `intro` · `challenge` · `decisions` · `delivered` · `end`). **Varias imágenes pueden compartir `slot`**: eso es lo que da los grupos de 2-3 seguidas sin texto entre medio.
+
+En mobile se ven completas y quietas (sin crop ni parallax); el recorte y el parallax arrancan en `md+`, y `mockup` y `long-strip` no llevan ninguno de los dos en ningún breakpoint. No tienen hover ni cursor custom porque no abren nada — **por eso la regla de rango tonal ≥120 no les aplica**: existe para que se perciba el duotono del hover de las cards.
+
+> ⚠️ **Eran 4 fijas, atadas a 4 secciones.** La page leía `imageBriefs[0]`…`[3]` en cuatro puntos hardcodeados, así que un quinto brief no se rendeaba en ningún lado y no lo avisaba nada. La cuota se decidió antes de saber qué necesitaba cada caso —con cuota fija terminás inventando qué poner— y nunca se escribió como decisión: se materializó como un array de 4 posiciones en TypeScript y de ahí se propagó al naming de archivos y al cálculo de "35 imágenes".
 
 **Open Graph**: `src/app/[locale]/opengraph-image.tsx` genera un PNG 1200×630 en build time: **solo la marca G centrada** sobre el fondo oscuro, **sin texto**. Al vivir en el segmento `[locale]` aplica también a `/projects/[slug]`: compartir cualquier link muestra la marca, no una captura del proyecto.
 
@@ -286,7 +134,7 @@ categoría y las escuadras de las 4 esquinas.
 
 > El SVG se lee de `src/app/icon.svg` — **el mismo archivo que el favicon**, no una copia. Cambiar el logotipo actualiza las dos cosas a la vez. Va como data URI en un `<img>` porque es lo que satori soporta de forma confiable.
 
-> ⚠️ Las dos imágenes (`es` / `en`) ahora son **idénticas byte a byte, a propósito**: sin texto no hay nada que localizar. No confundir con §9.15, que describe exactamente ese síntoma como un bug — ahí la causa era no leer `params`.
+> ⚠️ Las dos imágenes (`es` / `en`) ahora son **idénticas byte a byte, a propósito**: sin texto no hay nada que localizar.
 
 > Medidas reales, verificadas decodificando el PNG: el `<img>` es de 460px pero la **tinta** mide 315×314 (el `icon.svg` tiene su propio encuadre interno), o sea **~50% del cuadro que recorta WhatsApp**, que es el objetivo. El centro de la tinta cae a 2px del centro del lienzo. **Si se toca el path de `icon.svg`, volver a medir**: el encuadre se ajusta con el `viewBox`, no moviendo coordenadas.
 
@@ -364,7 +212,7 @@ El título de la card da la marca y el campo **`services`** da la categoría, co
 >
 > Mismo criterio con **Branding vs Dirección de Arte**: en Paseo Güemes el logo se lo dieron y él definió paleta, tipografías y el sistema visual — eso es dirección de arte. Decir "Branding" invita a la repregunta "¿hiciste el logo?", y la respuesta resta.
 
-> **`team` describe alcance, no cantidad de gente.** "Responsable único" y "Trabajo individual" señalan que no había nadie más; "Diseño y ejecución end-to-end · trato directo con el cliente" describe lo mismo como control sobre el proyecto. Misma realidad, lectura opuesta. No hace falta variar la redacción entre proyectos: **el campo solo se ve en el sidebar de un case study a la vez**, nunca dos juntos.
+> **`team` describe alcance, no cantidad de gente.** "Responsable único" y "Trabajo individual" señalan que no había nadie más; "Diseño y ejecución end-to-end · trato directo con el cliente" describe lo mismo como control sobre el proyecto. Misma realidad, lectura opuesta. No hace falta variar la redacción entre proyectos: **el campo solo se ve en la barra de metadata de un case study a la vez**, nunca dos juntos.
 
 > **`stack` lleva solo herramientas core.** UX Research, Card Sorting y Design System son *actividades*, no stack: viven en `role` y en el cuerpo del caso. Cuatro proyectos quedan en `Figma` a secas y está bien — inflar la lista con actividades le quita credibilidad a la parte que sí es herramienta.
 
@@ -378,7 +226,7 @@ Solo lo que Tiago pueda defender en una entrevista.
 
 > Excepción: en el case study de El Ritual del Tono sí se nombran Mongo/Node/Express porque son el contexto de ese proyecto. Distinto a promocionarlos como habilidad general.
 
-> **Herramientas propias**: no nombrar los temas de WordPress que usa (decisión de Tiago). En la copy va "un tema liviano" y el porqué de la elección. Elementor, WPForms, Rank Math y LiteSpeed sí se pueden nombrar **en el cuerpo del case study**, pero ya **no van en `metadata.stack`**: ese campo quedó podado a lo core (`Figma · WordPress`), porque una lista de plugins en el sidebar tapa la herramienta que importa.
+> **Herramientas propias**: no nombrar los temas de WordPress que usa (decisión de Tiago). En la copy va "un tema liviano" y el porqué de la elección. Elementor, WPForms, Rank Math y LiteSpeed sí se pueden nombrar **en el cuerpo del case study**, pero ya **no van en `metadata.stack`**: ese campo quedó podado a lo core (`Figma · WordPress`), porque una lista de plugins en la barra de metadata tapa la herramienta que importa.
 
 ---
 
@@ -389,7 +237,7 @@ Solo lo que Tiago pueda defender en una entrevista.
 ### Bloqueado por contenido de Tiago
 | ID | Tarea | Notas |
 |---|---|---|
-| **IMG-1** | **Rehacer las 35 imágenes** — 7 covers + 28 de case study | Reemplaza a NDA-img, WP-img y B1, que quedaron sin objeto al darse de baja todas las provisorias (§10). 📋 **La dirección de arte está en `BRIEF-IMAGENES.md`** (raíz del repo), que es *solo* eso: cómo tiene que verse cada imagen. **Ese archivo se borra cuando estén todas.** Las medidas permanentes están en §2, el cableado en §10 y las prioridades acá abajo. ✅ **D3 ya está hecho**, así que el cableado es solo agregar el `src`: no hay que optimizar nada a mano ni pensar en `srcset`. |
+| **IMG-1** | **Rehacer las 35 imágenes** — 7 covers + 28 de case study | Reemplaza a NDA-img, WP-img y B1, que quedaron sin objeto al darse de baja todas las provisorias (§10). 📋 **La dirección de arte, las medidas y el vocabulario de tipos están en `.claude/rules/imagenes.md`**; el cableado en §10 y las prioridades acá abajo. ⚠️ **Ya no son 4 por case study**: la cuota se reemplazó por el vocabulario, así que "28 de case study" es una estimación, no un target. ✅ **D3 ya está hecho**, así que el cableado es solo agregar el `src`: no hay que optimizar nada a mano ni pensar en `srcset`. |
 | **B3** | Métricas reales de FutbolTalent.Pro | Sin data el caso cierra sin impacto duro. |
 
 **Orden de las 35** — hechas en este orden, el sitio queda presentable después del primer bloque en vez de después del último:
@@ -401,9 +249,13 @@ Solo lo que Tiago pueda defender en una entrevista.
 | **P2** | Los 3 covers restantes | 3 | Solo se ven entrando a `/projects`. |
 | **P3** | Las 12 de case study restantes | 12 | Cola larga. |
 
-Progreso: **8 / 35** · P0 **`4/4` ✅** · P1 `4/16` · P2 `0/3` · P3 `0/12`
+Progreso: P0 `4/4` cableados · **Pulso corregido y publicado** · **Paseo corregido y limpio, sin publicar** · Ritual y FutbolTalent con texto inventado · P1: **Pulso ✅ cerrado (5)**, con 3 pendientes de imagen · **Paseo ✅ cerrado (4)** · FutbolTalent y Ritual `0` · P2 `0/3` · P3 `0`
 
-✅ **Los 4 covers del home están hechos y cableados.** Los 4 son mockup de
+> **Ya no se cuenta sobre 35.** Ese total salía de la cuota de 4 por caso: Pulso cerró con 5 y Paseo con 4. El denominador de cada caso sale de lo que el proyecto tiene para mostrar (`.claude/rules/imagenes.md` §2, *"Casos reales"*).
+
+⚠️ **De los 4 covers del home, dos están limpios (Pulso y Paseo) y dos no.**
+Ritual y FutbolTalent siguen con texto inventado y se corrigen en la tanda de
+su proyecto. Ver *"Incidente de los covers"* más abajo. Los 4 son mockup de
 dispositivo sobre hormigón con luz dura, generados con Nano Banana Pro y
 compuestos en Figma. Specs verificados: `2400×1800` (4:3) los tres anchos,
 rango tonal 164-196. Cada uno tiene su propio protagonista para que la serie
@@ -420,7 +272,7 @@ Sale de la referencia [mikekus.com](https://mikekus.com/): el home muestra 4-6 p
 | ID | Tarea | Toca | Notas |
 |---|---|---|---|
 | ~~**P-4**~~ | ~~Label `nombre + servicios`~~ | — | ✅ **Hecha.** El campo `type` se borró; la convención y la tabla de los 7 viven ahora en §7. |
-| **P-1** 🔒 | Página `/projects` con los 7 + un 8º tile de CTA | `app/[locale]/projects/page.tsx` (nueva) · `Projects.tsx` | ⚠️ **`id="top"` obligatorio** en el div raíz: renderea el `<Footer />` y sin ese id el back-to-top queda muerto sin dar error (§9.24). El build tiene que pasar de 21 a **23 páginas SSG**. |
+| **P-1** 🔒 | Página `/projects` con los 7 + un 8º tile de CTA | `app/[locale]/projects/page.tsx` (nueva) · `Projects.tsx` | ⚠️ **`id="top"` obligatorio** en el div raíz: renderea el `<Footer />` y sin ese id el back-to-top queda muerto sin dar error. El build tiene que pasar de 21 a **23 páginas SSG**. |
 | ~~**P-2**~~ | ~~Home a 4 cards~~ | — | ✅ **Hecha.** `featured` → `showOnHome`. La grilla uniforme 3:2 duró poco: se reemplazó por el bento de dos formas (`cardShape`) en P-3. |
 | ~~**P-3**~~ | ~~Dirección de arte de la card~~ | — | ✅ **Hecha.** Reposo: solo la imagen, cero texto. Hover: lavado + nombre + VER PROYECTO + categoría + escuadras. Grilla bento de dos formas. |
 | **P-5** | Cierre de docs: §6, §7 y §10 | `CLAUDE.md` | Esas tres describen "qué existe hoy" — se actualizan recién cuando el código exista, no antes. |
@@ -431,43 +283,242 @@ Cuando se retome P-1 hay que volver a ponerlo en el header de `Projects.tsx` —
 key `projects.view_all` **sigue en los dos JSON**, así que no hay que crearla de
 nuevo. En el componente quedó un comentario en el lugar exacto donde iba.
 
-**Lo próximo NO es P-1**, es repensar la página individual del case study: las
-imágenes que se idearon no convencen y hay que rediseñar la página antes de
-producir más. Referencias que trajo Tiago: los case studies de Studio Dizzy
-(deliverables como checklist + screenshots largos a sangre + next project) y de
-mikekus/MIXD (barra de metadata arriba, series de imágenes full-width, lista de
-servicios en dos columnas).
+✅ **La estructura de la página de case study ya se rediseñó** (sigue sin
+commitear, ver abajo). Lo que se hizo, contra las referencias de Studio Dizzy
+(screenshots largos a sangre) y mikekus/MIXD (barra de metadata arriba, series
+de imágenes full-width):
 
-⚠️ **Deuda conocida en los covers: el texto de las pantallas está generado, no**
-**capturado** (§9.33). Afecta a Paseo, Pulso y Ritual; FutbolTalent no, porque su
-pantalla es solo el logo.
-
-**No es bloqueante y se decidió publicarlos así.** Medido al ancho real de la
-card (628px), las palabras rotas son de 3-4px y no se leen; lo que sí se lee a
-ese tamaño —los titulares— está bien escrito. Conviene rehacerlos cuando haya
-tiempo, y **solo hay que reemplazar el contenido de la pantalla**: la composición
-está bien.
-
-✅ **El cover de Pulso ya está reencuadrado** a `1200×1200` (cuadrado, rango 202).
-
-⚠️ **Las 4 imágenes de case study de Pulso son PROVISORIAS.** Están cableadas y se
-ven, pero se rehacen enteras siguiendo las referencias de Studio Dizzy y
-mikekus/MIXD — no es un retoque, es un rediseño de la página de case study que
-decide después qué imágenes hacen falta. **No producir más imágenes de case study**
-hasta resolver esa página.
-
-Diagnóstico de las 4 actuales, para cuando se rehagan:
-
-| | Problema |
+| | |
 |---|---|
-| `01-hero` | Es la misma imagen que el cover, solo que con menos margen. Y tiene una cuña blanca en la esquina inferior derecha. |
-| `02-challenge` | Mete tres ideas (logos + CTA + dos cards). Las cards no se leen a 330px. |
-| `03-decisions` | La peor: a 330px solo se lee el título y toda la lista de bullets es textura. Además le falta el "antes" que la decisión describe. |
-| `04-delivered` | ✅ La mejor de las cuatro y el estándar a igualar: es un diagrama, así que su significado está en la estructura y sobrevive al 27% de escala. |
+| **Metadata a barra superior** | Se eliminó `CaseStudySidebar`. Libera el shell completo de 1280 y arregla el orden de lectura en mobile (§6) |
+| **El hero es el mockup, a sangre** | `type: 'mockup'`, 21:9. Es la misma escena que el cover en otro encuadre, a propósito: clic en la card y aterrizás en la misma imagen. Primero se había decidido que el hero fuera la tira larga; cambió al cerrar Pulso. Lo que sigue prohibido es un hero que sea una versión PEOR del cover (`.claude/rules/imagenes.md` §3) |
+| **Metadata debajo del intro en mobile** | En desktop la barra sigue arriba; en mobile baja después del intro, para que la primera pantalla sea la frase que explica el proyecto. DOM en orden mobile + `md:order-first` |
+| **Vocabulario de tipos** | `type` + `slot` en cada brief, sin cuota fija. La page recorre el array en vez de leer 4 posiciones |
+| **Regla de los 36px reformulada** | Pasó a ser comprensión a 330px, que admite tiras y diagramas sin necesidad de una excepción (`.claude/rules/imagenes.md` §1.2) |
+
+**Lo que queda de esa tanda**, en orden:
+
+1. ✅ **Cover corregido de Pulso publicado** en `a203a6a` (2026-09-17). Commit
+   de un solo archivo, sin arrastrar el borrado staged. Verificado contra el
+   deploy: el sitio sirve el archivo nuevo, byte a byte.
+2. ✅ **Pulso visto en la página.** De ahí salieron dos pendientes que siguen
+   abiertos (lista en *"Pulso — cerrado"*).
+3. ✅ **Tanda de Paseo — cerrada** (ver *"Paseo — tanda"*). Qué es una tanda,
+   para no dejar nada suelto. Una tanda de un proyecto incluye **siempre**:
+   - las imágenes de case study con el vocabulario,
+   - **el cover corregido**, con la captura real en pantalla. No es opcional:
+     cover y hero son el mismo mockup, así que salen de la misma escena. **La
+     tanda no está cerrada mientras el cover siga con texto inventado.**
+   - **y las dos cosas pasan el control al 100%** (`.claude/rules/imagenes.md`
+     §6): texto real **y sin artefactos**. Esto se agregó con Paseo, que tenía
+     el texto bien y costuras de composición en las pantallas.
+
+   📋 **Antes de producir**: la tabla de proporciones por tipo y la zona segura
+   (`.claude/rules/imagenes.md` §2), la regla de luminancia (§4.2), y el
+   `cardShape` del proyecto para el encuadre del cover (§3).
+4. **Después, Ritual y FutbolTalent**, con la misma definición de tanda. Los
+   dos son `wide`: **cover en 4:3**.
+   ⚠️ **FutbolTalent NO lleva mockup con UI ni tira**: el NDA (§4) prohíbe
+   pantallas finales del producto. Su hero tiene que salir del material
+   permitido (wireframes, flujos, design system, personas), y su cover se
+   corrige con solo el logo real en pantalla.
+
+**Después de eso** viene P-1, que sigue congelada. Y queda pendiente una
+decisión que la estructura nueva habilita pero nadie tomó: qué otros tipos
+además del hero merecen ir a sangre (hoy `palette` y `screen-cluster` van al
+shell de 1280, que fue decisión explícita de Tiago).
+
+#### ⏸️ Trabajo listo y SIN commitear — entra con esa sesión
+
+Buildeado y verificado (21 páginas SSG, TS limpio), pero **Tiago decidió no
+commitearlo todavía**: se commitea cuando se retome la página de case study.
+
+| Archivo | Qué cambió |
+|---|---|
+| `src/messages/{es,en}.json` | Case study de Pulso reescrito. Se sacó todo lo que **no existe en el sitio publicado**: el WhatsApp "ruteado por servicio" (es Joinchat, un solo número y el mismo mensaje en todas las páginas), el texto "limitado a 800px" (no hay ningún 800px en el CSS) y la "optimización de rendimiento en servidor" (no se hizo). Las 3 decisiones ahora son carrusel de logos · casos en viñetas · dos vías de contacto. Se borró la key opcional `process`. |
+| `src/data/projects.ts` | `tagline` ("Plataforma" → "Sitio"), `description` y los alts de 02, 03 y 04. **Y el rediseño**: `type` + `slot` en los 28 briefs, más la nota de que las 8 cableadas son provisorias. |
+| **Rediseño de la página de case study** ↓ | |
+| `src/components/case-study/CaseStudyMetaBar.tsx` | **Nuevo.** Barra de metadata horizontal (`grid-cols-2 sm:3 lg:4` + `border-y`). Reemplaza al sidebar. |
+| `src/components/case-study/CaseStudySidebar.tsx` | **Borrado.** |
+| `src/components/case-study/imageSpec.ts` | **Nuevo.** Traduce cada `type` a ancho, recorte, parallax, `frame` nominal y `sizes`. Módulo plano sin `'use client'` a propósito: lo leen un client component y un server component. |
+| `src/components/case-study/CaseStudyImageRun.tsx` | **Nuevo.** Rendea las imágenes de un `slot` seguidas, y decide por imagen si va a sangre o dentro del shell. |
+| `src/components/case-study/CaseStudyImage.tsx` | Recibe `type` en vez de `aspectRatio`. Camino nuevo sin recorte para `long-strip` + `priority` para la del hero. |
+| `src/app/[locale]/projects/[slug]/page.tsx` | De grilla 12-col a secuencia de bloques hermanos con un `<Shell>` local. Las imágenes se piden por `slot`. |
+| `src/components/case-study/CaseStudyHeader.tsx` | Le saqué su `max-w-7xl` propio: el ancho lo da el `<Shell>` de la page. |
+| `src/types/index.ts` | `CaseStudyImageType` · `CaseStudyImageSlot` · `CaseStudyImageBrief`. |
+| `.claude/rules/imagenes.md` | **Nuevo.** Todas las reglas de imagen consolidadas. Importado desde `CLAUDE.md`. |
+| `.gitignore` | Ignoraba `.claude` **entero**, así que las rules importadas y las skills no se versionaban y un clon limpio quedaba con `CLAUDE.md` importando archivos que no existen. Ahora versiona `rules/` y `skills/`, y deja afuera `settings.local.json`. |
+| `.claude/rules/*.md` · `.claude/skills/auditar-copy/` | Sin trackear hasta ese cambio del `.gitignore`. |
+| **Tanda Pulso — imágenes finales (2026-09-16)** ↓ | |
+| `public/images/case-study/pulso-creativo/` | 5 imágenes con el naming nuevo: `00-mockup` · `01-tira` · `02-cluster` · `03-paleta` · `04-diagrama`. Se borraron `01-hero`, `02-challenge` y `03-decisions`; `04-delivered` se renombró a `04-diagrama`. |
+| `src/types/index.ts` · `imageSpec.ts` | Tipo nuevo **`mockup`**: a sangre, sin recorte, sin parallax, 21:9 de default. `frame` pasa a valer para los dos tipos sin recorte. |
+| `src/data/projects.ts` | Los 5 briefs de Pulso. Flag *pendiente de revisión* en los covers de Paseo, FutbolTalent y Ritual. |
+| `src/app/[locale]/projects/[slug]/page.tsx` | Metadata debajo del intro en mobile (`md:order-first` en desktop). El contenedor pasó de `space-y` a `flex` + `gap`, porque `space-y` reparte el margen por orden del DOM y con `order` dejaba mal los espacios. |
+| `src/components/case-study/CaseStudyMetaBar.tsx` | `animate` → `whileInView`: en mobile la barra quedó fuera de la primera pantalla y hacía su entrada donde nadie la veía. |
+| `.claude/rules/imagenes.md` | Incidente de los covers (§1.1) · tipo `mockup` y tira en columnas (§2) · cover y hero, mismo mockup (§3) · caso real de Pulso en el split de color (§4.1) · naming `{nn}-{nombre}` (§5). Segunda vuelta: tabla de proporciones por tipo + zona segura (§2) · casos reales de luminancia (§4.2). Tercera vuelta: §4 reestructurada — **una sola regla de luminancia para todas las imágenes, sin excepción** (§4.2) y el rango tonal pasa a §4.3 · covers con texto inventado confirmado, corregidos dentro de la tanda de cada proyecto (§1.1). |
+| `public/images/case-study/pulso-creativo/` (segunda vuelta) | `01-tira` sobre hormigón · `03-paleta` a 16:9 · `04-diagrama` sobre charcoal. |
+| **Tanda Paseo (2026-09-17)** ↓ | |
+| `public/images/case-study/paseo-guemes-hotel/` | 4 imágenes con el naming nuevo: `00-mockup` · `01-tira` · `02-cluster` · `03-paleta`. Borradas las 4 provisorias. |
+| `public/images/covers/paseo-guemes-hotel-cover.jpg` | Cover con el texto corregido. ⚠️ **No publicar solo** como se hizo con el de Pulso: tiene costuras y es 1:1 (ver *"Paseo — tanda"*). |
+| `src/data/projects.ts` | Los 4 briefs de Paseo con alts nuevos en los dos idiomas. El flag del cover de Paseo pasa de "texto inventado" a los dos pendientes reales. |
+| `.claude/rules/imagenes.md` | Casos reales de uso del vocabulario (§2) · criterio de columnas de la tira · `cardShape` antes de exportar el cover (§3) · paleta de Paseo (§4.1) · Paseo en la tabla de luminancia (§4.2) · costuras al componer (§1.1). |
+| **Tanda Paseo, segunda vuelta (2026-09-17)** ↓ | |
+| `public/images/covers/paseo-guemes-hotel-cover.jpg` · `.../paseo-guemes-hotel/00-mockup.jpg` | Rehechos **sin perspectiva**: mockup de celular con la captura adentro + captura plana para el desktop. Cover a `2400×1800` (4:3). Sin costuras. |
+| `public/images/case-study/paseo-guemes-hotel/03-paleta.jpg` | Formato sin tarjeta (logo grande a la izquierda, bandas a la derecha) sobre fondo de valor medio (73). |
+| `src/data/projects.ts` | El comentario del cover de Paseo pasa de "pendientes" a limpio. |
+| `.claude/rules/imagenes.md` | Orden de preferencia para meter una captura en una pantalla, con la perspectiva como último recurso (§1.1) · formato de `palette` y la regla de no recolorear un logo (§2) · Paseo actualizado en §3, §4.1 y §4.2. |
+| **Auditoría de copy (2026-09-17)** ↓ | |
+| `public/images/case-study/pulso-creativo/03-paleta.jpg` | Rehecha con el formato de Paseo: sin tarjeta, fondo de valor medio (73). |
+| `src/messages/{es,en}.json` | **Case study de Paseo, pasada de hechos contra el sitio publicado.** Se corrigió: el cierre decía *"está por publicarse"* y el sitio ya está online; `delivered_3` prometía *"base de SEO local, backups automáticos y rendimiento optimizado"* (el HTML no tiene meta description, ni datos estructurados, ni H1 en la portada) y *"formularios"* en plural cuando hay uno; y *"el activo que más convierte"*, un superlativo sin métrica en el mismo párrafo que dice que no hay métricas. Además, dos posesivos comidos en el inglés (`the hotel own` → `the hotel's own`) y dos dos-puntos que anunciaban. |
+
+⚠️ **Hasta que se pushee, el case study publicado sigue afirmando lo que no es** — y sigue con el sidebar sticky y las imágenes a 944px.
+
+Decisiones de Tiago que conviene cerrar antes de commitear el copy:
+- ¿El sitio está dado de alta en Search Console? En el HTML no hay meta de verificación, pero puede estar verificado por DNS.
+- El cierre dice *"hoy no tengo números de consultas para mostrar"*. Es honesto y se puede suavizar.
+- La negociación con el cliente está contada en abstracto. Con un ejemplo concreto (qué querían contar, qué se cortó) es la mejor parte del caso.
+
+> 📌 A la skill `auditar-copy` le falta una **pasada de hechos**: contrastar cada
+> afirmación contra el sitio publicado. Audita tono, y el problema real de Pulso
+> no era el tono — eran afirmaciones falsas que ninguna pasada de estilo detecta.
+>
+> **Cómo se hizo a mano en Paseo, para cuando se escriba esa pasada**: bajar el
+> HTML del sitio con `curl` y buscar la evidencia de cada afirmación —
+> `<video>` para un hero con video, `<form>` y sus `<label>` para un formulario,
+> `data-settings` del widget para "tres logos en mobile", `name="description"` /
+> `ld+json` / `<h1>` para una afirmación de SEO. ⚠️ **No alcanza con un resumen
+> de la página**: el resumen de texto de Paseo decía que el hero era una imagen
+> fija, y en el HTML hay un `<video autoplay loop>`. La afirmación era cierta y
+> por poco se "corrige" una verdad.
+
+🚨 **Incidente de los covers — la regla de captura real se violó en producción.**
+Los mockups se generaron con IA **con la pantalla incluida**, y el cover de Pulso
+publicado tiene el párrafo del hero en galimatías (*"doude una mirada
+estratégica, corcaca e Ireograi… para kligoizar marcas"*). Se lee con zoom.
+
+Esto **reemplaza** a la "deuda conocida, no bloqueante" que había acá: se había
+decidido publicarlos porque a 628px las palabras rotas no se ven. Ese criterio
+no aguanta —se lee con zoom, y el mismo mockup ahora va a sangre en el hero— y
+el análisis completo, con cómo detectarlo, está en `.claude/rules/imagenes.md`
+§1.1.
+
+| Cover | Estado |
+|---|---|
+| Pulso Creativo | ✅ **Corregido y en el repo** (captura real incrustada, misma luz). `2400×2400`, párrafo leído al 100%, rango tonal 201. Hash nuevo `c72264d` (el roto era `056b26a`). ✅ **Publicado** en `a203a6a`, verificado contra el deploy |
+| Paseo Güemes | ✅ **Corregido y limpio**, `2400×1800` (4:3). Las dos pantallas estaban generadas; se rehizo con el método sin perspectiva. En el repo, **sin publicar**: se publica con el resto de la tanda o solo, con la receta del commit acotado |
+| El Ritual del Tono · FutbolTalent.Pro | ❌ **Texto inventado, confirmado por Tiago** (misma herramienta: se asume en los dos). **No es una tarea suelta**: cada cover se corrige **dentro de la tanda de imágenes de su proyecto**, porque es el mismo mockup que el hero. Flageados también en `projects.ts` |
+
+> El cover de Pulso estaba exportado a 1× (`1200×1200`) y la card en retina pide 1256px. **Se cerró con el corregido**, que viene a 2×. Los cuatro covers llegan ahora.
+
+> ✅ **El cover se publicó solo, adelantado a la tanda de case study**, en `a203a6a`. Queda la receta porque la trampa sigue armada para cualquier otro archivo suelto que haya que publicar antes de tiempo.
+>
+> 🚨 **Trampa del stage, sigue vigente**: `CaseStudySidebar.tsx` está **staged como borrado**, y el `page.tsx` publicado todavía lo importa. Un `git add <archivo>` + `git commit` a secas mete ese borrado en el commit y **el deploy de Vercel no buildea**. Para publicar un archivo suelto **no se hace `git add`**: se commitea con el path al final, que toma solo ese archivo e ignora el resto del stage.
+>
+> ```
+> git commit -m "…" -- <archivo>
+> git show --stat HEAD     # tiene que listar UN solo archivo
+> git push
+> ```
+
+✅ **Pulso — cerrado con el vocabulario.** Cinco imágenes de cinco tipos, con
+el naming nuevo:
+
+| Archivo | `type` | `slot` | Medida |
+|---|---|---|---|
+| `00-mockup.jpg` | `mockup` | `hero` | `2560×1097` (21:9), a sangre |
+| `01-tira.jpg` | `long-strip` | `intro` | `2400×1350` (16:9), a sangre — home desktop y mobile en columnas, sobre hormigón de valor medio |
+| `02-cluster.jpg` | `screen-cluster` | `decisions` | `2400×1600`, sobre el verde marca `#8EB943` |
+| `03-paleta.jpg` | `palette` | `decisions` | `2400×1350` (16:9), formato sin tarjeta sobre fondo de valor medio |
+| `04-diagrama.jpg` | `diagram` | `delivered` | `2400×1600`, sobre charcoal |
+
+El slot `challenge` queda **sin imagen a propósito**: el desafío era texto denso
+y conflictos de plantillas de WordPress, y no hay nada visual honesto que
+mostrar. Control 1.1 hecho al 100% sobre el mockup, la tira y el cover: el
+texto es real.
+
+**Pendientes que dejó Pulso:**
+
+1. ✅ ~~La tira se fundía con el tema oscuro~~ (71,5% del borde en `#111110`).
+   Rehecha sobre hormigón de valor medio: 0% cerca de los dos fondos.
+2. ✅ ~~La paleta era 3:2 y `palette` recorta a 16:9~~. Re-exportada a 16:9.
+   De ahí salió la tabla de proporciones por tipo, con la **zona segura de 80px**
+   que impone el parallax (`.claude/rules/imagenes.md` §2).
+3. ✅ ~~§4.2 de las rules se contradecía~~ (eximía a las imágenes del shell de
+   la regla de luminancia, con un motivo falso en el código). **Decisión de
+   Tiago: una sola regla, sin excepción.** Toda imagen necesita un borde
+   claramente distinto de los dos fondos, vaya a sangre o no. Reescrita en
+   `.claude/rules/imagenes.md` §4.2, con el porqué.
+
+**Siguen abiertos** (no entraron en la tanda de Paseo; se hacen cuando Tiago
+rehaga las de Pulso):
+
+4. **`01-tira` — las columnas son chicas.** Ocupan ~60% del ancho y queda
+   demasiado gris alrededor: a sangre se ven como capturas chiquitas flotando,
+   y una imagen a sangre tiene que tener presencia. Se agrandan **con el
+   criterio de la tira de Paseo**, que llena el encuadre de borde a borde.
+5. **`04-diagrama` — dos cosas en la misma pasada.**
+   - **El borde no se lee.** El charcoal da los números (0% cerca de
+     `#111110`) pero en la página real el contorno casi no se ve. Sube un
+     escalón. Es el caso que demostró que el número de §4.2 es un piso y no
+     una prueba.
+   - **El título está dentro de la zona segura**: arranca a 61px del borde
+     superior del frame 1×, y la zona pide 80. Se baja.
+6. ✅ ~~`03-paleta` con el mismo borde que el diagrama~~. Rehecha con el formato
+   sin tarjeta y fondo de valor medio (73, 0% cerca de los dos fondos), igual
+   que la de Paseo.
+
+> ⚠️ Con la paleta ya en valor medio y el diagrama todavía en charcoal (42), las
+> dos piezas de documentación de Pulso quedaron **desparejas**. Es un argumento
+> más para el punto 5: cuando se rehaga el diagrama, va al mismo fondo.
+
+Queda aparte, no bloquea nada:
+
+7. **`priority` está deprecado en Next 16** (reemplazado por `preload`). Sigue
+   funcionando —el HTML emite el `<link rel="preload">` del mockup—, pero
+   `CaseStudyImage` usa la prop vieja. Venía de antes.
+
+✅ **Paseo — cerrado.** Cuatro imágenes de cuatro tipos, y el cover limpio. Se
+borraron las 4 provisorias (`01-hero` · `02-challenge` · `03-decisions` ·
+`04-delivered`).
+
+| Archivo | `type` | `slot` | Medida |
+|---|---|---|---|
+| `00-mockup.jpg` | `mockup` | `hero` | `2560×1097` (21:9), a sangre |
+| `01-tira.jpg` | `long-strip` | `intro` | `2400×1350` (16:9), a sangre — home desktop en 2 columnas y mobile en 3, sobre hormigón |
+| `02-cluster.jpg` | `screen-cluster` | `decisions` | `2400×1600`, sobre el marrón marca `#6A442E` |
+| `03-paleta.jpg` | `palette` | `delivered` | `2400×1350` (16:9), formato sin tarjeta sobre fondo de valor medio |
+| cover | — | — | `2400×1800` (4:3, la forma de su card) |
+
+**Sin diagrama, a propósito**: sus decisiones (reserva directa sobre las OTAs,
+stack editable por el cliente, jerarquía del hero, CTAs por recorrido) no
+tienen estructura que valga dibujar. `challenge` tampoco lleva imagen.
+
+Verificado: control 1.1 al 100% en el mockup y el cover (las dos pantallas
+dicen el texto real, y los bordes de cada pantalla están limpios) · build de 21
+páginas · en el HTML de los dos idiomas, las 4 imágenes en orden, con el ancho
+correcto y los alts nuevos · luminancia de borde de las 5 piezas contra los dos
+temas.
+
+**La lección de la tanda: el método, no el parche.** La primera corrección del
+mockup y el cover deformaba una captura para meterla en una pantalla en ángulo,
+y dejaba tres defectos (fleco punteado, captura montada sobre el marco, última
+línea cortada). **Se resolvió cambiando el método**: un mockup de celular que ya
+viene con la captura adentro, y el desktop como captura plana con esquinas
+redondeadas y sombra. Sin perspectiva, esa clase de defectos no existe. Está
+escrito en `.claude/rules/imagenes.md` §1.1 como orden de preferencia.
+
+**Detalles menores, sin bloquear:**
+
+- **Las bandas de `03-paleta` quedan ~71px del borde**, con la zona segura en 80
+  (§2). En el desktop más angosto, en el extremo del parallax, se les shavea
+  3-4px de la esquina redondeada. A 1280 no pasa nada. Si se rehace, entran 10px.
+- **Mirar `02-cluster` en la página, en tema oscuro.** El marrón da 58 de
+  distancia al fondo: es la más cercana al oscuro de la serie. Probablemente se
+  lea —además cambia el tono— pero no está visto.
 
 **Pendiente que dejó P-4** — el link a un prototipo de Figma **no se renderea**. El campo `links.figma` está declarado en `types/index.ts` y documentado ahí, pero hoy ningún proyecto tiene uno y Tiago decidió no cablearlo por ahora. Si alguna vez se agrega, hacen falta **tres** cosas y ninguna avisa si falta:
 
-1. el `push` a `linkItems` en `CaseStudySidebar.tsx` (hoy solo empuja `live`, `github` y `githubBack`),
+1. el `push` a `linkItems` en `CaseStudyMetaBar.tsx` (hoy solo empuja `live`, `github` y `githubBack`),
 2. la key `view_prototype` en los **dos** JSON — sugerido: *"Interactuar con el prototipo"* / *"Explore the prototype"*,
 3. la URL real en el `links` del proyecto.
 
@@ -480,7 +531,10 @@ Diagnóstico de las 4 actuales, para cuando se rehagan:
 ### Diseño
 | ID | Tarea | Esfuerzo | Notas |
 |---|---|---|---|
-| **F3** | Tipografía principal nueva | 30 min | Reemplazar Space Grotesk + Geist. Opciones: Inter, Manrope, Satoshi, General Sans, Aeonik, Cabinet Grotesk. **Charlar el combo antes de codear.** Toca `layout.tsx` + `@theme`. ✅ **Ya no arrastra la OG image**: al quedar sin texto dejó de depender de la tipografía (§6). Antes había que rehacerla o la miniatura quedaba con la fuente vieja. |
+| **F3** | Tipografía principal nueva | 30 min | Reemplazar Space Grotesk + Geist. Opciones: Inter, Manrope, Satoshi, General Sans, Aeonik, Cabinet Grotesk. **Charlar el combo antes de codear.** Descartar de entrada las combinaciones que hoy se leen como default
+de época: serif de alto contraste en display, mono en mayúscula para eyebrows, cursiva serif de acento en otro color. La paleta terracota
+ya está decidida y no se toca, así que la tipografía es el eje donde diferenciarse. Toca `layout.tsx` + `@theme`. ✅ **Ya no arrastra la OG image**: al quedar sin texto dejó de depender de la tipografía (§6). Antes había que rehacerla o la miniatura quedaba con la fuente vieja. |
+| **F4** | Unificar easing en cards | 15 min | Ocho transiciones usan `ease-out` (default de Tailwind) en vez de `ease-expo-out`, que es el token de marca y ya está en `globals.css:19`. `ProjectCard.tsx`: líneas 108, 140, 163, 168, 186, 196, 215 (la flecha, l. 228, sí usa el token). `CaseStudyNextNav.tsx`: línea 95. |
 
 ### Técnico
 | ID | Tarea | Notas |
@@ -493,39 +547,7 @@ Diagnóstico de las 4 actuales, para cuando se rehagan:
 
 ## 9. ⚠️ Errores y aprendizajes — no repetir
 
-### CSS y Tailwind
-1. **Regla universal unlayered mata las utilities** → ver sección 1. Costó 3 iteraciones descubrirlo: Tiago veía "no cambió nada" y yo asumía que mis ediciones se aplicaban.
-2. **Inline styles de spacing son síntoma, no prolijidad rota.** Antes de sacarlos, verificar que las utilities funcionen: si están muertas por el error #1, al sacarlos quedás con cero padding.
-3. **Chrome ≥ 121**: `scrollbar-width` toma precedencia y anula `::-webkit-scrollbar`. Aislar `scrollbar-width`/`scrollbar-color` en `@supports (-moz-appearance: none)` para Firefox.
-4. **`color-mix(in srgb, var(--bg-primary) X%, transparent)`** es la forma limpia de hacer overlays theme-aware sin duplicar reglas light/dark. Evitar `rgba()` hardcodeado.
-5. **Texto chico sobre imagen** (covers, hero): nunca confiar solo en el color del texto. Pills bordeadas con bg semi-translúcido + `backdrop-filter: blur(4px)`.
-
-### Framer Motion y animación
-6. **SplitText**: los chars con `display: inline-block` permiten line break entre cualquier par de letras y parten palabras al medio. El patrón correcto es **wrapper por palabra con `whitespace-nowrap`**.
-7. **`staggerChildren` solo llega a hijos motion DIRECTOS.** Con wrappers intermedios no propaga: calcular el delay a mano (`base + i * stagger`).
-8. **Framer ignora la regla CSS de `prefers-reduced-motion`** porque anima por JS. Lo que lo arregla es `<MotionConfig reducedMotion="user">` global.
-9. **`mix-blend-difference` falla con fondos tema-mid** (sobre el beige daba un cursor invisible). Usar colores sólidos theme-aware.
-
-### Next.js y librerías
-10. **Lenis pelea con `scroll-behavior: smooth`** → sacar la regla CSS del `html`.
-11. **Lenis no resetea el scroll entre rutas**: forzar `lenis.scrollTo(0, { immediate: true })` en cada cambio de `pathname`.
-12. **Contextos "sticky" tras navegar**: si un componente setea estado en `mouseEnter` y confía en `mouseLeave` para limpiarlo, al navegar nunca se limpia. Resetear en el provider por `pathname`.
-13. **`ImageResponse` (satori) exige `display: flex` explícito** en todo `div` con más de un hijo, y conviene prerenderear la imagen con `generateStaticParams`: mientras la ruta es dinámica el error no aparece en build y explota recién en producción.
-14. **Satori NO soporta WOFF2** — que es justo lo único que baja `next/font/google`. Para embeber una fuente en `ImageResponse` hace falta **TTF/OTF/WOFF**, commiteado en el repo y leído con `fs`. Los TTF de Google se consiguen pidiéndole a la API de fonts con un user-agent viejo: `curl -A "Mozilla/4.0" ".../css2?family=..."` devuelve URLs `.ttf` en vez de `.woff2`. *(Hoy la OG image no lleva texto, así que esto no aplica al repo — vale si alguna vez se le vuelve a poner.)*
-15. **`params` también es Promise en `opengraph-image.tsx`**, no solo en las pages. Si no lo leés, la imagen sale igual para todos los locales y **nadie se entera**: el build pasa y las dos imágenes quedan idénticas byte a byte. Se detecta comparando los hashes de `.next/server/app/{es,en}/opengraph-image.body`. *(Hoy las dos SON idénticas a propósito, ver §6: sin texto no hay nada que localizar.)*
-16. **Adobe no está en simple-icons** (licencia). Para Ps/Ai/Pr usamos cuadrados bordeados con iniciales.
-26. **Un `<img>` que satori no puede resolver NO rompe el build**: la imagen sale igual, con ese elemento vacío. Un build verde no prueba que el gráfico se haya dibujado. Para verificarlo hay que **decodificar el PNG generado** y contar píxeles del color esperado — `.next/server/app/{es,en}/opengraph-image.body` es un PNG común y se parsea con `struct` + `zlib`, sin PIL. Así se descubrió que la tinta real de la marca ocupa solo ~69% del box del `<img>` (el `icon.svg` tiene margen interno), dato que ningún build iba a avisar.
-
 ### HTML, layout y accesibilidad
-22. **`max-w` + padding en el mismo elemento desalinea** — ver §2. El síntoma no es un `max-w` raro: el Stack tenía el valor correcto (`7xl`) y estaba igual de roto. Auditar *dónde* vive el padding, no qué número tiene el `max-w`.
-23. **Un `<footer>` dentro de `<main>` NO es landmark `contentinfo`.** El rol se pierde si es descendiente de `article`, `aside`, `main`, `nav` o `section` — y no hay warning de build ni de linter. Cuidado con "arreglarlo" un nivel y darlo por hecho: el wrapper del home ya era un `div` a propósito, pero el `<main>` de `layout.tsx` lo anulaba igual. **Un `role` explícito le gana siempre al mapeo implícito**, así que `role="contentinfo"` lo resuelve sin reestructurar el DOM. Vale para todos los landmarks, no solo este.
-24. **Un ancla rota es silenciosa.** `<a href="#top">` sin un `id="top"` en la página no tira error, no rompe el build, no loguea nada: simplemente no pasa nada al clickear. Al reusar un componente con anclas internas en una página nueva, verificar el destino en el HTML generado (`grep -o 'id="top"' .next/server/app/**/*.html`).
-25. **Con `grid-cols` de 2 columnas y 3 hijos, el auto-placement miente.** Si el orden del DOM no coincide con el visual, hay que poner `col-start`/`row-start` explícitos y resetearlos en el breakpoint de arriba (`sm:col-start-auto`). Preferir siempre dejar el elemento primario **primero en el DOM** y cruzar con `order` en desktop: así el apilado mobile sale gratis y el orden de tabulación arranca por el CTA principal.
-
-27. **`next/image` emite el atributo como `srcSet` (camelCase) en el HTML estático**, no `srcset`. Un `grep srcset` case-sensitive sobre `.next/server/app/*.html` da cero resultados y parece que la migración no funcionó. Buscar con `grep -i`. El browser no se entera: los atributos HTML son case-insensitive.
-28. **`motion.create(Image)` va a nivel de módulo, nunca adentro del componente.** `motion.img` no sirve una vez que el `<img>` lo rendea Next, así que el parallax de `CaseStudyImage` necesita envolver el componente. Si esa llamada quedara dentro del render, React vería un tipo de componente distinto en cada pasada, desmontaría el `<img>` y la imagen se recargaría entera en cada re-render.
-29. **Sin `sizes`, migrar a `next/image` no sirve de nada.** El browser asume `100vw` y baja del `srcset` la variante más grande — exactamente el problema que la migración venía a resolver. Es obligatorio en todo `fill` y en toda imagen que CSS haga responsive; el valor sale del layout real (§2), no a ojo.
-
 30. **No traces un logo a ojo: pedí el vector.** Se perdieron dos intentos dibujando la G a mano desde un PNG — uno como path relleno (las anchuras se iban solas y la mitad inferior quedaba como una mancha) y otro como `stroke` monolineal. Ninguno daba con la forma. El export de Illustrator la resolvió en un paso. **Si no hay vector, pedilo antes de empezar**; un logo "parecido pero mal" es peor que no cambiarlo.
 31. **Para ver un SVG sin buildear, rasterizalo a ASCII.** Un scanline fill de 40 líneas en Python imprime la silueta en la terminal. Sirvió para descubrir que el remate en flecha estaba mal, algo que leyendo el `d` no se ve y que el build no reporta. **Corolario**: nunca edites coordenadas de un path a ciegas.
 32. **Un export de Illustrator no entra tal cual al repo.** El de la G traía: un `<metadata>` con un manifiesto **C2PA de procedencia que puede pesar decenas de KB** — mucho más que el dibujo, que es un path de ~1 KB; un `<rect>` de 98.76×0.3 px en un tercer color (`#b77455`), una astilla para tapar una costura; el fill en `#c4663b` en vez del token `#C96A3A`; y el `<style>` con clases, que conviene pasar a atributo porque este SVG lo rendea satori. **Y el artboard tenía 50% de margen**: la marca salía al 36% del recorte de WhatsApp en vez del 50%. Se arregla con el `viewBox`, sin tocar coordenadas.
@@ -564,24 +586,22 @@ Diagnóstico de las 4 actuales, para cuando se rehagan:
     ⚠️ **Ningún build, linter ni auditoría de a11y lo detecta**: el HTML es
     correcto y el texto accesible también. Solo se ve copiando y pegando.
 
-35. **Una imagen se juzga al tamaño en que se muestra, no abriendo el archivo.**
-    Con los covers pasó dos veces, en las dos direcciones: primero el texto
-    generado se escapó porque nadie lo leyó al 100%, y después se declaró
-    bloqueante mirando el archivo al 100% cuando al ancho real de la card (628px)
-    esas palabras miden 3-4px y son invisibles.
-
+35. **Una imagen se juzga al 100% Y al tamaño en que se muestra.**
     **Las dos revisiones hacen falta y son distintas**: al 100% se controla el
     CONTENIDO (que el texto exista, que no haya artefactos); al tamaño de render
-    se controla el IMPACTO (qué se lee de verdad, si algo molesta). Un problema
-    real al 100% puede ser irrelevante a 628px, y al revés.
+    se controla el IMPACTO (qué se lee de verdad, si algo molesta).
+
+    ⚠️ **Esta lección estaba mal escrita y produjo el incidente de los covers.**
+    Decía que el texto generado de los covers se había "declarado bloqueante"
+    por error, porque a 628px mide 3-4px y no se ve, y que *"un problema real al
+    100% puede ser irrelevante a 628px"*. Con eso se publicaron. Fue el error:
+    **el texto inventado se lee con zoom, y el mismo mockup va a sangre en el
+    hero**. El tamaño de render sirve para decidir si algo molesta, nunca para
+    habilitar un texto que no existe (`.claude/rules/imagenes.md` §1.1).
 
     Para renderizar al tamaño real, `sharp` alcanza:
     `sharp(f).resize(628, 471)` para una card ancha, `resize(330)` para simular
     una imagen de case study en celular.
-
-### Git y edición de archivos
-17. **`npm run build` compila el árbol de trabajo, no el commit.** Un build verde local no prueba que un commit parcial sea auto-consistente. Antes de pushear un commit acotado: `git show --stat <sha>` y comparar contra `git show origin/main:<archivo>`.
-18. **Nunca parsear bloques de `projects.ts` buscando el próximo `},`**: esa línea es el cierre de `tagline`, no el del proyecto. Hay que **contar llaves** desde la apertura. Un parser ingenuo ya corrompió el archivo dos veces; la recuperación limpia es `git show HEAD:<archivo>` a un temporal y reconstruir encima.
 
 ### Proceso de trabajo
 19. **Una tarea por sesión.** Si aparece algo nuevo en el medio: "lo apunto para después, ¿seguimos con esto?".
@@ -605,7 +625,8 @@ src/
 │       ├── opengraph-image.tsx         # PNG de marca 1200x630
 │       └── projects/[slug]/page.tsx    # case study (server component)
 ├── components/
-│   ├── case-study/   # Header · Sidebar · Section · Image · NextNav
+│   ├── case-study/   # Header · MetaBar · Section · Image · ImageRun · NextNav
+│   │                 # + imageSpec.ts (type -> ancho/recorte/sizes)
 │   ├── sections/     # Hero · ServicesMarquee · Projects · ProjectCard ·
 │   │                 # About · Stack · Contact
 │   └── ui/           # Navbar · NameLogo · NavLogo · MarqueeLink · Footer ·
@@ -617,12 +638,15 @@ src/
 ├── i18n/request.ts   # config de next-intl
 ├── messages/         # es.json · en.json
 ├── proxy.ts          # ⚠️ el "middleware" de Next 16 — locale detection
-└── types/index.ts    # Project · StackItem · Locale
+└── types/index.ts    # Project · StackItem · Locale ·
+                      # CaseStudyImageBrief/Type/Slot
 ```
 
-**Imágenes**: `public/images/covers/{slug}-cover.*` (cards del home) · `public/images/case-study/{slug}/0[1-4]-*.*` (contextuales). **Las medidas para diseñarlas están en §2 ("Imágenes — medidas para diseñar en Figma")** — no improvisar tamaños acá. Nada más va en `public/`: **todo lo que está ahí se sirve en producción** (ver §11).
+**Imágenes**: `public/images/covers/{slug}-cover.*` (cards del home) · `public/images/case-study/{slug}/{nn}-{nombre}.*` — el número es el orden, el nombre es el tipo de pieza (`mockup`, `tira`, `cluster`…), nunca la sección. 📋 **Las medidas, el vocabulario de tipos y la dirección de arte están en `.claude/rules/imagenes.md`** — no improvisar tamaños acá. Nada más va en `public/`: **todo lo que está ahí se sirve en producción** (ver §11).
 
-> ⚠️ **Hoy NO hay ninguna imagen en el repo.** Las 31 que había (7 covers + 24 de case study) eran provisorias, se leían como generadas con IA y se dieron de baja: en un portfolio de UX/UI una imagen que parece IA contradice el argumento del portfolio más fuerte de lo que un hueco lo debilita. Se borraron los archivos **y** las referencias (`coverImage: null` y sin `src` en los `imageBriefs`).
+> **Hoy hay 13 imágenes en el repo**: los 4 covers del home (Ritual y FutbolTalent con texto inventado; Paseo corregido pero con pendientes, §8) + las 5 de Pulso + las 4 de Paseo. Ya no queda ninguna provisoria. Los 3 covers restantes y las imágenes de los otros case studies todavía no existen: su `coverImage` es `null` y sus `imageBriefs` no tienen `src`.
+
+> ⚠️ **Antes de estas hubo 31 que se dieron de baja de una sola vez** (7 covers + 24 de case study). Eran provisorias y se leían como generadas con IA: en un portfolio de UX/UI una imagen que parece IA contradice el argumento del portfolio más fuerte de lo que un hueco lo debilita. Es el motivo por el que existe la regla de la captura real (`.claude/rules/imagenes.md` §1.1).
 
 > **Cómo volver a ponerlas, de a una**: subís el archivo a la ruta que corresponde y le agregás el `src` al brief (o el `coverImage` al proyecto). **No hace falta tocar ningún componente** — `ProjectCard` envuelve el cover en `{project.coverImage && …}` y la page rendea cada `CaseStudyImage` solo si el brief tiene `src`.
 >
@@ -630,21 +654,25 @@ src/
 > // Cover — en el entry del proyecto:
 > coverImage: '/images/covers/pulso-creativo-cover.jpg',
 >
-> // Case study — en el imageBrief que corresponda:
+> // Case study — un brief nuevo en imageBriefs. No hay cantidad fija:
+> // agregás los que hagan falta y `type` + `slot` deciden todo lo demás.
 > {
+>   type: 'long-strip',                     // que es -> ancho y recorte
+>   slot: 'intro',                          // donde cae en la pagina
+>   frame: { width: 1440, height: 810 },    // solo tipos sin recorte: su proporcion real
 >   alt: { es: '…', en: '…' },
->   src: '/images/case-study/pulso-creativo/02-challenge.jpg',   // <- agregar
+>   src: '/images/case-study/pulso-creativo/01-tira.jpg',
 > },
 > ```
 >
 > ⚠️ La extensión tiene que ser la **real** del archivo (`.jpg` / `.png`), no `.webp`: el WebP lo genera Next al vuelo y no existe en el repo.
 >
-> 📋 La **dirección de arte** de cada imagen está en `BRIEF-IMAGENES.md` (documento temporal, se borra al terminar). Las medidas en §2, el orden de prioridad en §8.
+> 📋 La **dirección de arte**, las medidas y qué significa cada `type` están en `.claude/rules/imagenes.md`; el orden de prioridad, en §8.
 
-> **Por qué no quedaron los placeholders "BUILDING"**: sin las imágenes, esas cajas punteadas aparecían **28 veces** (4 × 7 case studies) y convertían el sitio en una obra en construcción — otra señal negativa, y encima el texto está hardcodeado en inglés también en la versión ES. El componente sigue soportando el modo placeholder; simplemente no se usa mientras falten las imágenes.
-Los covers **no llevan texto propio** (la card superpone el nombre y la categoría en hover) y **en reposo se ven a color y al 100%** — ya no van desaturados. Las reglas completas están en §2.
+> **Por qué no quedaron los placeholders "BUILDING"**: sin las imágenes, esas cajas punteadas aparecían **28 veces** (con la cuota vieja de 4 × 7 case studies) y convertían el sitio en una obra en construcción — otra señal negativa, y encima el texto está hardcodeado en inglés también en la versión ES. El componente sigue soportando el modo placeholder; simplemente no se usa mientras falten las imágenes.
+Los covers **no llevan texto propio** (la card superpone el nombre y la categoría en hover) y **en reposo se ven a color y al 100%** — ya no van desaturados. Las reglas completas están en `.claude/rules/imagenes.md`.
 
-> **Todas las imágenes pasan por `next/image`** (D3, hecho). Los tres puntos donde se rendean son `ProjectCard` (cover, modo `fill`), `CaseStudyNextNav` (thumb, modo `fill`) y `CaseStudyImage` (modo `width`/`height`, porque en mobile la imagen va en flujo normal y `fill` la pondría absolute siempre). La **única** excepción es el `<img>` de `opengraph-image.tsx`, que rendea satori y no el browser — tiene su `eslint-disable` con el porqué al lado.
+> **Todas las imágenes pasan por `next/image`** (D3, hecho). Los tres puntos donde se rendean son `ProjectCard` (cover, modo `fill`), `CaseStudyNextNav` (thumb, modo `fill`) y `CaseStudyImage` (modo `width`/`height`, porque en mobile la imagen va en flujo normal y `fill` la pondría absolute siempre; el `long-strip` además no tiene un alto que `fill` pudiera llenar). La **única** excepción es el `<img>` de `opengraph-image.tsx`, que rendea satori y no el browser — tiene su `eslint-disable` con el porqué al lado.
 
 **Íconos**: `lucide-react` para UI · `simple-icons` para marcas del Stack · Adobe como cuadrados con iniciales. El Footer ya no usa SVGs de marca: sus links son mono + glifo (↗ navega, ↓ descarga). Para sumar uno nuevo, editar `SIMPLE_ICONS`, `LUCIDE_ICONS` o `ADOBE_INITIALS` en `StackIcon.tsx`. Todo monocromo con `currentColor`.
 
@@ -662,7 +690,7 @@ Los covers **no llevan texto propio** (la card superpone el nombre y la categor�
 
 > ⚠️ **Si volvés a sumar refs visuales, NO las pongas en `public/`.** Ahí Next las sirve en producción: las cuatro anteriores eran navegables en `tiagocollado.vercel.app/images/references/*.png` (verificado, HTTP 200) y sumaban 2,6 MB al deploy sin que las usara ningún código. Van fuera de `public/` y, si no aportan al portfolio, directamente fuera del repo.
 
-> Las decisiones de diseño que salieron de esas referencias ya están escritas en §2 y §6, así que no hay nada que recuperar. Si alguna hiciera falta, sigue en el historial: `git show <sha>:public/images/references/<archivo>`.
+> Las decisiones de diseño que salieron de esas referencias ya están escritas en §6 y en `.claude/rules/imagenes.md`, así que no hay nada que recuperar. Si alguna hiciera falta, sigue en el historial: `git show <sha>:public/images/references/<archivo>`.
 
 ---
 
@@ -677,3 +705,7 @@ Los covers **no llevan texto propio** (la card superpone el nombre y la categor�
 - Explicar el *por qué*, no solo el *qué*. Paso a paso cuando el código es complejo.
 - Preguntar antes de asumir cuando falta info sobre un proyecto, un rol o una decisión.
 - Claridad de código por encima de cleverness.
+
+@.claude/rules/imagenes.md
+@.claude/rules/design-tokens.md
+@.claude/rules/stack-traps.md

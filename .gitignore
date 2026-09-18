@@ -36,8 +36,11 @@ yarn-error.log*
 # vercel
 .vercel
 
-# claude code
-.claude
+# claude code: se versionan las rules y las skills, lo personal queda afuera
+.claude/*
+!.claude/rules/
+!.claude/skills/
+.claude/settings.local.json
 
 # typescript
 *.tsbuildinfo
