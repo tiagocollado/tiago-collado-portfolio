@@ -249,7 +249,7 @@ Solo lo que Tiago pueda defender en una entrevista.
 | **P2** | Los 3 covers restantes | 3 | Solo se ven entrando a `/projects`. |
 | **P3** | Las 12 de case study restantes | 12 | Cola larga. |
 
-Progreso: P0 `4/4` cableados · **Pulso corregido y publicado** · **Paseo corregido y limpio, sin publicar** · Ritual y FutbolTalent con texto inventado · P1: **Pulso ✅ cerrado (5)**, con 3 pendientes de imagen · **Paseo ✅ cerrado (4)** · FutbolTalent y Ritual `0` · P2 `0/3` · P3 `0`
+Progreso: P0 `4/4` cableados · **Pulso y Paseo corregidos y publicados** (`7f69757`) · Ritual y FutbolTalent con texto inventado · P1: **Pulso ✅ cerrado (5)**, con 2 pendientes de imagen · **Paseo ✅ cerrado (4)** · FutbolTalent y Ritual `0` · P2 `0/3` · P3 `0`
 
 > **Ya no se cuenta sobre 35.** Ese total salía de la cuota de 4 por caso: Pulso cerró con 5 y Paseo con 4. El denominador de cada caso sale de lo que el proyecto tiene para mostrar (`.claude/rules/imagenes.md` §2, *"Casos reales"*).
 
@@ -328,10 +328,14 @@ decisión que la estructura nueva habilita pero nadie tomó: qué otros tipos
 además del hero merecen ir a sangre (hoy `palette` y `screen-cluster` van al
 shell de 1280, que fue decisión explícita de Tiago).
 
-#### ⏸️ Trabajo listo y SIN commitear — entra con esa sesión
+#### ✅ Commiteado y publicado en `7f69757` (2026-09-17)
 
-Buildeado y verificado (21 páginas SSG, TS limpio), pero **Tiago decidió no
-commitearlo todavía**: se commitea cuando se retome la página de case study.
+Todo este bloque estuvo semanas sin commitear y entró junto, en un solo commit
+de 38 archivos. **Verificado contra el deploy**: el sitio sirve las imágenes
+nuevas (hashes idénticos a los del repo), el case study de Pulso ya no dice
+*"ruteado por servicio"* y el de Paseo dice *"El sitio ya está publicado"*.
+
+Queda como registro de qué entró y por qué.
 
 | Archivo | Qué cambió |
 |---|---|
@@ -371,9 +375,9 @@ commitearlo todavía**: se commitea cuando se retome la página de case study.
 | `public/images/case-study/pulso-creativo/03-paleta.jpg` | Rehecha con el formato de Paseo: sin tarjeta, fondo de valor medio (73). |
 | `src/messages/{es,en}.json` | **Case study de Paseo, pasada de hechos contra el sitio publicado.** Se corrigió: el cierre decía *"está por publicarse"* y el sitio ya está online; `delivered_3` prometía *"base de SEO local, backups automáticos y rendimiento optimizado"* (el HTML no tiene meta description, ni datos estructurados, ni H1 en la portada) y *"formularios"* en plural cuando hay uno; y *"el activo que más convierte"*, un superlativo sin métrica en el mismo párrafo que dice que no hay métricas. Además, dos posesivos comidos en el inglés (`the hotel own` → `the hotel's own`) y dos dos-puntos que anunciaban. |
 
-⚠️ **Hasta que se pushee, el case study publicado sigue afirmando lo que no es** — y sigue con el sidebar sticky y las imágenes a 944px.
+✅ **Ya está publicado**: el case study en vivo tiene la estructura nueva, las imágenes con el vocabulario y el copy contrastado contra los sitios reales.
 
-Decisiones de Tiago que conviene cerrar antes de commitear el copy:
+Decisiones de Tiago que siguen abiertas sobre el copy de Pulso:
 - ¿El sitio está dado de alta en Search Console? En el HTML no hay meta de verificación, pero puede estar verificado por DNS.
 - El cierre dice *"hoy no tengo números de consultas para mostrar"*. Es honesto y se puede suavizar.
 - La negociación con el cliente está contada en abstracto. Con un ejemplo concreto (qué querían contar, qué se cortó) es la mejor parte del caso.
@@ -404,15 +408,15 @@ el análisis completo, con cómo detectarlo, está en `.claude/rules/imagenes.md
 
 | Cover | Estado |
 |---|---|
-| Pulso Creativo | ✅ **Corregido y en el repo** (captura real incrustada, misma luz). `2400×2400`, párrafo leído al 100%, rango tonal 201. Hash nuevo `c72264d` (el roto era `056b26a`). ✅ **Publicado** en `a203a6a`, verificado contra el deploy |
-| Paseo Güemes | ✅ **Corregido y limpio**, `2400×1800` (4:3). Las dos pantallas estaban generadas; se rehizo con el método sin perspectiva. En el repo, **sin publicar**: se publica con el resto de la tanda o solo, con la receta del commit acotado |
+| Pulso Creativo | ✅ **Publicado y limpio.** Primero se corrigió incrustando la captura (`a203a6a`), y después **se rehízo con el método sin perspectiva** junto con su `00-mockup`, que entró en `7f69757`. Hoy: `2400×2400`, párrafo y nav leídos al 100%, rango tonal 209, bordes de pantalla limpios |
+| Paseo Güemes | ✅ **Publicado y limpio**, `2400×1800` (4:3). Las dos pantallas estaban generadas; se rehizo con el método sin perspectiva. Entró en `7f69757` |
 | El Ritual del Tono · FutbolTalent.Pro | ❌ **Texto inventado, confirmado por Tiago** (misma herramienta: se asume en los dos). **No es una tarea suelta**: cada cover se corrige **dentro de la tanda de imágenes de su proyecto**, porque es el mismo mockup que el hero. Flageados también en `projects.ts` |
 
 > El cover de Pulso estaba exportado a 1× (`1200×1200`) y la card en retina pide 1256px. **Se cerró con el corregido**, que viene a 2×. Los cuatro covers llegan ahora.
 
-> ✅ **El cover se publicó solo, adelantado a la tanda de case study**, en `a203a6a`. Queda la receta porque la trampa sigue armada para cualquier otro archivo suelto que haya que publicar antes de tiempo.
+> ✅ **El cover se publicó solo, adelantado a la tanda de case study**, en `a203a6a`. La trampa que lo hacía necesario **ya no existe**: el borrado de `CaseStudySidebar.tsx` entró con el resto en `7f69757`. La receta queda porque el patrón se repite cada vez que haya que publicar un archivo suelto con trabajo a medio terminar en el árbol.
 >
-> 🚨 **Trampa del stage, sigue vigente**: `CaseStudySidebar.tsx` está **staged como borrado**, y el `page.tsx` publicado todavía lo importa. Un `git add <archivo>` + `git commit` a secas mete ese borrado en el commit y **el deploy de Vercel no buildea**. Para publicar un archivo suelto **no se hace `git add`**: se commitea con el path al final, que toma solo ese archivo e ignora el resto del stage.
+> **Qué pasaba entonces**: `CaseStudySidebar.tsx` estaba staged como borrado y el `page.tsx` publicado todavía lo importaba, así que un `git add <archivo>` + `git commit` a secas metía ese borrado y **rompía el build de Vercel**. Para publicar un archivo suelto **no se hace `git add`**: se commitea con el path al final, que toma solo ese archivo e ignora el resto del stage.
 >
 > ```
 > git commit -m "…" -- <archivo>
@@ -425,7 +429,7 @@ el naming nuevo:
 
 | Archivo | `type` | `slot` | Medida |
 |---|---|---|---|
-| `00-mockup.jpg` | `mockup` | `hero` | `2560×1097` (21:9), a sangre |
+| `00-mockup.jpg` | `mockup` | `hero` | `2560×1097` (21:9), a sangre. **Rehecho sin perspectiva** junto con el cover |
 | `01-tira.jpg` | `long-strip` | `intro` | `2400×1350` (16:9), a sangre — home desktop y mobile en columnas, sobre hormigón de valor medio |
 | `02-cluster.jpg` | `screen-cluster` | `decisions` | `2400×1600`, sobre el verde marca `#8EB943` |
 | `03-paleta.jpg` | `palette` | `decisions` | `2400×1350` (16:9), formato sin tarjeta sobre fondo de valor medio |

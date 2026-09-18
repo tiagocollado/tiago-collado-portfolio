@@ -107,7 +107,7 @@ siendo generados, que es justo lo que la regla permite.
 
 | Cover | Estado |
 |---|---|
-| Pulso Creativo | ✅ Corregido y en el repo: `2400 × 2400`, párrafo leído al 100% y real, rango tonal 201. ✅ **Publicado** (`a203a6a`) |
+| Pulso Creativo | ✅ **Publicado y limpio.** Se corrigió primero incrustando la captura (`a203a6a`) y después se rehízo con el método sin perspectiva, junto con su `00-mockup` (`7f69757`): `2400 × 2400`, párrafo y nav leídos al 100%, rango tonal 209 |
 | Paseo Güemes Hotel | ✅ **Corregido y limpio.** Las dos pantallas estaban generadas (el celular decía *"En el **cezacón** de Salta la Linda, a **poses** del centro histórico y la **zana** de bares"*). Rehecho con el método sin perspectiva: `2400 × 1800` (4:3, la forma de su card), texto real, sin costuras. **Publicable** |
 | El Ritual del Tono | ❌ **Texto inventado, confirmado.** Se corrige en su tanda |
 | FutbolTalent.Pro | ❌ **Texto inventado, confirmado.** Se corrige en su tanda (ojo con el NDA, abajo) |
@@ -563,12 +563,12 @@ revisado a mano en la página.
 | `01-tira`, primera versión | casi negro | — | ❌ 71,5% del borde pegado a `#111110` | Se fundía en el tema por defecto |
 | `01-tira` | hormigón, 92 | 75 / 135 | ✅ | — |
 | `04-diagrama`, primera versión | `#0E0E0E` | — | ❌ 100% igual a `#111110` | La card no tenía contorno |
-| `04-diagrama` | charcoal, 42 | **25** / 185 | ✅ | ❌ **Casi no se lee.** Sube un escalón en la tanda de Paseo |
+| `04-diagrama` | charcoal, 42 | **25** / 185 | ✅ | ❌ **Casi no se lee.** Pendiente: sube un escalón cuando se rehaga |
 | `03-paleta`, primera versión | charcoal, 42 | **25** / 185 | ✅ | ⚠️ El mismo borde que el diagrama |
 | `03-paleta` | valor medio, 73 | 56 / 154 | ✅ | — Rehecha con el formato de Paseo |
 | `02-cluster` | verde marca, 167 | 150 / 60 | ✅ | — |
-| `00-mockup` | hormigón, 103 | 86 / 124 | ✅ | — |
-| Cover | hormigón, 88 | 71 / 139 | ✅ | — |
+| `00-mockup` | hormigón, 101 | 84 / 126 | ✅ | — Rehecho sin perspectiva |
+| Cover | hormigón, 92 | 75 / 135 | ✅ | — Rehecho sin perspectiva |
 | **Paseo** `00-mockup` | hormigón, 110 | 93 / 117 | ✅ | — |
 | **Paseo** `01-tira` | hormigón + capturas en los costados, 127 | 110 / 100 | ✅ | — |
 | **Paseo** `02-cluster` | marrón marca, 75 | **58** / 152 | ✅ | — Es la más cercana al oscuro después del charcoal. Mirarla en la página |
