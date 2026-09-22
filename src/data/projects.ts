@@ -25,6 +25,7 @@ export const projects: Project[] = [
     // pantallas en captura real y sin composicion en perspectiva.
     coverImage: '/images/covers/paseo-guemes-hotel-cover.jpg',
     year: 2026,
+    published: true,
     showOnHome: true,
     order: 1,
     awwwardsLayout: true,
@@ -110,6 +111,7 @@ export const projects: Project[] = [
     cardShape: 'square',
     coverImage: '/images/covers/pulso-creativo-cover.jpg',
     year: 2026,
+    published: true,
     showOnHome: true,
     order: 2,
     awwwardsLayout: true,
@@ -207,6 +209,7 @@ export const projects: Project[] = [
     // real, nunca UI del producto. Ver `.claude/rules/imagenes.md` §1.1.
     coverImage: '/images/covers/futbol-talent-pro-cover.jpg',
     year: 2025,
+    published: true,
     showOnHome: true,
     order: 3,
     awwwardsLayout: true,
@@ -281,6 +284,7 @@ export const projects: Project[] = [
     // las rules). La tanda de Ritual no cierra mientras el cover siga asi.
     coverImage: '/images/covers/el-ritual-del-tono-cover.jpg',
     year: 2025,
+    published: true,
     showOnHome: true,
     order: 4,
     awwwardsLayout: true,
@@ -378,6 +382,8 @@ export const projects: Project[] = [
     cardShape: 'wide',
     coverImage: null,
     year: 2023,
+    // No publicado: vuelve en la version siguiente (CLAUDE.md §8).
+    published: false,
     showOnHome: false,
     order: 7,
     awwwardsLayout: true,
@@ -443,6 +449,8 @@ export const projects: Project[] = [
     cardShape: 'wide',
     coverImage: null,
     year: 2025,
+    // No publicado: vuelve en la version siguiente (CLAUDE.md §8).
+    published: false,
     showOnHome: false,
     order: 5,
     awwwardsLayout: true,
@@ -508,6 +516,9 @@ export const projects: Project[] = [
     cardShape: 'square',
     coverImage: null,
     year: 2025,
+    // No publicado: vuelve en la version siguiente, y es el primero en
+    // volver porque es el que mas prueba investigacion UX (CLAUDE.md §8).
+    published: false,
     showOnHome: false,
     order: 6,
     awwwardsLayout: true,
@@ -554,3 +565,19 @@ export const projects: Project[] = [
     ],
   },
 ]
+
+/*
+ * Los proyectos que existen en el sitio publicado, en el orden del home.
+ *
+ * TODO lo que se ve en el sitio lee de esta lista y no de `projects`: la
+ * grilla del home, las páginas que se buildean y el "Próximo proyecto" del
+ * pie de cada case study. Así un proyecto con `published: false` no puede
+ * aparecer por ningún lado aunque alguien se olvide de filtrarlo en un
+ * componente nuevo.
+ *
+ * `projects` (el array completo) queda para lo que necesita ver también los
+ * no publicados. Hoy no hay nada que lo necesite.
+ */
+export const publishedProjects: Project[] = projects
+  .filter((p) => p.published)
+  .sort((a, b) => a.order - b.order)

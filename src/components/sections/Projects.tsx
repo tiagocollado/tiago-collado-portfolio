@@ -2,28 +2,25 @@
 
 import { useTranslations, useLocale } from 'next-intl'
 import { motion } from 'framer-motion'
-import { projects } from '@/data/projects'
 import ProjectCard from './ProjectCard'
 import SplitText from '../ui/SplitText'
-import { Locale } from '@/types'
+import { Locale, Project } from '@/types'
 
-export default function Projects() {
+/*
+ * Recibe los proyectos ya elegidos y ordenados desde el home, que es un
+ * componente del servidor. Este archivo NO importa `projects.ts`: si lo
+ * hiciera, los datos de los 7 proyectos viajarían al navegador en un JS,
+ * incluidos los no publicados (ver `app/[locale]/page.tsx`).
+ *
+ * Hoy llegan los 4 publicados con `showOnHome`, los que mejor muestran
+ * rango. Por qué 4: es el patrón de agencia (el home es un destacado, no el
+ * catálogo) y además sostiene Hick — menos opciones, decisión más rápida.
+ * Los otros 3 vuelven en la versión siguiente, en una página con todos los
+ * proyectos (CLAUDE.md §8).
+ */
+export default function Projects({ projects }: { projects: Project[] }) {
   const t = useTranslations('projects')
   const locale = useLocale() as Locale
-
-
-  /*
-   * El home muestra SOLO los 4 marcados con `showOnHome` — los reales para
-   * clientes. Los 7 completos viven en /projects.
-   *
-   * Por qué 4 y no los 7: es el patrón de agencia (el home es un destacado,
-   * no el catálogo) y además sostiene Hick — menos opciones, decisión más
-   * rápida. Con 6 la página /projects quedaría con un solo proyecto extra y
-   * no se justificaría.
-   */
-  const homeProjects = projects
-    .filter((p) => p.showOnHome)
-    .sort((a, b) => a.order - b.order)
 
   /*
    * Masonry en dos columnas, repartiendo los proyectos de forma ALTERNADA:
@@ -48,8 +45,8 @@ export default function Projects() {
    * dentro de cada una los valores ya quedan en secuencia.
    */
   const columnas = [
-    homeProjects.filter((_, i) => i % 2 === 0),
-    homeProjects.filter((_, i) => i % 2 === 1),
+    projects.filter((_, i) => i % 2 === 0),
+    projects.filter((_, i) => i % 2 === 1),
   ]
 
   return (

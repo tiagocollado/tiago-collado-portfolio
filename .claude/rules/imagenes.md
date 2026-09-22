@@ -438,10 +438,12 @@ hover    lavado terracota + nombre (arriba izq) + "VER PROYECTO" (abajo izq)
 5. **Nunca entregar un cover ya duotonado.** El duotono lo aplica el CSS; si
    viene aplicado desde Figma se le pone dos veces.
 
-### La receta única de los 7 covers
+### La receta única de los covers
 
 Se ven los 4 del home uno al lado del otro, así que la grilla tiene que leerse
-como un sistema y no como un collage:
+como un sistema y no como un collage. **Esta versión publica 4 proyectos y
+tiene 4 covers** (`CLAUDE.md` §8, *"Alcance de esta versión"*); los 3 de V2
+siguen la misma receta cuando se hagan:
 
 > El producto en un entorno real, con **luz dura y direccional**. Un
 > dispositivo con el sitio en pantalla, apoyado sobre una superficie con
@@ -531,7 +533,7 @@ tenía por qué existir.
 
 | | Entorno | Por qué |
 |---|---|---|
-| **Covers** | **Acromático.** El único color sale de la pantalla (una excepción anotada en §3: el Fender de Ritual) | Los 4 se ven **juntos** en el home. Si cada uno trae el color de su cliente, la grilla se lee como un collage. Es lo que hace que siete proyectos con paletas distintas parezcan una misma serie |
+| **Covers** | **Acromático.** El único color sale de la pantalla (una excepción anotada en §3: el Fender de Ritual) | Los 4 se ven **juntos** en el home. Si cada uno trae el color de su cliente, la grilla se lee como un collage. Es lo que hace que proyectos con paletas distintas parezcan una misma serie |
 | **Case study** | **Color de marca del cliente**, bienvenido (planos de color, bandas de paleta) | Se ve **solo**, una página a la vez. No hay nada con lo que competir, y el color del cliente es información sobre el proyecto |
 
 > **Es un split deliberado, no una contradicción.** La receta acromática existe

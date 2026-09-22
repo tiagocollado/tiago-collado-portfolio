@@ -77,7 +77,7 @@ Tiago sigue estudiando y la programación no es su fuerte. **El código tiene qu
 
 ## 6. Estado actual — qué existe hoy
 
-**Deploy**: https://tiagocollado.vercel.app/ · cada push a `main` redeploya. Build de referencia: **21 páginas SSG**, TS limpio, sin warnings.
+**Deploy**: https://tiagocollado.vercel.app/ · cada push a `main` redeploya. Build de referencia: **15 páginas SSG** (eran 21 con los 7 case studies; los 3 no publicados ya no se buildean, §8), TS limpio, sin warnings.
 
 **Defaults**: tema **dark**, locale **`en`** (`/` redirige a `/en`; las URLs `/es/...` siguen vivas).
 
@@ -102,15 +102,15 @@ categoría y las escuadras de las 4 esquinas.
 > Antes el overlay quedaba fijo en mobile y se veía como si la card estuviera
 > siempre en hover, con el lavado tapando el cover.
 
-**El `<Footer />` cierra el home Y los seis case studies.** Antes era solo del home (la card de "próximo proyecto" oficiaba de cierre), pero al pie de un case study largo faltaba el camino de vuelta arriba. El cierre del case study es entonces `CaseStudyNextNav` + `Footer`.
+**El `<Footer />` cierra el home Y los cuatro case studies publicados.** Antes era solo del home (la card de "próximo proyecto" oficiaba de cierre), pero al pie de un case study largo faltaba el camino de vuelta arriba. El cierre del case study es entonces `CaseStudyNextNav` + `Footer`.
 
 > ⚠️ **`id="top"` es requisito, no detalle.** El back-to-top es un `<a href="#top">`; toda página que renderee el `<Footer />` necesita ese id o el botón queda **muerto sin dar ningún error** — el build pasa, no hay warning, simplemente no scrollea. Hoy vive en el `<section>` del Hero (home) y en el `<div>` raíz del case study.
 
-**Cierre del case study**: los dos paths van en **una sola fila** desde `md+` — pill ghost "Ver todos los proyectos" en columna `auto` a la izquierda, card "Próximo proyecto" en `1fr` a la derecha. La card es el CTA primario inequívoco (tamaño, fondo, thumbnail, glow en hover); la pill no compite (Hick). La card va **primero en el DOM** y las columnas se cruzan con `md:order-*`: así el apilado en mobile sale correcto sin `order`, y el primario encabeza el orden de tabulación.
+**Cierre del case study**: el "Próximo proyecto" **cicla solo entre los publicados**, en el orden del home (`order`), y el último vuelve al primero: hoy Paseo → Pulso → FutbolTalent → Ritual → Paseo. Sale de `publishedProjects`, la misma lista que la grilla, así que no pueden divergir. El pill "Ver todos los proyectos" lleva a `/{locale}#projects`, la grilla del home, hasta que exista la página de V2. Los dos paths van en **una sola fila** desde `md+` — pill ghost "Ver todos los proyectos" en columna `auto` a la izquierda, card "Próximo proyecto" en `1fr` a la derecha. La card es el CTA primario inequívoco (tamaño, fondo, thumbnail, glow en hover); la pill no compite (Hick). La card va **primero en el DOM** y las columnas se cruzan con `md:order-*`: así el apilado en mobile sale correcto sin `order`, y el primario encabeza el orden de tabulación.
 
 **Back-to-top**: `<a href="#top">` con el `id="top"` en el `<section>` del Hero. Lenis monta con `anchors: true`, así que lo intercepta y hace el scroll suave él. Nunca `window.scrollTo`: pelearía contra su animación. Las dos flechas apiladas suben en loop mientras hay hover.
 
-**Case studies** (los 7): **secuencia vertical de bloques hermanos**, cada uno declarando su propio ancho — barra de metadata (Cliente / Año / Rol / Duración / Equipo / Stack / NDA / Links; **en mobile va debajo del intro**, ver §8) + hero a sangre + 5 secciones editoriales — **Intro → El desafío → Cómo lo resolví → Lo entregado → Cierre** — con tiradas de imágenes entre medio. Componentes en `src/components/case-study/`.
+**Case studies** (los 4 publicados; los otros 3 siguen en el repo con `published: false`, §7): **secuencia vertical de bloques hermanos**, cada uno declarando su propio ancho — barra de metadata (Cliente / Año / Rol / Duración / Equipo / Stack / NDA / Links; **en mobile va debajo del intro**, ver §8) + hero a sangre + 5 secciones editoriales — **Intro → El desafío → Cómo lo resolví → Lo entregado → Cierre** — con tiradas de imágenes entre medio. Componentes en `src/components/case-study/`.
 
 > ⚠️ **Era una grilla de 12 columnas con sidebar sticky** (`col-span-3` + `col-span-9`), y eso tenía tres consecuencias que se arrastraron hasta que se midieron: la columna editorial quedaba clavada en **944px**, así que ninguna imagen podía ir a sangre; entre una laptop de 1440 y un monitor de 1920 la imagen crecía **24px** (el desktop no ofrecía nada que justificara la pantalla grande); y en mobile el sidebar caía full-width **arriba del hook de intro**, así que lo primero que leías de un proyecto era su duración.
 >
@@ -155,17 +155,19 @@ En mobile se ven completas y quietas (sin crop ni parallax); el recorte y el par
 
 ## 7. Proyectos del portfolio
 
-Orden = campo `order`. Qué se muestra en el home lo decide `showOnHome`; la forma de la card, `cardShape` (`wide` 4:3 · `square` 1:1). La grilla es masonry de dos columnas.
+Orden = campo `order`. Si la página existe lo decide **`published`**; qué se muestra en el home, `showOnHome`; la forma de la card, `cardShape` (`wide` 4:3 · `square` 1:1). La grilla es masonry de dos columnas.
 
-| # | Proyecto | Año | Home | Forma | Qué es |
-|---|---|---|---|---|---|
-| 1 | **Paseo Güemes Hotel** | 2026 | ✅ | ancha | Hotel 3★ en Salta. UX/UI + WordPress, reserva directa contra OTAs. |
-| 2 | **Pulso Creativo** | 2026 | ✅ | **cuadrada** | Consultora B2B 25+ años. Sitio institucional, contacto dual, rediseño UX del contenido. |
-| 3 | **FutbolTalent.Pro** | 2025 | ✅ | ancha | UX/UI de plataforma de scouting. **Bajo NDA — ver sección 4.** |
-| 4 | **El Ritual del Tono** | 2025 | ✅ | ancha | **Proyecto universitario** (Programación Multimedial III, Maimónides). Full-stack MERN con demo en vivo. |
-| 5 | **Multibrand Design System** | 2025 | — | ancha | Simulación laboral No Country, equipo de 6. |
-| 6 | **Recuérdalo** | 2025 | — | **cuadrada** | Proyecto universitario, UX inclusivo para adultos 70+. |
-| 7 | **Cabify Music Match** | 2023 | — | ancha | Concept UX/UI, prototipo iPhone 14. |
+| # | Proyecto | Año | Publicado | Home | Forma | Qué es |
+|---|---|---|---|---|---|---|
+| 1 | **Paseo Güemes Hotel** | 2026 | ✅ | ✅ | ancha | Hotel 3★ en Salta. UX/UI + WordPress, reserva directa contra OTAs. |
+| 2 | **Pulso Creativo** | 2026 | ✅ | ✅ | **cuadrada** | Consultora B2B 25+ años. Sitio institucional, contacto dual, rediseño UX del contenido. |
+| 3 | **FutbolTalent.Pro** | 2025 | ✅ | ✅ | ancha | UX/UI de plataforma de scouting. **Bajo NDA — ver sección 4.** |
+| 4 | **El Ritual del Tono** | 2025 | ✅ | ✅ | ancha | **Proyecto universitario** (Programación Multimedial III, Maimónides). Full-stack MERN con demo en vivo. |
+| 5 | **Multibrand Design System** | 2025 | — V2 | — | ancha | Simulación laboral No Country, equipo de 6. |
+| 6 | **Recuérdalo** | 2025 | — V2 (primero) | — | **cuadrada** | Proyecto universitario, UX inclusivo para adultos 70+. |
+| 7 | **Cabify Music Match** | 2023 | — V2 | — | ancha | Concept UX/UI, prototipo iPhone 14. |
+
+> **Los 5-7 no están publicados** (§8, *"Alcance de esta versión"*): su página da 404 y no aparecen en ningún lado del sitio, pero sus datos, copy e imágenes siguen en el repo. **Volver a publicar uno es cambiar `published` a `true`**, después de su tanda.
 
 La grilla es **masonry**: `Projects.tsx` rendea dos columnas `flex-col`
 independientes y reparte los proyectos **alternando** — el 1 y el 3 a la
@@ -238,22 +240,61 @@ Solo lo que Tiago pueda defender en una entrevista.
 
 **REGLA: una tarea por sesión.** No abrir frentes en paralelo (ya pasó factura). Excepción válida: un plan en fases acordado de antemano, con check-in entre fases.
 
+### 🎯 Alcance de esta versión: 4 proyectos publicados
+
+**Decisión de Tiago (2026-09-21).** El sitio publica solo los cuatro que se
+están terminando: **Pulso Creativo, Paseo Güemes, FutbolTalent.Pro y El Ritual
+del Tono**. Multibrand, Recuérdalo y Cabify **salen del sitio publicado**:
+todavía no están para mostrar, y los reclutadores prefieren pocos proyectos
+completos a muchos a medias.
+
+**No se borró nada.** Los datos, el copy de los dos JSON, los briefs y las
+imágenes de los tres siguen en el repo, con **`published: false`** en
+`projects.ts`. Ese campo decide si la página existe: con `false` no se buildea
+(da 404), no aparece en el home y no entra en el ciclo de "Próximo proyecto".
+Todo lo que se ve en el sitio lee de **`publishedProjects`**, así que un
+proyecto oculto no puede colarse aunque un componente nuevo se olvide de
+filtrar.
+
+> ⚠️ **Sacarlo de `generateStaticParams` no alcanzaba.** Por defecto Next
+> genera a pedido cualquier slug que no esté en la lista, y como los datos
+> siguen en el repo, la página oculta se seguía viendo entrando por la URL. Lo
+> que da el 404 es `dynamicParams = false` en la page (`.claude/rules/stack-traps.md`).
+
+> ⚠️ **Y despublicar las páginas tampoco alcanzaba: los tres seguían en el
+> código fuente.** Sin una sola mención visible, aparecían en dos lugares:
+> 1. **El copy de todos los case studies viajaba en cada página.** El layout
+>    le pasaba al `NextIntlClientProvider` **todos** los mensajes, y los
+>    bloques `case_study_*` eran el 87% del texto. Ahora el layout filtra esos
+>    bloques: los lee solo la page del case study, en el servidor.
+> 2. **Los datos de los 7 viajaban en un JS.** `Projects.tsx` es un
+>    componente del cliente e importaba `projects.ts` entero. Ahora el home
+>    (servidor) elige los proyectos y se los pasa como prop.
+>
+> Verificado en el build: los tres no aparecen ni en el HTML visible, ni en
+> el código fuente de las 12 páginas, ni en los 117 payloads RSC, ni en los
+> 17 JS del navegador. **De yapa, el HTML bajó un 16% (29% en gzip)**: los
+> case studies, un 20-25% cada uno (Ritual ES 85,4 → 68,2 KB), y el home un 5%.
+
+| ID | Tarea | Notas |
+|---|---|---|
+| **V2** ⏳ | **Versión siguiente: página de todos los proyectos + Multibrand, Recuérdalo y Cabify** | **Recuérdalo primero**, porque es el que más prueba investigación UX. Cada uno vuelve con una tanda completa (vocabulario de imágenes, cover, pasada de hechos del copy) y recién ahí pasa a `published: true`. La página `/projects` reemplaza a la vieja P-1: ⚠️ **`id="top"` obligatorio** en el div raíz (renderea el `<Footer />`), y al crearla hay que apuntar ahí el pill "Ver todos los proyectos" de `CaseStudyNextNav` (hoy va a `/{locale}#projects`, la grilla del home) y volver a poner el link del header de `Projects.tsx` (la key `projects.view_all` sigue en los dos JSON). El conteo del build cambia con cada uno: hoy son **15 páginas**; cada proyecto publicado suma 2 y la página de proyectos suma 2 |
+
 ### Bloqueado por contenido de Tiago
 | ID | Tarea | Notas |
 |---|---|---|
-| **IMG-1** | **Rehacer las 35 imágenes** — 7 covers + 28 de case study | Reemplaza a NDA-img, WP-img y B1, que quedaron sin objeto al darse de baja todas las provisorias (§10). 📋 **La dirección de arte, las medidas y el vocabulario de tipos están en `.claude/rules/imagenes.md`**; el cableado en §10 y las prioridades acá abajo. ⚠️ **Ya no son 4 por case study**: la cuota se reemplazó por el vocabulario, así que "28 de case study" es una estimación, no un target. ✅ **D3 ya está hecho**, así que el cableado es solo agregar el `src`: no hay que optimizar nada a mano ni pensar en `srcset`. |
+| **IMG-1** | **Rehacer las imágenes de los 4 publicados** — covers + case study | ⚠️ **Con el alcance nuevo (arriba) el "35 = 7 covers + 28" ya no aplica**: esta versión cubre solo los 4 publicados, y los otros 3 pasan a V2 con sus tandas. Reemplaza a NDA-img, WP-img y B1, que quedaron sin objeto al darse de baja todas las provisorias (§10). 📋 **La dirección de arte, las medidas y el vocabulario de tipos están en `.claude/rules/imagenes.md`**; el cableado en §10 y las prioridades acá abajo. ⚠️ **Ya no son 4 por case study**: la cuota se reemplazó por el vocabulario, así que "28 de case study" es una estimación, no un target. ✅ **D3 ya está hecho**, así que el cableado es solo agregar el `src`: no hay que optimizar nada a mano ni pensar en `srcset`. |
 | **B3** | Métricas reales de FutbolTalent.Pro | Sin data el caso cierra sin impacto duro. |
 
-**Orden de las 35** — hechas en este orden, el sitio queda presentable después del primer bloque en vez de después del último:
+**Orden** — hechas en este orden, el sitio queda presentable después del primer bloque en vez de después del último:
 
-| | Bloque | Cant. | Por qué en ese orden |
-|---|---|---|---|
-| **P0** | Los 4 covers del home (Pulso Creativo, Paseo Güemes, FutbolTalent.Pro, El Ritual del Tono) | 4 | Es lo único que ve alguien que entra y no scrollea. **`pulso-creativo-cover` desbloquea la tarea P-3.** |
-| **P1** | Las 16 de case study de esos 4 | 16 | Son los 4 casos que reciben tráfico desde el home. |
-| **P2** | Los 3 covers restantes | 3 | Solo se ven entrando a `/projects`. |
-| **P3** | Las 12 de case study restantes | 12 | Cola larga. |
+| | Bloque | Por qué en ese orden |
+|---|---|---|
+| **P0** | Los 4 covers del home (Pulso Creativo, Paseo Güemes, FutbolTalent.Pro, El Ritual del Tono) | Es lo único que ve alguien que entra y no scrollea. **`pulso-creativo-cover` desbloqueó la tarea P-3.** |
+| **P1** | Las de case study de esos 4 | Son los 4 casos publicados. Sin cantidad fija por caso (`.claude/rules/imagenes.md` §2) |
+| ~~**P2**~~ · ~~**P3**~~ | ~~Los 3 covers y las imágenes de case study restantes~~ | **Pasaron a V2** con el alcance nuevo (arriba) |
 
-Progreso: P0 `4/4` cableados · **Pulso y Paseo corregidos y publicados** (`7f69757`) · Ritual y FutbolTalent con texto inventado · P1: **Pulso ✅ cerrado (5)**, con 2 pendientes de imagen · **Paseo ✅ cerrado (4)** · **Ritual 🔄 5 cableadas, tanda abierta** por el cover con texto inventado, ver *"Ritual — tanda en curso"* · FutbolTalent `0` · P2 `0/3` · P3 `0`
+Progreso: P0 `4/4` cableados · **Pulso y Paseo corregidos y publicados** (`7f69757`) · Ritual y FutbolTalent con texto inventado · P1: **Pulso ✅ cerrado (5)**, con 2 pendientes de imagen · **Paseo ✅ cerrado (4)** · **Ritual ✅ publicado y verificado en `d6e50eb` (5)**, tanda abierta por el cover con texto inventado · **FutbolTalent `0`: el único de los cuatro sin terminar**
 
 > **Ya no se cuenta sobre 35.** Ese total salía de la cuota de 4 por caso: Pulso cerró con 5 y Paseo con 4. El denominador de cada caso sale de lo que el proyecto tiene para mostrar (`.claude/rules/imagenes.md` §2, *"Casos reales"*).
 
@@ -271,20 +312,19 @@ FutbolTalent es un celular con el logo sobre la sombra de una red de arco.
 
 Sale de la referencia [mikekus.com](https://mikekus.com/): el home muestra 4-6 proyectos destacados, el resto vive en una página aparte, y el cover muestra **el producto a color** que en hover se transforma. Hoy el sitio hace lo contrario en las tres cosas.
 
-**Decidido**: 4 proyectos en el home — **los cuatro que mejor muestran rango** (Pulso Creativo, Paseo Güemes, FutbolTalent.Pro, El Ritual del Tono). El criterio era "los cuatro reales para clientes" y dejó de valer cuando se supo que Ritual es universitario (§7); **se queda en el home porque es el único full-stack con demo en vivo** (decisión de Tiago, 2026-09-21). Los otros 3 (simulación, universitario, concept) solo en `/projects` · página, no carrusel · label en dos líneas · título visible en idle.
+**Decidido**: 4 proyectos en el home — **los cuatro que mejor muestran rango** (Pulso Creativo, Paseo Güemes, FutbolTalent.Pro, El Ritual del Tono). El criterio era "los cuatro reales para clientes" y dejó de valer cuando se supo que Ritual es universitario (§7); **se queda en el home porque es el único full-stack con demo en vivo** (decisión de Tiago, 2026-09-21). Los otros 3 (simulación, universitario, concept) **no están publicados** en esta versión; vuelven en V2, en una página propia · página, no carrusel · label en dos líneas · título visible en idle.
 
 | ID | Tarea | Toca | Notas |
 |---|---|---|---|
 | ~~**P-4**~~ | ~~Label `nombre + servicios`~~ | — | ✅ **Hecha.** El campo `type` se borró; la convención y la tabla de los 7 viven ahora en §7. |
-| **P-1** 🔒 | Página `/projects` con los 7 + un 8º tile de CTA | `app/[locale]/projects/page.tsx` (nueva) · `Projects.tsx` | ⚠️ **`id="top"` obligatorio** en el div raíz: renderea el `<Footer />` y sin ese id el back-to-top queda muerto sin dar error. El build tiene que pasar de 21 a **23 páginas SSG**. |
+| ~~**P-1**~~ | ~~Página `/projects` con los 7 + un 8º tile de CTA~~ | — | ➡️ **Pasó a V2** (arriba, *"Alcance de esta versión"*), junto con los 3 proyectos que la llenan. Las notas de `id="top"` y del link del header se mudaron ahí. |
 | ~~**P-2**~~ | ~~Home a 4 cards~~ | — | ✅ **Hecha.** `featured` → `showOnHome`. La grilla uniforme 3:2 duró poco: se reemplazó por el bento de dos formas (`cardShape`) en P-3. |
 | ~~**P-3**~~ | ~~Dirección de arte de la card~~ | — | ✅ **Hecha.** Reposo: solo la imagen, cero texto. Hover: lavado + nombre + VER PROYECTO + categoría + escuadras. Grilla bento de dos formas. |
 | **P-5** | Cierre de docs: §6, §7 y §10 | `CLAUDE.md` | Esas tres describen "qué existe hoy" — se actualizan recién cuando el código exista, no antes. |
 
-⚠️ **P-1 está congelada por decisión de Tiago** hasta resolver la página de case
-study. **El link "Ver todos los proyectos ↗" se sacó del home**, porque tiraba 404.
-Cuando se retome P-1 hay que volver a ponerlo en el header de `Projects.tsx` — la
-key `projects.view_all` **sigue en los dos JSON**, así que no hay que crearla de
+⚠️ **El link "Ver todos los proyectos ↗" se sacó del home** porque tiraba 404.
+Vuelve con la página de V2, en el header de `Projects.tsx` — la key
+`projects.view_all` **sigue en los dos JSON**, así que no hay que crearla de
 nuevo. En el componente quedó un comentario en el lugar exacto donde iba.
 
 ✅ **La estructura de la página de case study ya se rediseñó** (sigue sin
@@ -327,7 +367,8 @@ de imágenes full-width):
    permitido (wireframes, flujos, design system, personas), y su cover se
    corrige con solo el logo real en pantalla.
 
-**Después de eso** viene P-1, que sigue congelada. Y queda pendiente una
+**Después de FutbolTalent** se cierra esta versión; la página de todos los
+proyectos pasa a V2 (arriba). Y queda pendiente una
 decisión que la estructura nueva habilita pero nadie tomó: qué otros tipos
 además del hero merecen ir a sangre (hoy `palette` y `screen-cluster` van al
 shell de 1280, que fue decisión explícita de Tiago).
@@ -486,7 +527,11 @@ Queda aparte, no bloquea nada:
    funcionando —el HTML emite el `<link rel="preload">` del mockup—, pero
    `CaseStudyImage` usa la prop vieja. Venía de antes.
 
-⏳ **Para DESPUÉS de terminar los siete case studies — no antes:**
+⏳ **Para DESPUÉS de FutbolTalent, dentro de esta versión — no en V2:**
+
+> Decía *"después de los siete case studies"*. Con el alcance nuevo (arriba)
+> Tiago lo fijó así (2026-09-22): Pulso ya está publicado y el diagrama se ve,
+> así que es de esta versión.
 
 8. **`04-diagrama` — ¿reemplazarlo por el producto real?** A Tiago no le
    cierra (2026-09-21). Es la única imagen de los sets publicados que muestra
@@ -546,7 +591,7 @@ escrito en `.claude/rules/imagenes.md` §1.1 como orden de preferencia.
   distancia al fondo: es la más cercana al oscuro de la serie. Probablemente se
   lea —además cambia el tono— pero no está visto.
 
-🔄 **Ritual — tanda en curso** (arrancó 2026-09-21).
+✅ **Ritual — publicado y verificado en `d6e50eb` (2026-09-21)**, con la tanda **abierta** por el cover. Verificado contra el deploy: las 5 imágenes idénticas byte a byte a las del repo · en los dos idiomas, el copy nuevo completo y ninguna de las afirmaciones viejas · el desafío en dos párrafos · las 5 imágenes en orden y con alt · Pulso y Paseo sin cambios (el `split` del desafío no los tocó).
 
 | Archivo | `type` | `slot` | Medida | Estado |
 |---|---|---|---|---|

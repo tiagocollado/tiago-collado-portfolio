@@ -152,6 +152,22 @@ export interface Project {
    */
   cardShape: 'wide' | 'square'
   /**
+   * Si el proyecto existe en el sitio publicado.
+   *
+   * `false` = no se buildea su página (da 404), no aparece en el home y no
+   * entra en el ciclo de "Próximo proyecto". Los datos, el copy y las
+   * imágenes se quedan en el repo: reactivarlo es cambiar este valor a `true`.
+   *
+   * Existe porque la versión actual del portfolio muestra solo los 4 que
+   * están completos. Los otros 3 vuelven en la versión siguiente, junto con
+   * la página de todos los proyectos (CLAUDE.md §8).
+   *
+   * Es distinto de `showOnHome`: `published` decide si la página EXISTE;
+   * `showOnHome`, si además va destacado en la grilla del home. Un proyecto
+   * con `published: false` nunca se muestra, tenga el `showOnHome` que tenga.
+   */
+  published: boolean
+  /**
    * Si el proyecto aparece en la grilla del home.
    *
    * Antes se llamaba `featured` y significaba "ocupa 2 columnas". Ese
@@ -159,11 +175,14 @@ export interface Project {
    * así que este campo solo dice QUÉ se muestra, no cómo. Se renombró en vez
    * de reusarse para que no quedara un nombre arrastrando la semántica vieja.
    *
-   * Hoy: true en los 4 reales para clientes (`order` 1-4). Los otros 3
-   * (simulación, universitario, concept) viven solo en /projects.
+   * Hoy: true en los 4 publicados (`order` 1-4), que son los cuatro que
+   * mejor muestran rango. Los otros 3 no están publicados (ver `published`).
    */
   showOnHome: boolean
-  /** Orden en ambas grillas: la del home y la de /projects. */
+  /**
+   * Orden del home, y también del ciclo de "Próximo proyecto" al pie de cada
+   * case study: los dos leen la misma lista, así que no pueden divergir.
+   */
   order: number
   /**
    * Si es true, el case study renderea con el layout Awwwards-style (sidebar

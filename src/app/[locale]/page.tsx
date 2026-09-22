@@ -5,13 +5,27 @@ import About from '@/components/sections/About'
 import Stack from '@/components/sections/Stack'
 import Contact from '@/components/sections/Contact'
 import Footer from '@/components/ui/Footer'
+import { publishedProjects } from '@/data/projects'
+
+/*
+ * Los proyectos del home se eligen ACÁ, en el servidor, y se le pasan a
+ * <Projects> ya filtrados.
+ *
+ * Por qué no los importa <Projects> directamente: es un componente del
+ * cliente ('use client'), y todo lo que un componente del cliente importa
+ * viaja al navegador en un archivo JS. Si importara `projects.ts`, el
+ * navegador recibiría los datos de los 7 proyectos, incluidos los no
+ * publicados. Pasándole la lista como prop, al navegador llegan solo los 4
+ * que se muestran.
+ */
+const homeProjects = publishedProjects.filter((p) => p.showOnHome)
 
 export default function Home() {
   return (
     <>
       <Hero />
       <ServicesMarquee />
-      <Projects />
+      <Projects projects={homeProjects} />
       <About />
       <Stack />
       {/* Bloque de cierre a pantalla completa.

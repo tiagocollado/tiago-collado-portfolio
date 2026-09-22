@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { projects } from '@/data/projects'
+import { publishedProjects } from '@/data/projects'
 import { CaseStudyImageSlot, Locale } from '@/types'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import CaseStudyMetaBar from '@/components/case-study/CaseStudyMetaBar'
@@ -16,9 +16,20 @@ interface ProjectPageProps {
   }>
 }
 
+/*
+ * Solo se buildean las páginas de los proyectos publicados.
+ *
+ * ⚠️ Sacarlos de acá NO alcanza para que den 404. Por defecto Next genera a
+ * pedido cualquier slug que no esté en esta lista (`dynamicParams = true`),
+ * y como los datos siguen en el repo, la página de un proyecto oculto se
+ * seguiría viendo entrando por la URL. `dynamicParams = false` corta eso: un
+ * slug que no está en la lista da 404, sin render a pedido.
+ */
 export async function generateStaticParams() {
-  return projects.map((project) => ({ slug: project.slug }))
+  return publishedProjects.map((project) => ({ slug: project.slug }))
 }
+
+export const dynamicParams = false
 
 /**
  * El shell de la marca: gutter afuera, ancho máximo adentro.
@@ -39,19 +50,21 @@ function Shell({ children }: { children: React.ReactNode }) {
   )
 }
 
-// Devuelve el siguiente proyecto en el carrusel, con wrap-around al
-// primero cuando estamos en el último.
+// Devuelve el siguiente proyecto publicado, en el orden del home, y vuelve
+// al primero cuando estamos en el último. Antes recorría los 7 del array, así
+// que al final de Ritual aparecía Multibrand, que no está publicado.
 function getNextProject(currentOrder: number) {
-  const eligible = [...projects].sort((a, b) => a.order - b.order)
-  const idx = eligible.findIndex((p) => p.order === currentOrder)
-  return eligible[(idx + 1) % eligible.length]
+  const idx = publishedProjects.findIndex((p) => p.order === currentOrder)
+  return publishedProjects[(idx + 1) % publishedProjects.length]
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { locale, slug } = await params
   setRequestLocale(locale)
 
-  const project = projects.find((p) => p.slug === slug)
+  // Se busca en los publicados, no en todos: es la segunda red, por si algún
+  // día se toca `dynamicParams`. Un proyecto oculto da 404 igual.
+  const project = publishedProjects.find((p) => p.slug === slug)
   if (!project) notFound()
 
   const cs = await getTranslations('case_study')

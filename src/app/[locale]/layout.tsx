@@ -75,6 +75,27 @@ export default async function LocaleLayout({
   setRequestLocale(locale)
   const messages = await getMessages()
 
+  /*
+   * Al navegador le llegan todos los textos MENOS el copy de cada case study
+   * (los bloques `case_study_<slug>`).
+   *
+   * Por qué: `NextIntlClientProvider` mete los mensajes que recibe en el HTML
+   * de cada página, para que los componentes del cliente puedan traducir. Si
+   * le pasamos todos, cada página arrastra el copy de TODOS los case studies
+   * (era el 87% del texto), incluido el de los proyectos no publicados, que
+   * así quedaba legible en el código fuente de cualquier página.
+   *
+   * Ese copy lo lee solo la page del case study, en el servidor, con
+   * `getTranslations`, así que el cliente no lo necesita. Los componentes del
+   * cliente usan otros namespaces (nav, hero, projects, footer, a11y y el
+   * `case_study` genérico con los labels de la página), y esos siguen
+   * llegando: el filtro corta solo lo que empieza con `case_study_`, con el
+   * guion bajo, así que `case_study` a secas no se toca.
+   */
+  const clientMessages = Object.fromEntries(
+    Object.entries(messages).filter(([namespace]) => !namespace.startsWith('case_study_'))
+  )
+
   return (
     <html
       lang={locale}
@@ -83,7 +104,7 @@ export default async function LocaleLayout({
     >
       <body>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          <NextIntlClientProvider messages={messages}>
+          <NextIntlClientProvider messages={clientMessages}>
             <SmoothScrollProvider>
               <CursorProvider>
                 <SkipLink />

@@ -51,6 +51,45 @@ funcionen: si están muertas por el bug de arriba, al sacarlos quedás con cero 
 - Ante cualquier duda de API, leer `node_modules/next/dist/docs/` antes de
   escribir código.
 
+### Sacar un slug de `generateStaticParams` NO lo despublica
+
+Por defecto `dynamicParams` es `true`: un slug que no está en la lista **se
+genera a pedido** la primera vez que alguien entra. Si los datos del proyecto
+siguen en el repo, la página se ve igual, y el build ni lo menciona: la lista
+de rutas sale más corta y parece que funcionó.
+
+Lo que da el 404 es **`export const dynamicParams = false`** en la page.
+Pasó al despublicar Multibrand, Recuérdalo y Cabify (`CLAUDE.md` §8). Como
+segunda red, la page busca el proyecto en `publishedProjects` y llama a
+`notFound()` si no está.
+
+⚠️ `dynamicParams` **no existe si se activa Cache Components** en
+`next.config` (lo dice `node_modules/next/dist/docs/`). Si algún día se
+activa, el 404 depende solo de esa segunda red.
+
+🔍 Se verifica en el build: que `.next/server/app/{es,en}/projects/` tenga
+solo los `.html` de los publicados.
+
+### Ocultar una página no saca su contenido del código fuente
+
+Dos caminos por los que un dato que no se muestra igual llega al navegador,
+sin que se vea nada en pantalla ni lo avise el build:
+
+1. **`NextIntlClientProvider` serializa en el HTML todos los mensajes que
+   recibe.** Si el layout le pasa `getMessages()` entero, cada página lleva
+   el copy de todas las demás. Se le pasan solo los namespaces que usan los
+   componentes del cliente (hoy: todo menos `case_study_*`, filtrado en
+   `layout.tsx`). ⚠️ Si un componente del cliente empieza a usar un
+   namespace que el filtro corta, el texto no aparece y el build no avisa.
+2. **Todo lo que importa un componente `'use client'` viaja entero en un
+   JS.** Si importa un archivo de datos, el navegador recibe el archivo
+   completo, no solo lo que se muestra. Los datos se eligen en un componente
+   del servidor y se pasan como prop (el home le pasa los proyectos a
+   `Projects.tsx`).
+
+🔍 Se verifica buscando el texto en `.next/server/app/**/*.html` (el archivo
+**entero**, no solo lo visible), en los `.rsc` y en `.next/static/**/*.js`.
+
 ### `params` en `opengraph-image.tsx`
 
 También es Promise ahí, no solo en las pages. Si no lo leés, **la imagen sale
