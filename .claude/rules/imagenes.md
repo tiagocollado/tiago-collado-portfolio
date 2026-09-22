@@ -38,6 +38,11 @@ El proceso correcto:
       alternativa.
 3. El marco del dispositivo, el fondo y la luz **sí** pueden ser generados.
    El contenido de la pantalla, **no**.
+4. **Una captura no se retoca.** Si algo en la pantalla no conviene, se vuelve
+   a capturar; no se editan píxeles. Caso real: en el hero de Ritual el carrito
+   dice **3** en el celular y **0** en el desktop, porque son dos sesiones
+   distintas. Se deja así: pintar un número encima convierte la captura en una
+   pantalla inventada, que es justo lo que esta regla prohíbe.
 
 > ⚠️ **La perspectiva es la que trae los problemas.** Deformar una captura para
 > encajarla en una pantalla en ángulo dejó, en la primera corrección de Paseo,
@@ -109,7 +114,7 @@ siendo generados, que es justo lo que la regla permite.
 |---|---|
 | Pulso Creativo | ✅ **Publicado y limpio.** Se corrigió primero incrustando la captura (`a203a6a`) y después se rehízo con el método sin perspectiva, junto con su `00-mockup` (`7f69757`): `2400 × 2400`, párrafo y nav leídos al 100%, rango tonal 209 |
 | Paseo Güemes Hotel | ✅ **Corregido y limpio.** Las dos pantallas estaban generadas (el celular decía *"En el **cezacón** de Salta la Linda, a **poses** del centro histórico y la **zana** de bares"*). Rehecho con el método sin perspectiva: `2400 × 1800` (4:3, la forma de su card), texto real, sin costuras. **Publicable** |
-| El Ritual del Tono | ❌ **Texto inventado, confirmado.** Se corrige en su tanda |
+| El Ritual del Tono | ❌ **Texto inventado, confirmado** (*"los **guionnates** más icónicos"*). **Se queda por decisión de Tiago** (2026-09-21), así que el hero se hizo aparte (§3) y la tanda **sigue abierta** |
 | FutbolTalent.Pro | ❌ **Texto inventado, confirmado.** Se corrige en su tanda (ojo con el NDA, abajo) |
 
 Se hicieron todos con la misma herramienta, así que se asume que los tres
@@ -212,6 +217,7 @@ como lo que usa.
 |---|---|---|---|---|---|---|---|
 | **Pulso Creativo** | hero | intro | decisions | decisions | delivered | — | **5** |
 | **Paseo Güemes** | hero | intro | decisions | delivered | — | — | **4** |
+| **El Ritual del Tono** | hero | intro | decisions | delivered | decisions | — | **5** |
 
 **Pulso va sin imagen en "El desafío".** El desafío era texto denso del cliente
 y conflictos de plantillas de WordPress: no hay nada visual honesto que
@@ -264,6 +270,17 @@ tira es recorrerla.
 > gris alrededor: se ven como capturas chiquitas flotando. **La de Paseo es el
 > estándar** —la home desktop en dos columnas y la mobile en tres, de borde a
 > borde— y la de Pulso se rehace con ese criterio.
+
+> **Variante: varias páginas distintas en vez de una sola partida.** La tira
+> no tiene por qué ser siempre la home. Cuando el valor del proyecto es que es
+> **un producto con varias pantallas** —y no un sitio de una página larga—, las
+> columnas pueden ser páginas diferentes. **Caso real — `01-tira` de El Ritual
+> del Tono:** cuatro columnas —la home, la página de un artista con el setup de
+> cada canción, el catálogo de equipos y la ficha de un producto en mobile—
+> sobre hormigón, en **16:9** (`2400 × 1350`, `frame: { width: 1440, height:
+> 810 }`), llenando el encuadre de borde a borde. Rige lo mismo que en la tira
+> de una sola página: escalar sin deformar, y todas las columnas a la misma
+> altura para que se lean como una fila.
 
 > ⚠️ Antes esta sección decía que la tira **era** el hero de cada case study.
 > Dejó de serlo cuando el hero pasó a ser el `mockup`.
@@ -348,9 +365,24 @@ el sistema visual salió de los logos del cliente y no de una identidad propia.
 > Paseo la usa en el header de su propio sitio. Inventar un recoloreo es
 > maquillar la identidad del cliente, y en un portfolio de UX/UI eso se nota.
 
+> **El "sin tarjeta" es sobre no AGREGAR una caja, no sobre sacarle al logo la
+> suya.** En El Ritual del Tono la púa va dentro de un **círculo blanco con
+> contorno oscuro**, y está bien: así es el asset real, el favicon de la demo.
+> Lo que se prohíbe es meter el logo en una card que no existe en la marca.
+
 **`diagram`.** Solo cuando hay una decisión con estructura que mostrar: un
 flujo, una arquitectura de información, un 70/30. Es el tipo que mejor
 sobrevive a la escala, por 1.2.
+
+> **Se justifica cuando lo que muestra no está en ninguna pantalla.** Si la
+> decisión se ve en el producto, se muestra el producto. **Caso real —
+> `03-diagrama` de El Ritual del Tono:** una Stratocaster del catálogo, un solo
+> documento, referenciada por 11 canciones de 7 artistas. El modelo de datos no
+> aparece en ninguna pantalla y es lo que prueba que el proyecto es full-stack
+> y no un frontend con datos fijos. Sale de los esquemas reales del backend, no
+> del copy. **El contraejemplo es `04-diagrama` de Pulso**: las dos vías de
+> contacto sí se ven en el sitio, y por eso está en revisión (`CLAUDE.md` §8,
+> punto 8).
 
 **`detail`.** Un recorte o zoom de UNA pantalla. **Nunca la pantalla entera**:
 a 330px una pantalla completa es una mancha gris.
@@ -425,6 +457,18 @@ como un sistema y no como un collage:
    **15-25% de opacidad** — la drop shadow default de Figma es demasiado dura y
    corta: subile el blur y bajale la opacidad.
 
+> ⚠️ **Excepción a la regla 1 — El Ritual del Tono.** Su cover lleva un
+> **amplificador Fender en tweed** (amarillo-marrón) y un pedal al lado de la
+> laptop, así que la pantalla **no** es el único color de la imagen. **Decisión
+> de Tiago (2026-09-21): queda.** El motivo: es el objeto que diferencia este
+> cover de los otros tres. Cada cover tiene su protagonista para que la serie
+> no se lea repetida, y el de Ritual es el equipo de guitarra; un ampli gris
+> dejaría de decir "guitarristas".
+>
+> **Es una excepción de color, no un cambio de regla.** Los demás covers siguen
+> acromáticos. Si otro proyecto pide un objeto con color propio, se decide caso
+> por caso y se anota acá.
+
 ### El cover y el hero son el mismo mockup, a propósito
 
 Una sola escena en dos encuadres: el de la card del home (4:3 o 1:1, según
@@ -450,6 +494,21 @@ grande y completa.
 > y a la resolución de su propio export. El mal hecho sale de **recortar y
 > agrandar** el cover. Cambia el lienzo, nunca la calidad.
 
+> ⚠️ **Excepción — El Ritual del Tono: el cover y el hero divergen.** El cover
+> tiene texto inventado en la pantalla (*"los tonos legendarios de los
+> **guionnates** más icónicos"*) y **se queda como está por decisión de Tiago**
+> (2026-09-21). Un hero sacado de esa escena heredaría el texto inventado, y a
+> sangre se lee sin zoom. Por eso el hero es una **composición plana nueva**: la
+> home en desktop (captura plana) y en celular (marco dibujado, pantalla con la
+> captura real) sobre hormigón. Se pierde la continuidad card → hero, y es el
+> precio de no publicar texto inventado a sangre.
+>
+> 🚨 **Esto no cierra el problema del cover.** Por la regla de §1.1, **la tanda
+> de Ritual NO está cerrada** mientras su cover tenga texto inventado. Queda
+> como pendiente, no como resuelto. Cuando se corrija, conviene rearmarlo
+> desde la escena del hero nuevo, así cover y hero vuelven a ser la misma
+> imagen.
+
 > Antes esta regla decía lo contrario: *"si al mirarlos juntos parecen la misma
 > imagen, rehacé uno de los dos"*. Se escribió contra ese `01-hero`, y mezclaba
 > dos cosas distintas: que se parezcan (lo que ahora se busca) y que el hero
@@ -472,7 +531,7 @@ tenía por qué existir.
 
 | | Entorno | Por qué |
 |---|---|---|
-| **Covers** | **Acromático.** El único color sale de la pantalla | Los 4 se ven **juntos** en el home. Si cada uno trae el color de su cliente, la grilla se lee como un collage. Es lo que hace que siete proyectos con paletas distintas parezcan una misma serie |
+| **Covers** | **Acromático.** El único color sale de la pantalla (una excepción anotada en §3: el Fender de Ritual) | Los 4 se ven **juntos** en el home. Si cada uno trae el color de su cliente, la grilla se lee como un collage. Es lo que hace que siete proyectos con paletas distintas parezcan una misma serie |
 | **Case study** | **Color de marca del cliente**, bienvenido (planos de color, bandas de paleta) | Se ve **solo**, una página a la vez. No hay nada con lo que competir, y el color del cliente es información sobre el proyecto |
 
 > **Es un split deliberado, no una contradicción.** La receta acromática existe
@@ -508,6 +567,21 @@ hormigón para lo que muestra el sitio, charcoal para lo que lo documenta.
 | `01-tira` | Hormigón | Solo en las capturas | Familia con el mockup, igual que en Pulso |
 | `02-cluster` | **Plano del marrón marca `#6A442E`** | Sí, todo el fondo | El marrón del logo dice de quién es el proyecto antes de leer nada |
 | `03-paleta` | Gris de **valor medio** (73), con degradado sutil | Sí, las bandas y el logo | El contenido es la paleta. El fondo neutro deja que las muestras se lean, y el valor medio cumple §4.2. El logo va en su **variante clara real**, la que el hotel usa sobre oscuro en su propio header |
+
+**Caso real — El Ritual del Tono.** Paleta del sitio y del logo:
+`#FD9A00` naranja acción · `#C47D58` cobre · `#2257A8` azul · `#0A0A0A`
+negro · `#FFFFFF` blanco. El logo lo generó Tiago con IA: la paleta lo
+muestra, pero **no se presenta como identidad diseñada por él**. Lo suyo son
+las decisiones del sitio (el naranja como color de acción, la interfaz oscura).
+
+| Imagen | Fondo | Color de marca | Por qué está bien |
+|---|---|---|---|
+| Cover | Hormigón gris + ampli Fender tweed | En la pantalla **y en el ampli** | La excepción anotada en §3 |
+| `00-mockup` | Hormigón gris | Solo en las pantallas | Composición nueva, no la escena del cover (§3) |
+| `01-tira` | Hormigón | Solo en las capturas | Familia con el mockup |
+| `02-cluster` | **Plano del cobre del logo `#C47D58`** | Sí, todo el fondo | Mismo lugar que el verde de Pulso y el marrón de Paseo |
+| `03-diagrama` | Hormigón con tarjeta oscura | Acentos en naranja | Documentación |
+| `04-paleta` | Gris de valor medio (73) | Sí, las bandas y el logo | Mismo formato y fondo que las paletas de Pulso y Paseo |
 
 Paseo repite el patrón de Pulso sin buscarlo, y eso lo confirma como sistema:
 **hormigón para las piezas de producto, color de marca en el cluster, y un
@@ -574,6 +648,11 @@ revisado a mano en la página.
 | **Paseo** `02-cluster` | marrón marca, 75 | **58** / 152 | ✅ | — Es la más cercana al oscuro después del charcoal. Mirarla en la página |
 | **Paseo** `03-paleta` | valor medio, 73 | 56 / 154 | ✅ | — Rehecha: la primera versión era charcoal (42), el mismo que el diagrama de Pulso |
 | **Paseo** cover | hormigón, 96 | 79 / 131 | ✅ | — |
+| **Ritual** `00-mockup` | hormigón, 82 | 65 / 145 | ✅ 0% cerca de los dos | — Composición nueva, no la del cover (§3) |
+| **Ritual** `01-tira` | hormigón, 93 | 76 / 134 | ✅ 0% cerca de los dos | — |
+| **Ritual** `02-cluster` | cobre del logo, 137 | 120 / 90 | ✅ 0% cerca de los dos | — |
+| **Ritual** `03-diagrama` | hormigón alrededor de una tarjeta oscura, 92 | 75 / 135 | ✅ 0% cerca de los dos | — **Re-exportada.** La primera versión tenía la tarjeta a 48px del borde: en desktops angostos el recorte se comía el hormigón y el borde visible pasaba a ser la tarjeta oscura, pegada a `#111110`. Ahora está a 103 / 83 |
+| **Ritual** `04-paleta` | valor medio, 73 | 56 / 154 | ✅ 0% cerca de los dos | — Mismo fondo que las paletas de Pulso y Paseo |
 
 El único dato que hay para calibrar un umbral mejor: **25 de distancia contra
 el fondo no alcanza**. Cuando haya más casos vistos en la página, se puede

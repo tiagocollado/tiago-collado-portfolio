@@ -122,6 +122,8 @@ categoría y las escuadras de las 4 esquinas.
 
 **Convención de contenido**: un case study real necesita `awwwardsLayout: true` + 12 keys de TEXTO en ambos JSON (`intro`, `challenge`, `decision_1-3_title/body`, `delivered_1-3`, `closing`). La key **`process`** es opcional (bajada de "Cómo lo resolví") y se carga con `t.has()`. Si falta una obligatoria, el catch deja `hasCaseStudy: false` y el cuerpo no se renderea.
 
+> **`challenge` admite varios párrafos**, separados por una línea en blanco (`\n\n` en el JSON). La page lo parte y rendea un `<p>` por párrafo con `space-y-6`; sin línea en blanco sale un solo párrafo, como antes. Hace falta porque HTML colapsa los saltos de línea: un `\n\n` adentro de un único `<p>` se ve como un espacio. Hoy solo lo usa Ritual (problema de producto + problema técnico). **Las demás keys siguen siendo de un solo párrafo**: si otra lo necesita, se le agrega el mismo `split`.
+
 **Imágenes de case study**: **no hay cantidad fija** — cada proyecto usa los tipos que necesita, pueden ser 2 o 6. Cada brief declara `type` (qué es: `mockup` · `long-strip` · `screen-cluster` · `palette` · `diagram` · `detail`) y `slot` (dónde cae: `hero` · `intro` · `challenge` · `decisions` · `delivered` · `end`). **Varias imágenes pueden compartir `slot`**: eso es lo que da los grupos de 2-3 seguidas sin texto entre medio.
 
 En mobile se ven completas y quietas (sin crop ni parallax); el recorte y el parallax arrancan en `md+`, y `mockup` y `long-strip` no llevan ninguno de los dos en ningún breakpoint. No tienen hover ni cursor custom porque no abren nada — **por eso la regla de rango tonal ≥120 no les aplica**: existe para que se perciba el duotono del hover de las cards.
@@ -160,7 +162,7 @@ Orden = campo `order`. Qué se muestra en el home lo decide `showOnHome`; la for
 | 1 | **Paseo Güemes Hotel** | 2026 | ✅ | ancha | Hotel 3★ en Salta. UX/UI + WordPress, reserva directa contra OTAs. |
 | 2 | **Pulso Creativo** | 2026 | ✅ | **cuadrada** | Consultora B2B 25+ años. Sitio institucional, contacto dual, rediseño UX del contenido. |
 | 3 | **FutbolTalent.Pro** | 2025 | ✅ | ancha | UX/UI de plataforma de scouting. **Bajo NDA — ver sección 4.** |
-| 4 | **El Ritual del Tono** | 2025 | ✅ | ancha | Full-stack MERN con demo en vivo. |
+| 4 | **El Ritual del Tono** | 2025 | ✅ | ancha | **Proyecto universitario** (Programación Multimedial III, Maimónides). Full-stack MERN con demo en vivo. |
 | 5 | **Multibrand Design System** | 2025 | — | ancha | Simulación laboral No Country, equipo de 6. |
 | 6 | **Recuérdalo** | 2025 | — | **cuadrada** | Proyecto universitario, UX inclusivo para adultos 70+. |
 | 7 | **Cabify Music Match** | 2023 | — | ancha | Concept UX/UI, prototipo iPhone 14. |
@@ -186,7 +188,9 @@ desktop las columnas vuelven a `flex` y el `order` no molesta.
 
 **Fuera del portfolio**: Retro Kicks, Govah, SoundCloud Redesign, Rick & Morty Explorer.
 
-**Regla**: salvo que se diga "académico" o "universitario", se asume que el proyecto es real. Hoy solo Recuérdalo está flageado como universitario.
+**Regla**: salvo que se diga "académico" o "universitario", se asume que el proyecto es real. Hoy hay **dos** flageados como universitarios, con el mismo formato en `metadata.client` (`Proyecto universitario · Maimónides`): **Recuérdalo** y **El Ritual del Tono**.
+
+> ⚠️ **El Ritual del Tono estuvo mal clasificado**: figuraba como "Proyecto personal" en `projects.ts` y como uno de "los reales para clientes" en §8. Es un trabajo de **Programación Multimedial III (Universidad Maimónides, 2025)** — lo dice la página About de la propia demo. Antes de rotular un proyecto, mirar si el sitio publicado dice de dónde salió.
 
 ### Cómo se rotula cada proyecto — formato de agencia
 
@@ -249,7 +253,7 @@ Solo lo que Tiago pueda defender en una entrevista.
 | **P2** | Los 3 covers restantes | 3 | Solo se ven entrando a `/projects`. |
 | **P3** | Las 12 de case study restantes | 12 | Cola larga. |
 
-Progreso: P0 `4/4` cableados · **Pulso y Paseo corregidos y publicados** (`7f69757`) · Ritual y FutbolTalent con texto inventado · P1: **Pulso ✅ cerrado (5)**, con 2 pendientes de imagen · **Paseo ✅ cerrado (4)** · FutbolTalent y Ritual `0` · P2 `0/3` · P3 `0`
+Progreso: P0 `4/4` cableados · **Pulso y Paseo corregidos y publicados** (`7f69757`) · Ritual y FutbolTalent con texto inventado · P1: **Pulso ✅ cerrado (5)**, con 2 pendientes de imagen · **Paseo ✅ cerrado (4)** · **Ritual 🔄 5 cableadas, tanda abierta** por el cover con texto inventado, ver *"Ritual — tanda en curso"* · FutbolTalent `0` · P2 `0/3` · P3 `0`
 
 > **Ya no se cuenta sobre 35.** Ese total salía de la cuota de 4 por caso: Pulso cerró con 5 y Paseo con 4. El denominador de cada caso sale de lo que el proyecto tiene para mostrar (`.claude/rules/imagenes.md` §2, *"Casos reales"*).
 
@@ -267,7 +271,7 @@ FutbolTalent es un celular con el logo sobre la sombra de una red de arco.
 
 Sale de la referencia [mikekus.com](https://mikekus.com/): el home muestra 4-6 proyectos destacados, el resto vive en una página aparte, y el cover muestra **el producto a color** que en hover se transforma. Hoy el sitio hace lo contrario en las tres cosas.
 
-**Decidido**: 4 proyectos en el home — los reales para clientes (Pulso Creativo, Paseo Güemes, FutbolTalent.Pro, El Ritual del Tono); los otros 3 (simulación, universitario, concept) solo en `/projects` · página, no carrusel · label en dos líneas · título visible en idle.
+**Decidido**: 4 proyectos en el home — **los cuatro que mejor muestran rango** (Pulso Creativo, Paseo Güemes, FutbolTalent.Pro, El Ritual del Tono). El criterio era "los cuatro reales para clientes" y dejó de valer cuando se supo que Ritual es universitario (§7); **se queda en el home porque es el único full-stack con demo en vivo** (decisión de Tiago, 2026-09-21). Los otros 3 (simulación, universitario, concept) solo en `/projects` · página, no carrusel · label en dos líneas · título visible en idle.
 
 | ID | Tarea | Toca | Notas |
 |---|---|---|---|
@@ -460,7 +464,8 @@ rehaga las de Pulso):
    demasiado gris alrededor: a sangre se ven como capturas chiquitas flotando,
    y una imagen a sangre tiene que tener presencia. Se agrandan **con el
    criterio de la tira de Paseo**, que llena el encuadre de borde a borde.
-5. **`04-diagrama` — dos cosas en la misma pasada.**
+5. **`04-diagrama` — dos cosas en la misma pasada.** ⏸ **En suspenso hasta
+   decidir el punto 8**: si el diagrama se reemplaza, este arreglo no hace falta.
    - **El borde no se lee.** El charcoal da los números (0% cerca de
      `#111110`) pero en la página real el contorno casi no se ve. Sube un
      escalón. Es el caso que demostró que el número de §4.2 es un piso y no
@@ -480,6 +485,27 @@ Queda aparte, no bloquea nada:
 7. **`priority` está deprecado en Next 16** (reemplazado por `preload`). Sigue
    funcionando —el HTML emite el `<link rel="preload">` del mockup—, pero
    `CaseStudyImage` usa la prop vieja. Venía de antes.
+
+⏳ **Para DESPUÉS de terminar los siete case studies — no antes:**
+
+8. **`04-diagrama` — ¿reemplazarlo por el producto real?** A Tiago no le
+   cierra (2026-09-21). Es la única imagen de los sets publicados que muestra
+   una decisión **en abstracto** en vez del sitio, y al final de la página
+   rompe el registro: todo lo anterior es producto, y el cierre es un esquema.
+   - **Candidato**: una captura de la página de contacto de Pulso con el
+     formulario y el botón de WhatsApp **en el mismo encuadre**. Muestra la
+     misma decisión (dos vías de contacto), pero en el producto real.
+   - **Si se reemplaza, el `type` pasa de `diagram` a `screen-cluster` o
+     `detail`.** Ojo con §1.2 de las rules: la página de contacto entera tiene
+     labels y texto chico, así que como `detail` va recortada a formulario +
+     botón. Y el botón de WhatsApp es el flotante de Joinchat (`position:
+     fixed`): verificar que aparezca en la captura y al lado del formulario,
+     porque un elemento fijo no siempre queda donde se lo ve al scrollear.
+   - **Arrastra docs**: `.claude/rules/imagenes.md` cita este diagrama como
+     *"el estándar a igualar"* en §1.2 y lo lista en §2, §4.1, §4.2 y §5. Si se
+     reemplaza, esas menciones se actualizan en la misma pasada.
+   - **Mata el punto 5** si se reemplaza, y con él la nota de las dos piezas de
+     documentación desparejas.
 
 ✅ **Paseo — cerrado.** Cuatro imágenes de cuatro tipos, y el cover limpio. Se
 borraron las 4 provisorias (`01-hero` · `02-challenge` · `03-decisions` ·
@@ -520,6 +546,47 @@ escrito en `.claude/rules/imagenes.md` §1.1 como orden de preferencia.
   distancia al fondo: es la más cercana al oscuro de la serie. Probablemente se
   lea —además cambia el tono— pero no está visto.
 
+🔄 **Ritual — tanda en curso** (arrancó 2026-09-21).
+
+| Archivo | `type` | `slot` | Medida | Estado |
+|---|---|---|---|---|
+| `00-mockup.jpg` | `mockup` | `hero` | `2560×1097` (21:9), a sangre — **composición plana nueva**: home en desktop y en celular sobre hormigón, centrada (205 / 207px a 2×) | ✅ Cableada. El carrito dice 3 en el celular y 0 en el desktop: **es real y no se edita** (§1.1 de las rules) |
+| `01-tira.jpg` | `long-strip` | `intro` | `2400×1350` (16:9), a sangre — **cuatro páginas distintas** (home, artista, catálogo, producto en mobile) sobre hormigón | ✅ Cableada |
+| `02-cluster.jpg` | `screen-cluster` | `decisions` | `2400×1600`, sobre el cobre del logo `#C47D58` — el flujo real del botón: setup de *Comfortably Numb* → carrito con esos tres → checkout | ✅ Cableada |
+| `03-diagrama.jpg` | `diagram` | `decisions` | `2400×1600` — la Stratocaster '60s, 1 documento, 11 canciones de 7 artistas | ✅ Cableada. Re-exportada: la tarjeta quedaba a 48px del borde y ahora está a 103 / 83 (zona segura 80). Se achicó **la tarjeta, no el contenido**: escalar todo al 90% bajaba los nombres de 70 a 63px |
+| `04-paleta.jpg` | `palette` | `delivered` | `2400×1350` (16:9), formato sin tarjeta, fondo de valor medio (73) | ✅ Cableada |
+| cover | — | — | `2400×1800` | ❌ **Texto inventado. Se queda por decisión de Tiago**, así que el hero se hizo aparte |
+
+🚨 **La tanda NO está cerrada.** Por la regla de la propia tanda (arriba, punto 3), no cierra mientras el cover tenga texto inventado: *"los tonos legendarios de los **guionnates** más icónicos"*. **Queda como pendiente, no como resuelto.** Y en Ritual **el cover y el hero divergen**: el hero no pudo salir de la escena del cover sin heredar ese texto, que a sangre se lee sin zoom. La excepción está escrita en `.claude/rules/imagenes.md` §3.
+
+Verificado en las cinco: texto real al 100% (la descripción de *Comfortably Numb* coincide palabra por palabra con la API; los precios del clúster, con el catálogo) · luminancia de borde (§4.2 de las rules) · build de 21 páginas, con las cinco en orden en los dos idiomas.
+
+**El copy tenía afirmaciones falsas, y no se desactualizaron: nunca fueron ciertas.** Las escribió Claude chat al armar el caso, rellenando un hueco: Tiago había dicho que no recordaba cómo había resuelto el carrito, y en vez de preguntar se completó con una explicación técnica plausible. Es el mismo patrón que el ruteo de WhatsApp de Pulso. Contrastado contra la API en vivo, el frontend publicado y los dos repos:
+
+| Dice | Es |
+|---|---|
+| `intro`: *"motor de búsqueda inversa… buscás por artista y canción"* | No hay buscador: se navega artista → canción |
+| `challenge`: *"5–8 productos"* | Los setups tienen 2 o 3 |
+| `challenge`: *"respetando stock"* | El stock no se valida en ningún lado, ni al agregar ni al comprar |
+| `challenge`: *"sincronizando estado entre backend y Context API"* | El carrito vive solo en el Context; el backend se entera recién en el checkout |
+| `decision_1`: endpoint que recibe un array de IDs y valida disponibilidad | No existe. El botón hace un `forEach` en el cliente |
+| `decision_2`: *"David Gilmour y John Mayer"* | John Mayer no está en la demo |
+| `closing`: *"el 90% de las queries"* | Inventado |
+| `decision_3`: *"en vez de 50 artistas × 10 tonos"* · *"en vez de integrar Stripe"* | Inventado. El alcance fue 13 × 2 desde el principio; lo que se recortó fue el catálogo de equipos |
+| `decision_3`: *"demostrar la transaccionalidad"* | Era la palabra del requisito de la materia y no describe el código: el backend guarda la orden tal como llega |
+
+**Lo que sí es cierto**: 13 artistas con 2 canciones cada uno · canciones como subdocumentos del artista · el setup apunta por `ObjectId` a equipos compartidos · checkout simulado · 3 colecciones · todo en Vercel.
+
+✅ **Copy reescrito y aplicado (2026-09-21)**, con dos fuentes: el código del botón y de los modelos, y lo que Tiago recuerda. Cada afirmación dice de cuál sale.
+- **challenge** en dos párrafos: el benchmark real (Equipboard, YouTube, foros → *"la tienda tenía que ordenar el equipo por canción"*) y después el One-Click Setup.
+- **decision_1**: por qué funcionan las llamadas seguidas (`setCart(prev => …)`). Que fue lo que más le costó es su recuerdo; el porqué lo prueba el código. Sin inventar cómo lo descubrió.
+- **decision_2**: el Tube Screamer de Cerati y Stevie Ray Vaughan, y 26 canciones → 18 equipos.
+- **closing**: las tres limitaciones reales, sin suavizar, y cómo las resolvería (como propuesta, no como algo hecho).
+- **delivered_2**: sus decisiones de UI (interfaz oscura, naranja como color de acción). El logo lo generó con IA y **no se presenta como identidad diseñada por él**.
+- Tagline a *"guitarrista"* en los dos idiomas (los 13 lo son) · `description` sin *"buscá artistas"* · la materia con su nombre original en los dos idiomas.
+
+> 📌 **Lección**: cuando falta el dato, se pregunta. Un hueco en el copy se ve; una explicación técnica plausible y falsa no, y en una entrevista es lo primero que se repregunta.
+
 **Pendiente que dejó P-4** — el link a un prototipo de Figma **no se renderea**. El campo `links.figma` está declarado en `types/index.ts` y documentado ahí, pero hoy ningún proyecto tiene uno y Tiago decidió no cablearlo por ahora. Si alguna vez se agrega, hacen falta **tres** cosas y ninguna avisa si falta:
 
 1. el `push` a `linkItems` en `CaseStudyMetaBar.tsx` (hoy solo empuja `live`, `github` y `githubBack`),
@@ -543,6 +610,7 @@ ya está decidida y no se toca, así que la tipografía es el eje donde diferenc
 ### Técnico
 | ID | Tarea | Notas |
 |---|---|---|
+| **T4** 🔴 | **Proteger los endpoints de escritura de la API de El Ritual del Tono** — prioridad alta | `api-el-ritual-del-tono.vercel.app` acepta `POST`, `PUT` y `DELETE` en `/products` **sin ninguna autenticación** (`routes/products.js` del repo del backend). La demo está linkeada desde el portfolio: si alguien vacía el catálogo, el reclutador que hace clic en "ver demo" encuentra una tienda vacía, y además es justo lo que se captura para las imágenes. Lo mínimo es cerrar la escritura (una API key en un header, o sacar esas rutas del deploy si no las usa el frontend — hoy el frontend solo hace `GET` y `POST /orders`). De yapa: una ruta inexistente devuelve 500 con `"createError is not defined"` en vez de un 404. |
 | **T2** | Lighthouse audit real | Manual en DevTools. No hay números del bundle post-rework. |
 | **T3** | ¿Mover `CLAUDE.md` y `AGENTS.md` a un `.docs/` privado? | Decisión pendiente de Tiago para cuando el repo público madure. Revisar también el `.gitignore`. |
 | **E** | Easter egg · Vercel Analytics · dominio NIC.ar | Cuando haya ganas. |
@@ -648,7 +716,7 @@ src/
 
 **Imágenes**: `public/images/covers/{slug}-cover.*` (cards del home) · `public/images/case-study/{slug}/{nn}-{nombre}.*` — el número es el orden, el nombre es el tipo de pieza (`mockup`, `tira`, `cluster`…), nunca la sección. 📋 **Las medidas, el vocabulario de tipos y la dirección de arte están en `.claude/rules/imagenes.md`** — no improvisar tamaños acá. Nada más va en `public/`: **todo lo que está ahí se sirve en producción** (ver §11).
 
-> **Hoy hay 13 imágenes en el repo**: los 4 covers del home (Ritual y FutbolTalent con texto inventado; Paseo corregido pero con pendientes, §8) + las 5 de Pulso + las 4 de Paseo. Ya no queda ninguna provisoria. Los 3 covers restantes y las imágenes de los otros case studies todavía no existen: su `coverImage` es `null` y sus `imageBriefs` no tienen `src`.
+> **Hoy hay 15 imágenes en el repo**: los 4 covers del home (Ritual y FutbolTalent con texto inventado) + las 5 de Pulso + las 4 de Paseo + 2 de Ritual (tanda en curso, §8). Ya no queda ninguna provisoria. Los 3 covers restantes y las imágenes de los otros case studies todavía no existen: su `coverImage` es `null` y sus `imageBriefs` no tienen `src`.
 
 > ⚠️ **Antes de estas hubo 31 que se dieron de baja de una sola vez** (7 covers + 24 de case study). Eran provisorias y se leían como generadas con IA: en un portfolio de UX/UI una imagen que parece IA contradice el argumento del portfolio más fuerte de lo que un hueco lo debilita. Es el motivo por el que existe la regla de la captura real (`.claude/rules/imagenes.md` §1.1).
 

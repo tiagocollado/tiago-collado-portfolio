@@ -257,12 +257,12 @@ export const projects: Project[] = [
     slug: 'el-ritual-del-tono',
     title: 'El Ritual del Tono',
     tagline: {
-      es: 'Encontrá el tono exacto de tu artista favorito.',
+      es: 'Encontrá el tono exacto de tu guitarrista favorito.',
       en: 'Find the exact tone of your favorite guitarist.',
     },
     description: {
-      es: 'Aplicación full-stack para guitarristas: buscá artistas, explorá su equipamiento y descubrí cómo replicar su sonido.',
-      en: 'Full-stack app for guitarists: search artists, explore their gear and discover how to replicate their sound.',
+      es: 'Aplicación full-stack para guitarristas: elegí un artista, explorá su equipamiento y descubrí cómo replicar su sonido.',
+      en: 'Full-stack app for guitarists: pick an artist, explore their gear and discover how to replicate their sound.',
     },
     tags: ['React', 'Next.js', 'Node.js', 'Express', 'MongoDB', 'Tailwind CSS'],
     services: {
@@ -275,53 +275,86 @@ export const projects: Project[] = [
       live:       'https://el-ritual-del-tono.vercel.app',
     },
     cardShape: 'wide',
-    // ❌ TEXTO INVENTADO EN LA PANTALLA (confirmado). Se corrige en la tanda
-    // de imagenes de este proyecto, junto con el mockup del hero: la tanda no
-    // esta cerrada mientras esto siga asi. Ver `.claude/rules/imagenes.md` §1.1.
+    // ❌ TEXTO INVENTADO EN LA PANTALLA (confirmado: "los tonos legendarios de
+    // los guionnates mas iconicos"). Queda como esta por decision de Tiago, y
+    // por eso el hero NO sale de este mockup: es una composicion nueva (§3 de
+    // las rules). La tanda de Ritual no cierra mientras el cover siga asi.
     coverImage: '/images/covers/el-ritual-del-tono-cover.jpg',
     year: 2025,
     showOnHome: true,
     order: 4,
     awwwardsLayout: true,
     metadata: {
-      client:   { es: 'Proyecto personal',                   en: 'Personal project' },
+      client:   { es: 'Proyecto universitario · Maimónides', en: 'University project · Maimónides' },
       role:     { es: 'Diseño UI y Desarrollo Full-stack',   en: 'UI Design & Full-stack Development' },
       duration: { es: '2 meses',                             en: '2 months' },
       team:     { es: 'Diseño y desarrollo end-to-end',      en: 'End-to-end design & development' },
       stack:    ['React', 'Next.js', 'Node.js', 'MongoDB', 'Tailwind'],
     },
+    /*
+     * Cinco imagenes con el vocabulario.
+     *
+     * - El hero NO es el cover en otro encuadre, como en Pulso y Paseo: el
+     *   cover tiene texto inventado y se queda asi por decision de Tiago, asi
+     *   que el hero es una composicion plana nueva (§3 de las rules).
+     * - `decisions` lleva dos seguidas: el cluster cuenta la decision_1 (el
+     *   flujo real del boton) y el diagrama la decision_2 (un equipo, varios
+     *   artistas).
+     * - El diagrama se justifica porque el modelo de datos no aparece en
+     *   ninguna pantalla, y es lo que prueba que el proyecto es full-stack.
+     *   Sale de los esquemas reales del backend, no del copy.
+     * - `challenge` va sin imagen.
+     */
     imageBriefs: [
       {
-        type: 'detail',
+        type: 'mockup',
         slot: 'hero',
         alt: {
-          es: 'Hero shot — página principal de El Ritual del Tono mostrando un artista y su cadena de señal',
-          en: 'Hero shot — El Ritual del Tono main page showing an artist and their signal chain',
+          es: 'La home de El Ritual del Tono en desktop y en celular, sobre hormigón',
+          en: 'The El Ritual del Tono home page on desktop and on a phone, on concrete',
         },
+        src: '/images/case-study/el-ritual-del-tono/00-mockup.jpg',
       },
       {
-        type: 'diagram',
-        slot: 'challenge',
+        type: 'long-strip',
+        slot: 'intro',
+        // Variante de la tira: cuatro paginas DISTINTAS lado a lado, en vez
+        // de la home partida en columnas. Aca el valor es que el producto
+        // tiene varias pantallas (§2 de las rules).
+        frame: { width: 1440, height: 810 },
         alt: {
-          es: 'Esquema de las 3 colecciones MongoDB del proyecto: Artists con Songs como subdocumentos, Gears reutilizables y Orders',
-          en: 'MongoDB schema diagram with 3 collections: Artists with Songs subdocuments, reusable Gears, and Orders',
+          es: 'Cuatro pantallas de la demo, lado a lado: la home, la página de un artista con el setup de cada canción, el catálogo de equipos y la ficha de un producto en mobile',
+          en: 'Four screens of the demo side by side: the home page, an artist page with the setup for each song, the gear catalog, and a product page on mobile',
         },
-      },
-      {
-        type: 'detail',
-        slot: 'decisions',
-        alt: {
-          es: 'Página de canción mostrando la cadena de señal: guitarra, pedales y amplificador en orden',
-          en: 'Song page showing the signal chain: guitar, pedals, and amp in order',
-        },
+        src: '/images/case-study/el-ritual-del-tono/01-tira.jpg',
       },
       {
         type: 'screen-cluster',
+        slot: 'decisions',
+        // Sobre el cobre del logo `#C47D58` (§4.1 de las rules).
+        alt: {
+          es: 'Tres pantallas mobile sobre el cobre del logo: el setup de Comfortably Numb con el botón Comprar Sonido Completo, el carrito con esos tres equipos y el checkout',
+          en: 'Three mobile screens on the logo copper: the Comfortably Numb setup and its one-click buy button, the cart holding those three pieces of gear, and checkout',
+        },
+        src: '/images/case-study/el-ritual-del-tono/02-cluster.jpg',
+      },
+      {
+        type: 'diagram',
+        slot: 'decisions',
+        alt: {
+          es: 'La Stratocaster de los 60 del catálogo, un solo documento, conectada a los siete artistas que la usan en once canciones',
+          en: "The catalog's '60s Stratocaster, a single document, linked to the seven artists who use it across eleven songs",
+        },
+        src: '/images/case-study/el-ritual-del-tono/03-diagrama.jpg',
+      },
+      {
+        type: 'palette',
         slot: 'delivered',
         alt: {
-          es: 'Carrito y checkout simulado mostrando el setup completo de un tono',
-          en: 'Cart and simulated checkout showing the complete tone setup',
+          es: 'Paleta del sitio y del logo, con el logo de la púa al lado: naranja acción, cobre, azul, negro y blanco',
+          en: 'Palette from the site and the logo, shown next to the guitar-pick logo: action orange, copper, blue, black, and white',
         },
+        src: '/images/case-study/el-ritual-del-tono/04-paleta.jpg',
       },
     ],
   },

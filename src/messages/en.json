@@ -68,18 +68,18 @@
     "closing": "I worked in parallel with the frontend developer, validating the technical feasibility of each screen. Operating under strict confidentiality rules required me to be extremely methodical: rigorously documenting the 'why' behind each UX decision and ensuring a seamless handoff."
   },
   "case_study_el-ritual-del-tono": {
-    "intro": "I built a reverse search engine for guitarists: you search by artist and song, and the app returns the full signal chain (guitar, pedals, amplifier) to replicate that exact sound. MERN stack, deployed on Vercel.",
-    "challenge": "Letting a user add 5–8 products to the cart with a single click, without duplicating items, respecting stock, and syncing state between backend and Context API. The transaction had to feel atomic from the UI.",
-    "decision_1_title": "Atomic One-Click Setup",
-    "decision_1_body": "A dedicated endpoint that receives an array of IDs, validates availability in MongoDB, and returns only the addable items. The frontend updates the cart in a single operation, with no partially loaded products visible to the user.",
-    "decision_2_title": "Shared gear across artists",
-    "decision_2_body": "David Gilmour and John Mayer use similar pedals. Modeling each gear as unique per artist would have blown up the database. Solution: an independent Gears collection where each Song points to reusable ObjectIds.",
+    "intro": "I designed and built El Ritual del Tono, a store for guitarists. You pick an artist, open one of their songs, and see the gear behind that sound, ready to add to the cart. A university project for my Programación Multimedial III course, with a Next.js frontend and a Node, Express, and MongoDB backend.",
+    "challenge": "Before writing code, I compared what already existed. Equipboard lists each artist's gear, but not by song. YouTube channels explain a tone, but you have to watch the whole thing to find one detail. And on forums the information is scattered. The store had to organize gear by song.\n\nThe hardest part was the One-Click Setup, the button that adds a song's two or three pieces of gear to the cart. A single click triggers several updates in a row to the same cart.",
+    "decision_1_title": "Each update builds on the last",
+    "decision_1_body": "The button walks through the setup and adds the gear one piece at a time. It works because the cart is updated from its previous state, with setCart(prev => …), so each call gets the cart the previous one left. If the calls read the cart variable instead, they would all start from the same stale cart and only the last piece would stay. Gear that's already in the cart isn't duplicated.",
+    "decision_2_title": "Gear shared across artists",
+    "decision_2_body": "I checked which artists used the same gear so I wouldn't load duplicate products. Each piece of gear is a single MongoDB document that songs reference by ObjectId. Cerati's Tube Screamer is the same document as Stevie Ray Vaughan's. The 26 songs point to 18 pieces of gear, and 8 of them are shared by two or more artists.",
     "decision_3_title": "Trimmed scope, functional MVP",
-    "decision_3_body": "Instead of 50 artists × 10 tones, I focused on 13 iconic artists with 2 tones each. Simulated checkout in MongoDB instead of integrating Stripe. Enough to demonstrate the transactional flow without getting stuck on payment integrations.",
+    "decision_3_body": "I cut down the gear catalog, because loading every pedal of every artist would never have ended. The 13 artists with two songs each were the scope from the start. Checkout saves the order to MongoDB without charging, which is enough to go through the store from song to order.",
     "delivered_1": "Node.js + Express backend with REST API and 3 MongoDB collections",
-    "delivered_2": "Next.js frontend + React Context API + Tailwind CSS",
+    "delivered_2": "Next.js frontend with React Context and Tailwind, a dark interface, and orange as the action color",
     "delivered_3": "Deployed on Vercel with end-to-end live demo (artist → song → cart → checkout)",
-    "closing": "Modeling data in MongoDB is fundamentally different from SQL. I chose subdocuments (Songs inside Artists) because 90% of queries are 'give me the songs by this artist': no populate needed, faster responses. If I were to redo it: authentication + user-shared setups to turn personal curation into a guitarist social network."
+    "closing": "If I did it again, I'd fix three limitations the demo has today. The setup button overwrites the quantity. If a piece of gear was in the cart with three units, it drops back to one. Stock is never validated, neither when adding to the cart nor when placing the order. And the cart only lives in memory, so it's gone when the page reloads. I'd solve them by adding to the quantity instead of replacing it, checking stock on the backend when the order comes in, and saving the cart so it survives a reload."
   },
   "case_study_cabify-music-match": {
     "intro": "Cabify already had a music option, but it only changed the radio station (dead tech). I designed Music Match: a feature that merges driver and passenger tastes via Spotify, without adding friction to the trip request flow.",

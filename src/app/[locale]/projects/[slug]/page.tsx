@@ -197,12 +197,23 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           {/* EL DESAFÍO */}
           <Shell>
             <CaseStudySection label={cs('cs_challenge')}>
-              <p
-                className="text-lg md:text-xl leading-relaxed max-w-2xl text-pretty"
-                style={{ color: 'var(--ink-secondary)' }}
-              >
-                {awwwardsContent.challenge}
-              </p>
+              {/* El desafío puede tener más de un párrafo: en el JSON van
+                  separados por una línea en blanco (\n\n). Hace falta
+                  partirlo acá porque HTML colapsa los saltos de línea, y un
+                  solo <p> pegaría los dos párrafos en uno. Un challenge sin
+                  línea en blanco da un array de un elemento y se ve igual
+                  que antes. */}
+              <div className="max-w-2xl space-y-6">
+                {awwwardsContent.challenge.split('\n\n').map((paragraph, i) => (
+                  <p
+                    key={i}
+                    className="text-lg md:text-xl leading-relaxed text-pretty"
+                    style={{ color: 'var(--ink-secondary)' }}
+                  >
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
             </CaseStudySection>
           </Shell>
           {/* Pulso no tiene imagen acá, a propósito: su desafío era texto
