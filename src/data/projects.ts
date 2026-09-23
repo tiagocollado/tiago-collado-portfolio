@@ -28,7 +28,6 @@ export const projects: Project[] = [
     published: true,
     showOnHome: true,
     order: 1,
-    awwwardsLayout: true,
     metadata: {
       client:   { es: 'Paseo Güemes Hotel · Salta',                                en: 'Paseo Güemes Hotel · Salta' },
       role:     { es: 'Dirección de arte, diseño UX/UI e implementación en WordPress', en: 'Art direction, UX/UI design & WordPress implementation' },
@@ -114,7 +113,6 @@ export const projects: Project[] = [
     published: true,
     showOnHome: true,
     order: 2,
-    awwwardsLayout: true,
     metadata: {
       client:   { es: 'Pulso Creativo',                                              en: 'Pulso Creativo' },
       role:     { es: 'Diseño UX/UI e implementación en WordPress',                  en: 'UX/UI design & WordPress implementation' },
@@ -215,7 +213,6 @@ export const projects: Project[] = [
     published: true,
     showOnHome: true,
     order: 3,
-    awwwardsLayout: true,
     metadata: {
       client:   { es: 'FutbolTalent.Pro',                    en: 'FutbolTalent.Pro' },
       role:     { es: 'Diseñador UX/UI',                     en: 'UX/UI Designer' },
@@ -291,7 +288,6 @@ export const projects: Project[] = [
     published: true,
     showOnHome: true,
     order: 4,
-    awwwardsLayout: true,
     metadata: {
       client:   { es: 'Proyecto universitario · Maimónides', en: 'University project · Maimónides' },
       role:     { es: 'Diseño UI y Desarrollo Full-stack',   en: 'UI Design & Full-stack Development' },
@@ -390,7 +386,6 @@ export const projects: Project[] = [
     published: false,
     showOnHome: false,
     order: 7,
-    awwwardsLayout: true,
     metadata: {
       client:   { es: 'Concept · Cabify',                    en: 'Concept · Cabify' },
       role:     { es: 'Diseño UX/UI y Prototipado',          en: 'UX/UI Design & Prototyping' },
@@ -457,7 +452,6 @@ export const projects: Project[] = [
     published: false,
     showOnHome: false,
     order: 5,
-    awwwardsLayout: true,
     metadata: {
       client:   { es: 'Simulación · No Country',             en: 'Simulation · No Country' },
       role:     { es: 'Diseño UX/UI y Design System',        en: 'UX/UI Design & Design System' },
@@ -525,7 +519,6 @@ export const projects: Project[] = [
     published: false,
     showOnHome: false,
     order: 6,
-    awwwardsLayout: true,
     metadata: {
       client:   { es: 'Proyecto universitario · Maimónides', en: 'University project · Maimónides' },
       role:     { es: 'Investigación UX y Diseño Inclusivo', en: 'UX Research & Inclusive Design' },

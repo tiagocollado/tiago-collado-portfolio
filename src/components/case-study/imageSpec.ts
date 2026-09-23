@@ -94,7 +94,7 @@ export const IMAGE_TYPE_SPEC: Record<CaseStudyImageType, ImageTypeSpec> = {
     parallax: true,
   },
   // Bandas de color con su nombre. Van más anchas y más bajas que una
-  // pantalla: 16:9 le da el formato de tira que tiene en la referencia.
+  // pantalla: 16:9 les da formato de tira.
   palette: {
     bleed: false,
     aspect: 'video',

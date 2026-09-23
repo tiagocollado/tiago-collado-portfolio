@@ -92,7 +92,7 @@ export default function Hero() {
             />
           </div>
 
-          {/* CTA "Ver proyectos" — Awwwards minimal: texto en mono uppercase
+          {/* CTA "Ver proyectos" — minimal: texto en mono uppercase
               + 5 chevrons animados en cascada hacia abajo. Wrappeado en
               <MagneticLink> con factor sutil (0.2): el bloque entero "tira"
               del cursor en hover, sumando hint kinestésico. El cursor custom

@@ -93,6 +93,12 @@ export interface Project {
     es: string
     en: string
   }
+  /**
+   * ⚠️ Hoy SIN LECTORES: ningún componente lo muestra. Lo leía una rama del
+   * header del case study que no se ejecutaba en ningún proyecto, y se borró
+   * con ella. Queda pendiente decidir si los tags se muestran en algún lado
+   * o se borran (CLAUDE.md §8).
+   */
   tags: string[]
   /**
    * Categorías generales del servicio prestado, en formato de agencia:
@@ -122,9 +128,9 @@ export interface Project {
     live?:       string
     /**
      * URL de un prototipo de Figma.
-     * ⚠️ Declarado pero SIN RENDEREAR: hoy ningún proyecto tiene uno y el
-     * sidebar del case study no lo muestra. Para activarlo hacen falta tres
-     * cosas: el push a `linkItems` en `CaseStudySidebar`, la key
+     * ⚠️ Declarado pero SIN RENDEREAR: hoy ningún proyecto tiene uno y la
+     * barra de metadata no lo muestra. Para activarlo hacen falta tres
+     * cosas: el push a `linkItems` en `CaseStudyMetaBar`, la key
      * `view_prototype` en los DOS JSON de mensajes, y el link real acá.
      */
     figma?:      string
@@ -185,16 +191,9 @@ export interface Project {
    */
   order: number
   /**
-   * Si es true, el case study renderea con el layout Awwwards-style (sidebar
-   * metadata + main editorial, secciones intro/challenge/decisions/delivered/closing).
-   * Si es false o undefined, se renderea con el layout legacy (5 secciones numeradas).
-   * Los case studies se migran uno por uno; mientras tanto conviven los dos layouts.
-   */
-  awwwardsLayout?: boolean
-  /**
-   * Metadata estructurada para el sidebar del layout Awwwards-style.
-   * Solo se renderea cuando `awwwardsLayout: true`. Cada campo es opcional —
-   * si falta, el bloque correspondiente no aparece en el sidebar.
+   * Metadata estructurada para la barra de metadata del case study
+   * (`CaseStudyMetaBar`). Cada campo es opcional — si falta, el bloque
+   * correspondiente no aparece en la barra.
    */
   metadata?: {
     /** Cliente o entidad para la que se hizo el proyecto. */
@@ -205,7 +204,7 @@ export interface Project {
     duration?: { es: string; en: string }
     /** Alcance del trabajo ej. "Diseño y ejecución end-to-end · trato directo con el cliente". */
     team?:     { es: string; en: string }
-    /** Stack como array para listarlo en el sidebar. */
+    /** Stack como array para listarlo en la barra de metadata. */
     stack?:    string[]
     /** Nota sobre NDA si aplica. */
     nda?:      { es: string; en: string }

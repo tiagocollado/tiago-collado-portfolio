@@ -32,6 +32,34 @@ Pendiente de reemplazo (F3).
 
 Concepto: minimalismo técnico pero cálido.
 
+## Nombres — por función, nunca por referencia
+
+Todo nombre —variable, prop, campo de datos, clase CSS, token, keyframe, key
+de i18n, archivo— dice **qué hace o qué es**. Nunca de dónde salió la idea.
+
+| ❌ Por referencia | ✅ Por función |
+|---|---|
+| `awwwardsContent` | `caseStudyText` — los textos del caso |
+| `awwwardsKeys` | `requiredKeys` — las keys obligatorias |
+| `--ease-apple` | `--ease-expo-out` — la curva |
+| `IsadeburghFooter` | `Footer` |
+
+Por qué:
+
+1. **La referencia no le dice nada a quien lee el código.** `awwwardsLayout`
+   obligaba a saber qué es Awwwards y qué layout se tomó de ahí para entender
+   un `if`. Terminó siendo un flag que valía `true` en los 7 proyectos y no
+   decidía nada, y nadie lo notó porque el nombre no decía qué decidía.
+2. **Deja de ser cierta** en cuanto el diseño se separa de la referencia, y
+   el nombre se queda.
+3. **El repo es público.** Un nombre por referencia le cuenta a cualquiera de
+   dónde se copió cada cosa.
+
+**Los comentarios sí pueden decir de dónde salió una idea**, pero el porqué
+tiene que sostenerse solo: *"como en la referencia"* no es un motivo. Y un
+comentario nunca apunta a un archivo que no está en el repo (las capturas de
+referencia se borraron y quedaron punteros a PNGs inexistentes).
+
 ## Spacing — siempre múltiplos de 4
 
 `xs 4 · sm 8 · md 16 · lg 24 · xl 32 · 2xl 48 · 3xl 64 · 4xl 96 · 5xl 128`

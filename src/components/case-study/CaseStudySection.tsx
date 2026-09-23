@@ -3,15 +3,16 @@
 import { motion, type Variants } from 'framer-motion'
 
 /**
- * Wrapper de sección para el layout Awwwards-style.
+ * Wrapper de cada sección editorial del case study (intro, desafío,
+ * cómo lo resolví, lo entregado, cierre).
  *
  * Cada sección entra con scroll-in suave: fade + slide-up 16px, 0.6s expo-out
  * cuando el bloque entra al viewport. Si tiene `label`, el label entra
  * primero con un sutil delay; el contenido entra después.
  *
  * Si `label` es null/undefined, no se renderea la línea de label — útil para
- * el bloque de intro que no lleva título de sección (las refs Awwwards
- * arrancan sin label).
+ * el bloque de intro, que no lleva título de sección: es la frase que
+ * explica el proyecto, no una sección más.
  *
  * Las imágenes hijas (CaseStudyImage) tienen su propio blur-in y parallax
  * por separado — este wrapper anima solo el contenedor + label.

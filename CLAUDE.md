@@ -113,7 +113,7 @@ categoría y las escuadras de las 4 esquinas.
 
 > ⚠️ **`sizes` sale del ancho real y hay que moverlo con él.** Si el shell cambia de ancho, el `sizes` de `imageSpec.ts` se mueve en la misma pasada. Sin `sizes` correcto, `next/image` no sirve de nada.
 
-**Convención de contenido**: un case study real necesita `awwwardsLayout: true` + 12 keys de TEXTO en ambos JSON (`intro`, `challenge`, `decision_1-3_title/body`, `delivered_1-3`, `closing`). La key **`process`** es opcional (bajada de "Cómo lo resolví") y se carga con `t.has()`. Si falta una obligatoria, el catch deja `hasCaseStudy: false` y el cuerpo no se renderea.
+**Convención de contenido**: un case study real necesita 12 keys de TEXTO en ambos JSON (`intro`, `challenge`, `decision_1-3_title/body`, `delivered_1-3`, `closing`). La key **`process`** es opcional (bajada de "Cómo lo resolví") y se carga con `t.has()`. Si falta una obligatoria, el catch deja `hasCaseStudy: false` y el cuerpo no se renderea.
 
 > **`challenge` admite varios párrafos**, separados por una línea en blanco (`\n\n` en el JSON). La page lo parte y rendea un `<p>` por párrafo con `space-y-6`; sin línea en blanco sale un solo párrafo. Hace falta porque HTML colapsa los saltos de línea: un `\n\n` adentro de un único `<p>` se ve como un espacio. Hoy solo lo usa Ritual (problema de producto + problema técnico). **Las demás keys siguen siendo de un solo párrafo**: si otra lo necesita, se le agrega el mismo `split`.
 
@@ -402,6 +402,13 @@ El campo `links.figma` está declarado en `types/index.ts`, pero hoy ningún pro
 1. el `push` a `linkItems` en `CaseStudyMetaBar.tsx` (hoy solo empuja `live`, `github` y `githubBack`),
 2. la key `view_prototype` en los **dos** JSON — sugerido: *"Interactuar con el prototipo"* / *"Explore the prototype"*,
 3. la URL real en el `links` del proyecto.
+
+### El campo `tags` — sin lectores
+
+Ningún componente lo muestra. Lo leía una rama del header del case study que no
+se ejecutaba en ningún proyecto (dependía de un flag que valía `true` en los
+7), y se borró con ella. Los datos siguen en `projects.ts`. **Decisión de
+Tiago pendiente**: si los tags se muestran en algún lado o se borran.
 
 ### Diseño
 | ID | Tarea | Esfuerzo | Notas |

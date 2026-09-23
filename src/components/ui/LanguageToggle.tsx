@@ -12,8 +12,6 @@ import { useRouter, usePathname } from 'next/navigation'
  * Se usa en dos lugares del Navbar:
  *  - Inline (modo full, lg+): visible junto al toggle de tema.
  *  - Dropdown de hamburguesa (modo minimal): mismo componente, mismo styling.
- *
- * Ref visual: public/images/references/toggle_language_reference.png
  */
 const LOCALES = ['en', 'es'] as const
 type LocaleCode = typeof LOCALES[number]

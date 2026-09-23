@@ -241,7 +241,8 @@ export default function ProjectCard({ project, locale, index = 0 }: ProjectCardP
       {/*
         Pie para dispositivos táctiles. Se muestra SOLO donde no hay hover, así
         que el nombre y la categoría nunca desaparecen en un celular — pero en
-        desktop no ocupa lugar y la card queda muda, como en la referencia.
+        desktop no ocupa lugar y la card queda muda: en reposo es solo la
+        imagen, y el texto entra con el hover.
 
         Va por capacidad (`hover: none`) y no por ancho de pantalla: una tablet
         en horizontal es ancha y tampoco tiene hover.

@@ -3,7 +3,7 @@
 /**
  * About — versión 4.0 (rebranding Gotya)
  * --------------------------------------
- *  Estructura tomada de la referencia POSTA (public/images/references):
+ *  Estructura editorial asimétrica:
  *   1. Fila de micro-labels: "SOBRE GOTYA" a la izquierda, ubicación a la
  *      derecha. Marca los bordes de la sección y da el respiro superior.
  *   2. Claim display grande, alineado a la izquierda, con dos fragmentos en
@@ -11,7 +11,7 @@
  *   3. Mucho aire.
  *   4. Bloque de copy chico, alineado a la DERECHA, cerrado por el remate
  *      de marca en bold y una byline mono debajo. La asimetría (claim izq /
- *      copy der) es el gesto editorial de la referencia.
+ *      copy der) es el gesto editorial de la sección.
  *
  *  El claim viaja partido en 4 keys de i18n (claim_1..claim_4) en vez de
  *  meter HTML dentro del string: las pares van en bold. Así se traduce sin

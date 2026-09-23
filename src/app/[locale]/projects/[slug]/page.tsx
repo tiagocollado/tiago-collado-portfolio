@@ -69,37 +69,36 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
   const cs = await getTranslations('case_study')
 
-  // Cargar contenido del caso de estudio (shape Awwwards: intro/challenge/
-  // decision_1-3/delivered_1-3/closing). Si falta alguna key — porque el
-  // bloque case_study_<slug> no fue creado en i18n — el catch deja
-  // hasCaseStudy en false y el body simplemente no se renderea.
+  // Cargar los textos del case study: las 12 keys obligatorias (intro,
+  // challenge, decision_1-3, delivered_1-3, closing) más `process`, que es
+  // opcional. Si falta alguna obligatoria — porque el bloque
+  // case_study_<slug> no fue creado en i18n — el catch deja hasCaseStudy en
+  // false y el body simplemente no se renderea.
   const caseStudyKey = `case_study_${slug}`
   let hasCaseStudy = false
-  const awwwardsContent: Record<string, string> = {}
+  const caseStudyText: Record<string, string> = {}
 
-  if (project.awwwardsLayout) {
-    try {
-      const t = await getTranslations(caseStudyKey)
-      const awwwardsKeys = [
-        'intro',
-        'challenge',
-        'decision_1_title', 'decision_1_body',
-        'decision_2_title', 'decision_2_body',
-        'decision_3_title', 'decision_3_body',
-        'delivered_1', 'delivered_2', 'delivered_3',
-        'closing',
-      ]
-      for (const key of awwwardsKeys) {
-        awwwardsContent[key] = t(key)
-      }
-      // 'process' es opcional: solo algunos case studies cuentan el cómo
-      // arrancaron antes de listar las decisiones. t.has() evita que un
-      // proyecto sin la key tire y apague el case study entero.
-      if (t.has('process')) awwwardsContent.process = t('process')
-      hasCaseStudy = true
-    } catch {
-      hasCaseStudy = false
+  try {
+    const t = await getTranslations(caseStudyKey)
+    const requiredKeys = [
+      'intro',
+      'challenge',
+      'decision_1_title', 'decision_1_body',
+      'decision_2_title', 'decision_2_body',
+      'decision_3_title', 'decision_3_body',
+      'delivered_1', 'delivered_2', 'delivered_3',
+      'closing',
+    ]
+    for (const key of requiredKeys) {
+      caseStudyText[key] = t(key)
     }
+    // 'process' es opcional: solo algunos case studies cuentan el cómo
+    // arrancaron antes de listar las decisiones. t.has() evita que un
+    // proyecto sin la key tire y apague el case study entero.
+    if (t.has('process')) caseStudyText.process = t('process')
+    hasCaseStudy = true
+  } catch {
+    hasCaseStudy = false
   }
 
   const nextProject = getNextProject(project.order)
@@ -143,9 +142,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       </div>
 
       {/* ============ CASE STUDY BODY ============
-          Solo se renderea si el proyecto tiene awwwardsLayout: true Y se
-          pudieron cargar todas las keys i18n. Si no, queda solo el header
-          + la navegación de abajo.
+          Solo se renderea si se pudieron cargar todas las keys obligatorias
+          de i18n. Si no, queda solo el header + la navegación de abajo.
 
           ⚠️ La página ya no es una grilla de 12 columnas con sidebar: es una
           secuencia vertical de bloques hermanos, y cada uno declara su propio
@@ -159,7 +157,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           hace con `order`. `space-y` pone el margen según el orden del DOM,
           no el visual: con `order` el bloque que sube quedaría sin separación
           y el que baja con margen de más. `gap` separa según el orden visual. */}
-      {project.awwwardsLayout && hasCaseStudy && (
+      {hasCaseStudy && (
         <div className="mt-12 md:mt-16 flex flex-col gap-20 md:gap-28">
 
           {/* HERO — el mockup del sitio, a sangre. Es la misma composición
@@ -174,7 +172,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 className="font-display text-2xl md:text-3xl lg:text-4xl leading-tight tracking-tight max-w-3xl text-balance"
                 style={{ color: 'var(--ink-primary)' }}
               >
-                {awwwardsContent.intro}
+                {caseStudyText.intro}
               </p>
             </CaseStudySection>
           </Shell>
@@ -217,7 +215,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                   línea en blanco da un array de un elemento y se ve igual
                   que antes. */}
               <div className="max-w-2xl space-y-6">
-                {awwwardsContent.challenge.split('\n\n').map((paragraph, i) => (
+                {caseStudyText.challenge.split('\n\n').map((paragraph, i) => (
                   <p
                     key={i}
                     className="text-lg md:text-xl leading-relaxed text-pretty"
@@ -240,12 +238,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               {/* Bajada opcional: cómo encaré el proyecto antes de entrar
                   en las decisiones puntuales. Si el case study no define
                   'process', no se renderea nada. */}
-              {awwwardsContent.process && (
+              {caseStudyText.process && (
                 <p
                   className="text-lg md:text-xl leading-relaxed max-w-2xl text-pretty"
                   style={{ color: 'var(--ink-secondary)' }}
                 >
-                  {awwwardsContent.process}
+                  {caseStudyText.process}
                 </p>
               )}
               <ol className="space-y-12 md:space-y-16 list-none">
@@ -262,13 +260,13 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                         className="font-display text-xl md:text-2xl tracking-tight text-balance"
                         style={{ color: 'var(--ink-primary)' }}
                       >
-                        {awwwardsContent[`decision_${i}_title`]}
+                        {caseStudyText[`decision_${i}_title`]}
                       </h3>
                       <p
                         className="text-base md:text-lg leading-relaxed max-w-2xl text-pretty"
                         style={{ color: 'var(--ink-secondary)' }}
                       >
-                        {awwwardsContent[`decision_${i}_body`]}
+                        {caseStudyText[`decision_${i}_body`]}
                       </p>
                     </div>
                   </li>
@@ -299,7 +297,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                       className="text-base md:text-lg font-display"
                       style={{ color: 'var(--ink-primary)' }}
                     >
-                      {awwwardsContent[`delivered_${i}`]}
+                      {caseStudyText[`delivered_${i}`]}
                     </span>
                   </li>
                 ))}
@@ -315,7 +313,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 className="text-lg md:text-xl leading-relaxed max-w-2xl text-pretty"
                 style={{ color: 'var(--ink-secondary)' }}
               >
-                {awwwardsContent.closing}
+                {caseStudyText.closing}
               </p>
             </CaseStudySection>
           </Shell>

@@ -29,7 +29,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
    * Se arma con dos <div> explícitos y NO con `grid-auto-rows` + `row-span`,
    * que fue el primer intento: eso alinea las filas y las dos columnas terminan
    * a la misma altura, que es justo lo que NO queremos. Acá cada columna fluye
-   * sola y el borde inferior queda disparejo, como en la referencia.
+   * sola y el borde inferior queda disparejo: eso es lo que la hace masonry.
    *
    * Tampoco se usa `column-count` (el masonry nativo de CSS) por dos razones:
    * reordena los hijos de forma implícita, y además llena la primera columna

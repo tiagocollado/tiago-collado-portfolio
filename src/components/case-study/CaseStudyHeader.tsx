@@ -11,17 +11,18 @@ import { useCursor } from '@/hooks/useCursor'
  *
  * Estructura:
  *  1. Back link (← Volver)
- *  2. Type label (UX/UI Case Study, etc.)
+ *  2. Categorías del servicio (`services`)
  *  3. H1 con SplitText char reveal
- *  4. Tags (solo cuando NO awwwardsLayout — en Awwwards el stack vive en sidebar)
- *  5. Tagline
- *  6. CTAs (solo cuando NO awwwardsLayout — en Awwwards los links viven en sidebar)
+ *  4. Tagline
+ *
+ * El stack y los links del proyecto no van acá: viven en la barra de
+ * metadata (`CaseStudyMetaBar`).
  *
  * Cascade: container variant con `staggerChildren: 0.12`. Cada bloque es
  * motion.* con `variants={item}`. El SplitText H1 anima sus chars internos
  * con stagger propio que arranca después del delay del container.
  *
- * Cursor variants: `link` en back / CTAs (anchors). En el H1 el cursor
+ * Cursor variants: `link` en el back link. En el H1 el cursor
  * queda en `default` — es texto, no interactivo.
  */
 
@@ -58,10 +59,6 @@ export default function CaseStudyHeader({
   // label derivado de `project.type` ("UX / UI Case Study"), que describía
   // a Tiago en vez del trabajo. El `&` es el separador de la marca.
   const servicesLabel = project.services[locale].join(' & ')
-
-  const hasLinks = Boolean(
-    project.links.live || project.links.github || project.links.githubBack
-  )
 
   return (
     <motion.div
@@ -117,26 +114,7 @@ export default function CaseStudyHeader({
         className="font-display text-5xl md:text-7xl font-semibold tracking-tight leading-[1.05] mb-6 md:mb-8 max-w-4xl text-balance block text-(--ink-primary)"
       />
 
-      {/* 4. Tags (solo non-awwwards layout) */}
-      {!project.awwwardsLayout && (
-        <motion.div variants={item} className="flex flex-wrap gap-2 mb-8 md:mb-10">
-          {project.tags.map((tag) => (
-            <span
-              key={tag}
-              className="text-xs font-mono tracking-wide px-3 py-1.5 rounded-full border"
-              style={{
-                borderColor: 'var(--border-default)',
-                backgroundColor: 'var(--bg-secondary)',
-                color: 'var(--ink-secondary)',
-              }}
-            >
-              {tag}
-            </span>
-          ))}
-        </motion.div>
-      )}
-
-      {/* 5. Tagline */}
+      {/* 4. Tagline */}
       <motion.p
         variants={item}
         className="text-lg md:text-2xl leading-relaxed mb-10 md:mb-12 max-w-3xl text-balance"
@@ -144,73 +122,6 @@ export default function CaseStudyHeader({
       >
         {project.tagline[locale]}
       </motion.p>
-
-      {/* 6. CTAs (solo non-awwwards layout + has links). En Awwwards los links
-          viven en el sidebar. */}
-      {!project.awwwardsLayout && hasLinks && (
-        <motion.div variants={item} className="flex flex-wrap gap-3 mb-12 md:mb-16">
-          {project.links.live && (
-            <a
-              href={project.links.live}
-              target="_blank"
-              rel="noopener noreferrer"
-              onMouseEnter={onLinkEnter}
-              onMouseLeave={onLinkLeave}
-              className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 hover:-translate-y-0.5"
-              style={{
-                backgroundColor: 'var(--color-accent)',
-                color: '#FFFFFF',
-              }}
-            >
-              <span>{cs('view_live')}</span>
-              <span
-                aria-hidden
-                className="inline-block transition-transform duration-300 ease-expo-out group-hover:translate-x-1"
-              >
-                →
-              </span>
-            </a>
-          )}
-          {project.links.github && (
-            <a
-              href={project.links.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              onMouseEnter={onLinkEnter}
-              onMouseLeave={onLinkLeave}
-              className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border transition-all duration-300 hover:-translate-y-0.5 border-(--border-default) hover:border-accent"
-              style={{ color: 'var(--ink-primary)' }}
-            >
-              <span>{cs('view_github_frontend')}</span>
-              <span
-                aria-hidden
-                className="inline-block transition-transform duration-300 ease-expo-out group-hover:translate-x-1"
-              >
-                →
-              </span>
-            </a>
-          )}
-          {project.links.githubBack && (
-            <a
-              href={project.links.githubBack}
-              target="_blank"
-              rel="noopener noreferrer"
-              onMouseEnter={onLinkEnter}
-              onMouseLeave={onLinkLeave}
-              className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border transition-all duration-300 hover:-translate-y-0.5 border-(--border-default) hover:border-accent"
-              style={{ color: 'var(--ink-primary)' }}
-            >
-              <span>{cs('view_github_backend')}</span>
-              <span
-                aria-hidden
-                className="inline-block transition-transform duration-300 ease-expo-out group-hover:translate-x-1"
-              >
-                →
-              </span>
-            </a>
-          )}
-        </motion.div>
-      )}
     </motion.div>
   )
 }
