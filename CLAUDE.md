@@ -320,7 +320,11 @@ asumido, escrito para que nadie lo redescubra y lo abra de nuevo:
 | **P1** | Las de case study de esos 4 | Son los 4 casos publicados. Sin cantidad fija por caso (`.claude/rules/imagenes.md` §2) |
 | ~~**P2**~~ · ~~**P3**~~ | ~~Los 3 covers y las imágenes de case study restantes~~ | **Pasaron a V2** con el alcance nuevo (arriba) |
 
-Progreso: P0 `4/4` cableados · **Pulso, Paseo y FutbolTalent con el cover limpio** · P1: **Pulso ✅ cerrado (5)**, con 2 pendientes de imagen · **Paseo ✅ cerrado (4)** · **Ritual ✅ publicado y verificado en `d6e50eb` (5)**, tanda abierta por el cover con texto inventado · **FutbolTalent ✅ cerrado (3)**, sin commitear todavía
+Progreso: P0 `4/4` cableados · **Pulso, Paseo y FutbolTalent con el cover limpio** · P1: **Pulso ✅ cerrado (5)**, con 2 pendientes de imagen · **Paseo ✅ cerrado (4)** · **Ritual ✅ publicado y verificado en `d6e50eb` (5)**, tanda abierta por el cover con texto inventado · **FutbolTalent ✅ publicado y verificado en `4165f6d` (3)**
+
+> **Los 4 case studies están publicados con sus imágenes.** Lo que queda para
+> cerrar la versión son cuatro arreglos sobre lo ya publicado, en el orden de
+> abajo, y antes de todo eso **T4**.
 
 > **Ya no se cuenta sobre 35.** Ese total salía de la cuota de 4 por caso: Pulso cerró con 5 y Paseo con 4. El denominador de cada caso sale de lo que el proyecto tiene para mostrar (`.claude/rules/imagenes.md` §2, *"Casos reales"*).
 
@@ -394,9 +398,24 @@ de imágenes full-width):
    permitido (wireframes, flujos, design system, personas), y su cover se
    corrige con solo el logo real en pantalla.
 
-✅ **FutbolTalent — tanda cerrada (2026-09-22), pendiente de commit.** El copy
+✅ **FutbolTalent — publicado y verificado en `4165f6d` (2026-09-23).** El copy
 está reescrito contra las respuestas de Tiago y las 3 imágenes están cableadas,
-con el cover verificado limpio.
+con el cover verificado limpio. **Con esto cierran los cuatro case studies de
+esta versión.**
+
+**Verificado contra el deploy**: las 3 imágenes y el cover, idénticos byte a
+byte a los del repo · en los dos idiomas, el copy nuevo completo (intro,
+`process`, las tres decisiones, "Más de 35 pantallas" y el cierre con la
+confidencialidad) y **cero apariciones** de las afirmaciones viejas y del
+vocabulario prohibido de §4 · las 3 imágenes en orden `00` → `01` → `02` con
+sus alts · Pulso, Paseo, Ritual y el home, **con el texto visible idéntico al
+build local**, o sea que la tanda no tocó nada de los otros casos.
+
+> **Cómo se comparan dos páginas contra el deploy, para la próxima**: hashear el
+> HTML entero **no sirve** —el payload de los `<script>` trae los IDs del build
+> y cambia en cada deploy, así que todo "difiere"—. Hay que sacar `<script>` y
+> `<style>`, después las etiquetas y las entidades, normalizar los espacios y
+> recién ahí comparar. Con eso las cinco páginas dieron idénticas al carácter.
 
 > **Queda un detalle cosmético**, sin bloquear: en `02-cluster` dos de las tres
 > secciones dicen *"ON BOARDING + REGISTR…"*, cortado por el ancho de la
