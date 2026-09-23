@@ -797,13 +797,55 @@ ya está decidida y no se toca, así que la tipografía es el eje donde diferenc
 ### Técnico
 | ID | Tarea | Notas |
 |---|---|---|
-| **T4** 🔴 | **Proteger los endpoints de escritura de la API de El Ritual del Tono** — **es lo próximo que se hace** (decisión de Tiago, 2026-09-23) | Va **antes que los pendientes de imagen**: es el único problema que puede romperse solo, sin que nadie toque el portfolio. Plan completo abajo. |
+| **T4** ⏳ | Proteger los endpoints de escritura de la API de El Ritual del Tono | **Cambios escritos y verificados en local (2026-09-23)**, en el repo del backend. **Pendientes de commit y deploy ahí**, en una sesión aparte. Detalle abajo. |
+| **T5** 🔴 | **Rotar las credenciales de la base de El Ritual del Tono** — **es lo próximo, antes que los pendientes de imagen** | Las variables de entorno del backend estuvieron expuestas, así que **la contraseña de la base y el `JWT_SECRET` hay que darlos por comprometidos**: se rotan en MongoDB Atlas, se actualizan en las variables de entorno de Vercel y se revisa el acceso de red del cluster. **Rotar es lo que cierra el problema**, no borrar archivos. ⚠️ Los detalles de dónde quedó expuesto **no se escriben acá**: este repo es público y serían un mapa para encontrarlo. Están en la nota local de Claude. |
 | **T2** | Lighthouse audit real | Manual en DevTools. No hay números del bundle post-rework. |
 
-#### 🔴 T4 — cómo arrancar la sesión
+#### ⏳ T4 — escrito y verificado en local el 2026-09-23, falta deployarlo
 
-**Es en otro repo** (el backend de El Ritual del Tono), así que la sesión
-empieza abriendo ese proyecto, no este.
+**Se hizo en el repo del backend** (`el-ritual-del-tono-backend`), en dos
+archivos. **Queda commitear y deployar allá**, y recién ahí se cierra:
+
+| Archivo | Qué cambió |
+|---|---|
+| `routes/products.js` | **Se sacaron `POST /`, `PUT /:id` y `DELETE /:id`**, con sus tres handlers. Quedó solo lectura. Antes de tocar nada se verificó que el frontend no las usa: en `src/contexts/ShopContext.js` hace 4 `GET` y un solo `POST /orders` |
+| `app.js` | El handler de 404 llamaba a `createError`, **que nunca se importó**, así que cualquier URL mal escrita devolvía 500 con `"createError is not defined"`. Ahora responde 404 con un mensaje limpio |
+
+**Verificado con la API corriendo local, sin escribir nada en producción**:
+`GET /products`, `/categories` y `/` siguen en 200 · una ruta inexistente da
+**404** y ya no 500 · `POST`, `PUT` y `DELETE` sobre `/products` dan **404**,
+porque las rutas ya no existen.
+
+> **El CORS no era protección.** `app.js` restringe `origin` al dominio del
+> front, y eso puede leerse como que la API estaba cerrada. No lo estaba: el
+> CORS lo aplica el navegador, así que un `curl` o un script lo ignoran por
+> completo. Sirve contra otra web que quiera usar la sesión de un usuario, no
+> contra alguien que manda pedidos a mano.
+
+**Lo que quedó revisado y no hacía falta tocar**: `/categories` (que a pesar
+del nombre sirve los artistas) y la raíz solo tienen `GET`. `POST /orders` se
+queda, porque es el checkout de la demo, y su modelo de Mongoose es estricto y
+tiene campos requeridos, así que solo entran órdenes bien formadas. **Sigue
+siendo una escritura abierta sin límite de frecuencia**: si algún día aparece
+basura en la colección `Orders`, es por ahí.
+
+#### 🔴 T5 — las credenciales, que es lo que quedó abierto
+
+**Esto salió de revisar T4 y es más grave que las rutas.** Con la contraseña
+de la base, las rutas de la API dan igual: se entra directo a MongoDB.
+
+1. **Rotar en MongoDB Atlas** la contraseña del usuario de la base, y de paso
+   el `JWT_SECRET`.
+2. **Actualizar las variables de entorno en Vercel** (backend) y redeployar.
+3. **Revisar el acceso de red del cluster** en Atlas: si está abierto a
+   `0.0.0.0/0` —lo habitual para que Vercel pueda conectarse— la contraseña es
+   lo único que separa la base de internet, así que la rotación es urgente.
+4. **Revisar las colecciones** después de rotar: que el catálogo esté completo
+   y que `Orders` no tenga basura.
+
+> **Borrar el archivo del historial no reemplaza a rotar.** Aunque se
+> reescribiera, las credenciales ya estuvieron publicadas y hay que asumir que
+> se copiaron. Rotar invalida lo expuesto; borrar solo lo esconde.
 
 **El problema, verificado el 2026-09-23**: `GET /products` responde 200 y una
 ruta inexistente sigue devolviendo **500 con `"createError is not defined"`**,
