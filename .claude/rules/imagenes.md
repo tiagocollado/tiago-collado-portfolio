@@ -203,16 +203,14 @@ proyecto no usa es tan deliberado como lo que usa.
 > ⚠️ **En un proyecto con NDA, un diagrama se revisa nodo por nodo, no de un
 > vistazo.** Los user flows de FutbolTalent pasaban el control de 1.1 (son
 > captura real) y el de luminancia, y aun así tenían nodos que el caso no puede
-> contar: dos popups de registro obligatorio y un *"Navegar a Rankings"*, que
-> es la gamificación que el copy no nombra. **Lo que el copy no puede decir, la
-> imagen tampoco.**
+> contar (`CLAUDE.md` §4). **Lo que el copy no puede decir, la imagen tampoco**
+> — y la documentación del recorte tampoco: acá no se dice cuáles eran.
 >
 > **Dos imágenes del mismo proyecto no tienen que mostrar lo mismo: tienen que
 > respetar la misma restricción.** La restricción es **no mostrar pantallas**,
-> no evitar el tema: la sección del feed sin registro sale de los wireframes
-> —ahí es una pantalla— y el nodo del feed se queda en el flujo, donde es una
-> caja de un diagrama. Decidir por tema en vez de por restricción lleva a
-> recortar de más.
+> no evitar el tema: una sección que en los wireframes es una pantalla sale de
+> ahí, y el mismo tema se queda en el flujo si ahí es una caja de un diagrama.
+> Decidir por tema en vez de por restricción lleva a recortar de más.
 >
 > **Se resuelve recortando el encuadre, no tapando nodos, y el recorte hay que
 > pensarlo antes.** Un nodo en el borde sale recortando; uno en el medio de una
@@ -226,8 +224,8 @@ proyecto no usa es tan deliberado como lo que usa.
 > 🔍 **El control de un diagrama con material sensible se hace al 100% sobre el
 > archivo que se va a publicar, recortando sin escalar.** No al tamaño de
 > render: que a 330px no se lea no habilita nada, igual que con el texto
-> inventado (§6). Y ojo con el export: en los flows de FutbolTalent un popup se
-> leía entero a 1× y el otro estaba en el límite, así que **el 2× que se usa
+> inventado (§6). Y ojo con el export: en los flows de FutbolTalent un nodo
+> sensible se leía entero a 1× y otro estaba en el límite, así que **el 2× que se usa
 > para que el texto no quede borroso también vuelve legible lo que a 1× no se
 > leía**. Medir sobre el export final, no sobre el borrador.
 

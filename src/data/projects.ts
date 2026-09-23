@@ -238,9 +238,8 @@ export const projects: Project[] = [
         src: '/images/case-study/futbol-talent-pro/00-mockup.jpg',
       },
       // Protopersonas + el tramo de registro del user flow. La version anterior
-      // mostraba los dos flows enteros, con dos popups de registro obligatorio
-      // y un nodo de rankings: las tres cosas que el NDA deja afuera (§4). Se
-      // resolvio RECORTANDO el encuadre, no tapando nodos.
+      // mostraba los dos flows enteros, con nodos que el NDA deja afuera
+      // (CLAUDE.md §4). Se resolvio RECORTANDO el encuadre, no tapando nodos.
       {
         type: 'diagram',
         slot: 'challenge',

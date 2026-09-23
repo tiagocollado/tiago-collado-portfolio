@@ -34,8 +34,9 @@ Lo único que se queda en este archivo, porque es estructura y no arte:
 
 **REGLA ESTRICTA. Leer antes de tocar texto, imagen o metadata de `futbol-talent-pro`.**
 
-- **Vocabulario prohibido**: *freemium, premium, monetización, inversores, fundadores, Flutter*. Aplica a `case_study_futbol-talent-pro` en ambos JSON y al entry en `projects.ts` (tagline, description, metadata, alts).
-- **Nunca revelar** flujos de negocio, estrategias de retención ni métricas internas — incluidos números que impliquen escala del producto.
+- **Qué no se cuenta del producto**, en ningún lugar del repo —`case_study_futbol-talent-pro` en los dos JSON, el entry en `projects.ts` (tagline, description, metadata, alts), los comentarios del código y esta documentación—: cómo genera ingresos, quién lo financia o lo dirige, con qué tecnología está construido, qué flujos restringen el acceso o buscan retener usuarios, ni métricas internas, incluidos números que impliquen escala del producto.
+- **La prueba, antes de escribir o commitear**: ¿esta frase le cuenta a alguien de afuera algo del negocio, de la empresa o de la tecnología del producto que no se ve en un wireframe? Si sí, no va, use las palabras que use. Por eso la regla es un criterio y no una lista de palabras: una lista ataja esas palabras y deja pasar sus sinónimos, y publicada en un repo público revela justo lo que protege.
+- **Tampoco se explica lo que se sacó.** Describir qué se recortó de una imagen o de un texto por el NDA es contarlo igual. Se dice *"se recortaron nodos que §4 deja afuera"*, nunca cuáles ni qué hacían.
 - **Framing obligatorio**: siempre **MVP validado técnicamente**, con eje en **arquitectura de información** y **reducción de carga cognitiva**.
 - **NO ocultar** `metadata.client` (`FutbolTalent.Pro`), el `title` ni el `slug`: el vínculo laboral ya es público y el NDA no lo restringe.
 - **Material permitido**: wireframes de baja/media, flujos, design system, user personas. **Nunca** pantallas finales del producto. Vale igual para cualquier imagen nueva, incluidas las versiones "Marca Blanca".
@@ -266,13 +267,14 @@ asumido, escrito para que nadie lo redescubra y lo abra de nuevo:
 
 - **El historial conserva el material de FutbolTalent que se purgó de HEAD.**
   La purga (`f9ba5af`) y el borrado de las imágenes limpiaron el sitio, no
-  `git log`. Siguen accesibles sin autenticarse: el copy original con las seis
-  palabras prohibidas de §4, el flujo de convocatorias, los inversores y el
-  stack (`d742a14`), y **las 4 imágenes con UI real del producto** en
+  `git log`. Siguen accesibles sin autenticarse: el copy original con todo lo
+  que §4 prohíbe (`d742a14`), y **las 4 imágenes con UI real del producto** en
   `196e39c`, descargables por `raw.githubusercontent.com`.
-- **Esta misma documentación es pública.** La lista de "vocabulario prohibido"
-  de §4 dice, por sí sola, que el producto tiene plan pago, inversores y con
-  qué está hecho. Es lo que vuelve a T3 más urgente que antes.
+- **Esta misma documentación es pública**, así que §4 rige para ella igual que
+  para el copy: lo que no se puede decir en el sitio tampoco se escribe acá, ni
+  en un comentario del código. Las versiones anteriores de este archivo, que
+  sí lo decían, siguen en el historial por el mismo motivo que el punto de
+  arriba.
 - **Sacarlo después no alcanza**: GitHub sirve los commits viejos por SHA
   aunque se reescriba el historial, y reescribir necesita `git-filter-repo`,
   que no está instalado, más un push forzado.

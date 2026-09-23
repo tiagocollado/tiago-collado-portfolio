@@ -203,7 +203,7 @@ export interface Project {
     role?:     { es: string; en: string }
     /** Duración ej. "3 meses (ago–oct 2025)". */
     duration?: { es: string; en: string }
-    /** Equipo ej. "3 personas (yo + dev + fundadores)". */
+    /** Alcance del trabajo ej. "Diseño y ejecución end-to-end · trato directo con el cliente". */
     team?:     { es: string; en: string }
     /** Stack como array para listarlo en el sidebar. */
     stack?:    string[]
