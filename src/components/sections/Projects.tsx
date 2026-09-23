@@ -59,7 +59,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
 
             ⚠️ Acá iba un link "Ver todos los proyectos ↗" a la derecha. Se sacó
             porque la página /projects todavía no existe y el link tiraba 404.
-            Vuelve cuando se haga P-1 (CLAUDE.md §8); la key `projects.view_all`
+            Vuelve con la página de V2 (CLAUDE.md §8); la key `projects.view_all`
             sigue en los dos JSON, así que no hay que volver a crearla. */}
         <div>
           <motion.p

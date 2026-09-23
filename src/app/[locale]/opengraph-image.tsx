@@ -29,9 +29,10 @@ import { join } from 'node:path'
  *    miniatura. Repetirlos adentro de la imagen no sumaba información.
  *
  * ⚠️ Las dos imágenes (es / en) ahora son IDÉNTICAS byte a byte, y está
- * bien: al no haber texto no hay nada que localizar. Ojo con §9.15 de
- * CLAUDE.md, que describe imágenes idénticas entre locales como el síntoma
- * de un bug — ese caso era no leer `params`. Acá es intencional.
+ * bien: al no haber texto no hay nada que localizar. Ojo con
+ * `.claude/rules/stack-traps.md`, que describe imágenes idénticas entre
+ * locales como el síntoma de un bug — ese caso era no leer `params`. Acá es
+ * intencional.
  *
  * Al vivir en app/[locale]/, la convención de Next hace que aplique a este
  * segmento y a todos los de abajo (incluido /projects/[slug]).
@@ -42,7 +43,8 @@ export const contentType = 'image/png'
 export const alt = 'Gotya by Tiago Collado'
 
 // Prerenderea la imagen en build time en vez de generarla on-demand en cada
-// scrape. Además evita el bug de §9.13: mientras la ruta es dinámica, los
+// scrape. Además evita una trampa de satori (`.claude/rules/stack-traps.md`):
+// mientras la ruta es dinámica, los
 // errores de satori no aparecen en el build y explotan recién en producción.
 export function generateStaticParams() {
   return [{ locale: 'en' }, { locale: 'es' }]

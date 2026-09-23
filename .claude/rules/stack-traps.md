@@ -230,6 +230,19 @@ por el CTA principal.
   local no prueba que un commit parcial sea auto-consistente. Antes de pushear
   un commit acotado: `git show --stat <sha>` y comparar contra
   `git show origin/main:<archivo>`.
+- **Para publicar un archivo suelto con otro trabajo a medio hacer en el stage,
+  no se hace `git add`**: se commitea con el path al final, que toma solo ese
+  archivo e ignora el resto del stage. Un `git add` + `commit` a secas ya metió
+  una vez un borrado staged que rompía el build de Vercel.
+
+  ```
+  git commit -m "…" -- <archivo>
+  git show --stat HEAD     # tiene que listar UN solo archivo
+  ```
+- **Para comparar una página contra el deploy, hashear el HTML entero no
+  sirve**: el payload de los `<script>` trae los IDs del build y cambia en cada
+  deploy, así que todo "difiere". Hay que sacar `<script>` y `<style>`, después
+  las etiquetas y las entidades, normalizar los espacios y recién ahí comparar.
 - **Nunca parsear bloques de `projects.ts` buscando el próximo `},`**: esa línea
   es el cierre de `tagline`, no el del proyecto. Hay que **contar llaves** desde
   la apertura. Un parser ingenuo ya corrompió el archivo dos veces; la
