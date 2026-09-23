@@ -2,7 +2,7 @@
 
 import { useTranslations, useLocale } from 'next-intl'
 import { useTheme } from 'next-themes'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useSyncExternalStore } from 'react'
 import { Sun, Moon, Menu, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import MarqueeLink from './MarqueeLink'
@@ -24,12 +24,22 @@ import { useCursor } from '@/hooks/useCursor'
  * scrollea > 100px (el nombre en Hero ya está achicando, el navbar toma
  * presencia visual). Underline draw on hover via Tailwind `after:` utilities.
  */
+// Para `mounted`: no hay nada externo a lo que suscribirse, solo importa
+// saber si estamos en el servidor o en el navegador.
+const subscribeToNothing = () => () => {}
+
 export default function Navbar() {
   const t = useTranslations('nav')
   const locale = useLocale()
   const { theme, setTheme } = useTheme()
   const { setVariant } = useCursor()
-  const [mounted, setMounted] = useState(false)
+  // `mounted` es false en el servidor y true en el navegador. Hace falta
+  // porque el tema (next-themes) solo se conoce en el navegador: si el ícono
+  // de sol/luna se dibujara en el servidor, podría no coincidir con el tema
+  // real y React tiraría un error de hidratación. `useSyncExternalStore` da
+  // un valor distinto en cada lado sin el `setState` en un `useEffect` que
+  // había antes, que obligaba a renderizar dos veces.
+  const mounted = useSyncExternalStore(subscribeToNothing, () => true, () => false)
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -37,10 +47,6 @@ export default function Navbar() {
   // Cualquier link / botón que sea clickeable cambia el cursor a `link`.
   const onCursorEnter = () => setVariant('link')
   const onCursorLeave = () => setVariant('default')
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 100)

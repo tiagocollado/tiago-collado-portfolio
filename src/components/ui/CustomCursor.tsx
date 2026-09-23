@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useSyncExternalStore } from 'react'
 import {
   motion,
   useMotionValue,
@@ -30,26 +30,44 @@ import {
  *   pathname lo resetea a `default` en cada navegación.
  * - prefers-reduced-motion: cursor nativo (no renderea).
  */
+/*
+ * ¿Hay mouse? Se lee del media query `(pointer: fine)`.
+ *
+ * `useSyncExternalStore` es el hook de React para leer algo del navegador que
+ * cambia solo (un media query, el tamaño de la ventana). Recibe cómo
+ * suscribirse, cómo leer el valor en el navegador y qué valor usar en el
+ * servidor, donde no hay `window`. Reemplaza a un `useEffect` que hacía
+ * `setState` apenas montaba: eso obligaba a React a renderizar dos veces.
+ */
+const FINE_POINTER = '(pointer: fine)'
+function subscribeFinePointer(onChange: () => void) {
+  const mq = window.matchMedia(FINE_POINTER)
+  mq.addEventListener('change', onChange)
+  return () => mq.removeEventListener('change', onChange)
+}
+const readFinePointer = () => window.matchMedia(FINE_POINTER).matches
+// En el servidor no sabemos si hay mouse: false, igual que antes. El cursor
+// aparece recién en el navegador.
+const readFinePointerOnServer = () => false
+
 export function CursorProvider({ children }: { children: React.ReactNode }) {
   const [variant, setVariant] = useState<CursorVariant>('default')
-  const [hasFinePointer, setHasFinePointer] = useState(false)
+  const hasFinePointer = useSyncExternalStore(subscribeFinePointer, readFinePointer, readFinePointerOnServer)
   const reduced = useReducedMotion()
   const pathname = usePathname()
-
-  useEffect(() => {
-    const mq = window.matchMedia('(pointer: fine)')
-    setHasFinePointer(mq.matches)
-    const onChange = (e: MediaQueryListEvent) => setHasFinePointer(e.matches)
-    mq.addEventListener('change', onChange)
-    return () => mq.removeEventListener('change', onChange)
-  }, [])
 
   // Reset variant en cada cambio de ruta — evita el bug de "cursor sticky"
   // cuando hacés click en un link y el componente que seteó el variant
   // se desmonta antes de que dispare onMouseLeave.
-  useEffect(() => {
+  //
+  // Se hace durante el render comparando con la ruta anterior, que es el
+  // patrón que recomienda React para "cuando cambia X, reseteá Y". Un
+  // `useEffect` hacía lo mismo pero un render más tarde.
+  const [lastPathname, setLastPathname] = useState(pathname)
+  if (pathname !== lastPathname) {
+    setLastPathname(pathname)
     setVariant('default')
-  }, [pathname])
+  }
 
   const showCursor = hasFinePointer && !reduced
 

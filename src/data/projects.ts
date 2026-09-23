@@ -12,7 +12,6 @@ export const projects: Project[] = [
       es: 'Análisis de mercado, wireframes en Figma e implementación en WordPress, con reserva directa integrada y foco en conversión mobile.',
       en: 'Market analysis, Figma wireframes, and WordPress implementation, with direct booking integrated and a focus on mobile conversion.',
     },
-    tags: ['UX Research', 'UI Design', 'WordPress', 'Mobile-first', 'SEO local'],
     services: {
       es: ['Diseño Web', 'Dirección de Arte'],
       en: ['Website Design', 'Art Direction'],
@@ -99,7 +98,6 @@ export const projects: Project[] = [
       es: 'Sitio institucional con los clientes a la vista y casos de éxito reescritos para leerse de un vistazo.',
       en: 'Institutional site that puts the clients up front and rewrites the success stories to read at a glance.',
     },
-    tags: ['WordPress', 'Elementor', 'UX Writing', 'UI Design', 'B2B'],
     services: {
       es: ['Diseño Web'],
       en: ['Website Design'],
@@ -197,7 +195,6 @@ export const projects: Project[] = [
     },
     // Sin `UX Research`: no hubo entrevistas ni pruebas con usuarios. Las
     // protopersonas, el Lean Canvas y los HMW fueron hipotesis.
-    tags: ['UI Design', 'Information Architecture', 'Design System', 'Figma', 'FigJam'],
     services: {
       es: ['Aplicaciones Móviles', 'Design System'],
       en: ['Mobile Apps', 'Design System'],
@@ -268,7 +265,6 @@ export const projects: Project[] = [
       es: 'Aplicación full-stack para guitarristas: elegí un artista, explorá su equipamiento y descubrí cómo replicar su sonido.',
       en: 'Full-stack app for guitarists: pick an artist, explore their gear and discover how to replicate their sound.',
     },
-    tags: ['React', 'Next.js', 'Node.js', 'Express', 'MongoDB', 'Tailwind CSS'],
     services: {
       es: ['Diseño Web', 'Desarrollo de Producto'],
       en: ['Website Design', 'Product Development'],
@@ -373,7 +369,6 @@ export const projects: Project[] = [
       es: 'Diseño de una funcionalidad para Cabify que fusiona los gustos musicales del conductor y el pasajero en una playlist compartida generada en tiempo real.',
       en: 'Feature design for Cabify that merges driver and passenger music tastes into a real-time shared playlist.',
     },
-    tags: ['UX Research', 'UI Design', 'Prototyping', 'Figma'],
     services: {
       es: ['Aplicaciones Móviles'],
       en: ['Mobile Apps'],
@@ -439,7 +434,6 @@ export const projects: Project[] = [
       es: 'Simulación laboral en No Country: construcción de un design system unificado para múltiples productos educativos, con foco en accesibilidad y UX Writing.',
       en: 'No Country work simulation: building a unified design system for multiple educational products, focused on accessibility and UX Writing.',
     },
-    tags: ['Design System', 'UX Writing', 'Figma', 'FigJam', 'Accessibility'],
     services: {
       es: ['Design System'],
       en: ['Design System'],
@@ -505,7 +499,6 @@ export const projects: Project[] = [
       es: 'Proyecto universitario de diseño UX inclusivo: investigación con entrevistas reales, card sorting, journey map y prototipo funcional en Figma para personas mayores de 70 años.',
       en: 'University project in inclusive UX design: research with real interviews, card sorting, journey map and functional Figma prototype for adults over 70.',
     },
-    tags: ['UX Research', 'Inclusive Design', 'Figma', 'Card Sorting', 'Accessibility'],
     services: {
       es: ['Aplicaciones Móviles'],
       en: ['Mobile Apps'],

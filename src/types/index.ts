@@ -94,13 +94,6 @@ export interface Project {
     en: string
   }
   /**
-   * ⚠️ Hoy SIN LECTORES: ningún componente lo muestra. Lo leía una rama del
-   * header del case study que no se ejecutaba en ningún proyecto, y se borró
-   * con ella. Queda pendiente decidir si los tags se muestran en algún lado
-   * o se borran (CLAUDE.md §8).
-   */
-  tags: string[]
-  /**
    * Categorías generales del servicio prestado, en formato de agencia:
    * el título de la card da la marca y esto da la categoría
    * ("Paseo Güemes Hotel" → "Diseño Web & Dirección de Arte").

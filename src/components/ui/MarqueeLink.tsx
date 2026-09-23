@@ -47,12 +47,25 @@ export default function MarqueeLink({
   const x = useMotionValue(0)
   const reducedMotion = useReducedMotion()
 
-  // Medimos el ancho de UNA copia tras el mount. Mientras copyWidth=0,
-  // renderizamos solo 1 copia (para medir limpio); cuando ya tenemos
-  // medida, agregamos la 2da copia que hace el loop continuo.
+  // Medimos el ancho de UNA copia. Mientras copyWidth=0, renderizamos solo 1
+  // copia (para medir limpio); cuando ya tenemos medida, agregamos la 2da
+  // copia que hace el loop continuo.
+  //
+  // Se mide con un ResizeObserver y no una sola vez al montar, por dos
+  // motivos. El marquee vive en el navbar de desktop, que en pantallas
+  // chicas está oculto (`display: none`) y mide 0: si la ventana arranca
+  // chica y después se agranda, una medición única lo dejaba quieto para
+  // siempre. Y el observer avisa cada vez que el tamaño cambia (por ejemplo,
+  // cuando termina de cargar la fuente), así que la medida no queda vieja.
   useEffect(() => {
-    const w = copyRef.current?.offsetWidth ?? 0
-    if (w > 0) setCopyWidth(w)
+    const el = copyRef.current
+    if (!el) return
+    const observer = new ResizeObserver(() => {
+      const w = el.offsetWidth
+      if (w > 0) setCopyWidth(w)
+    })
+    observer.observe(el)
+    return () => observer.disconnect()
   }, [label])
 
   useEffect(() => {

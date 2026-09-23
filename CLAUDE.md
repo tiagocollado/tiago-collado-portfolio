@@ -418,13 +418,6 @@ El campo `links.figma` está declarado en `types/index.ts`, pero hoy ningún pro
 2. la key `view_prototype` en los **dos** JSON — sugerido: *"Interactuar con el prototipo"* / *"Explore the prototype"*,
 3. la URL real en el `links` del proyecto.
 
-### El campo `tags` — sin lectores
-
-Ningún componente lo muestra. Lo leía una rama del header del case study que no
-se ejecutaba en ningún proyecto (dependía de un flag que valía `true` en los
-7), y se borró con ella. Los datos siguen en `projects.ts`. **Decisión de
-Tiago pendiente**: si los tags se muestran en algún lado o se borran.
-
 ### Diseño
 | ID | Tarea | Esfuerzo | Notas |
 |---|---|---|---|
@@ -510,7 +503,7 @@ src/
 
 **Portfolios premium**: [isadeburgh](https://isadeburgh.com/) (el "Get in touch" que rota y frena en hover — ya replicado en `MarqueeLink`; y su footer, de donde salió el bloque de cierre unificado: micro-label sobre el mail, botón copiar y barra de tres zonas. **No** se copió el estilo dibujado a mano, ni el serif del mail — sin serif en el stack, el contraste lo da Geist Mono —, ni el wordmark gigante de remate, que se probó y se descartó) · [artemiilebedev](https://artemiilebedev.com/) · [louispaquet](https://louispaquet.com/)
 
-**Case studies Awwwards** (copy super corta en todos, sidebar de metadata, tipografía protagonista): [mikekus](https://mikekus.com/) · [joonassandell](https://joonassandell.com/) · [henriheymans](https://henriheymans.com/) · [silviasguotti](https://silviasguotti.design/) · [alejandromejias](https://www.alejandromejias.com.au/) · [yaremenko](https://yaremenko.design/) · (https://abhishekjha.me/?ref=lapaninja)
+**Case studies** (copy super corta en todos, metadata en una barra arriba del caso —de acá sale `CaseStudyMetaBar`—, tipografía protagonista): [mikekus](https://mikekus.com/) · [joonassandell](https://joonassandell.com/) · [henriheymans](https://henriheymans.com/) · [silviasguotti](https://silviasguotti.design/) · [alejandromejias](https://www.alejandromejias.com.au/) · [yaremenko](https://yaremenko.design/) · (https://abhishekjha.me/?ref=lapaninja)
 
 > ⚠️ **Si sumás refs visuales, NO las pongas en `public/`.** Ahí Next las sirve en producción: las últimas que hubo eran navegables en `tiagocollado.vercel.app/images/references/*.png` y sumaban 2,6 MB al deploy sin que las usara ningún código. Van fuera de `public/` y, si no aportan al portfolio, directamente fuera del repo.
 
