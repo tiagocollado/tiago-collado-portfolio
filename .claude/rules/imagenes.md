@@ -266,7 +266,8 @@ tira es recorrerla.
 > presencia. En la tira de Pulso las columnas ocupan ~60% del ancho y sobra
 > gris alrededor: se ven como capturas chiquitas flotando. **La de Paseo es el
 > estándar** —la home desktop en dos columnas y la mobile en tres, de borde a
-> borde— y la de Pulso se rehace con ese criterio.
+> borde—. La de Pulso se queda así por decisión de Tiago (2026-09-23); las
+> tiras nuevas siguen el criterio de la de Paseo.
 
 > **Variante: varias páginas distintas en vez de una sola partida.** Cuando el
 > valor del proyecto es que es **un producto con varias pantallas** —y no un

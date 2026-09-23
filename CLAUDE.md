@@ -314,11 +314,18 @@ arreglos sobre lo ya publicado, en este orden:
 
 | | Tarea | Dónde está el detalle |
 |---|---|---|
-| 2 | **El diagrama de Pulso** — reemplazarlo por una captura de su página de contacto | *"Pulso"*, punto 8. Arrastra el punto 5 y menciones en §1.2, §2, §4.1, §4.2 y §5 de las rules |
-| 3 | **La tira de Pulso** — columnas más grandes, con el criterio de la de Paseo | *"Pulso"*, punto 4 |
-| 4 | **Las etiquetas del `02-cluster` de FutbolTalent** | *"FutbolTalent"*, abajo. Cosmético |
+| 1 | **El diagrama de Pulso** — reemplazarlo por una captura de su página de contacto | *"Pulso"*, punto 8. Arrastra el punto 5 y menciones en §1.2, §2, §4.1, §4.2 y §5 de las rules |
 
-Con esos cuatro, la versión queda cerrada; la página de todos los proyectos
+**Decidido, se quedan como están** (Tiago, 2026-09-23). No vuelven a
+aparecer como pendientes:
+
+- **La tira de Pulso** (`01-tira`), con las columnas al ~60% del ancho. La
+  regla de llenar el encuadre sigue valiendo para las tiras nuevas
+  (`.claude/rules/imagenes.md` §2).
+- **Las etiquetas cortadas del `02-cluster` de FutbolTalent** (*"ON BOARDING +
+  REGISTR…"*, truncadas por el ancho de la sección en Figma).
+
+Con eso, la versión queda cerrada; la página de todos los proyectos
 pasa a V2 (arriba). Y sigue pendiente una decisión que la estructura nueva
 habilita pero nadie tomó: qué otros tipos además del hero merecen ir a sangre
 (hoy `palette` y `screen-cluster` van al shell de 1280, que fue decisión
@@ -349,10 +356,6 @@ FutbolTalent (`.claude/rules/imagenes.md` §1.1).
 
 **Siguen abiertos:**
 
-4. **`01-tira` — las columnas son chicas.** Ocupan ~60% del ancho y queda
-   demasiado gris alrededor: a sangre se ven como capturas chiquitas flotando,
-   y una imagen a sangre tiene que tener presencia. Se agrandan **con el
-   criterio de la tira de Paseo**, que llena el encuadre de borde a borde.
 5. **`04-diagrama` — dos cosas en la misma pasada.** ⏸ **En suspenso hasta
    decidir el punto 8**: si el diagrama se reemplaza, este arreglo no hace falta.
    - **El borde no se lee.** El charcoal da los números (0% cerca de
@@ -406,13 +409,6 @@ Queda aparte, no bloquea nada:
 - **Mirar `02-cluster` en la página, en tema oscuro.** El marrón da 58 de
   distancia al fondo: es la más cercana al oscuro de la serie. Probablemente se
   lea —además cambia el tono— pero no está visto.
-
-### FutbolTalent — las etiquetas del `02-cluster`
-
-**Detalle cosmético, sin bloquear**: en `02-cluster` dos de las tres secciones
-dicen *"ON BOARDING + REGISTR…"*, cortado por el ancho de la sección en Figma. A
-1280 se lee truncado, y son justo las que prueban la decisión 1. Se arregla
-ensanchando esas secciones y volviendo a capturar.
 
 ### Link al prototipo de Figma — declarado, sin renderear
 
