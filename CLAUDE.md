@@ -67,7 +67,7 @@ Tiago sigue estudiando y la programación no es su fuerte. **El código tiene qu
 - **Dark**: bg `#111110` · ink `#F0EDE8` — **es el tema por defecto**
 - **Símbolo**: la "G" de Gotya en `src/app/icon.svg` — **vector real exportado de Illustrator**, un único path relleno. Chaflán hexagonal a la izquierda, esquina superior derecha redondeada y una diagonal que sube apuntando al codo de la transversal: esa es la flecha. Su `viewBox` está recortado respecto del artboard original (§6).
 - **Radius** 12px cards / 999px pills · **Easing** `cubic-bezier(0.16, 1, 0.3, 1)`
-- **Tipografía**: Space Grotesk (display) + Geist (body) + Geist Mono (labels) → *pendiente de reemplazo, ver F3*
+- **Tipografía**: Space Grotesk (display) + Geist (body) + Geist Mono (labels) → *en revisión: paso 3 de la versión siguiente (§8)*
 - Concepto: "minimalismo técnico pero cálido".
 
 ---
@@ -123,7 +123,7 @@ En mobile se ven completas y quietas (sin crop ni parallax); el recorte y el par
 
 **Open Graph**: `src/app/[locale]/opengraph-image.tsx` genera un PNG 1200×630 en build time: **solo la marca G centrada** sobre el fondo oscuro, **sin texto**. Al vivir en el segmento `[locale]` aplica también a `/projects/[slug]`: compartir cualquier link muestra la marca, no una captura del proyecto.
 
-> **Por qué sin texto.** WhatsApp (y varios clientes de chat) no muestran la card ancha: **recortan un cuadrado del centro**, y un texto alineado a la izquierda queda cortado e ilegible. Una marca centrada sobrevive cualquier recorte. Sin texto, además, la imagen no depende de la tipografía (F3 no la toca) ni duplica el lema, que vive solo en los JSON.
+> **Por qué sin texto.** WhatsApp (y varios clientes de chat) no muestran la card ancha: **recortan un cuadrado del centro**, y un texto alineado a la izquierda queda cortado e ilegible. Una marca centrada sobrevive cualquier recorte. Sin texto, además, la imagen no depende de la tipografía (el cambio de identidad no la toca) ni duplica el lema, que vive solo en los JSON.
 
 > El SVG se lee de `src/app/icon.svg` — **el mismo archivo que el favicon**, no una copia. Cambiar el logotipo actualiza las dos cosas a la vez. Va como data URI en un `<img>` porque es lo que satori soporta de forma confiable.
 
@@ -158,7 +158,7 @@ Orden = campo `order`. Si la página existe lo decide **`published`**; qué se m
 | 6 | **Recuérdalo** | 2025 | — V2 (primero) | — | **cuadrada** | Proyecto universitario, UX inclusivo para adultos 70+. |
 | 7 | **Cabify Music Match** | 2023 | — V2 | — | ancha | Concept UX/UI, prototipo iPhone 14. |
 
-> **Los 5-7 no están publicados** (§8, *"Alcance de esta versión"*): su página da 404 y no aparecen en ningún lado del sitio, pero sus datos, copy e imágenes siguen en el repo. **Volver a publicar uno es cambiar `published` a `true`**, después de su tanda.
+> **Los 5-7 no están publicados** (§8, *"Alcance de la versión 1"*): su página da 404 y no aparecen en ningún lado del sitio, pero sus datos, copy e imágenes siguen en el repo. **Volver a publicar uno es cambiar `published` a `true`**, después de su tanda.
 
 **Los 4 del home son los que mejor muestran rango.** Ritual es universitario y **se queda en el home porque es el único full-stack con demo en vivo** (decisión de Tiago, 2026-09-21).
 
@@ -233,7 +233,32 @@ Solo lo que Tiago pueda defender en una entrevista.
 
 **REGLA: una tarea por sesión.** No abrir frentes en paralelo (ya pasó factura). Excepción válida: un plan en fases acordado de antemano, con check-in entre fases.
 
-### 🎯 Alcance de esta versión: 4 proyectos publicados
+### ✅ Versión 1 — cerrada (2026-09-23)
+
+**Los cuatro case studies publicados están completos**, con sus imágenes y el
+copy contrastado, y verificados contra el deploy:
+
+| Proyecto | Imágenes | Cover |
+|---|---|---|
+| Pulso Creativo | 5 · el diagrama se reemplazó por `04-detalle`, la página de contacto en mobile | Limpio |
+| Paseo Güemes | 4 | Limpio |
+| FutbolTalent.Pro | 3 · `01-diagrama` re-exportado a 2× y revisado nodo por nodo | Limpio (solo el logo) |
+| El Ritual del Tono | 5 | Texto inventado, **por decisión** (abajo) |
+
+**Decidido, se quedan como están** (Tiago, 2026-09-23). No vuelven a
+aparecer como pendientes:
+
+- **El cover de Ritual**, con el riesgo escrito en su sección (abajo).
+- **La tira de Pulso** (`01-tira`), con las columnas al ~60% del ancho. La
+  regla de llenar el encuadre sigue valiendo para las tiras nuevas
+  (`.claude/rules/imagenes.md` §2).
+- **Las etiquetas cortadas del `02-cluster` de FutbolTalent** (*"ON BOARDING +
+  REGISTR…"*, truncadas por el ancho de la sección en Figma).
+
+Todo lo que queda abierto está en *"Versión siguiente — orden propuesto"*,
+al final de esta sección.
+
+### 🎯 Alcance de la versión 1: 4 proyectos publicados
 
 **Decisión de Tiago (2026-09-21).** El sitio publica solo los cuatro que se
 están terminando: **Pulso Creativo, Paseo Güemes, FutbolTalent.Pro y El Ritual
@@ -255,15 +280,12 @@ filtrar.
 > copy ni sus datos del código fuente (el layout filtra los bloques
 > `case_study_*` y el home le pasa los proyectos a `Projects.tsx` como prop).
 
-| ID | Tarea | Notas |
-|---|---|---|
-| **V2** ⏳ | **Versión siguiente: página de todos los proyectos + Multibrand, Recuérdalo y Cabify** | **Recuérdalo primero**, porque es el que más prueba investigación UX. Cada uno vuelve con una tanda completa (vocabulario de imágenes, cover, pasada de hechos del copy) y recién ahí pasa a `published: true`. La página `/projects`: ⚠️ **`id="top"` obligatorio** en el div raíz (renderea el `<Footer />`), y al crearla hay que apuntar ahí el pill "Ver todos los proyectos" de `CaseStudyNextNav` (hoy va a `/{locale}#projects`, la grilla del home) y volver a poner el link del header de `Projects.tsx` (la key `projects.view_all` sigue en los dos JSON, y en el componente quedó un comentario en el lugar exacto donde iba). El conteo del build cambia con cada uno: hoy son **15 páginas**; cada proyecto publicado suma 2 y la página de proyectos suma 2 |
+### 🔓 El repositorio es público — y el historial se resuelve en el paso 1
 
-### 🔓 El repositorio es público — decisión tomada, no un pendiente
-
-**Decisión de Tiago (2026-09-22): el repo se queda público.** No vuelve a
-aparecer como tarea ni se trata como un descuido. Lo que sigue es el riesgo
-asumido, escrito para que nadie lo redescubra y lo abra de nuevo:
+**Decisión de Tiago (2026-09-22): el repo es público.** No se trata como un
+descuido. **Revisada el 2026-09-23**: el riesgo de abajo se resuelve con un repo
+nuevo sin historial, primer paso de la versión siguiente (abajo). Hasta
+entonces, esto sigue siendo cierto:
 
 - **El historial conserva el material de FutbolTalent que se purgó de HEAD.**
   La purga (`f9ba5af`) y el borrado de las imágenes limpiaron el sitio, no
@@ -275,9 +297,9 @@ asumido, escrito para que nadie lo redescubra y lo abra de nuevo:
   en un comentario del código. Las versiones anteriores de este archivo, que
   sí lo decían, siguen en el historial por el mismo motivo que el punto de
   arriba.
-- **Sacarlo después no alcanza**: GitHub sirve los commits viejos por SHA
-  aunque se reescriba el historial, y reescribir necesita `git-filter-repo`,
-  que no está instalado, más un push forzado.
+- **Reescribir el historial no alcanza**: GitHub sirve los commits viejos por
+  SHA aunque se reescriba. Lo que sí lo resuelve es **borrar el repo**, que es
+  el plan del paso 1.
 
 > ⚠️ **Lo que esto implica para el trabajo diario**: todo lo que se commitea es
 > público desde el primer push, así que el control de NDA se hace **antes** de
@@ -307,33 +329,9 @@ abra de nuevo:
 > ⚠️ **No sienta precedente.** Para cualquier otro cover —incluidos los de
 > V2— la regla de §1.1 sigue entera: texto real o no se publica.
 
-### 🚦 Orden para cerrar esta versión (decisión de Tiago, 2026-09-23)
-
-Los 4 case studies están publicados con sus imágenes. Lo que queda son
-arreglos sobre lo ya publicado, en este orden:
-
-| | Tarea | Dónde está el detalle |
-|---|---|---|
-| 1 | ✅ **El diagrama de Pulso** — reemplazado por `04-detalle`, la página de contacto en mobile con el formulario y el botón de WhatsApp | Las rules ya lo citan en §1.2, §2, §4.1, §4.2 y §5 |
-
-**Decidido, se quedan como están** (Tiago, 2026-09-23). No vuelven a
-aparecer como pendientes:
-
-- **La tira de Pulso** (`01-tira`), con las columnas al ~60% del ancho. La
-  regla de llenar el encuadre sigue valiendo para las tiras nuevas
-  (`.claude/rules/imagenes.md` §2).
-- **Las etiquetas cortadas del `02-cluster` de FutbolTalent** (*"ON BOARDING +
-  REGISTR…"*, truncadas por el ancho de la sección en Figma).
-
-Con eso, la versión queda cerrada; la página de todos los proyectos
-pasa a V2 (arriba). Y sigue pendiente una decisión que la estructura nueva
-habilita pero nadie tomó: qué otros tipos además del hero merecen ir a sangre
-(hoy `palette` y `screen-cluster` van al shell de 1280, que fue decisión
-explícita de Tiago).
-
 ### Qué es una tanda
 
-Vale para los arreglos de arriba y para cada proyecto de V2. Una tanda de un
+Vale para cada proyecto de V2. Una tanda de un
 proyecto incluye **siempre**:
 
 - las imágenes de case study con el vocabulario,
@@ -352,7 +350,98 @@ proyecto incluye **siempre**:
 material permitido (§4) y su cover lleva solo el logo en pantalla. El modelo es
 FutbolTalent (`.claude/rules/imagenes.md` §1.1).
 
-### Pulso
+### ⏭️ Versión siguiente — orden propuesto (Tiago, 2026-09-23)
+
+**Documentado, no empezado.** Se retoma más adelante, en este orden y con la
+regla de una tarea por sesión.
+
+#### 1 · Repo nuevo, sin historial
+
+Es lo único con riesgo real. En el historial público siguen las imágenes con
+la interfaz de FutbolTalent y el copy original con lo que §4 protege (ver *"El
+repositorio es público"*, arriba). La limpieza arregló lo que se ve hoy, no lo
+que se descarga de commits viejos.
+
+**El plan**: un repo nuevo con **un solo commit** del estado actual, reconectar
+Vercel a ese repo, y recién entonces borrar el viejo.
+
+- **Verificado el 2026-09-23**: el repo viejo tiene **0 forks** y 0 estrellas, y
+  no tiene copias en Software Heritage ni en el Wayback Machine. Borrarlo se
+  lleva el historial de verdad. **Volver a mirar los forks justo antes de
+  borrar**: un fork conserva el historial entero aunque se borre el original.
+- **Borrar, no reescribir.** Reescribir el historial no alcanza: GitHub sigue
+  sirviendo los commits viejos por SHA. Borrar el repo sí.
+- **El orden importa**: primero el repo nuevo con el deploy andando desde ahí,
+  después borrar el viejo. Al revés, el sitio queda sin deploy en el medio.
+- **Antes del commit inicial**, el control de §4 sobre el árbol entero, igual
+  que antes de cualquier commit: ese commit arranca un historial nuevo, y todo
+  lo que entre ahí queda para siempre.
+- **Es el momento de decidir T3** (paso 6): si la documentación entra o no al
+  repo nuevo.
+- **Claude como contributor**: el historial actual ya está limpio (un solo
+  autor, sin coautorías); lo que mostraba el panel de GitHub era un caché. El
+  repo nuevo lo termina de resolver.
+
+#### 2 · Revisión con ojos de reclutador
+
+Con capturas de página completa del home y de los cuatro casos, **antes de
+sumar proyectos**: lo que salga puede cambiar las prioridades de los pasos
+siguientes.
+
+#### 3 · Identidad — absorbe F3
+
+Revisar el sistema contra lo que delata un sitio hecho con IA:
+
+- serif en los títulos con sans en el cuerpo;
+- mono en mayúscula en los eyebrows (IBM Plex Mono y parecidas);
+- colores "tierra";
+- sans con una cursiva serif de acento en otro color.
+
+**El sitio actual tiene algunas**: los eyebrows van en mono y en mayúscula, y
+el acento es terracota sobre fondo beige.
+
+> ⚠️ **Esto reabre la paleta**, que hasta ahora figuraba como decidida y fuera
+> de discusión (la vieja F3 decía *"la paleta terracota no se toca"*). Si
+> cambia, se mueven los tokens de `.claude/rules/design-tokens.md` y de
+> `@theme` en `globals.css`, el favicon y la marca G (§5).
+
+**Fuentes candidatas**: Nagasaki, Ailerons, Dongpora, Urbanist, Morganite.
+**Verificar la licencia de cada una para uso web antes de elegir**: varias
+fuentes display se distribuyen gratis solo para uso personal. Y varias son
+display (condensadas o de mayúsculas), así que hace falta un par para el
+cuerpo de texto.
+
+La OG image no depende de esto: no lleva texto (§6).
+
+#### 4 · Interacciones
+
+| Qué | Referencia | Notas |
+|---|---|---|
+| **Hero**: al scrollear, la sección de abajo sube y lo tapa, en vez de que el hero se desplace | [solkiernan.com](https://www.solkiernan.com/) | ⚠️ Hoy el hero tiene el wordmark GOTYA sticky que se achica y pasa a la navbar (§6). Hay que resolver cómo conviven las dos cosas. Probarlo con Lenis andando |
+| **Cursor** | [silviasguotti.design](https://silviasguotti.design/) | Hoy: dot + ring con variants (`CustomCursor.tsx`) |
+| **Toggle claro/oscuro** | [olivierguillard.dev](https://olivierguillard.dev/) | Hoy: sol/luna en el `Navbar` |
+| **Links de "ver producto final"** en cada case study | — | Tienen que llamar más la atención. Hoy viven en la barra de metadata (`CaseStudyMetaBar`) |
+
+Los componentes nuevos se nombran por lo que hacen, no por la referencia
+(`.claude/rules/design-tokens.md`, *"Nombres"*).
+
+#### 5 · V2: la página de todos los proyectos y los tres que faltan
+
+**Después de la identidad**, así los casos nuevos nacen con el sistema nuevo.
+
+| ID | Tarea | Notas |
+|---|---|---|
+| **V2** ⏳ | **Versión siguiente: página de todos los proyectos + Multibrand, Recuérdalo y Cabify** | **Recuérdalo primero**, porque es el que más prueba investigación UX. Cada uno vuelve con una tanda completa (vocabulario de imágenes, cover, pasada de hechos del copy) y recién ahí pasa a `published: true`. La página `/projects`: ⚠️ **`id="top"` obligatorio** en el div raíz (renderea el `<Footer />`), y al crearla hay que apuntar ahí el pill "Ver todos los proyectos" de `CaseStudyNextNav` (hoy va a `/{locale}#projects`, la grilla del home) y volver a poner el link del header de `Projects.tsx` (la key `projects.view_all` sigue en los dos JSON, y en el componente quedó un comentario en el lugar exacto donde iba). El conteo del build cambia con cada uno: hoy son **15 páginas**; cada proyecto publicado suma 2 y la página de proyectos suma 2 |
+
+#### 6 · El resto de lo que ya estaba anotado
+
+- **Qué otros tipos además del hero van a sangre.** Hoy `palette` y
+  `screen-cluster` van al shell de 1280, que fue decisión explícita de Tiago;
+  la estructura de bloques hermanos permite cambiarlo sin tocar layout.
+- Los pendientes de abajo: `priority` deprecado y las decisiones abiertas del
+  copy de Pulso, los detalles de Paseo, el link a Figma, F4, T2, T3 y E.
+
+##### Pulso
 
 Queda aparte, no bloquea nada:
 
@@ -365,7 +454,7 @@ Queda aparte, no bloquea nada:
 - El cierre dice *"hoy no tengo números de consultas para mostrar"*. Es honesto y se puede suavizar.
 - La negociación con el cliente está contada en abstracto. Con un ejemplo concreto (qué querían contar, qué se cortó) es la mejor parte del caso.
 
-### Paseo — detalles menores, sin bloquear
+##### Paseo — detalles menores, sin bloquear
 
 - **Las bandas de `03-paleta` quedan ~71px del borde**, con la zona segura en 80
   (§2). En el desktop más angosto, en el extremo del parallax, se les shavea
@@ -374,7 +463,7 @@ Queda aparte, no bloquea nada:
   distancia al fondo: es la más cercana al oscuro de la serie. Probablemente se
   lea —además cambia el tono— pero no está visto.
 
-### Link al prototipo de Figma — declarado, sin renderear
+##### Link al prototipo de Figma — declarado, sin renderear
 
 El campo `links.figma` está declarado en `types/index.ts`, pero hoy ningún proyecto tiene uno y Tiago decidió no cablearlo por ahora. Si alguna vez se agrega, hacen falta **tres** cosas y ninguna avisa si falta:
 
@@ -382,17 +471,16 @@ El campo `links.figma` está declarado en `types/index.ts`, pero hoy ningún pro
 2. la key `view_prototype` en los **dos** JSON — sugerido: *"Interactuar con el prototipo"* / *"Explore the prototype"*,
 3. la URL real en el `links` del proyecto.
 
-### Diseño
+##### Diseño
 | ID | Tarea | Esfuerzo | Notas |
 |---|---|---|---|
-| **F3** | Tipografía principal nueva | 30 min | Reemplazar Space Grotesk + Geist. Opciones: Inter, Manrope, Satoshi, General Sans, Aeonik, Cabinet Grotesk. **Charlar el combo antes de codear.** Descartar de entrada las combinaciones que hoy se leen como default de época: serif de alto contraste en display, mono en mayúscula para eyebrows, cursiva serif de acento en otro color. La paleta terracota ya está decidida y no se toca, así que la tipografía es el eje donde diferenciarse. Toca `layout.tsx` + `@theme`. La OG image no se toca: no lleva texto (§6). |
 | **F4** | Unificar easing en cards | 15 min | Ocho transiciones usan `ease-out` (default de Tailwind) en vez de `ease-expo-out`, que es el token de marca y ya está en `globals.css:19`. `ProjectCard.tsx`: líneas 108, 140, 163, 168, 186, 196, 215 (la flecha, l. 228, sí usa el token). `CaseStudyNextNav.tsx`: línea 95. |
 
-### Técnico
+##### Técnico
 | ID | Tarea | Notas |
 |---|---|---|
 | **T2** | Lighthouse audit real | Manual en DevTools. No hay números del bundle post-rework. |
-| **T3** | ¿Mover `CLAUDE.md` y `AGENTS.md` a un `.docs/` privado? | Sigue abierta, y ahora con más motivo: el repo se queda público (arriba), así que estos archivos se leen desde afuera. Revisar también el `.gitignore`. |
+| **T3** | ¿Mover `CLAUDE.md` y `AGENTS.md` a un `.docs/` privado? | Sigue abierta: el repo es público, así que estos archivos se leen desde afuera. **Se decide en el paso 1**, al armar el repo nuevo: es el momento en que se elige qué entra. Revisar también el `.gitignore`. |
 | **E** | Easter egg · Vercel Analytics · dominio NIC.ar | Cuando haya ganas. |
 
 ---

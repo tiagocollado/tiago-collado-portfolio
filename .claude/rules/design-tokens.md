@@ -28,7 +28,7 @@ premium nivel Awwwards, con la sensibilidad de Linear (precisión), Vercel
 | Easing | `cubic-bezier(0.16, 1, 0.3, 1)` |
 
 Tipografía actual: Space Grotesk (display) + Geist (body) + Geist Mono (labels).
-Pendiente de reemplazo (F3).
+En revisión, junto con la paleta: paso 3 de la versión siguiente (`CLAUDE.md` §8).
 
 Concepto: minimalismo técnico pero cálido.
 
