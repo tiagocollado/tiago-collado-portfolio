@@ -54,18 +54,19 @@
     "view_all": "Ver todos los proyectos"
   },
   "case_study_futbol-talent-pro": {
-    "intro": "Diseñé la experiencia de usuario y arquitectura de información para el MVP de una plataforma mobile-first enfocada en scouting deportivo.",
-    "challenge": "Diseñar un MVP escalable que conecte a tres perfiles de usuarios muy distintos (jugadores, scouts y clubes) manteniendo una navegación intuitiva y una carga cognitiva baja. El objetivo técnico central fue asegurar que las decisiones de diseño fueran 100% viables para una implementación ágil en código.",
-    "decision_1_title": "Arquitectura de información escalable",
-    "decision_1_body": "En lugar de exponer todas las funcionalidades de entrada, estructuré flujos de acceso progresivo. Esto permitió diferenciar accesos básicos de funcionalidades avanzadas mediante una jerarquía visual clara.",
-    "decision_2_title": "Búsqueda progresiva para reducir carga cognitiva",
-    "decision_2_body": "Propuse un buscador de uso simple e intuitivo por defecto (nombre, posición, región), encapsulando las opciones complejas bajo 'Filtros Avanzados' para usuarios experimentados.",
-    "decision_3_title": "Gamificación soportada por un Design System",
-    "decision_3_body": "Para evitar saturar la pantalla con rankings y medallas, construí un sistema de diseño atómico desde cero (tokens, iconografía consistente, light/dark). Esto mantuvo la interfaz limpia.",
-    "delivered_1": "Diseño de pantallas clave para 3 perfiles de usuario",
-    "delivered_2": "Design System atómico completo (tokens, componentes, light/dark)",
-    "delivered_3": "Wireframes lo-fi y flujos de usuario (versión anonimizada)",
-    "closing": "Trabajé en paralelo con el desarrollador frontend, validando la viabilidad técnica de cada pantalla. Operar bajo normativas estrictas de confidencialidad me exigió ser extremadamente metódico: documentar rigurosamente el 'por qué' de cada decisión de UX y asegurar un handoff impecable."
+    "intro": "Estuve a cargo del diseño del MVP de FutbolTalent.Pro, una plataforma mobile-first de scouting deportivo para jugadores, scouts y clubes. Hice los flujos, las pantallas y el Design System.",
+    "challenge": "Eran tres usuarios en la misma app y no buscaban lo mismo. El jugador quiere que lo vean; el scout y el club buscan a quién fichar. Y el alcance se iba ajustando sprint a sprint, así que lo que se acordaba en uno podía cambiar en el siguiente.",
+    "process": "No hubo entrevistas ni pruebas con usuarios, así que arranqué por hipótesis: protopersonas de los tres perfiles, un Lean Canvas y preguntas How Might We.",
+    "decision_1_title": "Un registro para cada perfil",
+    "decision_1_body": "El registro arranca preguntando qué tipo de usuario sos, y de esa respuesta depende el formulario que completás. Cada perfil pide los datos con los que se confirma que es legítimo, sea un jugador, un scout o un club, y desde ahí la app le muestra sus propias pantallas.",
+    "decision_2_title": "Filtros según quién busca",
+    "decision_2_body": "Con todos los filtros pedidos, el explorador se volvía casi un buscador general, y la devolución de la dirección del proyecto fue hacerlo más completo. Para cumplir con eso sin llegar a ese punto, terminé haciendo filtros distintos para cada tipo de usuario. El explorador buscaba jugadores, clubes y videos, y un scout no veía los mismos filtros que un jugador.",
+    "decision_3_title": "Componentes primero, sistema al final",
+    "decision_3_body": "No había un sistema de interfaz del que partir. El manual de marca no incluía definiciones para pantalla y la iconografía salió de una librería. Las pantallas cambiaban todo el tiempo, así que no armé el sistema de átomos a organismos. Diseñé los componentes directamente y, al final, los ordené en un Design System y un UI kit para que el equipo trabajara sobre esa base.",
+    "delivered_1": "Más de 35 pantallas en alta fidelidad para los tres perfiles, contando overlays",
+    "delivered_2": "Design System y UI kit en Figma",
+    "delivered_3": "Wireframes de baja y media fidelidad, prototipo, flujos de usuario y tres protopersonas",
+    "closing": "Cada decisión se discutía en los sprints semanales con todo el equipo y quedaba documentada en Notion. Mientras el desarrollo fue en paralelo, mis pantallas se implementaban a medida que salían, y así el MVP se fue validando técnicamente. Las revisiones eran con desarrollo, con marketing y con la dirección del proyecto, que aprobaba los diseños. Por confidencialidad, acá muestro el proceso y el sistema, no las pantallas finales."
   },
   "case_study_el-ritual-del-tono": {
     "intro": "Diseñé y programé El Ritual del Tono, una tienda para guitarristas. Elegís un artista, entrás a una de sus canciones y ves el equipo detrás de ese sonido, listo para agregar al carrito. Proyecto universitario para Programación Multimedial III, con frontend en Next.js y backend en Node, Express y MongoDB.",

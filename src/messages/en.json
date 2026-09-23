@@ -54,18 +54,19 @@
     "view_all": "View all projects"
   },
   "case_study_futbol-talent-pro": {
-    "intro": "I designed the user experience and information architecture for the MVP of a mobile-first platform focused on sports scouting.",
-    "challenge": "Design a scalable MVP connecting three distinct user profiles (players, scouts, and clubs) while maintaining intuitive navigation and low cognitive load. The core technical objective was to ensure all design decisions were 100% viable for agile code implementation.",
-    "decision_1_title": "Scalable information architecture",
-    "decision_1_body": "Instead of exposing all features at once, I structured progressive access flows. This differentiated basic access from advanced features through a clear visual hierarchy.",
-    "decision_2_title": "Progressive search to reduce cognitive load",
-    "decision_2_body": "I proposed a simple, intuitive default search (name, position, region), encapsulating complex options under 'Advanced Filters' for power users.",
-    "decision_3_title": "Gamification supported by a Design System",
-    "decision_3_body": "To prevent cluttering the screen with rankings and badges, I built an atomic design system from scratch (tokens, consistent iconography, light/dark). This kept the interface clean.",
-    "delivered_1": "Key interface designs for 3 user profiles",
-    "delivered_2": "Complete atomic Design System (tokens, components, light/dark)",
-    "delivered_3": "Lo-fi wireframes and user flows (anonymized version)",
-    "closing": "I worked in parallel with the frontend developer, validating the technical feasibility of each screen. Operating under strict confidentiality rules required me to be extremely methodical: rigorously documenting the 'why' behind each UX decision and ensuring a seamless handoff."
+    "intro": "I was responsible for the design of the MVP of FutbolTalent.Pro, a mobile-first sports scouting platform for players, scouts, and clubs. I did the flows, the screens, and the Design System.",
+    "challenge": "There were three users in the same app, and they weren't after the same thing. The player wants to be seen; the scout and the club are looking for someone to sign. The scope was also being adjusted sprint by sprint, so what we agreed on in one could change in the next.",
+    "process": "There were no interviews or tests with users, so I started from hypotheses: proto-personas for the three profiles, a Lean Canvas, and How Might We questions.",
+    "decision_1_title": "A separate sign-up for each profile",
+    "decision_1_body": "Sign-up starts by asking what kind of user you are, and the form you fill in depends on that answer. Each profile asks for the data that confirms it is legitimate, whether that is a player, a scout, or a club, and from there the app shows each one its own screens.",
+    "decision_2_title": "Filters based on who's searching",
+    "decision_2_body": "With every filter that was asked for, the explorer was turning into a general search engine, and the feedback from the project lead was to make it more complete. To do that without going that far, I ended up with different filters for each type of user. The explorer searched for players, clubs, and videos, and a scout didn't see the same filters as a player.",
+    "decision_3_title": "Components first, system last",
+    "decision_3_body": "There was no interface system to start from. The brand manual didn't include definitions for the screen, and the iconography came from a library. The screens kept changing, so I didn't build the system from atoms up to organisms. I designed the components directly and, at the end, organized them into a Design System and a UI kit so the team could work from that base.",
+    "delivered_1": "More than 35 high-fidelity screens for the three profiles, overlays included",
+    "delivered_2": "Design System and UI kit in Figma",
+    "delivered_3": "Low- and mid-fidelity wireframes, a prototype, user flows, and three proto-personas",
+    "closing": "Every decision was discussed in the weekly sprints with the whole team and documented in Notion. While development ran in parallel, my screens were implemented as they came out, so the MVP was validated technically as we went. Reviews were with development, with marketing, and with the project lead, who approved the designs. Because of the NDA, what I show here is the process and the system, not the final screens."
   },
   "case_study_el-ritual-del-tono": {
     "intro": "I designed and built El Ritual del Tono, a store for guitarists. You pick an artist, open one of their songs, and see the gear behind that sound, ready to add to the cart. A university project for my Programación Multimedial III course, with a Next.js frontend and a Node, Express, and MongoDB backend.",

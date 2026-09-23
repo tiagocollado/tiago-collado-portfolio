@@ -115,12 +115,20 @@ siendo generados, que es justo lo que la regla permite.
 | Pulso Creativo | ✅ **Publicado y limpio.** Se corrigió primero incrustando la captura (`a203a6a`) y después se rehízo con el método sin perspectiva, junto con su `00-mockup` (`7f69757`): `2400 × 2400`, párrafo y nav leídos al 100%, rango tonal 209 |
 | Paseo Güemes Hotel | ✅ **Corregido y limpio.** Las dos pantallas estaban generadas (el celular decía *"En el **cezacón** de Salta la Linda, a **poses** del centro histórico y la **zana** de bares"*). Rehecho con el método sin perspectiva: `2400 × 1800` (4:3, la forma de su card), texto real, sin costuras. **Publicable** |
 | El Ritual del Tono | ❌ **Texto inventado, confirmado** (*"los **guionnates** más icónicos"*). **Se queda por decisión de Tiago** (2026-09-21), así que el hero se hizo aparte (§3) y la tanda **sigue abierta** |
-| FutbolTalent.Pro | ❌ **Texto inventado, confirmado.** Se corrige en su tanda (ojo con el NDA, abajo) |
+| FutbolTalent.Pro | ✅ **Verificado limpio (2026-09-22).** Estaba flageado por analogía y no correspondía: en su pantalla va **solo el logo**, así que no hay copy que un generador pueda redibujar. Leído al 100%: el lettering dice *FUTBOLTALENT PRO* y coincide con el asset del archivo de Figma. `2400×1800` (4:3), rango tonal 175 |
 
-Se hicieron todos con la misma herramienta, así que se asume que los tres
-tienen el problema, sin revisarlos uno por uno. Paseo lo confirmó, y en
+Se hicieron todos con la misma herramienta, así que se asumió que los tres
+tenían el problema, sin revisarlos uno por uno. Paseo lo confirmó, y en
 **las dos** pantallas: si el mockup tiene más de un dispositivo, se revisan
 todos.
+
+> ⚠️ **Esa asunción le puso a FutbolTalent un defecto que no tenía**, y lo
+> arrastró en las notas hasta que se miró el archivo (2026-09-22). Su cover
+> muestra **solo el logo** en la pantalla: no hay párrafos, ni nav, ni copy de
+> producto, o sea que **no hay nada que un generador pueda redibujar mal**. La
+> regla 1.1 no aplica igual a todos los covers: **aplica donde hay texto de
+> interfaz**. Asumir en bloque es rápido para detectar, pero para dar algo por
+> roto —o por sano— hay que abrir el archivo.
 
 > 🚨 **No es una tarea aparte, y no es opcional.** Como el cover y el hero son el
 > mismo mockup (§3), la pantalla del cover se corrige **en la misma tanda en la
@@ -131,9 +139,15 @@ todos.
 
 > ⚠️ **FutbolTalent es la excepción al "mismo mockup".** El NDA prohíbe
 > pantallas finales del producto (`CLAUDE.md` §4), así que su hero no puede ser
-> un mockup con UI. El cover se corrige igual en su tanda, con **solo el logo
-> real** en pantalla y nada de producto. Cómo se relaciona con su hero se
-> decide al arrancar ese proyecto, pensándolo distinto desde el principio.
+> un mockup con UI, y su cover ya venía resuelto de la única forma permitida:
+> **solo el logo** en la pantalla del celular.
+>
+> ✅ **Resuelto así (2026-09-22): el cover y el hero divergen, como en Ritual
+> pero por otro motivo.** El cover es el celular con el logo sobre hormigón, y
+> el hero es la captura del archivo de Figma, también sobre hormigón. Lo que
+> los mantiene emparentados es el material del entorno, no el encuadre: la
+> serie del home se sigue leyendo junta y el caso no muestra una sola pantalla
+> del producto. **Es el modelo para cualquier proyecto bajo NDA.**
 
 ### 1.2. Una imagen tiene que ser comprensible a 330px de ancho
 
@@ -218,6 +232,7 @@ como lo que usa.
 | **Pulso Creativo** | hero | intro | decisions | decisions | delivered | — | **5** |
 | **Paseo Güemes** | hero | intro | decisions | delivered | — | — | **4** |
 | **El Ritual del Tono** | hero | intro | decisions | delivered | decisions | — | **5** |
+| **FutbolTalent.Pro** | hero | — | decisions | — | challenge | — | **3** |
 
 **Pulso va sin imagen en "El desafío".** El desafío era texto denso del cliente
 y conflictos de plantillas de WordPress: no hay nada visual honesto que
@@ -230,6 +245,53 @@ diagrama sería volver a la cuota**: hacer la imagen porque el tipo existe, no
 porque el proyecto la necesite.
 
 Ninguno de los dos usa `detail`.
+
+**FutbolTalent va sin tira y sin paleta, y su `mockup` no es un dispositivo.**
+El NDA prohíbe pantallas finales del producto (`CLAUDE.md` §4), así que no hay
+nada que capturar a lo largo ni una paleta que mostrar como pieza propia: el
+sistema visual se ve dentro del archivo de Figma. Su `mockup` es la captura de
+ese archivo —la página del Design System con el panel de estilos abierto—
+compuesta plana sobre hormigón. **Es el caso que prueba que el `type` manda
+sobre el motivo**: lo que decide el ancho es que sea la pieza principal
+compuesta para su lienzo, no que haya un dispositivo adentro.
+
+> ⚠️ **En un proyecto con NDA, un diagrama se revisa nodo por nodo, no de un
+> vistazo.** Los user flows de FutbolTalent pasaban el control de 1.1 (son
+> captura real) y el de luminancia, y aun así tenían cuatro nodos que el caso
+> no puede contar: dos popups de registro obligatorio —*"para guardar
+> contenido"* en el flujo de scout/club y *"para subir contenido"* en el de
+> jugador, el mismo muro con otra redacción— y un *"Navegar a Rankings"*, que
+> es la gamificación que el copy no nombra. **Lo que el copy no puede decir, la
+> imagen tampoco.**
+>
+> **Dos imágenes del mismo proyecto no tienen que mostrar lo mismo: tienen que
+> respetar la misma restricción.** La restricción acá es **no mostrar
+> pantallas**, no evitar el tema. Por eso la sección del feed sin registro sale
+> de los wireframes —ahí es una pantalla— y el nodo *"Pantalla Feed: el usuario
+> puede visualizar el contenido"* se queda en el flujo, donde es una caja de un
+> diagrama. Decidir por tema en vez de por restricción lleva a recortar de más.
+>
+> ✅ **Se resolvió recortando el encuadre, no tapando nodos** (2026-09-22): la
+> imagen final deja solo el **tramo de registro** del flujo de scout/club, que
+> es el que sostiene la decisión del caso. **Pero el recorte hay que pensarlo
+> antes**: el popup salía cortando el borde izquierdo, y *"Navegar a Rankings"*
+> no, porque estaba en el medio de una rama que converge —cortarla por arriba
+> dejaba conectores yendo hacia la nada—. Si un nodo prohibido cae en el medio
+> de la estructura, el recorte no alcanza: se borra en el archivo fuente y se
+> re-exporta, que no es retocar.
+>
+> ⚠️ **Al cambiar la imagen, revisar el `alt`.** El de esta decía *"los user
+> flows de cada una"* y la versión final tiene uno solo, recortado. Un alt que
+> describe la versión anterior del archivo no lo detecta ningún build.
+
+> 🔍 **El control de un diagrama con material sensible se hace al 100% sobre el
+> archivo que se va a publicar, recortando sin escalar.** No al tamaño de
+> render: que a 330px no se lea no habilita nada, igual que con el texto
+> inventado (§6). Y ojo con el export: medido sobre los flows de FutbolTalent,
+> el popup del flujo 2 se leía entero a 1× y el del flujo 1 estaba en el
+> límite —se distinguía el "Popup:" en negrita pero no las palabras—, así que
+> **el 2× que se usa para que el texto no quede borroso también vuelve legible
+> lo que a 1× no se leía**. Medir sobre el export final, no sobre el borrador.
 
 **`mockup` — el hero.** El sitio en un dispositivo, en un entorno real, en
 encuadre panorámico 21:9. **Es la misma composición que el cover del home**, a
@@ -655,6 +717,10 @@ revisado a mano en la página.
 | **Ritual** `02-cluster` | cobre del logo, 137 | 120 / 90 | ✅ 0% cerca de los dos | — |
 | **Ritual** `03-diagrama` | hormigón alrededor de una tarjeta oscura, 92 | 75 / 135 | ✅ 0% cerca de los dos | — **Re-exportada.** La primera versión tenía la tarjeta a 48px del borde: en desktops angostos el recorte se comía el hormigón y el borde visible pasaba a ser la tarjeta oscura, pegada a `#111110`. Ahora está a 103 / 83 |
 | **Ritual** `04-paleta` | valor medio, 73 | 56 / 154 | ✅ 0% cerca de los dos | — Mismo fondo que las paletas de Pulso y Paseo |
+| **FTP** `00-mockup` | hormigón, 94 | 77 / 133 | ✅ 0% cerca de los dos | — Captura del archivo de Figma, plana sobre hormigón |
+| **FTP** `02-cluster` | hormigón, 97 | 80 / 130 | ✅ 0% cerca de los dos | — Va en hormigón y no en un plano de marca como los otros tres clusters: son wireframes, o sea documentación de proceso, no producto |
+| **FTP** `01-diagrama` | azul del logo, 78 | 61 / 149 | ✅ 0% cerca de los dos | — La primera versión de ese plano daba 61 (44 del fondo oscuro): pasaba el número, pero era el más oscuro de los cuatro clusters. Se subió a la línea de Paseo |
+| **FTP** cover | hormigón, 103 | 86 / 124 | ✅ 3,5% cerca del oscuro (la sombra de la red en una esquina), bajo el 15% | — Rango tonal 175 |
 
 El único dato que hay para calibrar un umbral mejor: **25 de distancia contra
 el fondo no alcanza**. Cuando haya más casos vistos en la página, se puede
@@ -728,6 +794,25 @@ El caso real de Pulso, cinco piezas de cinco tipos:
 
 **El número es el orden. El nombre es el tipo. El `slot` del brief decide
 dónde cae.** El archivo dice qué es; el código dice dónde va.
+
+> 🚨 **Nombrar por posición y no por tipo cambia la imagen que se publica, y no
+> lo avisa nada.** En Pulso, Paseo y Ritual los nombres parecen una secuencia
+> (`00-mockup` · `01-tira` · `02-cluster` · `03-paleta` · `04-diagrama`) porque
+> esos casos usan esos tipos en ese orden. **Es coincidencia, no plantilla.**
+> FutbolTalent no tiene tira ni paleta —no hay página que capturar a lo largo,
+> y su sistema visual se ve dentro del archivo de Figma—, así que sus tres
+> piezas son `mockup`, `diagram` y `screen-cluster`.
+>
+> Renombrar sus archivos "como veníamos" dejó a los wireframes llamándose
+> `01-tira.jpg` y a las protopersonas `02-cluster.jpg`. El brief del cluster
+> apunta a `02-cluster.jpg`, así que **el case study pasó a servir la imagen de
+> las protopersonas con el alt de los wireframes**, y el build compiló sin una
+> sola advertencia. Encima era la imagen que estaba retenida por NDA.
+>
+> **Cómo se chequea**: por contenido, nunca por nombre. `md5sum` de cada
+> archivo contra el que se revisó, o abrirlos. Y si un número queda libre
+> —hoy falta el `01`, reservado para las protopersonas— es el sistema
+> funcionando, no un error.
 
 > ⚠️ **Por qué cambió.** El naming viejo era `01-hero` · `02-challenge` ·
 > `03-decisions` · `04-delivered`, y esos nombres codificaban la **sección** de

@@ -145,7 +145,9 @@ En mobile se ven completas y quietas (sin crop ni parallax); el recorte y el par
 **i18n**: next-intl con paridad total ES/EN (17 namespaces). **Regla**: toda key nueva va en los dos archivos.
 
 **Accesibilidad** (auditado sobre el HTML generado, no sobre el código):
-- Un solo `<main>`, `<nav>`, `<header>` y `<footer>` por página · `lang` correcto por locale · 12 imágenes, **cero sin `alt`** · 17 `aria-label` cubriendo los controles de solo ícono.
+- Un solo `<main>`, `<nav>`, `<header>` y `<footer>` por página · `lang` correcto por locale · **cero imágenes sin `alt`** · `aria-label` en todos los controles de solo ícono.
+
+> **Conteos verificados sobre el HTML generado (2026-09-23)**: el home tiene 4 imágenes y 14 `aria-label`; un case study, entre 4 y 6 imágenes —según cuántas tenga el proyecto— y 7 `aria-label`. **El `alt` vacío de los covers y del thumbnail de "próximo proyecto" es deliberado**: son decorativos y el texto que los nombra ya está en el DOM, así que un alt descriptivo los haría anunciar dos veces. Los números viejos ("12 imágenes, 17 aria-label") eran de una sola pasada y se desactualizaron con cada tanda: **lo que hay que sostener es el cero sin `alt`, no la cifra.**
 - **Nada suprime el focus ring del browser**, así que el foco de teclado se ve en todo. La única excepción es `<main>`, que lo suprime a propósito: recibe foco solo por script desde el skip link, y un contorno alrededor de toda la página se lee como un bug. **No agregar más excepciones.**
 - El cursor custom **no** oculta el nativo (no hay ninguna regla `cursor: none`), así que no interfiere con el foco.
 - **Skip link** (`SkipLink.tsx`): primer elemento focusable, invisible hasta recibir foco. Es un client component con `onClick` + `preventDefault` en vez de un `<a href="#main">` pelado, porque Lenis intercepta las anclas y puede comerse el movimiento de foco nativo — que acá es lo único que importa, ya que `<main>` arranca al tope y no hay nada que scrollear.
@@ -280,11 +282,35 @@ filtrar.
 |---|---|---|
 | **V2** ⏳ | **Versión siguiente: página de todos los proyectos + Multibrand, Recuérdalo y Cabify** | **Recuérdalo primero**, porque es el que más prueba investigación UX. Cada uno vuelve con una tanda completa (vocabulario de imágenes, cover, pasada de hechos del copy) y recién ahí pasa a `published: true`. La página `/projects` reemplaza a la vieja P-1: ⚠️ **`id="top"` obligatorio** en el div raíz (renderea el `<Footer />`), y al crearla hay que apuntar ahí el pill "Ver todos los proyectos" de `CaseStudyNextNav` (hoy va a `/{locale}#projects`, la grilla del home) y volver a poner el link del header de `Projects.tsx` (la key `projects.view_all` sigue en los dos JSON). El conteo del build cambia con cada uno: hoy son **15 páginas**; cada proyecto publicado suma 2 y la página de proyectos suma 2 |
 
+### 🔓 El repositorio es público — decisión tomada, no un pendiente
+
+**Decisión de Tiago (2026-09-22): el repo se queda público.** No vuelve a
+aparecer como tarea ni se trata como un descuido. Lo que sigue es el riesgo
+asumido, escrito para que nadie lo redescubra y lo abra de nuevo:
+
+- **El historial conserva el material de FutbolTalent que se purgó de HEAD.**
+  La purga (`f9ba5af`) y el borrado de las imágenes limpiaron el sitio, no
+  `git log`. Siguen accesibles sin autenticarse: el copy original con las seis
+  palabras prohibidas de §4, el flujo de convocatorias, los inversores y el
+  stack (`d742a14`), y **las 4 imágenes con UI real del producto** en
+  `196e39c`, descargables por `raw.githubusercontent.com`.
+- **Esta misma documentación es pública.** La lista de "vocabulario prohibido"
+  de §4 dice, por sí sola, que el producto tiene plan pago, inversores y con
+  qué está hecho. Es lo que vuelve a T3 más urgente que antes.
+- **Sacarlo después no alcanza**: GitHub sirve los commits viejos por SHA
+  aunque se reescriba el historial, y reescribir necesita `git-filter-repo`,
+  que no está instalado, más un push forzado.
+
+> ⚠️ **Lo que esto implica para el trabajo diario**: todo lo que se commitea es
+> público desde el primer push, así que el control de NDA se hace **antes** de
+> commitear, no después. Un archivo en `public/` se sirve en producción y
+> además queda en el historial para siempre.
+
 ### Bloqueado por contenido de Tiago
 | ID | Tarea | Notas |
 |---|---|---|
 | **IMG-1** | **Rehacer las imágenes de los 4 publicados** — covers + case study | ⚠️ **Con el alcance nuevo (arriba) el "35 = 7 covers + 28" ya no aplica**: esta versión cubre solo los 4 publicados, y los otros 3 pasan a V2 con sus tandas. Reemplaza a NDA-img, WP-img y B1, que quedaron sin objeto al darse de baja todas las provisorias (§10). 📋 **La dirección de arte, las medidas y el vocabulario de tipos están en `.claude/rules/imagenes.md`**; el cableado en §10 y las prioridades acá abajo. ⚠️ **Ya no son 4 por case study**: la cuota se reemplazó por el vocabulario, así que "28 de case study" es una estimación, no un target. ✅ **D3 ya está hecho**, así que el cableado es solo agregar el `src`: no hay que optimizar nada a mano ni pensar en `srcset`. |
-| **B3** | Métricas reales de FutbolTalent.Pro | Sin data el caso cierra sin impacto duro. |
+| ~~**B3**~~ | ~~Métricas reales de FutbolTalent.Pro~~ | ❌ **Dada de baja (2026-09-22).** La tarea se contradecía con §4, que prohíbe publicar métricas internas del producto: aunque Tiago consiguiera los números, no se podrían usar. El caso cierra con el proceso y el sistema, que es lo que el NDA sí permite mostrar. |
 
 **Orden** — hechas en este orden, el sitio queda presentable después del primer bloque en vez de después del último:
 
@@ -294,13 +320,14 @@ filtrar.
 | **P1** | Las de case study de esos 4 | Son los 4 casos publicados. Sin cantidad fija por caso (`.claude/rules/imagenes.md` §2) |
 | ~~**P2**~~ · ~~**P3**~~ | ~~Los 3 covers y las imágenes de case study restantes~~ | **Pasaron a V2** con el alcance nuevo (arriba) |
 
-Progreso: P0 `4/4` cableados · **Pulso y Paseo corregidos y publicados** (`7f69757`) · Ritual y FutbolTalent con texto inventado · P1: **Pulso ✅ cerrado (5)**, con 2 pendientes de imagen · **Paseo ✅ cerrado (4)** · **Ritual ✅ publicado y verificado en `d6e50eb` (5)**, tanda abierta por el cover con texto inventado · **FutbolTalent `0`: el único de los cuatro sin terminar**
+Progreso: P0 `4/4` cableados · **Pulso, Paseo y FutbolTalent con el cover limpio** · P1: **Pulso ✅ cerrado (5)**, con 2 pendientes de imagen · **Paseo ✅ cerrado (4)** · **Ritual ✅ publicado y verificado en `d6e50eb` (5)**, tanda abierta por el cover con texto inventado · **FutbolTalent ✅ cerrado (3)**, sin commitear todavía
 
 > **Ya no se cuenta sobre 35.** Ese total salía de la cuota de 4 por caso: Pulso cerró con 5 y Paseo con 4. El denominador de cada caso sale de lo que el proyecto tiene para mostrar (`.claude/rules/imagenes.md` §2, *"Casos reales"*).
 
-⚠️ **De los 4 covers del home, dos están limpios (Pulso y Paseo) y dos no.**
-Ritual y FutbolTalent siguen con texto inventado y se corrigen en la tanda de
-su proyecto. Ver *"Incidente de los covers"* más abajo. Los 4 son mockup de
+⚠️ **De los 4 covers del home, tres están limpios (Pulso, Paseo y
+FutbolTalent) y uno no.** Solo Ritual sigue con texto inventado, y se corrige
+en la tanda de su proyecto. El de FutbolTalent estaba flageado por analogía y
+se verificó limpio: en su pantalla va solo el logo. Ver *"Incidente de los covers"* más abajo. Los 4 son mockup de
 dispositivo sobre hormigón con luz dura, generados con Nano Banana Pro y
 compuestos en Figma. Specs verificados: `2400×1800` (4:3) los tres anchos,
 rango tonal 164-196. Cada uno tiene su propio protagonista para que la serie
@@ -320,7 +347,7 @@ Sale de la referencia [mikekus.com](https://mikekus.com/): el home muestra 4-6 p
 | ~~**P-1**~~ | ~~Página `/projects` con los 7 + un 8º tile de CTA~~ | — | ➡️ **Pasó a V2** (arriba, *"Alcance de esta versión"*), junto con los 3 proyectos que la llenan. Las notas de `id="top"` y del link del header se mudaron ahí. |
 | ~~**P-2**~~ | ~~Home a 4 cards~~ | — | ✅ **Hecha.** `featured` → `showOnHome`. La grilla uniforme 3:2 duró poco: se reemplazó por el bento de dos formas (`cardShape`) en P-3. |
 | ~~**P-3**~~ | ~~Dirección de arte de la card~~ | — | ✅ **Hecha.** Reposo: solo la imagen, cero texto. Hover: lavado + nombre + VER PROYECTO + categoría + escuadras. Grilla bento de dos formas. |
-| **P-5** | Cierre de docs: §6, §7 y §10 | `CLAUDE.md` | Esas tres describen "qué existe hoy" — se actualizan recién cuando el código exista, no antes. |
+| ~~**P-5**~~ | ~~Cierre de docs: §6, §7 y §10~~ | — | ✅ **Cerrada (2026-09-23).** Las tres describen lo que existe: 15 páginas, 4 proyectos publicados, 21 imágenes y la grilla masonry con `cardShape`. De paso se corrigieron los conteos de accesibilidad de §6, que eran de una pasada vieja. |
 
 ⚠️ **El link "Ver todos los proyectos ↗" se sacó del home** porque tiraba 404.
 Vuelve con la página de V2, en el header de `Projects.tsx` — la key
@@ -367,11 +394,104 @@ de imágenes full-width):
    permitido (wireframes, flujos, design system, personas), y su cover se
    corrige con solo el logo real en pantalla.
 
-**Después de FutbolTalent** se cierra esta versión; la página de todos los
-proyectos pasa a V2 (arriba). Y queda pendiente una
-decisión que la estructura nueva habilita pero nadie tomó: qué otros tipos
-además del hero merecen ir a sangre (hoy `palette` y `screen-cluster` van al
-shell de 1280, que fue decisión explícita de Tiago).
+✅ **FutbolTalent — tanda cerrada (2026-09-22), pendiente de commit.** El copy
+está reescrito contra las respuestas de Tiago y las 3 imágenes están cableadas,
+con el cover verificado limpio.
+
+> **Queda un detalle cosmético**, sin bloquear: en `02-cluster` dos de las tres
+> secciones dicen *"ON BOARDING + REGISTR…"*, cortado por el ancho de la
+> sección en Figma. A 1280 se lee truncado, y son justo las que prueban la
+> decisión 1. Se arregla ensanchando esas secciones y volviendo a capturar.
+
+| Archivo | `type` | `slot` | Medida | Estado |
+|---|---|---|---|---|
+| `00-mockup.jpg` | `mockup` | `hero` | `2560×1097` (21:9), a sangre — captura del archivo de Figma (página del Design System, panel de estilos abierto) plana sobre hormigón | ✅ Cableada |
+| `01-diagrama.jpg` | `diagram` | `challenge` | `2400×1600` — las tres protopersonas sobre un plano del azul del logo, y **el tramo de registro** del user flow de scout/club | ✅ Cableada en la tercera versión (abajo) |
+| `02-cluster.jpg` | `screen-cluster` | `decisions` | `2400×1600` — vista alejada de los wireframes, con la sección del feed sin registro recortada | ✅ Cableada |
+| cover | — | — | `2400×1800` (4:3) — celular con el logo sobre hormigón, con la sombra de una red | ✅ **Verificado limpio**, rango tonal 175. No estaba roto: el flag venía de asumir el defecto de los otros covers |
+
+✅ **`01-diagrama` — resuelto recortando, en tres vueltas.** La primera versión
+mostraba los dos user flows enteros, con tres nodos que el caso no puede
+mostrar. Mientras estuvo así **el archivo se mantuvo fuera de `public/`**
+(§11: todo lo que vive ahí se sirve en producción, aunque no se muestre en la
+página). Los tres nodos eran:
+
+1. Flujo 2 (scout/club) — *"Popup: El usuario debe registrarse para guardar contenido"*, entre "¿Quiere guardar contenido?" y "¿El usuario tiene cuenta?".
+2. Flujo 2 — *"Navegar a Rankings"*, en el grupo que sale de "Resultados de Búsqueda". Es la gamificación que el copy no nombra por §4.
+3. Flujo 1 (jugador) — *"Popup: El usuario debe registrarse para subir contenido"*. Mismo muro, otra redacción.
+
+> **El criterio es la fidelidad, no el tema** (decisión de Tiago, 2026-09-22).
+> La restricción del NDA es **no mostrar pantallas**: por eso la sección del
+> feed sin registro sale de los wireframes, donde es una pantalla, y el nodo
+> *"Pantalla Feed"* se queda en el flujo, donde es una caja de un diagrama. Las
+> dos imágenes no tienen que decir lo mismo; tienen que respetar lo mismo.
+
+**Cómo se resolvió** (decisión de Tiago, 2026-09-22): **salió el flujo 1**
+—se veía chico y desprolijo— y **el flujo 2 se recortó para que los nodos
+queden fuera del encuadre. Recortar, no tapar.**
+
+> **El recorte que cierra es el tramo de registro**: "¿El usuario tiene
+> cuenta? → Ir a Registro → Onboarding → Sign Up → ¿Jugador o Scout? → Carga
+> de datos iniciales", con la base de datos de los campos, y abajo la línea de
+> "Login → Pantalla Explorar". Deja el popup afuera por la izquierda y los
+> rankings por abajo, se lee solo, y **es justo lo que sostiene la decisión 1**:
+> el registro cambia según el perfil.
+>
+> ⚠️ **No cualquier recorte servía.** *"Navegar a Rankings"* está en el medio
+> del grupo que sale de "¿Qué perfil busca el usuario?" y converge en
+> "Resultados de Búsqueda", **en paralelo con "Aplicar Filtros Avanzados"**:
+> cortarlo por arriba dejaba los conectores de esa rama yendo hacia la nada.
+> Por eso el tramo que se salva es el de registro y no el de búsqueda. La otra
+> salida, si alguna vez hace falta el tramo de búsqueda, es **borrar ese nodo
+> en FigJam y re-exportar** — editar el archivo antes de capturar no es
+> retocar, es lo mismo que se hizo con la sección del feed en los wireframes.
+
+**Verificado en la versión final**, al 100% sobre el archivo publicado: en el
+borde izquierdo entra la flecha a "¿El usuario tiene cuenta?" sin rastro del
+popup, y el corte de abajo cae después de "Pantalla Explorar", sin rastro de
+rankings. La pieza va sobre un plano del **azul del logo** en vez de hormigón
+—las tres son capturas de Figma y el color rompe la monotonía, igual que el
+cluster de Paseo sobre marrón—. Números: borde **78** (la segunda versión daba
+61, el plano más oscuro de los cuatro clusters; ahora queda en la línea de
+Paseo, 75), 0% cerca de los dos fondos · los tres roles a **60px en el frame
+1×**, con la regla en 36 · márgenes 140 / 141 / 105 / 93, sobre la zona segura
+de 80.
+
+> ⚠️ **El alt tuvo que cambiar con la imagen.** Decía *"los user flows de cada
+> una"* y ahora hay **un** flujo, recortado. Un alt que describe la versión
+> anterior de su imagen no lo detecta ningún build: se revisa cuando se cambia
+> el archivo, igual que el `src`.
+
+> ⚠️ **Los user flows dicen algo distinto del copy y de los wireframes.** Los
+> wireframes tienen tres onboardings, uno por perfil, pero los flows son dos:
+> `UserFlow 1 — Jugador` y `UserFlow 2 — Scout / Club`. Por eso el copy afirma
+> el **registro** distinto por perfil, que es lo que las dos imágenes prueban,
+> y no tres flujos separados.
+
+**El copy se rehízo entero** (`process` incluida, que antes no tenía). Salió de
+las respuestas de Tiago, no de código ni de un sitio publicado: acá no hay nada
+que contrastar. Lo que se cayó, además de las 🔒 del NDA: el buscador
+progresivo que nunca propuso, los "Filtros Avanzados" como sección, el Design
+System atómico (las pantallas cambiaban todo el tiempo, así que hizo los
+componentes primero y el sistema al final), "UX Research" como tag (no hubo
+entrevistas ni pruebas) y el equipo "multidisciplinario".
+
+### 🚦 Orden para cerrar esta versión (decisión de Tiago, 2026-09-23)
+
+**Primero T4**, que está arriba y no es de imagen. Después, en este orden:
+
+| | Tarea | Dónde está el detalle |
+|---|---|---|
+| 1 | **El cover de Ritual** con texto inventado | *"Ritual — publicado y verificado"*, abajo. Es lo único que le falta a su tanda |
+| 2 | **El diagrama de Pulso** — reemplazarlo por una captura de su página de contacto | *"Pulso — cerrado"*, punto 8. Arrastra el punto 5 y menciones en §1.2, §2, §4.1, §4.2 y §5 de las rules |
+| 3 | **La tira de Pulso** — columnas más grandes, con el criterio de la de Paseo | *"Pulso — cerrado"*, punto 4 |
+| 4 | **Las etiquetas del `02-cluster` de FutbolTalent** | En la tanda de FTP, arriba. Cosmético |
+
+Con esos cuatro, la versión queda cerrada; la página de todos los proyectos
+pasa a V2 (arriba). Y sigue pendiente una decisión que la estructura nueva
+habilita pero nadie tomó: qué otros tipos además del hero merecen ir a sangre
+(hoy `palette` y `screen-cluster` van al shell de 1280, que fue decisión
+explícita de Tiago).
 
 #### ✅ Commiteado y publicado en `7f69757` (2026-09-17)
 
@@ -427,11 +547,13 @@ Decisiones de Tiago que siguen abiertas sobre el copy de Pulso:
 - El cierre dice *"hoy no tengo números de consultas para mostrar"*. Es honesto y se puede suavizar.
 - La negociación con el cliente está contada en abstracto. Con un ejemplo concreto (qué querían contar, qué se cortó) es la mejor parte del caso.
 
-> 📌 A la skill `auditar-copy` le falta una **pasada de hechos**: contrastar cada
-> afirmación contra el sitio publicado. Audita tono, y el problema real de Pulso
-> no era el tono — eran afirmaciones falsas que ninguna pasada de estilo detecta.
+> ✅ **La skill `auditar-copy` ya tiene la pasada de hechos** (2026-09-23).
+> Audita en tres pasadas y la de hechos va primero, con la tabla de dónde se
+> verifica según de dónde salga el caso —sitio publicado, código, API o la
+> memoria de Tiago— y la regla de preguntar cuando falta el dato. Se escribió
+> con lo que costó aprenderlo en los cuatro casos.
 >
-> **Cómo se hizo a mano en Paseo, para cuando se escriba esa pasada**: bajar el
+> **Cómo se hizo a mano en Paseo, que es de donde salió el método**: bajar el
 > HTML del sitio con `curl` y buscar la evidencia de cada afirmación —
 > `<video>` para un hero con video, `<form>` y sus `<label>` para un formulario,
 > `data-settings` del widget para "tres logos en mobile", `name="description"` /
@@ -455,7 +577,8 @@ el análisis completo, con cómo detectarlo, está en `.claude/rules/imagenes.md
 |---|---|
 | Pulso Creativo | ✅ **Publicado y limpio.** Primero se corrigió incrustando la captura (`a203a6a`), y después **se rehízo con el método sin perspectiva** junto con su `00-mockup`, que entró en `7f69757`. Hoy: `2400×2400`, párrafo y nav leídos al 100%, rango tonal 209, bordes de pantalla limpios |
 | Paseo Güemes | ✅ **Publicado y limpio**, `2400×1800` (4:3). Las dos pantallas estaban generadas; se rehizo con el método sin perspectiva. Entró en `7f69757` |
-| El Ritual del Tono · FutbolTalent.Pro | ❌ **Texto inventado, confirmado por Tiago** (misma herramienta: se asume en los dos). **No es una tarea suelta**: cada cover se corrige **dentro de la tanda de imágenes de su proyecto**, porque es el mismo mockup que el hero. Flageados también en `projects.ts` |
+| El Ritual del Tono | ❌ **Texto inventado, confirmado** (*"los **guionnates** más icónicos"*). Se corrige **dentro de la tanda de su proyecto**, porque es el mismo mockup que el hero. Flageado también en `projects.ts` |
+| FutbolTalent.Pro | ✅ **Verificado limpio (2026-09-22).** Estaba flageado por analogía con los otros y no correspondía: en su pantalla va **solo el logo**, así que no hay copy de producto que un generador pueda redibujar. Leído al 100%, dice *FUTBOLTALENT PRO* y coincide con el asset del Figma |
 
 > El cover de Pulso estaba exportado a 1× (`1200×1200`) y la card en retina pide 1256px. **Se cerró con el corregido**, que viene a 2×. Los cuatro covers llegan ahora.
 
@@ -655,9 +778,46 @@ ya está decidida y no se toca, así que la tipografía es el eje donde diferenc
 ### Técnico
 | ID | Tarea | Notas |
 |---|---|---|
-| **T4** 🔴 | **Proteger los endpoints de escritura de la API de El Ritual del Tono** — prioridad alta | `api-el-ritual-del-tono.vercel.app` acepta `POST`, `PUT` y `DELETE` en `/products` **sin ninguna autenticación** (`routes/products.js` del repo del backend). La demo está linkeada desde el portfolio: si alguien vacía el catálogo, el reclutador que hace clic en "ver demo" encuentra una tienda vacía, y además es justo lo que se captura para las imágenes. Lo mínimo es cerrar la escritura (una API key en un header, o sacar esas rutas del deploy si no las usa el frontend — hoy el frontend solo hace `GET` y `POST /orders`). De yapa: una ruta inexistente devuelve 500 con `"createError is not defined"` en vez de un 404. |
+| **T4** 🔴 | **Proteger los endpoints de escritura de la API de El Ritual del Tono** — **es lo próximo que se hace** (decisión de Tiago, 2026-09-23) | Va **antes que los pendientes de imagen**: es el único problema que puede romperse solo, sin que nadie toque el portfolio. Plan completo abajo. |
 | **T2** | Lighthouse audit real | Manual en DevTools. No hay números del bundle post-rework. |
-| **T3** | ¿Mover `CLAUDE.md` y `AGENTS.md` a un `.docs/` privado? | Decisión pendiente de Tiago para cuando el repo público madure. Revisar también el `.gitignore`. |
+
+#### 🔴 T4 — cómo arrancar la sesión
+
+**Es en otro repo** (el backend de El Ritual del Tono), así que la sesión
+empieza abriendo ese proyecto, no este.
+
+**El problema, verificado el 2026-09-23**: `GET /products` responde 200 y una
+ruta inexistente sigue devolviendo **500 con `"createError is not defined"`**,
+o sea que el backend no se tocó desde que se documentó. `routes/products.js`
+expone `POST`, `PUT` y `DELETE` **sin autenticación**. La demo está linkeada
+desde el case study publicado: si alguien vacía el catálogo, el reclutador que
+hace clic en "ver demo" encuentra una tienda vacía — y es lo mismo que se
+captura para las imágenes del caso.
+
+**El orden:**
+
+1. **Mirar qué usa el frontend antes de tocar nada.** Hasta donde está
+   documentado, solo hace `GET` de artistas y productos y `POST /orders`. Si
+   es así, **las rutas de escritura de `/products` se pueden sacar del deploy**
+   y no hace falta autenticar nada: es la solución más simple y la que no deja
+   una API key que administrar.
+2. **Si algo del front sí escribe**, entonces va una API key en un header,
+   leída de una variable de entorno en Vercel, y el front la manda solo en esa
+   llamada. Nunca hardcodeada en el repo, que es público.
+3. **Arreglar el 500 de la ruta inexistente.** `createError` no está definido:
+   o se importa, o se reemplaza por un `res.status(404).json(...)`. Hoy
+   cualquier URL mal escrita devuelve un error de servidor con el nombre de una
+   función adentro.
+4. **Verificar sin romper nada**: `GET` a `/products` (tiene que seguir dando
+   200), una ruta inexistente (tiene que dar 404 y no 500), y el flujo de la
+   demo de punta a punta — artista → canción → carrito → checkout.
+5. **Volver acá y cerrar T4**, con la fecha y qué se eligió de los dos caminos.
+
+> ⚠️ **No probar la escritura contra la API en producción para "confirmar" que
+> está abierta.** Un `POST` o un `DELETE` de prueba modifica el catálogo real
+> que usa la demo publicada. La evidencia ya está en el código de
+> `routes/products.js`; alcanza con leerlo.
+| **T3** | ¿Mover `CLAUDE.md` y `AGENTS.md` a un `.docs/` privado? | Sigue abierta, y ahora con más motivo: el repo se queda público (abajo), así que estos archivos se leen desde afuera. Revisar también el `.gitignore`. |
 | **E** | Easter egg · Vercel Analytics · dominio NIC.ar | Cuando haya ganas. |
 
 ---
@@ -761,7 +921,7 @@ src/
 
 **Imágenes**: `public/images/covers/{slug}-cover.*` (cards del home) · `public/images/case-study/{slug}/{nn}-{nombre}.*` — el número es el orden, el nombre es el tipo de pieza (`mockup`, `tira`, `cluster`…), nunca la sección. 📋 **Las medidas, el vocabulario de tipos y la dirección de arte están en `.claude/rules/imagenes.md`** — no improvisar tamaños acá. Nada más va en `public/`: **todo lo que está ahí se sirve en producción** (ver §11).
 
-> **Hoy hay 15 imágenes en el repo**: los 4 covers del home (Ritual y FutbolTalent con texto inventado) + las 5 de Pulso + las 4 de Paseo + 2 de Ritual (tanda en curso, §8). Ya no queda ninguna provisoria. Los 3 covers restantes y las imágenes de los otros case studies todavía no existen: su `coverImage` es `null` y sus `imageBriefs` no tienen `src`.
+> **Hoy hay 21 imágenes en el repo**: los 4 covers del home (solo el de Ritual con texto inventado) + las 5 de Pulso + las 4 de Paseo + las 5 de Ritual + las 3 de FutbolTalent. Ya no queda ninguna provisoria. Los 3 covers restantes y las imágenes de los otros case studies todavía no existen: su `coverImage` es `null` y sus `imageBriefs` no tienen `src`.
 
 > ⚠️ **Antes de estas hubo 31 que se dieron de baja de una sola vez** (7 covers + 24 de case study). Eran provisorias y se leían como generadas con IA: en un portfolio de UX/UI una imagen que parece IA contradice el argumento del portfolio más fuerte de lo que un hueco lo debilita. Es el motivo por el que existe la regla de la captura real (`.claude/rules/imagenes.md` §1.1).
 
