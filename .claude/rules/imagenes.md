@@ -104,8 +104,9 @@ sirve para decidir si un texto inventado puede quedarse.
 > que se producen las imágenes de ese proyecto**: se arma la escena una vez, con
 > la captura real incrustada, y salen los dos encuadres. **La tanda de un
 > proyecto no está cerrada mientras su cover siga con texto inventado**, aunque
-> todas sus imágenes de case study estén listas. El único cover con texto
-> inventado hoy es el de Ritual (`CLAUDE.md` §8).
+> todas sus imágenes de case study estén listas. **La única excepción es el
+> cover de Ritual**, que se queda con su texto inventado por decisión de Tiago,
+> con el riesgo escrito (`CLAUDE.md` §8). No sienta precedente.
 
 > ✅ **El modelo para proyectos bajo NDA — FutbolTalent.** El NDA prohíbe
 > pantallas finales del producto (`CLAUDE.md` §4), así que el hero no puede ser
@@ -478,16 +479,15 @@ grande y completa.
 > ⚠️ **Excepción — El Ritual del Tono: el cover y el hero divergen.** El cover
 > tiene texto inventado en la pantalla (*"los tonos legendarios de los
 > **guionnates** más icónicos"*) y **se queda como está por decisión de Tiago**
-> (2026-09-21). Un hero sacado de esa escena heredaría el texto inventado, y a
-> sangre se lee sin zoom. Por eso el hero es una **composición plana nueva**: la
-> home en desktop (captura plana) y en celular (marco dibujado, pantalla con la
-> captura real) sobre hormigón. Se pierde la continuidad card → hero, y es el
+> (2026-09-21, confirmada el 2026-09-23: la tanda de Ritual queda cerrada así,
+> `CLAUDE.md` §8). Un hero sacado de esa escena heredaría el texto inventado, y
+> a sangre se lee sin zoom. Por eso el hero es una **composición plana nueva**:
+> la home en desktop (captura plana) y en celular (marco dibujado, pantalla con
+> la captura real) sobre hormigón. Se pierde la continuidad card → hero, y es el
 > precio de no publicar texto inventado a sangre.
 >
-> 🚨 **Esto no cierra el problema del cover.** Por la regla de §1.1, **la tanda
-> de Ritual NO está cerrada** mientras su cover tenga texto inventado. Cuando se
-> corrija, conviene rearmarlo desde la escena del hero nuevo, así cover y hero
-> vuelven a ser la misma imagen.
+> Si algún día se rehace el cover, conviene armarlo desde la escena del hero
+> nuevo, así cover y hero vuelven a ser la misma imagen.
 
 ---
 

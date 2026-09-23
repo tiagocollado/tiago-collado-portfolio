@@ -280,9 +280,9 @@ export const projects: Project[] = [
     },
     cardShape: 'wide',
     // ❌ TEXTO INVENTADO EN LA PANTALLA (confirmado: "los tonos legendarios de
-    // los guionnates mas iconicos"). Queda como esta por decision de Tiago, y
-    // por eso el hero NO sale de este mockup: es una composicion nueva (§3 de
-    // las rules). La tanda de Ritual no cierra mientras el cover siga asi.
+    // los guionnates mas iconicos"). Queda como esta por decision de Tiago
+    // (2026-09-23, con el riesgo escrito en CLAUDE.md §8), y por eso el hero
+    // NO sale de este mockup: es una composicion nueva (§3 de las rules).
     coverImage: '/images/covers/el-ritual-del-tono-cover.jpg',
     year: 2025,
     published: true,

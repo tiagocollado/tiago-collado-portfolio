@@ -284,14 +284,36 @@ asumido, escrito para que nadie lo redescubra y lo abra de nuevo:
 > commitear, no después. Un archivo en `public/` se sirve en producción y
 > además queda en el historial para siempre.
 
+### 🎸 El cover de Ritual se queda — decisión tomada, no un pendiente
+
+**Decisión de Tiago (2026-09-23): el cover de El Ritual del Tono se publica
+con el texto inventado que tiene en la pantalla** (*"los tonos legendarios de
+los **guionnates** más icónicos"*). No vuelve a aparecer como tarea, y **la
+tanda de Ritual está cerrada**. Es la única excepción a la regla de la tanda
+(abajo) y a `.claude/rules/imagenes.md` §1.1.
+
+Lo que sigue es el riesgo asumido, escrito para que nadie lo redescubra y lo
+abra de nuevo:
+
+- **El motivo**: el texto es tan chico que al tamaño de la card no se lee ni
+  se detecta.
+- **Lo que la regla advierte y se acepta**: con zoom sí se lee. Pellizcar en
+  el celular amplía la variante 2× que sirve `next/image`.
+- **Lo que no aplica acá**: el otro riesgo de §1.1, que el mismo mockup vaya a
+  sangre en el hero. En Ritual el hero es una composición nueva, con captura
+  real (`.claude/rules/imagenes.md` §3), así que el texto inventado vive solo
+  en la card.
+
+> ⚠️ **No sienta precedente.** Para cualquier otro cover —incluidos los de
+> V2— la regla de §1.1 sigue entera: texto real o no se publica.
+
 ### 🚦 Orden para cerrar esta versión (decisión de Tiago, 2026-09-23)
 
-Los 4 case studies están publicados con sus imágenes. Lo que queda son cuatro
+Los 4 case studies están publicados con sus imágenes. Lo que queda son
 arreglos sobre lo ya publicado, en este orden:
 
 | | Tarea | Dónde está el detalle |
 |---|---|---|
-| 1 | **El cover de Ritual** con texto inventado | *"Ritual — el cover"*, abajo. Es lo único que le falta a su tanda |
 | 2 | **El diagrama de Pulso** — reemplazarlo por una captura de su página de contacto | *"Pulso"*, punto 8. Arrastra el punto 5 y menciones en §1.2, §2, §4.1, §4.2 y §5 de las rules |
 | 3 | **La tira de Pulso** — columnas más grandes, con el criterio de la de Paseo | *"Pulso"*, punto 4 |
 | 4 | **Las etiquetas del `02-cluster` de FutbolTalent** | *"FutbolTalent"*, abajo. Cosmético |
@@ -310,7 +332,8 @@ proyecto incluye **siempre**:
 - las imágenes de case study con el vocabulario,
 - **el cover corregido**, con la captura real en pantalla. No es opcional:
   cover y hero son el mismo mockup, así que salen de la misma escena. **La
-  tanda no está cerrada mientras el cover siga con texto inventado.**
+  tanda no está cerrada mientras el cover siga con texto inventado.** La
+  única excepción es el cover de Ritual, por decisión de Tiago (arriba).
 - **y las dos cosas pasan el control al 100%** (`.claude/rules/imagenes.md`
   §6): texto real **y sin artefactos**.
 
@@ -383,10 +406,6 @@ Queda aparte, no bloquea nada:
 - **Mirar `02-cluster` en la página, en tema oscuro.** El marrón da 58 de
   distancia al fondo: es la más cercana al oscuro de la serie. Probablemente se
   lea —además cambia el tono— pero no está visto.
-
-### Ritual — el cover
-
-🚨 **La tanda NO está cerrada.** Por la regla de la tanda (arriba), no cierra mientras el cover tenga texto inventado: *"los tonos legendarios de los **guionnates** más icónicos"*. **Queda como pendiente, no como resuelto.** Y en Ritual **el cover y el hero divergen**: el hero no pudo salir de la escena del cover sin heredar ese texto, que a sangre se lee sin zoom. La excepción está escrita en `.claude/rules/imagenes.md` §3.
 
 ### FutbolTalent — las etiquetas del `02-cluster`
 
@@ -479,7 +498,7 @@ src/
 
 **Imágenes**: `public/images/covers/{slug}-cover.*` (cards del home) · `public/images/case-study/{slug}/{nn}-{nombre}.*` — el número es el orden, el nombre es el tipo de pieza (`mockup`, `tira`, `cluster`…), nunca la sección. 📋 **Las medidas, el vocabulario de tipos, la dirección de arte y cómo cablear una imagen están en `.claude/rules/imagenes.md`** — no improvisar tamaños acá. Nada más va en `public/`: **todo lo que está ahí se sirve en producción** (ver §11).
 
-> **Hoy hay 21 imágenes en el repo**: los 4 covers del home (solo el de Ritual con texto inventado) + las 5 de Pulso + las 4 de Paseo + las 5 de Ritual + las 3 de FutbolTalent. Los proyectos de V2 todavía no tienen: su `coverImage` es `null` y sus `imageBriefs` no tienen `src`. **Cablear una no toca ningún componente** — `ProjectCard` envuelve el cover en `{project.coverImage && …}` y la page rendea cada `CaseStudyImage` solo si el brief tiene `src`.
+> **Hoy hay 21 imágenes en el repo**: los 4 covers del home (el de Ritual con texto inventado, por decisión: §8) + las 5 de Pulso + las 4 de Paseo + las 5 de Ritual + las 3 de FutbolTalent. Los proyectos de V2 todavía no tienen: su `coverImage` es `null` y sus `imageBriefs` no tienen `src`. **Cablear una no toca ningún componente** — `ProjectCard` envuelve el cover en `{project.coverImage && …}` y la page rendea cada `CaseStudyImage` solo si el brief tiene `src`.
 
 > **El modo placeholder de `CaseStudyImage` existe pero no se usa.** Sin imágenes, esas cajas punteadas "BUILDING" convertían el sitio en una obra en construcción —otra señal negativa—, y encima el texto está hardcodeado en inglés también en la versión ES.
 
