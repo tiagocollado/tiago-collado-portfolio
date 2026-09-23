@@ -1,6 +1,6 @@
 ---
 name: auditar-copy
-description: Audita textos del portfolio buscando patrones de escritura generada por IA y desvíos de la voz de marca Gotya. Usar al escribir, revisar o corregir cualquier copy del sitio — case studies, About, Hero, microcopy, alts, taglines — o cuando Tiago pida revisar si un texto "suena a IA" o suena genérico.
+description: Audita textos del portfolio contrastando cada afirmación contra la evidencia y buscando patrones de escritura generada por IA y desvíos de la voz de marca Gotya. Usar al escribir, revisar o corregir cualquier copy del sitio — case studies, About, Hero, microcopy, alts, taglines — o cuando Tiago pida revisar si un texto "suena a IA", suena genérico o dice algo que no puede probar.
 ---
 
 # Auditar copy — Portfolio Gotya
@@ -11,12 +11,57 @@ error técnico.
 
 ## Cómo auditar
 
-Recorré el texto **dos veces, por separado**:
+Recorré el texto **tres veces, por separado**:
 
-1. **Pasada de patrones**: buscá las marcas de abajo, una por una. Citá la línea
+1. **Pasada de hechos**: ¿cada afirmación es cierta? Es la primera y la que más
+   caro sale saltearse. Método completo abajo.
+2. **Pasada de patrones**: buscá las marcas de abajo, una por una. Citá la línea
    exacta y proponé un reemplazo concreto, no "reescribir más natural".
-2. **Pasada de voz**: releé el texto completo preguntando si lo escribiría
+3. **Pasada de voz**: releé el texto completo preguntando si lo escribiría
    alguien hablando de su propio trabajo a un reclutador, en voz alta.
+
+**El orden importa.** Una frase falsa bien escrita pasa las otras dos pasadas
+sin despeinarse, y pulir el tono de algo que no ocurrió es trabajo perdido.
+
+---
+
+## Pasada de hechos — va primero
+
+Los cuatro case studies publicados tenían afirmaciones falsas, y **ninguna era
+un dato desactualizado: nunca fueron ciertas**. Las escribió un modelo
+rellenando un hueco donde faltaba el dato. Ejemplos reales: un WhatsApp
+"ruteado por servicio" que era un solo número; un endpoint que validaba stock y
+no existe; *"el 90% de las queries"*; una discusión con el cliente que no pasó.
+Ninguna la detecta una pasada de estilo.
+
+**Por cada afirmación concreta del texto, preguntá: ¿con qué se prueba?**
+
+| De dónde sale el caso | Dónde se verifica |
+|---|---|
+| Un sitio publicado | El HTML real, bajado con `curl`. Buscá la evidencia del elemento: `<video>` para un hero con video, `<form>` y sus `<label>` para un formulario, `name="description"` / `ld+json` / `<h1>` para una afirmación de SEO |
+| Código propio | El repo: el componente, el modelo de datos, la ruta. Si el copy explica *por qué* funciona algo, el porqué tiene que estar en el código |
+| Una API en vivo | Pedirle los datos y comparar contra lo que dice el texto |
+| Solo la memoria de Tiago | **Preguntale, afirmación por afirmación.** No hay otra fuente y no se completa con lo plausible |
+
+**Las reglas:**
+
+1. **Listá las afirmaciones una por una antes de reescribir nada**, numeradas,
+   para que Tiago pueda contestar por número. Incluí las de `projects.ts` que se
+   ven en la página: `tagline`, `description`, `tags`, `metadata` y los `alt`.
+2. **Cuando falta el dato, se pregunta.** Un hueco en el copy se nota; una
+   explicación plausible y falsa, no — y en una entrevista es lo primero que se
+   repregunta.
+3. **Marcá los superlativos y los números sin fuente.** "El activo que más
+   convierte", "un 40% más rápido", "el 90% de los casos". O va la evidencia al
+   lado, o va el verbo neutro.
+4. **Un número aproximado se escribe como aproximado.** "Más de 35 pantallas"
+   se sostiene; "38 pantallas" salido de la memoria, no.
+5. **Ojo con corregir una verdad.** El resumen de texto de una página decía que
+   el hero era una imagen fija y en el HTML había un `<video autoplay loop>`.
+   **No alcanza con un resumen: hay que mirar la fuente.**
+6. **Lo que el copy no puede decir, la imagen tampoco.** Si el proyecto tiene
+   NDA o restricciones, revisá también las capturas y los diagramas: un nodo de
+   un flujo puede contar lo que el texto calla.
 
 Reportá siempre por línea citada. Un veredicto global ("suena bien") no sirve
 para corregir nada.
@@ -97,7 +142,16 @@ cualquiera, no dice nada. Borrala o reemplazala por el dato específico.
 
 ## Formato del reporte
 
-Por cada hallazgo:
+**La pasada de hechos se reporta aparte y primero**, como una lista numerada de
+afirmaciones con su evidencia, para que Tiago conteste por número:
+
+```
+1. [archivo:key] "…la afirmación…"
+   Evidencia: qué lo prueba (URL, archivo:línea, respuesta de la API)
+   Veredicto: ✅ cierta · ❌ falsa · ❓ solo la sabe Tiago
+```
+
+Las otras dos pasadas, por cada hallazgo:
 
 ```
 [archivo:key] — patrón detectado
