@@ -314,7 +314,7 @@ arreglos sobre lo ya publicado, en este orden:
 
 | | Tarea | Dónde está el detalle |
 |---|---|---|
-| 1 | **El diagrama de Pulso** — reemplazarlo por una captura de su página de contacto | *"Pulso"*, punto 8. Arrastra el punto 5 y menciones en §1.2, §2, §4.1, §4.2 y §5 de las rules |
+| 1 | ✅ **El diagrama de Pulso** — reemplazado por `04-detalle`, la página de contacto en mobile con el formulario y el botón de WhatsApp | Las rules ya lo citan en §1.2, §2, §4.1, §4.2 y §5 |
 
 **Decidido, se quedan como están** (Tiago, 2026-09-23). No vuelven a
 aparecer como pendientes:
@@ -354,47 +354,11 @@ FutbolTalent (`.claude/rules/imagenes.md` §1.1).
 
 ### Pulso
 
-**Siguen abiertos:**
-
-5. **`04-diagrama` — dos cosas en la misma pasada.** ⏸ **En suspenso hasta
-   decidir el punto 8**: si el diagrama se reemplaza, este arreglo no hace falta.
-   - **El borde no se lee.** El charcoal da los números (0% cerca de
-     `#111110`) pero en la página real el contorno casi no se ve. Sube un
-     escalón. Es el caso que demostró que el número de §4.2 es un piso y no
-     una prueba.
-   - **El título está dentro de la zona segura**: arranca a 61px del borde
-     superior del frame 1×, y la zona pide 80. Se baja.
-
-> ⚠️ Con la paleta ya en valor medio y el diagrama todavía en charcoal (42), las
-> dos piezas de documentación de Pulso quedaron **desparejas**. Es un argumento
-> más para el punto 5: cuando se rehaga el diagrama, va al mismo fondo.
-
 Queda aparte, no bloquea nada:
 
 7. **`priority` está deprecado en Next 16** (reemplazado por `preload`). Sigue
    funcionando —el HTML emite el `<link rel="preload">` del mockup—, pero
    `CaseStudyImage` usa la prop vieja.
-
-⏳ **Dentro de esta versión, no en V2** (decisión de Tiago, 2026-09-22):
-
-8. **`04-diagrama` — ¿reemplazarlo por el producto real?** A Tiago no le
-   cierra (2026-09-21). Es la única imagen de los sets publicados que muestra
-   una decisión **en abstracto** en vez del sitio, y al final de la página
-   rompe el registro: todo lo anterior es producto, y el cierre es un esquema.
-   - **Candidato**: una captura de la página de contacto de Pulso con el
-     formulario y el botón de WhatsApp **en el mismo encuadre**. Muestra la
-     misma decisión (dos vías de contacto), pero en el producto real.
-   - **Si se reemplaza, el `type` pasa de `diagram` a `screen-cluster` o
-     `detail`.** Ojo con §1.2 de las rules: la página de contacto entera tiene
-     labels y texto chico, así que como `detail` va recortada a formulario +
-     botón. Y el botón de WhatsApp es el flotante de Joinchat (`position:
-     fixed`): verificar que aparezca en la captura y al lado del formulario,
-     porque un elemento fijo no siempre queda donde se lo ve al scrollear.
-   - **Arrastra docs**: `.claude/rules/imagenes.md` cita este diagrama como
-     *"el estándar a igualar"* en §1.2 y lo lista en §2, §4.1, §4.2 y §5. Si se
-     reemplaza, esas menciones se actualizan en la misma pasada.
-   - **Mata el punto 5** si se reemplaza, y con él la nota de las dos piezas de
-     documentación desparejas.
 
 **Decisiones de Tiago que siguen abiertas sobre el copy de Pulso:**
 - ¿El sitio está dado de alta en Search Console? En el HTML no hay meta de verificación, pero puede estar verificado por DNS.

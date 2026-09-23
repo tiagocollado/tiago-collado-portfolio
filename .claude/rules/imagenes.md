@@ -135,7 +135,7 @@ bullets o cards de texto adentro.**
 | | Veredicto |
 |---|---|
 | Un caso de éxito de Pulso con bullets (ya borrado) | ❌ A 330px solo se lee el título; la lista es textura. Tiene texto que hace falta leer y mide menos de 36px |
-| `04-diagrama` de Pulso — un diagrama de dos vías de contacto | ✅ Su significado está en la estructura y sobrevive al 27% de escala. **Es el estándar a igualar** |
+| `03-diagrama` de Ritual — un equipo del catálogo y los siete artistas que lo usan | ✅ Su significado está en la estructura y sobrevive al 27% de escala: a 330px se leen el título y los nombres. **Es el estándar a igualar** |
 
 **Y una sola idea por imagen.** Si hay que entrecerrar los ojos para entender
 qué muestra, está mal: una imagen de Pulso que metía logos + CTA + dos cards
@@ -181,7 +181,7 @@ proyecto no usa es tan deliberado como lo que usa.
 
 | | `mockup` | `long-strip` | `screen-cluster` | `palette` | `diagram` | `detail` | Total |
 |---|---|---|---|---|---|---|---|
-| **Pulso Creativo** | hero | intro | decisions | decisions | delivered | — | **5** |
+| **Pulso Creativo** | hero | intro | decisions | decisions | — | delivered | **5** |
 | **Paseo Güemes** | hero | intro | decisions | delivered | — | — | **4** |
 | **El Ritual del Tono** | hero | intro | decisions | delivered | decisions | — | **5** |
 | **FutbolTalent.Pro** | hero | — | decisions | — | challenge | — | **3** |
@@ -229,6 +229,12 @@ proyecto no usa es tan deliberado como lo que usa.
 > sensible se leía entero a 1× y otro estaba en el límite, así que **el 2× que se usa
 > para que el texto no quede borroso también vuelve legible lo que a 1× no se
 > leía**. Medir sobre el export final, no sobre el borrador.
+>
+> **Pasó con la re-exportación a 2× (2026-09-23)**: el mismo encuadre, pero los
+> campos de la base de registro, que antes se leían borrosos, pasaron a leerse
+> nítidos. Se revisaron uno por uno al 100% y quedan, por decisión de Tiago.
+> Cada vez que se re-exporta una imagen bajo NDA, el control se repite entero,
+> aunque el encuadre no haya cambiado.
 
 **`mockup` — el hero.** El sitio en un dispositivo, en un entorno real, en
 encuadre panorámico 21:9. **Es la misma composición que el cover del home**, a
@@ -370,12 +376,22 @@ sobrevive a la escala, por 1.2.
 > documento, referenciada por 11 canciones de 7 artistas. El modelo de datos no
 > aparece en ninguna pantalla y es lo que prueba que el proyecto es full-stack
 > y no un frontend con datos fijos. Sale de los esquemas reales del backend, no
-> del copy. **El contraejemplo es `04-diagrama` de Pulso**: las dos vías de
-> contacto sí se ven en el sitio, y por eso está en revisión (`CLAUDE.md` §8,
-> punto 8).
+> del copy. **El contraejemplo fue el diagrama de Pulso**: mostraba las dos
+> vías de contacto como un esquema, cuando se ven en el sitio. Se reemplazó por
+> `04-detalle`, la captura del producto (ver `detail`, abajo).
 
 **`detail`.** Un recorte o zoom de UNA pantalla. **Nunca la pantalla entera**:
 a 330px una pantalla completa es una mancha gris.
+
+> **Caso real — `04-detalle` de Pulso:** la página de contacto en un celular,
+> con el formulario y el botón flotante de WhatsApp en la misma pantalla,
+> dentro del marco de celular de los clústeres y sobre gris de valor medio.
+> Muestra la decisión de las dos vías de contacto en el producto y no en un
+> esquema. **La primera versión fue la página entera capturada en desktop, y
+> no servía**: a 330px era una mancha gris, y el botón de WhatsApp, que en
+> desktop queda en la esquina de la ventana, medía 4px. En mobile el botón
+> flotante queda pegado al formulario, así que **el ancho de la captura decide
+> qué queda junto**: se elige el dispositivo donde la decisión se ve.
 
 ### Lo que queda AFUERA del vocabulario
 
@@ -524,7 +540,7 @@ valor medio para la documentación.**
 | `01-tira` | Hormigón de valor medio | Solo en las capturas | Misma textura que el mockup: las dos piezas a sangre se leen como una familia |
 | `02-cluster` | **Plano del verde marca `#8EB943`** | Sí, todo el fondo | Se ve sola en su página. El verde dice de quién es el proyecto antes de leer nada |
 | `03-paleta` | Gris de **valor medio** (73) | Sí, las bandas y el logo | El contenido **es** la paleta |
-| `04-diagrama` | Charcoal | Acentos | Documentación. ⚠️ **Desparejo**: la paleta está en valor medio (73) y el diagrama sigue en charcoal (42), que falla §4.2 en la página. Se iguala cuando se rehaga |
+| `04-detalle` | Gris de **valor medio**, con el marco de celular de los clústeres | Solo en la pantalla | Mismo fondo que la paleta: las dos piezas del cierre quedan parejas |
 
 **Paletas de los clientes**, para rehacer piezas sin volver a extraerlas:
 
@@ -580,7 +596,7 @@ y a `#EDE2CD` ≈ 227):
 | Imagen | Borde | Distancia oscuro / claro | Número | En la página |
 |---|---|---|---|---|
 | Pulso `01-tira`, primera versión | casi negro | — | ❌ 71,5% del borde pegado a `#111110` | Se fundía en el tema por defecto |
-| Pulso `04-diagrama` | charcoal, 42 | **25** / 185 | ✅ 0% cerca de los dos | ❌ **Casi no se lee.** El número es un piso, no una prueba |
+| Pulso `04-diagrama` (ya reemplazado) | charcoal, 42 | **25** / 185 | ✅ 0% cerca de los dos | ❌ **Casi no se lee.** El número es un piso, no una prueba |
 | Ritual `03-diagrama` | hormigón alrededor de una tarjeta oscura, 92 | 75 / 135 | ✅ | La primera versión tenía la tarjeta a 48px del borde: en desktops angostos el recorte del parallax se comía el hormigón y el borde visible pasaba a ser la tarjeta oscura. **La zona segura (§2) también protege el borde** |
 | FTP cover | hormigón, 103 | 86 / 124 | ✅ 3,5% cerca del oscuro | La sombra de una esquina, bajo el 15%: una zona oscura chica no hace fallar la regla |
 
@@ -649,7 +665,7 @@ El caso real de Pulso, cinco piezas de cinco tipos:
 01-tira.jpg        type long-strip      slot intro
 02-cluster.jpg     type screen-cluster  slot decisions
 03-paleta.jpg      type palette         slot decisions
-04-diagrama.jpg    type diagram         slot delivered
+04-detalle.jpg     type detail          slot delivered
 ```
 
 **El número es el orden. El nombre es el tipo. El `slot` del brief decide
@@ -658,8 +674,8 @@ sección (`02-challenge`) ataría la imagen a un único lugar de la página.
 
 > 🚨 **Nombrar por posición y no por tipo cambia la imagen que se publica, y no
 > lo avisa nada.** En Pulso, Paseo y Ritual los nombres parecen una secuencia
-> (`00-mockup` · `01-tira` · `02-cluster` · `03-paleta` · `04-diagrama`) porque
-> esos casos usan esos tipos en ese orden. **Es coincidencia, no plantilla.**
+> (`00-mockup` · `01-tira` · `02-cluster` · `03-…`) porque esos casos usan
+> esos tipos en ese orden. **Es coincidencia, no plantilla.**
 > FutbolTalent no tiene tira ni paleta, así que sus tres piezas son `mockup`,
 > `diagram` y `screen-cluster`.
 >

@@ -127,9 +127,10 @@ export const projects: Project[] = [
      *   del cliente y conflictos de plantillas de WordPress, y no hay nada
      *   visual honesto que mostrar. No es un hueco por completar.
      * - 02 y 03 comparten `decisions`: van seguidas, como grupo.
-     * - El cluster va sobre el verde de marca y la paleta sobre charcoal. No
-     *   son acromaticas y esta bien: eso es regla de los covers, no de las
-     *   imagenes de case study (`.claude/rules/imagenes.md` §4.1).
+     * - El cluster va sobre el verde de marca. No es acromatico y esta bien:
+     *   eso es regla de los covers, no de las imagenes de case study
+     *   (`.claude/rules/imagenes.md` §4.1). La paleta y el detalle de
+     *   contacto van sobre gris de valor medio.
      */
     imageBriefs: [
       {
@@ -172,13 +173,16 @@ export const projects: Project[] = [
         src: '/images/case-study/pulso-creativo/03-paleta.jpg',
       },
       {
-        type: 'diagram',
+        // Las dos vias de contacto en el producto real, no en un esquema: la
+        // pagina de contacto en mobile, donde el boton flotante de WhatsApp
+        // queda pegado al formulario. Reemplaza al diagrama de las dos vias.
+        type: 'detail',
         slot: 'delivered',
         alt: {
-          es: 'Diagrama de las dos vías de contacto: WhatsApp para consultas rápidas y formulario para las detalladas',
-          en: 'Diagram of the two contact paths: WhatsApp for quick questions, a form for detailed ones',
+          es: 'La página de contacto de Pulso Creativo en un celular: el formulario y el botón de WhatsApp en la misma pantalla',
+          en: 'The Pulso Creativo contact page on a phone: the form and the WhatsApp button on the same screen',
         },
-        src: '/images/case-study/pulso-creativo/04-diagrama.jpg',
+        src: '/images/case-study/pulso-creativo/04-detalle.jpg',
       },
     ],
   },
