@@ -233,6 +233,8 @@ Solo lo que Tiago pueda defender en una entrevista.
 
 **REGLA: una tarea por sesión.** No abrir frentes en paralelo (ya pasó factura). Excepción válida: un plan en fases acordado de antemano, con check-in entre fases.
 
+> ⏸️ **FutbolTalent.Pro está en revisión con el cliente** (2026-09-24): fuera del sitio publicado en `main`, se revisa en la rama `revision`.
+
 ### ✅ Versión 1 — cerrada (2026-09-23)
 
 **Los cuatro case studies publicados están completos**, con sus imágenes y el
