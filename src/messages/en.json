@@ -54,9 +54,8 @@
     "view_all": "View all projects"
   },
   "case_study_futbol-talent-pro": {
-    "intro": "I was responsible for the design of the MVP of FutbolTalent.Pro, a mobile-first sports scouting platform for players, scouts, and clubs. I did the flows, the screens, and the Design System.",
+    "intro": "I worked on the design of the MVP of FutbolTalent.Pro, a mobile-first sports scouting platform for players, scouts, and clubs. In my three months on the project, I designed flows, screens, and the Design System.",
     "challenge": "There were three users in the same app, and they weren't after the same thing. The player wants to be seen; the scout and the club are looking for someone to sign. The scope was also being adjusted sprint by sprint, so what we agreed on in one could change in the next.",
-    "process": "There were no interviews or tests with users, so I started from hypotheses: proto-personas for the three profiles, a Lean Canvas, and How Might We questions.",
     "decision_1_title": "A separate sign-up for each profile",
     "decision_1_body": "Sign-up starts by asking what kind of user you are, and the form you fill in depends on that answer. Each profile asks for the data that confirms it is legitimate, whether that is a player, a scout, or a club, and from there the app shows each one its own screens.",
     "decision_2_title": "Filters based on who's searching",

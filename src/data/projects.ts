@@ -197,8 +197,7 @@ export const projects: Project[] = [
       es: 'Flujos, pantallas y Design System de un MVP validado técnicamente, con un registro propio para jugadores, scouts y clubes.',
       en: 'Flows, screens, and Design System for a technically validated MVP, with a separate sign-up for players, scouts, and clubs.',
     },
-    // Sin `UX Research`: no hubo entrevistas ni pruebas con usuarios. Las
-    // protopersonas, el Lean Canvas y los HMW fueron hipotesis.
+    // Sin `UX Research`: el caso no cuenta la investigacion.
     services: {
       es: ['Aplicaciones Móviles', 'Design System'],
       en: ['Mobile Apps', 'Design System'],
@@ -211,14 +210,14 @@ export const projects: Project[] = [
     // el lettering dice FUTBOLTALENT PRO y coincide con el asset del Figma.
     coverImage: '/images/covers/futbol-talent-pro-cover.jpg',
     year: 2025,
-    published: false,
+    published: true,
     showOnHome: false,
     order: 3,
     metadata: {
       client:   { es: 'FutbolTalent.Pro',                    en: 'FutbolTalent.Pro' },
       role:     { es: 'Diseñador UX/UI',                     en: 'UX/UI Designer' },
       duration: { es: '3 meses',                             en: '3 months' },
-      team:     { es: 'A cargo de todo el diseño · trato directo con la dirección del proyecto', en: 'Responsible for all design · working directly with the project lead' },
+      team:     { es: 'Diseño UX/UI durante mi etapa en el proyecto · trato directo con la dirección', en: 'UX/UI design during my time on the project · working directly with the project lead' },
       stack:    ['Figma', 'FigJam'],
       nda:      { es: 'Bajo confidencialidad, material no sensible', en: 'Under NDA, non-sensitive material only' },
     },
