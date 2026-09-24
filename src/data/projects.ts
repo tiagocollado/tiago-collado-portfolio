@@ -211,8 +211,8 @@ export const projects: Project[] = [
     // el lettering dice FUTBOLTALENT PRO y coincide con el asset del Figma.
     coverImage: '/images/covers/futbol-talent-pro-cover.jpg',
     year: 2025,
-    published: true,
-    showOnHome: true,
+    published: false,
+    showOnHome: false,
     order: 3,
     metadata: {
       client:   { es: 'FutbolTalent.Pro',                    en: 'FutbolTalent.Pro' },
