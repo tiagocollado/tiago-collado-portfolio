@@ -237,6 +237,7 @@ Solo lo que Tiago pueda defender en una entrevista.
 
 > ⏸️ **FutbolTalent.Pro está en revisión con el cliente** (2026-09-24): fuera del sitio publicado en `main`, se revisa en la rama `revision`.
 > **Criterio del cliente**: solo rol, período, herramientas, descripción general del trabajo y lo que el proyecto comunica públicamente (§4).
+> **Idea abierta**: en vez de un case study, FutbolTalent podría ir como una línea de experiencia en el About, sin página propia. Por ahora el caso se queda, porque es la experiencia más fuerte de Tiago. Se decide según lo que responda el cliente sobre las imágenes.
 
 ### ✅ Versión 1 — cerrada (2026-09-23)
 
