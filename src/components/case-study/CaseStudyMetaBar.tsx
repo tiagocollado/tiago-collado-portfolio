@@ -79,17 +79,12 @@ export default function CaseStudyMetaBar({
     { label: t('meta_publication'), value: m.publication?.[locale] ?? null },
   ]
 
-  // Links del proyecto (live demo, sitio, repos). Son los únicos elementos
+  // Links del proyecto (live demo, repos). Son los únicos elementos
   // interactivos de la barra, así que van al final: el ojo llega a ellos
   // después de haber escaneado el contexto.
   const linkItems: Array<{ href: string; label: string }> = []
   if (project.links.live) {
     linkItems.push({ href: project.links.live, label: t('view_live') })
-  }
-  // `site` y no `live`: el sitio del proyecto no es el trabajo que muestra
-  // el caso, así que no puede decir "producto final" (ver `types/index.ts`).
-  if (project.links.site) {
-    linkItems.push({ href: project.links.site, label: t('view_project_site') })
   }
   if (project.links.github) {
     linkItems.push({ href: project.links.github, label: t('view_github_frontend') })

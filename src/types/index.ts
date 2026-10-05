@@ -120,13 +120,6 @@ export interface Project {
     /** URL del live demo del proyecto. */
     live?:       string
     /**
-     * URL del sitio público del proyecto, cuando ese sitio NO es el trabajo
-     * que muestra el caso. Se separa de `live` por la etiqueta: "Ver producto
-     * final" afirma que lo que se abre lo hice yo; "Ver sitio del proyecto"
-     * solo lleva al proyecto.
-     */
-    site?:       string
-    /**
      * URL de un prototipo de Figma.
      * ⚠️ Declarado pero SIN RENDEREAR: hoy ningún proyecto tiene uno y la
      * barra de metadata no lo muestra. Para activarlo hacen falta tres

@@ -32,7 +32,6 @@
     "next_project_label": "Next project",
     "view_all_projects": "View all projects",
     "view_live": "View final product",
-    "view_project_site": "View project site",
     "view_github_frontend": "View code (Frontend)",
     "view_github_backend": "View code (Backend)",
     "meta_client": "Client",
@@ -56,9 +55,9 @@
     "view_all": "View all projects"
   },
   "case_study_futbol-talent-pro": {
-    "intro": "I worked as a UX/UI designer on FutbolTalent.Pro, a digital scouting platform that connects players, scouts, and clubs.",
-    "overview": "I worked on the UX/UI design of the app together with the project leadership and the team, using Figma and FigJam.",
-    "closing": "The project's deliverables are confidential, so this case is limited to my role and a general description of my work, with the client's authorization."
+    "intro": "I joined FutbolTalent.Pro, an Argentine SportTech startup, as a UX/UI designer while its platform was being developed in 2025.",
+    "overview": "FutbolTalent.Pro brings together three groups with different needs: players who want to showcase their track record, coaches and scouts who follow their progress, and schools, academies, and clubs that organize their talent. I worked on the design of the mobile app's experience and interface, in direct contact with the project leadership.",
+    "closing": "For confidentiality reasons, this case doesn't show any project deliverables. If you'd like to know more about how I work, I'm happy to talk about it."
   },
   "case_study_el-ritual-del-tono": {
     "intro": "I designed and built El Ritual del Tono, a store for guitarists. You pick an artist, open one of their songs, and see the gear behind that sound, ready to add to the cart. A university project for my Programación Multimedial III course, with a Next.js frontend and a Node, Express, and MongoDB backend.",

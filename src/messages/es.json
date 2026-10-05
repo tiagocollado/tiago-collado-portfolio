@@ -32,7 +32,6 @@
     "next_project_label": "Próximo proyecto",
     "view_all_projects": "Ver todos los proyectos",
     "view_live": "Ver producto final",
-    "view_project_site": "Ver sitio del proyecto",
     "view_github_frontend": "Ver código (Frontend)",
     "view_github_backend": "Ver código (Backend)",
     "meta_client": "Cliente",
@@ -56,9 +55,9 @@
     "view_all": "Ver todos los proyectos"
   },
   "case_study_futbol-talent-pro": {
-    "intro": "Trabajé como diseñador UX/UI en FutbolTalent.Pro, una plataforma de scouting digital que conecta jugadores, scouts y clubes.",
-    "overview": "Trabajé en el diseño UX/UI de la aplicación junto con la dirección del proyecto y el equipo, con Figma y FigJam.",
-    "closing": "Los entregables del proyecto son confidenciales, así que este caso se limita a mi rol y a una descripción general del trabajo, con autorización del cliente."
+    "intro": "Me sumé como diseñador UX/UI a FutbolTalent.Pro, una startup SportTech argentina, durante el desarrollo de su plataforma en 2025.",
+    "overview": "FutbolTalent.Pro reúne a tres grupos con necesidades distintas: jugadores que quieren mostrar su recorrido, entrenadores y scouts que siguen su evolución, y escuelas, academias y clubes que organizan su talento. Trabajé en el diseño de la experiencia y la interfaz de la aplicación móvil, en contacto directo con la dirección del proyecto.",
+    "closing": "Por confidencialidad, este caso no muestra entregables del proyecto. Si querés saber más sobre cómo trabajo, lo cuento con gusto en una conversación."
   },
   "case_study_el-ritual-del-tono": {
     "intro": "Diseñé y programé El Ritual del Tono, una tienda para guitarristas. Elegís un artista, entrás a una de sus canciones y ves el equipo detrás de ese sonido, listo para agregar al carrito. Proyecto universitario para Programación Multimedial III, con frontend en Next.js y backend en Node, Express y MongoDB.",

@@ -190,20 +190,18 @@ export const projects: Project[] = [
     slug: 'futbol-talent-pro',
     title: 'FutbolTalent.Pro',
     tagline: {
-      es: 'Plataforma de scouting digital.',
-      en: 'Digital scouting platform.',
+      es: 'Plataforma para el fútbol formativo.',
+      en: 'A platform for youth football.',
     },
     description: {
-      es: 'Plataforma de scouting digital que conecta jugadores, scouts y clubes.',
-      en: 'Digital scouting platform that connects players, scouts, and clubs.',
+      es: 'Plataforma para el fútbol formativo que conecta jugadores, profesionales e instituciones.',
+      en: 'A youth football platform that connects players, professionals, and institutions.',
     },
     services: {
       es: ['Aplicaciones Móviles'],
       en: ['Mobile Apps'],
     },
-    links: {
-      site: 'https://futboltalent.pro',
-    },
+    links: {},
     // `compact` (2:1) y último en el orden: el caso tiene menos material que
     // los otros tres, y menos superficie en la grilla es menos peso.
     cardShape: 'compact',
@@ -220,7 +218,7 @@ export const projects: Project[] = [
       client:   { es: 'FutbolTalent.Pro',                    en: 'FutbolTalent.Pro' },
       role:     { es: 'Diseñador UX/UI',                     en: 'UX/UI Designer' },
       duration: { es: '3 meses (ago–oct 2025)',              en: '3 months (Aug–Oct 2025)' },
-      team:     { es: 'Diseño UX/UI durante mi etapa en el proyecto · trato directo con la dirección', en: 'UX/UI design during my time on the project · working directly with the project leadership' },
+      team:     { es: 'Dirección del proyecto, desarrollo y marketing', en: 'Project leadership, development, and marketing' },
       stack:    ['Figma', 'FigJam'],
       publication: { es: 'Material publicado con autorización del cliente', en: "Published with the client's authorization" },
     },
