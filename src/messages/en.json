@@ -32,6 +32,7 @@
     "next_project_label": "Next project",
     "view_all_projects": "View all projects",
     "view_live": "View final product",
+    "view_project_site": "View project site",
     "view_github_frontend": "View code (Frontend)",
     "view_github_backend": "View code (Backend)",
     "meta_client": "Client",
@@ -40,11 +41,12 @@
     "meta_duration": "Duration",
     "meta_team": "Team",
     "meta_stack": "Stack",
-    "meta_nda": "NDA",
+    "meta_publication": "Publication",
     "meta_links": "Links",
     "cs_challenge": "The challenge",
     "cs_decisions": "How I solved it",
     "cs_delivered": "What was delivered",
+    "cs_overview": "My work",
     "cs_closing": "Closing"
   },
   "projects": {

@@ -120,6 +120,13 @@ export interface Project {
     /** URL del live demo del proyecto. */
     live?:       string
     /**
+     * URL del sitio público del proyecto, cuando ese sitio NO es el trabajo
+     * que muestra el caso. Se separa de `live` por la etiqueta: "Ver producto
+     * final" afirma que lo que se abre lo hice yo; "Ver sitio del proyecto"
+     * solo lleva al proyecto.
+     */
+    site?:       string
+    /**
      * URL de un prototipo de Figma.
      * ⚠️ Declarado pero SIN RENDEREAR: hoy ningún proyecto tiene uno y la
      * barra de metadata no lo muestra. Para activarlo hacen falta tres
@@ -132,24 +139,46 @@ export interface Project {
   /** Año de realización (ej. 2025). Se muestra en la card como label arriba. */
   year?: number
   /**
-   * Forma de la card en la grilla masonry. Solo hay DOS, a propósito:
+   * Forma de la card en la grilla masonry:
    *
-   * - `wide`   → 4:3
-   * - `square` → 1:1
+   * - `wide`    → 4:3
+   * - `square`  → 1:1
+   * - `compact` → 2:1, para un caso con menos material que mostrar: menos
+   *   superficie es menos peso en la grilla, sin cambiar cómo se usa la card.
    *
-   * Salen de medir la referencia (Studio Dizzy): sus cards son 4:3, 3:2 y
-   * ≈1:1. Se tomaron las dos extremas, que son las que dan el contraste.
+   * `wide` y `square` salen de medir la referencia (Studio Dizzy): sus cards
+   * son 4:3, 3:2 y ≈1:1, y se tomaron las dos extremas, que son las que dan
+   * el contraste. `compact` es 2:1 por cuenta: una columna con una `square` y
+   * una `compact` mide lo mismo que una con dos `wide` (1 + 0,5 = 0,75 + 0,75
+   * del ancho), así que con 3 cards llenas y una compacta la grilla cierra
+   * pareja a cualquier ancho. Cualquier otra proporción deja una diferencia
+   * chica, y una diferencia chica se lee como un error de alineación.
    *
-   * ⚠️ Dos formas y no más. En la grilla bento original cada card tenía su
+   * ⚠️ Pocas formas y fijas. En la grilla bento original cada card tenía su
    * proporción y el mismo archivo caía en recortes de 2,64:1 y 1,28:1, con lo
-   * cual solo sobrevivía el 60% central. Dos formas fijas dan asimetría con
-   * un spec que se puede seguir en Figma.
+   * cual solo sobrevivía el 60% central. Formas fijas dan asimetría con un
+   * spec que se puede seguir en Figma: el cover se exporta en la proporción
+   * de su forma.
    *
    * ⚠️ NO hay `row-span`: la grilla es masonry de dos columnas y cada card
-   * declara su propio aspect. Las columnas terminan a distinta altura y eso
-   * es deliberado — es lo que la diferencia de una grilla alineada por filas.
+   * declara su propio aspect.
    */
-  cardShape: 'wide' | 'square'
+  cardShape: 'wide' | 'square' | 'compact'
+  /**
+   * Qué secciones tiene el case study. Si falta, vale `'full'`.
+   *
+   * - `full`    → Intro · El desafío · Cómo lo resolví · Lo entregado · Cierre.
+   *   Exige las 12 keys de texto (ver la page).
+   * - `summary` → Intro · Mi trabajo · Cierre. Para un caso que solo puede
+   *   contar el rol y una descripción general del trabajo. Exige `intro`,
+   *   `overview` y `closing`.
+   *
+   * Es un campo explícito y no "mostrar lo que haya" a propósito: si las
+   * secciones dependieran de qué keys existen, a un caso `full` le faltaría
+   * una por error y se publicaría a medias sin avisar. Así, un `full`
+   * incompleto sigue sin mostrar el cuerpo, como siempre.
+   */
+  caseStudyFormat?: 'full' | 'summary'
   /**
    * Si el proyecto existe en el sitio publicado.
    *
@@ -199,8 +228,11 @@ export interface Project {
     team?:     { es: string; en: string }
     /** Stack como array para listarlo en la barra de metadata. */
     stack?:    string[]
-    /** Nota sobre NDA si aplica. */
-    nda?:      { es: string; en: string }
+    /**
+     * Condiciones de publicación del caso, si las hay. Se llamaba `nda`, pero
+     * el label "NDA" en la barra contradecía el texto que pidió el cliente.
+     */
+    publication?: { es: string; en: string }
   }
   /**
    * Imagenes del case study. NO hay cantidad fija: cada proyecto usa los

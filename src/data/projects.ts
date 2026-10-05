@@ -202,58 +202,40 @@ export const projects: Project[] = [
       es: ['Aplicaciones Móviles', 'Design System'],
       en: ['Mobile Apps', 'Design System'],
     },
-    links: {},
-    cardShape: 'wide',
-    // ✅ VERIFICADO LIMPIO (2026-09-22). Estaba flageado como texto inventado
-    // por analogia con los otros covers, pero en pantalla va SOLO el logo:
-    // no hay copy de producto que un generador pueda redibujar. Leido al 100%,
-    // el lettering dice FUTBOLTALENT PRO y coincide con el asset del Figma.
+    links: {
+      site: 'https://futboltalent.pro',
+    },
+    // `compact` (2:1) y último en el orden: el caso tiene menos material que
+    // los otros tres, y menos superficie en la grilla es menos peso.
+    cardShape: 'compact',
+    // En pantalla va SOLO el logo, que es público: no hay copy de producto
+    // que un generador pueda redibujar. Leído al 100%, el lettering dice
+    // FUTBOLTALENT PRO.
     coverImage: '/images/covers/futbol-talent-pro-cover.jpg',
     year: 2025,
     published: true,
-    showOnHome: false,
-    order: 3,
+    showOnHome: true,
+    order: 4,
+    caseStudyFormat: 'summary',
     metadata: {
       client:   { es: 'FutbolTalent.Pro',                    en: 'FutbolTalent.Pro' },
       role:     { es: 'Diseñador UX/UI',                     en: 'UX/UI Designer' },
       duration: { es: '3 meses',                             en: '3 months' },
       team:     { es: 'Diseño UX/UI durante mi etapa en el proyecto · trato directo con la dirección', en: 'UX/UI design during my time on the project · working directly with the project lead' },
       stack:    ['Figma', 'FigJam'],
-      nda:      { es: 'Bajo confidencialidad, material no sensible', en: 'Under NDA, non-sensitive material only' },
+      publication: { es: 'Material publicado con autorización del cliente', en: "Published with the client's authorization" },
     },
+    // Solo material público (CLAUDE.md §4): el hero es la escena del cover,
+    // con el logo en pantalla, compuesta en panorámico.
     imageBriefs: [
-      // El hero NO es un mockup con UI: por el NDA (CLAUDE.md §4) no puede
-      // haber pantallas finales del producto. Es la captura real del archivo
-      // de Figma, plana sobre hormigon.
       {
         type: 'mockup',
         slot: 'hero',
         alt: {
-          es: 'Página del Design System en Figma, con la paleta, las grillas y los íconos, y el panel de estilos abierto',
-          en: 'The Design System page in Figma, with the palette, grids, and icons, and the styles panel open',
+          es: 'Un teléfono sobre hormigón con el logo de FutbolTalent.Pro en la pantalla',
+          en: 'A phone on concrete with the FutbolTalent.Pro logo on screen',
         },
         src: '/images/case-study/futbol-talent-pro/00-mockup.jpg',
-      },
-      // Protopersonas + el tramo de registro del user flow. La version anterior
-      // mostraba los dos flows enteros, con nodos que el NDA deja afuera
-      // (CLAUDE.md §4). Se resolvio RECORTANDO el encuadre, no tapando nodos.
-      {
-        type: 'diagram',
-        slot: 'challenge',
-        alt: {
-          es: 'Las tres protopersonas, jugador, scout y club, y el tramo de registro del user flow',
-          en: 'The three proto-personas, player, scout, and club, and the sign-up segment of the user flow',
-        },
-        src: '/images/case-study/futbol-talent-pro/01-diagrama.jpg',
-      },
-      {
-        type: 'screen-cluster',
-        slot: 'decisions',
-        alt: {
-          es: 'Vista alejada de los wireframes: un onboarding por perfil y las secciones de jugador, scout, club y búsqueda',
-          en: 'Zoomed-out view of the wireframes: one onboarding per profile and the player, scout, club, and search sections',
-        },
-        src: '/images/case-study/futbol-talent-pro/02-cluster.jpg',
       },
     ],
   },
@@ -286,7 +268,7 @@ export const projects: Project[] = [
     year: 2025,
     published: true,
     showOnHome: true,
-    order: 4,
+    order: 3,
     metadata: {
       client:   { es: 'Proyecto universitario · Maimónides', en: 'University project · Maimónides' },
       role:     { es: 'Diseño UI y Desarrollo Full-stack',   en: 'UI Design & Full-stack Development' },

@@ -69,26 +69,35 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
   const cs = await getTranslations('case_study')
 
-  // Cargar los textos del case study: las 12 keys obligatorias (intro,
-  // challenge, decision_1-3, delivered_1-3, closing) más `process`, que es
-  // opcional. Si falta alguna obligatoria — porque el bloque
-  // case_study_<slug> no fue creado en i18n — el catch deja hasCaseStudy en
-  // false y el body simplemente no se renderea.
+  // Qué secciones tiene este caso. Sin el campo, es el formato completo de
+  // siempre: los tres casos que ya existían no declaran nada.
+  const isSummary = project.caseStudyFormat === 'summary'
+
+  // Cargar los textos del case study. Las keys obligatorias dependen del
+  // formato:
+  // - full    → las 12 de siempre (intro, challenge, decision_1-3,
+  //             delivered_1-3, closing) más `process`, que es opcional.
+  // - summary → intro, overview y closing.
+  // Si falta alguna obligatoria — porque el bloque case_study_<slug> no fue
+  // creado en i18n — el catch deja hasCaseStudy en false y el body
+  // simplemente no se renderea.
   const caseStudyKey = `case_study_${slug}`
   let hasCaseStudy = false
   const caseStudyText: Record<string, string> = {}
 
   try {
     const t = await getTranslations(caseStudyKey)
-    const requiredKeys = [
-      'intro',
-      'challenge',
-      'decision_1_title', 'decision_1_body',
-      'decision_2_title', 'decision_2_body',
-      'decision_3_title', 'decision_3_body',
-      'delivered_1', 'delivered_2', 'delivered_3',
-      'closing',
-    ]
+    const requiredKeys = isSummary
+      ? ['intro', 'overview', 'closing']
+      : [
+          'intro',
+          'challenge',
+          'decision_1_title', 'decision_1_body',
+          'decision_2_title', 'decision_2_body',
+          'decision_3_title', 'decision_3_body',
+          'delivered_1', 'delivered_2', 'delivered_3',
+          'closing',
+        ]
     for (const key of requiredKeys) {
       caseStudyText[key] = t(key)
     }
@@ -205,6 +214,27 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
           <CaseStudyImageRun briefs={imagesIn('intro')} locale={locale} />
 
+          {/* MI TRABAJO — solo en el formato `summary`: una descripción
+              general del trabajo, en lugar del desafío, las decisiones y lo
+              entregado. Mismo estilo de párrafo que el desafío. */}
+          {isSummary && (
+            <Shell>
+              <CaseStudySection label={cs('cs_overview')}>
+                <p
+                  className="text-lg md:text-xl leading-relaxed max-w-2xl text-pretty"
+                  style={{ color: 'var(--ink-secondary)' }}
+                >
+                  {caseStudyText.overview}
+                </p>
+              </CaseStudySection>
+            </Shell>
+          )}
+
+          {/* EL DESAFÍO, CÓMO LO RESOLVÍ y LO ENTREGADO — solo en el formato
+              completo. El fragment no agrega ningún elemento al DOM, así que
+              sus bloques siguen siendo hijos directos del flex y el `gap`
+              los separa igual que antes. */}
+          {!isSummary && (<>
           {/* EL DESAFÍO */}
           <Shell>
             <CaseStudySection label={cs('cs_challenge')}>
@@ -305,6 +335,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             </CaseStudySection>
           </Shell>
           <CaseStudyImageRun briefs={imagesIn('delivered')} locale={locale} />
+          </>)}
 
           {/* CIERRE — 2-3 líneas */}
           <Shell>

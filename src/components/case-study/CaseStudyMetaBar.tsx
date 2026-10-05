@@ -67,23 +67,29 @@ export default function CaseStudyMetaBar({
   const m = project.metadata
 
   // Cada bloque queda como [label, value]. Si value es null/undefined, no se
-  // renderea: evita celdas vacías cuando un proyecto no tiene NDA o equipo.
+  // renderea: evita celdas vacías cuando un proyecto no tiene condiciones de
+  // publicación o equipo.
   const blocks: Array<{ label: string; value: string | string[] | null }> = [
-    { label: t('meta_client'),   value: m.client?.[locale]   ?? null },
-    { label: t('meta_year'),     value: project.year ? String(project.year) : null },
-    { label: t('meta_role'),     value: m.role?.[locale]     ?? null },
-    { label: t('meta_duration'), value: m.duration?.[locale] ?? null },
-    { label: t('meta_team'),     value: m.team?.[locale]     ?? null },
-    { label: t('meta_stack'),    value: m.stack ?? null },
-    { label: t('meta_nda'),      value: m.nda?.[locale]      ?? null },
+    { label: t('meta_client'),      value: m.client?.[locale]      ?? null },
+    { label: t('meta_year'),        value: project.year ? String(project.year) : null },
+    { label: t('meta_role'),        value: m.role?.[locale]        ?? null },
+    { label: t('meta_duration'),    value: m.duration?.[locale]    ?? null },
+    { label: t('meta_team'),        value: m.team?.[locale]        ?? null },
+    { label: t('meta_stack'),       value: m.stack ?? null },
+    { label: t('meta_publication'), value: m.publication?.[locale] ?? null },
   ]
 
-  // Links del proyecto (live demo, repos). Son los únicos elementos
+  // Links del proyecto (live demo, sitio, repos). Son los únicos elementos
   // interactivos de la barra, así que van al final: el ojo llega a ellos
   // después de haber escaneado el contexto.
   const linkItems: Array<{ href: string; label: string }> = []
   if (project.links.live) {
     linkItems.push({ href: project.links.live, label: t('view_live') })
+  }
+  // `site` y no `live`: el sitio del proyecto no es el trabajo que muestra
+  // el caso, así que no puede decir "producto final" (ver `types/index.ts`).
+  if (project.links.site) {
+    linkItems.push({ href: project.links.site, label: t('view_project_site') })
   }
   if (project.links.github) {
     linkItems.push({ href: project.links.github, label: t('view_github_frontend') })

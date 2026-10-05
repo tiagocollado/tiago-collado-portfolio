@@ -48,6 +48,13 @@ const OVERLAY_INK = '#F0EDE8'
  */
 const ORDER_CLASSES = ['order-1', 'order-2', 'order-3', 'order-4', 'order-5', 'order-6', 'order-7']
 
+/** Aspect de cada `cardShape`. Literales por el mismo motivo que `ORDER_CLASSES`. */
+const SHAPE_CLASSES = {
+  wide:    'aspect-[4/3]',
+  square:  'aspect-square',
+  compact: 'aspect-[2/1]',
+} as const
+
 export default function ProjectCard({ project, locale, index = 0 }: ProjectCardProps) {
   const t = useTranslations('projects')
   const { setVariant } = useCursor()
@@ -57,8 +64,9 @@ export default function ProjectCard({ project, locale, index = 0 }: ProjectCardP
    * alturas de fila — la grilla es masonry (dos columnas que fluyen por
    * separado), así que cada card decide su alto y las columnas terminan a
    * distinta altura. Eso es lo que la hace masonry y no una grilla alineada.
+   * Las proporciones y el porqué de cada una están en `types/index.ts`.
    */
-  const shapeClasses = project.cardShape === 'square' ? 'aspect-square' : 'aspect-[4/3]'
+  const shapeClasses = SHAPE_CLASSES[project.cardShape]
 
   /*
    * `sizes` le dice al browser cuánto espacio va a ocupar la imagen ANTES de
@@ -66,8 +74,8 @@ export default function ProjectCard({ project, locale, index = 0 }: ProjectCardP
    * next/image. Sin este valor el browser asume 100vw y baja siempre el
    * archivo más grande — justo el problema que la migración venía a resolver.
    *
-   * Un solo valor para las dos formas: `wide` y `square` cambian el ALTO, no
-   * el ancho — las dos ocupan una columna del shell `max-w-7xl`.
+   * Un solo valor para todas las formas: `wide`, `square` y `compact` cambian
+   * el ALTO, no el ancho — todas ocupan una columna del shell `max-w-7xl`.
    */
   const coverSizes = '(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 640px'
 
