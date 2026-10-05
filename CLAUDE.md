@@ -1,7 +1,7 @@
 @AGENTS.md
 # Portfolio Tiago Collado — marca **Gotya**
 
-> **Cómo usar este archivo**: las reglas de diseño, la ley UX y el NDA
+> **Cómo usar este archivo**: las reglas de diseño, la ley UX y la confidencialidad (§4)
 > son obligatorias. El resto es contexto del proyecto. Lo que falta hacer
 > está en la sección "Qué falta hacer". El historial vive en `git log`.
 > Las trampas del stack y los tokens de diseño están importados al final.
@@ -30,20 +30,21 @@ Lo único que se queda en este archivo, porque es estructura y no arte:
 | Traducción de `type` a layout | `src/components/case-study/imageSpec.ts` |
 
 
-## 4. 🔒 Confidencialidad y NDA — FutbolTalent
+## 4. 🔒 Confidencialidad — FutbolTalent
 
-**REGLA ESTRICTA. Leer antes de tocar texto, imagen o metadata de `futbol-talent-pro`.**
+**REGLA ESTRICTA. Leer antes de tocar texto, imagen, metadata o documentación de `futbol-talent-pro`.** El criterio lo definió el cliente (2026-10) y rige en todo el repo: los dos JSON, el entry en `projects.ts` (tagline, description, metadata, alts), los comentarios del código y esta documentación.
 
-- **Qué no se cuenta del producto**, en ningún lugar del repo —`case_study_futbol-talent-pro` en los dos JSON, el entry en `projects.ts` (tagline, description, metadata, alts), los comentarios del código y esta documentación—: cómo genera ingresos, quién lo financia o lo dirige, con qué tecnología está construido, qué flujos restringen el acceso o buscan retener usuarios, ni métricas internas, incluidos números que impliquen escala del producto.
-- **La prueba, antes de escribir o commitear**: ¿esta frase le cuenta a alguien de afuera algo del negocio, de la empresa o de la tecnología del producto que no se ve en un wireframe? Si sí, no va, use las palabras que use. Por eso la regla es un criterio y no una lista de palabras: una lista ataja esas palabras y deja pasar sus sinónimos, y publicada en un repo público revela justo lo que protege.
-- **Tampoco se explica lo que se sacó.** Describir qué se recortó de una imagen o de un texto por el NDA es contarlo igual. Se dice *"se recortaron nodos que §4 deja afuera"*, nunca cuáles ni qué hacían.
-- **Framing obligatorio**: siempre **MVP validado técnicamente**, con eje en **arquitectura de información** y **reducción de carga cognitiva**.
-- **NO ocultar** `metadata.client` (`FutbolTalent.Pro`), el `title` ni el `slug`: el vínculo laboral ya es público y el NDA no lo restringe.
-- **Material permitido**: wireframes de baja/media, flujos, design system, user personas. **Nunca** pantallas finales del producto. Vale igual para cualquier imagen nueva, incluidas las versiones "Marca Blanca".
+- **Permitido**: mi rol (UX/UI Designer), el período de participación, las herramientas, una descripción general de mi trabajo de diseño UX/UI y de la colaboración con el equipo y la dirección, y lo que el proyecto comunica públicamente.
+- **No permitido**: los entregables y la documentación del proyecto, y su contenido. Eso incluye qué se diseñó, cómo funciona o se decidió algo, y cualquier material o conclusión que haya salido del trabajo. Tampoco se describe el producto más allá de lo que comunica su sitio público.
+- **La prueba, antes de escribir o commitear**: cada afirmación tiene que caer en una categoría permitida o en algo que diga el sitio público del proyecto. Si no cae en ninguna, no va, use las palabras que use. La regla es un criterio y no una lista de palabras porque una lista ataja esas palabras y deja pasar sus sinónimos, y publicada en un repo público revela justo lo que protege.
+- **Tampoco se explica lo que se sacó.** Describir qué se recortó de una imagen o de un texto es contarlo igual.
+- **Imágenes**: solo material público, que hoy es el logo. Cover y hero son la misma escena con el logo en pantalla. Una imagen del trabajo entra solo si el cliente la da, y el caso tiene que estar completo y publicable sin ella.
+- **Aprobación**: nada del caso llega a `main` sin la aprobación expresa del cliente sobre la versión final.
+- **NO ocultar** `metadata.client` (`FutbolTalent.Pro`), el `title` ni el `slug`: el vínculo laboral ya es público.
 
-> ⚠️ Los `alt` de los `imageBriefs` también cuentan: son el brief con el que se diseña la imagen. El de `01` decía *"Pantalla de plataforma móvil"* — o sea, pedía justo el material prohibido. **Al escribir un brief nuevo para FTP, revisar que el alt no prometa producto real.**
+> ⚠️ Los `alt` de los `imageBriefs` también cuentan: son el brief con el que se diseña la imagen. **Un alt nuevo para FTP describe solo material público.**
 
-**Tono general del copy**: directo, sin narrativas forzadas de Silicon Valley. La confidencialidad se menciona solo dentro del case study de FTP, nunca en el About.
+**Tono general del copy**: directo, sin narrativas forzadas de Silicon Valley. El rótulo del caso es *"Material publicado con autorización del cliente"*, solo dentro del case study de FTP; nunca en el About ni en el home.
 
 ---
 
@@ -152,7 +153,7 @@ Orden = campo `order`. Si la página existe lo decide **`published`**; qué se m
 |---|---|---|---|---|---|---|
 | 1 | **Paseo Güemes Hotel** | 2026 | ✅ | ✅ | ancha | Hotel 3★ en Salta. UX/UI + WordPress, reserva directa contra OTAs. |
 | 2 | **Pulso Creativo** | 2026 | ✅ | ✅ | **cuadrada** | Consultora B2B 25+ años. Sitio institucional, contacto dual, rediseño UX del contenido. |
-| 3 | **FutbolTalent.Pro** | 2025 | ✅ | ✅ | ancha | UX/UI de plataforma de scouting. **Bajo NDA — ver sección 4.** |
+| 3 | **FutbolTalent.Pro** | 2025 | ✅ | ✅ | ancha | UX/UI de plataforma de scouting. **Con confidencialidad — ver sección 4.** |
 | 4 | **El Ritual del Tono** | 2025 | ✅ | ✅ | ancha | **Proyecto universitario** (Programación Multimedial III, Maimónides). Full-stack MERN con demo en vivo. |
 | 5 | **Multibrand Design System** | 2025 | — V2 | — | ancha | Simulación laboral No Country, equipo de 6. |
 | 6 | **Recuérdalo** | 2025 | — V2 (primero) | — | **cuadrada** | Proyecto universitario, UX inclusivo para adultos 70+. |
@@ -195,7 +196,7 @@ El título de la card da la marca y el campo **`services`** da la categoría, co
 |---|---|---|---|
 | Pulso Creativo | Diseño Web | Website Design | Diseño UX/UI e implementación en WordPress |
 | Paseo Güemes Hotel | Diseño Web & Dirección de Arte | Website Design & Art Direction | Dirección de arte, diseño UX/UI e implementación en WordPress |
-| FutbolTalent.Pro | Aplicaciones Móviles & Design System | Mobile Apps & Design System | Diseñador UX/UI |
+| FutbolTalent.Pro | Aplicaciones Móviles | Mobile Apps | Diseñador UX/UI |
 | El Ritual del Tono | Diseño Web & Desarrollo de Producto | Website Design & Product Development | Diseño UI y Desarrollo Full-stack |
 | Multibrand Design System | Design System | Design System | Diseño UX/UI y Design System |
 | Recuérdalo | Aplicaciones Móviles | Mobile Apps | Investigación UX y Diseño Inclusivo |
@@ -233,6 +234,9 @@ Solo lo que Tiago pueda defender en una entrevista.
 
 **REGLA: una tarea por sesión.** No abrir frentes en paralelo (ya pasó factura). Excepción válida: un plan en fases acordado de antemano, con check-in entre fases.
 
+> ⏸️ **FutbolTalent.Pro está en revisión con el cliente** (2026-09-24): fuera del sitio publicado en `main`, se revisa en la rama `revision`.
+> **Criterio del cliente**: solo rol, período, herramientas, descripción general del trabajo y lo que el proyecto comunica públicamente (§4).
+
 ### ✅ Versión 1 — cerrada (2026-09-23)
 
 **Los cuatro case studies publicados están completos**, con sus imágenes y el
@@ -242,7 +246,7 @@ copy contrastado, y verificados contra el deploy:
 |---|---|---|
 | Pulso Creativo | 5 · el diagrama se reemplazó por `04-detalle`, la página de contacto en mobile | Limpio |
 | Paseo Güemes | 4 | Limpio |
-| FutbolTalent.Pro | 3 · `01-diagrama` re-exportado a 2× y revisado nodo por nodo | Limpio (solo el logo) |
+| FutbolTalent.Pro | En revisión con el cliente (arriba) | Limpio (solo el logo) |
 | El Ritual del Tono | 5 | Texto inventado, **por decisión** (abajo) |
 
 **Decidido, se quedan como están** (Tiago, 2026-09-23). No vuelven a
@@ -252,8 +256,6 @@ aparecer como pendientes:
 - **La tira de Pulso** (`01-tira`), con las columnas al ~60% del ancho. La
   regla de llenar el encuadre sigue valiendo para las tiras nuevas
   (`.claude/rules/imagenes.md` §2).
-- **Las etiquetas cortadas del `02-cluster` de FutbolTalent** (*"ON BOARDING +
-  REGISTR…"*, truncadas por el ancho de la sección en Figma).
 
 Todo lo que queda abierto está en *"Versión siguiente — orden propuesto"*,
 al final de esta sección.
@@ -302,7 +304,7 @@ entonces, esto sigue siendo cierto:
   el plan del paso 1.
 
 > ⚠️ **Lo que esto implica para el trabajo diario**: todo lo que se commitea es
-> público desde el primer push, así que el control de NDA se hace **antes** de
+> público desde el primer push, así que el control de §4 se hace **antes** de
 > commitear, no después. Un archivo en `public/` se sirve en producción y
 > además queda en el historial para siempre.
 
@@ -346,9 +348,9 @@ proyecto incluye **siempre**:
 (`.claude/rules/imagenes.md` §2), la regla de luminancia (§4.2), y el
 `cardShape` del proyecto para el encuadre del cover (§3).
 
-⚠️ **Un proyecto bajo NDA no lleva mockup con UI ni tira**: su hero sale del
-material permitido (§4) y su cover lleva solo el logo en pantalla. El modelo es
-FutbolTalent (`.claude/rules/imagenes.md` §1.1).
+⚠️ **Un proyecto con confidencialidad no lleva mockup con UI ni tira**: su
+cover y su hero salen solo de material público, y en pantalla va solo el logo.
+El modelo es FutbolTalent (§4 y `.claude/rules/imagenes.md` §1.1).
 
 ### ⏭️ Versión siguiente — orden propuesto (Tiago, 2026-09-23)
 
@@ -375,7 +377,10 @@ Vercel a ese repo, y recién entonces borrar el viejo.
   después borrar el viejo. Al revés, el sitio queda sin deploy en el medio.
 - **Antes del commit inicial**, el control de §4 sobre el árbol entero, igual
   que antes de cualquier commit: ese commit arranca un historial nuevo, y todo
-  lo que entre ahí queda para siempre.
+  lo que entre ahí queda para siempre. **Incluye la documentación y los
+  comentarios del código**, no solo el copy: buscar en CLAUDE.md, en
+  `.claude/` y en los comentarios de `src/` cualquier texto que describa
+  entregables o contenido de FutbolTalent.
 - **Es el momento de decidir T3** (paso 6): si la documentación entra o no al
   repo nuevo.
 - **Claude como contributor**: el historial actual ya está limpio (un solo

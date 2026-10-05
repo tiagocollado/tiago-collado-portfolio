@@ -190,17 +190,16 @@ export const projects: Project[] = [
     slug: 'futbol-talent-pro',
     title: 'FutbolTalent.Pro',
     tagline: {
-      es: 'Plataforma mobile-first para scouting deportivo.',
-      en: 'Mobile-first platform for sports scouting.',
+      es: 'Plataforma de scouting digital.',
+      en: 'Digital scouting platform.',
     },
     description: {
-      es: 'Flujos, pantallas y Design System de un MVP validado técnicamente, con un registro propio para jugadores, scouts y clubes.',
-      en: 'Flows, screens, and Design System for a technically validated MVP, with a separate sign-up for players, scouts, and clubs.',
+      es: 'Plataforma de scouting digital que conecta jugadores, scouts y clubes.',
+      en: 'Digital scouting platform that connects players, scouts, and clubs.',
     },
-    // Sin `UX Research`: el caso no cuenta la investigacion.
     services: {
-      es: ['Aplicaciones Móviles', 'Design System'],
-      en: ['Mobile Apps', 'Design System'],
+      es: ['Aplicaciones Móviles'],
+      en: ['Mobile Apps'],
     },
     links: {
       site: 'https://futboltalent.pro',
@@ -220,8 +219,8 @@ export const projects: Project[] = [
     metadata: {
       client:   { es: 'FutbolTalent.Pro',                    en: 'FutbolTalent.Pro' },
       role:     { es: 'Diseñador UX/UI',                     en: 'UX/UI Designer' },
-      duration: { es: '3 meses',                             en: '3 months' },
-      team:     { es: 'Diseño UX/UI durante mi etapa en el proyecto · trato directo con la dirección', en: 'UX/UI design during my time on the project · working directly with the project lead' },
+      duration: { es: '3 meses (ago–oct 2025)',              en: '3 months (Aug–Oct 2025)' },
+      team:     { es: 'Diseño UX/UI durante mi etapa en el proyecto · trato directo con la dirección', en: 'UX/UI design during my time on the project · working directly with the project leadership' },
       stack:    ['Figma', 'FigJam'],
       publication: { es: 'Material publicado con autorización del cliente', en: "Published with the client's authorization" },
     },

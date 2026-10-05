@@ -54,8 +54,8 @@ Ninguna la detecta una pasada de estilo.
 3. **Marcá los superlativos y los números sin fuente.** "El activo que más
    convierte", "un 40% más rápido", "el 90% de los casos". O va la evidencia al
    lado, o va el verbo neutro.
-4. **Un número aproximado se escribe como aproximado.** "Más de 35 pantallas"
-   se sostiene; "38 pantallas" salido de la memoria, no.
+4. **Un número aproximado se escribe como aproximado.** "Más de 30 páginas"
+   se sostiene; "34 páginas" salido de la memoria, no.
 5. **Ojo con corregir una verdad.** El resumen de texto de una página decía que
    el hero era una imagen fija y en el HTML había un `<video autoplay loop>`.
    **No alcanza con un resumen: hay que mirar la fuente.**
@@ -134,9 +134,10 @@ cualquiera, no dice nada. Borrala o reemplazala por el dato específico.
 - Términos técnicos correctos. Precisión no es jerga.
 - Los títulos de rol y las categorías de `services`: tienen reglas propias en
   `CLAUDE.md` y no se improvisan.
-- El copy de `futbol-talent-pro` sin releer antes la sección de NDA de
-  `CLAUDE.md`. Hay vocabulario explícitamente prohibido ahí, incluidos los
-  `alt` de las imágenes.
+- El copy de `futbol-talent-pro` sin releer antes §4 de `CLAUDE.md`. Ahí está
+  el criterio del cliente: cada afirmación tiene que caer en una categoría
+  permitida o en algo que diga el sitio público del proyecto. Vale también
+  para los `alt` de las imágenes.
 
 ---
 

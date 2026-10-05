@@ -51,7 +51,7 @@ const CHANNELS = [
   { id: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/in/tiagocollado/', download: false },
   { id: 'github',   label: 'GitHub',   href: 'https://github.com/tiagocollado',           download: false },
   { id: 'whatsapp', label: 'WhatsApp', href: 'https://wa.link/9tvuws',                    download: false },
-  { id: 'cv',       label: null,       href: '/cv-tiago-collado.pdf',                     download: true  },
+  { id: 'cv',       label: null,       href: '/tiago-collado-cv.pdf',                     download: true  },
 ] as const
 
 /**
