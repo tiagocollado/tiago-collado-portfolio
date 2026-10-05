@@ -41,6 +41,7 @@ Lo único que se queda en este archivo, porque es estructura y no arte:
 - **Imágenes**: solo material público, que hoy es el logo. Cover y hero son la misma escena con el logo en pantalla. Una imagen del trabajo entra solo si el cliente la da, y el caso tiene que estar completo y publicable sin ella.
 - **Aprobación**: nada del caso llega a `main` sin la aprobación expresa del cliente sobre la versión final.
 - **NO ocultar** `metadata.client` (`FutbolTalent.Pro`), el `title` ni el `slug`: el vínculo laboral ya es público.
+- **Excepción: el CV** (`public/tiago-collado-cv.pdf`) sigue su propio criterio, por decisión de Tiago (§8). No se marca como pendiente.
 
 > ⚠️ Los `alt` de los `imageBriefs` también cuentan: son el brief con el que se diseña la imagen. **Un alt nuevo para FTP describe solo material público.**
 
@@ -307,6 +308,16 @@ entonces, esto sigue siendo cierto:
 > público desde el primer push, así que el control de §4 se hace **antes** de
 > commitear, no después. Un archivo en `public/` se sirve en producción y
 > además queda en el historial para siempre.
+
+### 📄 El CV sigue su propio criterio — decisión tomada, no un pendiente
+
+**Decisión de Tiago (2026-10-05): el CV no se ajusta al criterio de §4.** Se
+trabajó aparte, con el criterio de un CV y no el de un case study, y cuenta
+más sobre FutbolTalent que el caso. Riesgo asumido: el cliente puede verlo,
+porque el sitio y el preview de revisión lo enlazan desde Contacto.
+
+No vuelve a aparecer como tarea. **Tampoco se describe acá qué dice**:
+copiarlo en la documentación sería publicar lo mismo en otro lugar.
 
 ### 🎸 El cover de Ritual se queda — decisión tomada, no un pendiente
 
