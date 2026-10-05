@@ -217,8 +217,8 @@ export const projects: Project[] = [
     metadata: {
       client:   { es: 'FutbolTalent.Pro',                    en: 'FutbolTalent.Pro' },
       role:     { es: 'Diseñador UX/UI',                     en: 'UX/UI Designer' },
-      duration: { es: '3 meses (ago–oct 2025)',              en: '3 months (Aug–Oct 2025)' },
-      team:     { es: 'Dirección del proyecto, desarrollo y marketing', en: 'Project leadership, development, and marketing' },
+      duration: { es: '3 meses',                             en: '3 months' },
+      team:     { es: 'Junto a dirección, desarrollo y marketing', en: 'Alongside leadership, development, and marketing' },
       stack:    ['Figma', 'FigJam'],
       publication: { es: 'Material publicado con autorización del cliente', en: "Published with the client's authorization" },
     },

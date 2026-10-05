@@ -55,9 +55,9 @@
     "view_all": "Ver todos los proyectos"
   },
   "case_study_futbol-talent-pro": {
-    "intro": "Me sumé como diseñador UX/UI a FutbolTalent.Pro, una startup SportTech argentina, durante el desarrollo de su plataforma en 2025.",
-    "overview": "FutbolTalent.Pro reúne a tres grupos con necesidades distintas: jugadores que quieren mostrar su recorrido, entrenadores y scouts que siguen su evolución, y escuelas, academias y clubes que organizan su talento. Trabajé en el diseño de la experiencia y la interfaz de la aplicación móvil, en contacto directo con la dirección del proyecto.",
-    "closing": "Por confidencialidad, este caso no muestra entregables del proyecto. Si querés saber más sobre cómo trabajo, lo cuento con gusto en una conversación."
+    "intro": "Participé como diseñador UX/UI en el MVP de FutbolTalent.Pro.",
+    "overview": "La plataforma conecta a jugadores, entrenadores, scouts y clubes. Trabajé en el diseño de la experiencia y la interfaz de la aplicación móvil.",
+    "closing": "Por confidencialidad, este caso no muestra entregables del proyecto."
   },
   "case_study_el-ritual-del-tono": {
     "intro": "Diseñé y programé El Ritual del Tono, una tienda para guitarristas. Elegís un artista, entrás a una de sus canciones y ves el equipo detrás de ese sonido, listo para agregar al carrito. Proyecto universitario para Programación Multimedial III, con frontend en Next.js y backend en Node, Express y MongoDB.",
