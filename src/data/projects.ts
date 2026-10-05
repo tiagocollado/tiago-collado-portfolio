@@ -190,25 +190,22 @@ export const projects: Project[] = [
     slug: 'futbol-talent-pro',
     title: 'FutbolTalent.Pro',
     tagline: {
-      es: 'Plataforma mobile-first para scouting deportivo.',
-      en: 'Mobile-first platform for sports scouting.',
+      es: 'Plataforma de scouting digital.',
+      en: 'Digital scouting platform.',
     },
     description: {
-      es: 'Flujos, pantallas y Design System de un MVP validado técnicamente, con un registro propio para jugadores, scouts y clubes.',
-      en: 'Flows, screens, and Design System for a technically validated MVP, with a separate sign-up for players, scouts, and clubs.',
+      es: 'Plataforma de scouting digital que conecta jugadores, scouts y clubes.',
+      en: 'Digital scouting platform that connects players, scouts, and clubs.',
     },
-    // Sin `UX Research`: no hubo entrevistas ni pruebas con usuarios. Las
-    // protopersonas, el Lean Canvas y los HMW fueron hipotesis.
     services: {
-      es: ['Aplicaciones Móviles', 'Design System'],
-      en: ['Mobile Apps', 'Design System'],
+      es: ['Aplicaciones Móviles'],
+      en: ['Mobile Apps'],
     },
     links: {},
     cardShape: 'wide',
-    // ✅ VERIFICADO LIMPIO (2026-09-22). Estaba flageado como texto inventado
-    // por analogia con los otros covers, pero en pantalla va SOLO el logo:
-    // no hay copy de producto que un generador pueda redibujar. Leido al 100%,
-    // el lettering dice FUTBOLTALENT PRO y coincide con el asset del Figma.
+    // En pantalla va SOLO el logo, que es público: no hay copy de producto
+    // que un generador pueda redibujar. Leído al 100%, el lettering dice
+    // FUTBOLTALENT PRO.
     coverImage: '/images/covers/futbol-talent-pro-cover.jpg',
     year: 2025,
     published: false,
@@ -218,43 +215,21 @@ export const projects: Project[] = [
       client:   { es: 'FutbolTalent.Pro',                    en: 'FutbolTalent.Pro' },
       role:     { es: 'Diseñador UX/UI',                     en: 'UX/UI Designer' },
       duration: { es: '3 meses',                             en: '3 months' },
-      team:     { es: 'A cargo de todo el diseño · trato directo con la dirección del proyecto', en: 'Responsible for all design · working directly with the project lead' },
+      team:     { es: 'Diseño UX/UI durante mi etapa en el proyecto · trato directo con la dirección', en: 'UX/UI design during my time on the project · working directly with the project lead' },
       stack:    ['Figma', 'FigJam'],
-      nda:      { es: 'Bajo confidencialidad, material no sensible', en: 'Under NDA, non-sensitive material only' },
+      nda:      { es: 'Material publicado con autorización del cliente', en: "Published with the client's authorization" },
     },
+    // Solo material público (CLAUDE.md §4): el hero es la escena del cover,
+    // con el logo en pantalla, compuesta en panorámico.
     imageBriefs: [
-      // El hero NO es un mockup con UI: por el NDA (CLAUDE.md §4) no puede
-      // haber pantallas finales del producto. Es la captura real del archivo
-      // de Figma, plana sobre hormigon.
       {
         type: 'mockup',
         slot: 'hero',
         alt: {
-          es: 'Página del Design System en Figma, con la paleta, las grillas y los íconos, y el panel de estilos abierto',
-          en: 'The Design System page in Figma, with the palette, grids, and icons, and the styles panel open',
+          es: 'Un teléfono sobre hormigón con el logo de FutbolTalent.Pro en la pantalla',
+          en: 'A phone on concrete with the FutbolTalent.Pro logo on screen',
         },
         src: '/images/case-study/futbol-talent-pro/00-mockup.jpg',
-      },
-      // Protopersonas + el tramo de registro del user flow. La version anterior
-      // mostraba los dos flows enteros, con nodos que el NDA deja afuera
-      // (CLAUDE.md §4). Se resolvio RECORTANDO el encuadre, no tapando nodos.
-      {
-        type: 'diagram',
-        slot: 'challenge',
-        alt: {
-          es: 'Las tres protopersonas, jugador, scout y club, y el tramo de registro del user flow',
-          en: 'The three proto-personas, player, scout, and club, and the sign-up segment of the user flow',
-        },
-        src: '/images/case-study/futbol-talent-pro/01-diagrama.jpg',
-      },
-      {
-        type: 'screen-cluster',
-        slot: 'decisions',
-        alt: {
-          es: 'Vista alejada de los wireframes: un onboarding por perfil y las secciones de jugador, scout, club y búsqueda',
-          en: 'Zoomed-out view of the wireframes: one onboarding per profile and the player, scout, club, and search sections',
-        },
-        src: '/images/case-study/futbol-talent-pro/02-cluster.jpg',
       },
     ],
   },

@@ -108,13 +108,12 @@ sirve para decidir si un texto inventado puede quedarse.
 > cover de Ritual**, que se queda con su texto inventado por decisión de Tiago,
 > con el riesgo escrito (`CLAUDE.md` §8). No sienta precedente.
 
-> ✅ **El modelo para proyectos bajo NDA — FutbolTalent.** El NDA prohíbe
-> pantallas finales del producto (`CLAUDE.md` §4), así que el hero no puede ser
-> un mockup con UI. **El cover y el hero divergen**: el cover es el celular con
-> **solo el logo** en pantalla, sobre hormigón, y el hero es la captura del
-> archivo de Figma, también sobre hormigón. Lo que los emparenta es el material
-> del entorno, no el encuadre: la serie del home se sigue leyendo junta y el
-> caso no muestra una sola pantalla del producto.
+> ✅ **El modelo para proyectos con confidencialidad — FutbolTalent.** Solo se
+> publica material público (`CLAUDE.md` §4), así que no hay mockup con UI.
+> **El cover y el hero son la misma escena**: el celular con **solo el logo** en
+> pantalla, sobre hormigón, en dos encuadres (2:1 para la card compacta y 21:9
+> para el hero). La serie del home se sigue leyendo junta y el caso no muestra
+> nada del trabajo que el cliente no haya habilitado.
 
 ### 1.2. Una imagen tiene que ser comprensible a 330px de ancho
 
@@ -184,7 +183,7 @@ proyecto no usa es tan deliberado como lo que usa.
 | **Pulso Creativo** | hero | intro | decisions | decisions | — | delivered | **5** |
 | **Paseo Güemes** | hero | intro | decisions | delivered | — | — | **4** |
 | **El Ritual del Tono** | hero | intro | decisions | delivered | decisions | — | **5** |
-| **FutbolTalent.Pro** | hero | — | decisions | — | challenge | — | **3** |
+| **FutbolTalent.Pro** | hero | — | — | — | — | — | **1** |
 
 - **Pulso va sin imagen en "El desafío"**: era texto denso del cliente y
   conflictos de plantillas de WordPress, y no hay nada visual honesto que
@@ -193,48 +192,33 @@ proyecto no usa es tan deliberado como lo que usa.
   stack que el cliente puede editar, la jerarquía del hero, los CTAs por
   recorrido— no tienen una estructura que valga la pena dibujar. **Forzar un
   diagrama sería volver a la cuota**: hacer la imagen porque el tipo existe.
-- **FutbolTalent va sin tira ni paleta, y su `mockup` no es un dispositivo.**
-  Por el NDA no hay pantalla que capturar a lo largo, y el sistema visual se ve
-  dentro del archivo de Figma. Su `mockup` es la captura de ese archivo —la
-  página del Design System con el panel de estilos abierto— plana sobre
-  hormigón. **El `type` manda sobre el motivo**: lo que decide el ancho es que
-  sea la pieza principal compuesta para su lienzo, no que haya un dispositivo
-  adentro.
+- **FutbolTalent lleva solo el hero**: la escena del cover en panorámico, con
+  el logo en pantalla. Es el único material público del proyecto (`CLAUDE.md`
+  §4), y una imagen sin contenido propio que rellene el caso se lee como
+  relleno. **Una paleta sacada del logo se descartó por eso**: además de no
+  mostrar trabajo propio, se lee como el sistema visual de la interfaz.
 
-> ⚠️ **En un proyecto con NDA, un diagrama se revisa nodo por nodo, no de un
-> vistazo.** Los user flows de FutbolTalent pasaban el control de 1.1 (son
-> captura real) y el de luminancia, y aun así tenían nodos que el caso no puede
-> contar (`CLAUDE.md` §4). **Lo que el copy no puede decir, la imagen tampoco**
-> — y la documentación del recorte tampoco: acá no se dice cuáles eran.
+> ⚠️ **Si un cliente con confidencialidad habilita una imagen de un entregable,
+> se revisa elemento por elemento, no de un vistazo.** Pasar el control de 1.1 y
+> el de luminancia no alcanza: **lo que el copy no puede decir, la imagen
+> tampoco** — y la documentación del recorte tampoco: no se dice qué se sacó.
 >
-> **Dos imágenes del mismo proyecto no tienen que mostrar lo mismo: tienen que
-> respetar la misma restricción.** La restricción es **no mostrar pantallas**,
-> no evitar el tema: una sección que en los wireframes es una pantalla sale de
-> ahí, y el mismo tema se queda en el flujo si ahí es una caja de un diagrama.
-> Decidir por tema en vez de por restricción lleva a recortar de más.
->
-> **Se resuelve recortando el encuadre, no tapando nodos, y el recorte hay que
-> pensarlo antes.** Un nodo en el borde sale recortando; uno en el medio de una
-> rama que converge no, porque cortarlo deja conectores yendo hacia la nada. Si
-> un nodo prohibido cae en el medio de la estructura, se borra en el archivo
-> fuente y se re-exporta, que no es retocar.
+> **Se resuelve recortando el encuadre, no tapando elementos, y el recorte hay
+> que pensarlo antes.** Un elemento en el borde sale recortando; uno en el medio
+> de una estructura no, porque cortarlo deja conectores yendo hacia la nada. Si
+> cae en el medio, se borra en el archivo fuente y se re-exporta, que no es
+> retocar.
 >
 > ⚠️ **Al cambiar la imagen, revisar el `alt`.** Un alt que describe la versión
 > anterior del archivo no lo detecta ningún build.
 
-> 🔍 **El control de un diagrama con material sensible se hace al 100% sobre el
+> 🔍 **El control de una imagen con material sensible se hace al 100% sobre el
 > archivo que se va a publicar, recortando sin escalar.** No al tamaño de
 > render: que a 330px no se lea no habilita nada, igual que con el texto
-> inventado (§6). Y ojo con el export: en los flows de FutbolTalent un nodo
-> sensible se leía entero a 1× y otro estaba en el límite, así que **el 2× que se usa
-> para que el texto no quede borroso también vuelve legible lo que a 1× no se
-> leía**. Medir sobre el export final, no sobre el borrador.
->
-> **Pasó con la re-exportación a 2× (2026-09-23)**: el mismo encuadre, pero los
-> campos de la base de registro, que antes se leían borrosos, pasaron a leerse
-> nítidos. Se revisaron uno por uno al 100% y quedan, por decisión de Tiago.
-> Cada vez que se re-exporta una imagen bajo NDA, el control se repite entero,
-> aunque el encuadre no haya cambiado.
+> inventado (§6). Y ojo con el export: **el 2× que se usa para que el texto no
+> quede borroso también vuelve legible lo que a 1× no se leía**. Medir sobre el
+> export final, no sobre el borrador, y repetir el control entero cada vez que
+> se re-exporta, aunque el encuadre no haya cambiado.
 
 **`mockup` — el hero.** El sitio en un dispositivo, en un entorno real, en
 encuadre panorámico 21:9. **Es la misma composición que el cover del home**, a
@@ -552,10 +536,6 @@ valor medio para la documentación.**
 > **no se presenta como identidad diseñada por él**. Lo suyo son las decisiones
 > del sitio (el naranja como color de acción, la interfaz oscura).
 
-> **FutbolTalent rompe el patrón a propósito**: su cluster va sobre hormigón y
-> no sobre un plano de marca, porque son wireframes —documentación de proceso,
-> no producto—. Su diagrama sí va sobre el azul del logo.
-
 ### 4.2. Luminancia: una sola regla, sin excepción
 
 > **Toda imagen necesita un borde claramente distinto de los DOS fondos de
@@ -676,14 +656,11 @@ sección (`02-challenge`) ataría la imagen a un único lugar de la página.
 > lo avisa nada.** En Pulso, Paseo y Ritual los nombres parecen una secuencia
 > (`00-mockup` · `01-tira` · `02-cluster` · `03-…`) porque esos casos usan
 > esos tipos en ese orden. **Es coincidencia, no plantilla.**
-> FutbolTalent no tiene tira ni paleta, así que sus tres piezas son `mockup`,
-> `diagram` y `screen-cluster`.
 >
-> Renombrar sus archivos "como veníamos" dejó a los wireframes llamándose
-> `01-tira.jpg` y a las protopersonas `02-cluster.jpg`. El brief del cluster
-> apunta a `02-cluster.jpg`, así que **el case study pasó a servir la imagen de
-> las protopersonas con el alt de los wireframes**, y el build compiló sin una
-> sola advertencia. Encima era la imagen que estaba retenida por NDA.
+> En un caso que no usaba esos tipos, renombrar los archivos "como veníamos"
+> hizo que el brief de una imagen apuntara a otra: **el case study pasó a servir
+> una imagen con el alt de otra**, y el build compiló sin una sola advertencia.
+> Encima era una imagen retenida por confidencialidad.
 >
 > **Cómo se chequea**: por contenido, nunca por nombre. `md5sum` de cada
 > archivo contra el que se revisó, o abrirlos. Y un número que queda libre es
@@ -694,7 +671,7 @@ Dos consecuencias:
 - **Dos piezas del mismo tipo llevan sufijo**: `02-cluster-a.jpg`,
   `02-cluster-b.jpg`.
 - **La numeración no es una plantilla.** Pulso tiene cinco, Paseo tiene
-  cuatro, FutbolTalent tres. No existe un `00`–`04` fijo, y que un slot quede
+  cuatro, FutbolTalent una. No existe un `00`–`04` fijo, y que un slot quede
   sin imagen es el sistema funcionando (§2, *"Casos reales"*).
 
 ⚠️ **La extensión en `projects.ts` tiene que ser la real** (`.jpg` / `.png`),

@@ -53,21 +53,6 @@
     "view_project": "View project",
     "view_all": "View all projects"
   },
-  "case_study_futbol-talent-pro": {
-    "intro": "I was responsible for the design of the MVP of FutbolTalent.Pro, a mobile-first sports scouting platform for players, scouts, and clubs. I did the flows, the screens, and the Design System.",
-    "challenge": "There were three users in the same app, and they weren't after the same thing. The player wants to be seen; the scout and the club are looking for someone to sign. The scope was also being adjusted sprint by sprint, so what we agreed on in one could change in the next.",
-    "process": "There were no interviews or tests with users, so I started from hypotheses: proto-personas for the three profiles, a Lean Canvas, and How Might We questions.",
-    "decision_1_title": "A separate sign-up for each profile",
-    "decision_1_body": "Sign-up starts by asking what kind of user you are, and the form you fill in depends on that answer. Each profile asks for the data that confirms it is legitimate, whether that is a player, a scout, or a club, and from there the app shows each one its own screens.",
-    "decision_2_title": "Filters based on who's searching",
-    "decision_2_body": "With every filter that was asked for, the explorer was turning into a general search engine, and the feedback from the project lead was to make it more complete. To do that without going that far, I ended up with different filters for each type of user. The explorer searched for players, clubs, and videos, and a scout didn't see the same filters as a player.",
-    "decision_3_title": "Components first, system last",
-    "decision_3_body": "There was no interface system to start from. The brand manual didn't include definitions for the screen, and the iconography came from a library. The screens kept changing, so I didn't build the system from atoms up to organisms. I designed the components directly and, at the end, organized them into a Design System and a UI kit so the team could work from that base.",
-    "delivered_1": "More than 35 high-fidelity screens for the three profiles, overlays included",
-    "delivered_2": "Design System and UI kit in Figma",
-    "delivered_3": "Low- and mid-fidelity wireframes, a prototype, user flows, and three proto-personas",
-    "closing": "Every decision was discussed in the weekly sprints with the whole team and documented in Notion. While development ran in parallel, my screens were implemented as they came out, so the MVP was validated technically as we went. Reviews were with development, with marketing, and with the project lead, who approved the designs. Because of the NDA, what I show here is the process and the system, not the final screens."
-  },
   "case_study_el-ritual-del-tono": {
     "intro": "I designed and built El Ritual del Tono, a store for guitarists. You pick an artist, open one of their songs, and see the gear behind that sound, ready to add to the cart. A university project for my Programación Multimedial III course, with a Next.js frontend and a Node, Express, and MongoDB backend.",
     "challenge": "Before writing code, I compared what already existed. Equipboard lists each artist's gear, but not by song. YouTube channels explain a tone, but you have to watch the whole thing to find one detail. And on forums the information is scattered. The store had to organize gear by song.\n\nThe hardest part was the One-Click Setup, the button that adds a song's two or three pieces of gear to the cart. A single click triggers several updates in a row to the same cart.",
