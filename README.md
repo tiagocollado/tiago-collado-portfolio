@@ -1,43 +1,63 @@
-# Astro Starter Kit: Minimal
+# Gotya — portfolio de Tiago Collado
+
+Examen final de Programación Multimedial IV.
+
+## Propuesta y público
+
+Pendiente.
+
+## Instalación y ejecución
+
+Requisitos: Node.js 22.23.4 o superior (lo fija `engines` en `package.json`) y npm.
 
 ```sh
-npm create astro@latest -- --template minimal
+# instalar dependencias
+npm install
+
+# servidor de desarrollo en http://localhost:4321
+npm run dev
+
+# build de producción
+npm run build
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Tecnologías y decisiones principales
 
-## 🚀 Project Structure
+Pendiente. Las decisiones tomadas hasta ahora están en
+[docs/proceso/decisiones.md](docs/proceso/decisiones.md).
 
-Inside of your Astro project, you'll see the following folders and files:
+## Componentes propios
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+Pendiente.
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Fuente dinámica: API
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+Pendiente.
 
-Any static assets, like images, can be placed in the `public/` directory.
+### Comportamiento ante error o ausencia de datos
 
-## 🧞 Commands
+Pendiente.
 
-All commands are run from the root of the project, from a terminal:
+## Responsive y accesibilidad
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+Pendiente.
 
-## 👀 Want to learn more?
+## Limitaciones conocidas y líneas de mejora
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Pendiente.
+
+## Créditos y licencias
+
+Pendiente.
+
+## Evidencia de proceso
+
+Pendiente. La carpeta [docs/proceso/](docs/proceso/) reúne la
+[bitácora](docs/proceso/bitacora.md), las [decisiones](docs/proceso/decisiones.md),
+el [historial de la versión Next](docs/proceso/historial-version-next.md) y las
+[capturas](docs/proceso/capturas/).
+
+## Uso de inteligencia artificial
+
+Pendiente. El registro por fase está en
+[docs/proceso/uso-de-ia.md](docs/proceso/uso-de-ia.md).
