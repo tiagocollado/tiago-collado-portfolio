@@ -1,12 +1,10 @@
 # Gotya — portfolio de Tiago Collado
 
-Examen final de Programación Multimedial IV.
-
-## Propuesta y público
+## Sobre el proyecto
 
 Pendiente.
 
-## Instalación y ejecución
+## Cómo correrlo
 
 Requisitos: Node.js 22.23.4 o superior (lo fija `engines` en `package.json`) y npm.
 
@@ -21,20 +19,20 @@ npm run dev
 npm run build
 ```
 
-## Tecnologías y decisiones principales
+## Stack y decisiones
 
-Pendiente. Las decisiones tomadas hasta ahora están en
+Pendiente. El detalle de cada decisión está en
 [docs/proceso/decisiones.md](docs/proceso/decisiones.md).
 
-## Componentes propios
+## Componentes
 
 Pendiente.
 
-## Fuente dinámica: API
+## Datos en vivo
 
 Pendiente.
 
-### Comportamiento ante error o ausencia de datos
+### Si la API falla o no hay datos
 
 Pendiente.
 
@@ -42,7 +40,7 @@ Pendiente.
 
 Pendiente.
 
-## Limitaciones conocidas y líneas de mejora
+## Próximos pasos
 
 Pendiente.
 
@@ -50,14 +48,27 @@ Pendiente.
 
 Pendiente.
 
-## Evidencia de proceso
+## Proceso
 
-Pendiente. La carpeta [docs/proceso/](docs/proceso/) reúne la
-[bitácora](docs/proceso/bitacora.md), las [decisiones](docs/proceso/decisiones.md),
-el [historial de la versión Next](docs/proceso/historial-version-next.md) y las
-[capturas](docs/proceso/capturas/).
+Cómo se construyó el proyecto, en [docs/proceso/](docs/proceso/):
 
-## Uso de inteligencia artificial
+- [Bitácora](docs/proceso/bitacora.md): el antecedente en Next y, para cada
+  etapa, qué se hizo, qué problemas aparecieron, cómo se resolvieron y qué
+  queda abierto.
+- [Decisiones](docs/proceso/decisiones.md): cada decisión de diseño,
+  arquitectura y tecnología, con su contexto y su porqué.
+- [Cómo uso IA](docs/proceso/uso-de-ia.md): el registro detallado, etapa por
+  etapa.
 
-Pendiente. El registro por fase está en
+## Cómo uso IA
+
+Uso Claude Code (modelo Claude Opus 5.5) como asistente de desarrollo: para
+adaptar la documentación del proyecto anterior, configurar Astro, portar
+estilos y componentes, y verificar las APIs de Astro en la documentación
+oficial. La IA propone y ejecuta los cambios; yo los reviso, tomo las
+decisiones de diseño, alcance y arquitectura, y hago los commits.
+
+Las reglas con las que trabaja el asistente están en [CLAUDE.md](CLAUDE.md) y
+en [.claude/rules/](.claude/rules/). El registro detallado (qué hizo la IA, qué
+revisé o descarté, qué errores aparecieron y qué decidí yo) está en
 [docs/proceso/uso-de-ia.md](docs/proceso/uso-de-ia.md).
