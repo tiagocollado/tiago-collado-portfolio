@@ -1,0 +1,12 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { createTranslator } from '../../i18n/translate.js';
+
+const t = createTranslator(Astro.currentLocale);
+---
+
+<BaseLayout>
+  <h1>{t('hero.headline')}</h1>
+  <a href={getRelativeLocaleUrl('en')} hreflang="en" lang="en">English</a>
+</BaseLayout>
