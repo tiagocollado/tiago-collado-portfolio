@@ -1,64 +1,138 @@
 # Bitácora
 
-Registro por fase de la migración del portfolio de Next.js a Astro. Cada
-entrada cuenta qué se hizo, qué problemas aparecieron y qué quedó pendiente.
+Registro del desarrollo del portfolio en Astro: qué se hizo en cada etapa, qué
+problemas aparecieron, cómo se resolvieron y qué queda abierto.
+
+**Punto de partida.** El portfolio ya existía, publicado en
+[tiagocollado.vercel.app](https://tiagocollado.vercel.app), hecho con Next.js y
+TypeScript. Este repositorio lo reconstruye en Astro y JavaScript. La primera
+meta es la paridad: el sitio nuevo tiene que verse y comportarse igual que el
+publicado, en las mismas URLs. Los cambios de diseño vienen después, sobre una
+base que ya funciona.
 
 ---
 
-## 2026-11-06 · F0 — Cerrar lo que quedaba online del sitio viejo
+## Antecedente: la versión en Next
 
-Antes de empezar el repo nuevo se cerró online un caso de estudio retirado
-del portfolio: se dio de baja el link compartido, se borraron los deployments
-de preview de su rama de revisión y se borró la rama. El caso no pasa al
-proyecto nuevo.
+**Abril de 2026.** Primera versión completa del portfolio en Next.js, con
+descarga del CV y los textos en inglés y castellano. Ese mismo mes llegaron un
+rediseño visual (cards de proyecto, About reescrito, favicon terracota) y una
+corrección de fondo: un reset global sin `@layer` anulaba las utilities de
+espaciado de Tailwind v4. Es el origen de la primera regla de
+[errores conocidos del stack](../../.claude/rules/stack-traps.md).
+
+**Mayo a agosto.** La capa de frontend creativo, en dos tandas: scroll suave,
+cursor propio, revelado de texto, botones magnéticos y el marquee de servicios.
+En agosto se sumaron el bloque de cierre unificado (contacto y footer), la
+imagen de Open Graph con la marca, el skip link y una jerarquía de headings
+sin saltos.
+
+**Septiembre: imágenes.** Migración a `next/image`, covers del home con el
+barrido terracota en hover y las imágenes de los casos de estudio. Los
+mockups con texto generado por IA se reemplazaron por capturas reales del
+sitio de cada proyecto.
+
+**Septiembre: casos de estudio.** Rediseño de la página de caso como una
+secuencia de bloques con un vocabulario de tipos de imagen. El copy de cada
+caso se contrastó contra la evidencia (el sitio publicado o el código), y esa
+pasada de hechos quedó como regla de revisión.
+
+**Septiembre: El Ritual del Tono.** El caso del proyecto full-stack (MERN, con
+demo en vivo) se armó contra su código: el diagrama del modelo de datos sale
+de los esquemas reales del backend. En esa revisión también cerré las rutas de
+escritura de `/products`, que estaban abiertas; corregí la respuesta 404 de las
+rutas inexistentes y agregué reintento de conexión a la base de datos.
+
+**23 de septiembre: cierre de la primera versión.** El sitio pasó a publicar
+solo los proyectos terminados; el resto quedó en el código sin publicar. Con
+eso se cerró la V1: nombres por función en vez de por referencia, lint en cero
+y la documentación sin historial de tareas cerradas.
 
 ---
 
-## 2026-11-06 · F1 — Configuración y documentación
+## 2026-11-06 · Repositorio y documentación
+
+- Repositorio nuevo a partir de la plantilla mínima de Astro, con `.gitignore`
+  para Astro, Vercel y variables de entorno (solo se versiona `.env.example`).
+- Las reglas de diseño, de imágenes y de errores conocidos del proyecto
+  anterior se trajeron a `.claude/rules/`, adaptadas a Astro. Son las
+  instrucciones que usa el asistente de IA (ver
+  [uso-de-ia.md](uso-de-ia.md)).
+- Estructura de documentación: esta bitácora, el
+  [registro de decisiones](decisiones.md) y el
+  [registro de uso de IA](uso-de-ia.md).
+
+**Problema encontrado.** Los archivos del proyecto anterior tenían finales de
+línea CRLF y este repositorio usa LF (`.gitattributes`). Los reemplazos de
+texto exacto fallaban hasta normalizarlos.
+
+---
+
+## 2026-11-07 · Entorno de prueba
+
+Proyecto de staging en Vercel conectado a este repositorio. El sitio publicado
+sigue saliendo del proyecto anterior hasta que la migración esté completa, así
+la URL pública no se cae en el medio.
+
+---
+
+## 2026-11-07 · Base del sitio
 
 **Qué se hizo**
 
-- `.gitignore` para Astro: dependencias, build, tipos generados, Vercel,
-  variables de entorno (con excepción para `.env.example`), logs y archivos
-  del sistema operativo. De `.claude/` se versionan solo `rules/` y `skills/`.
-- Se trajeron del repo viejo las reglas (`design-tokens`, `imagenes`,
-  `stack-traps`) y las skills (`auditar-copy`, `design-critique`,
-  `frontend-design`), adaptadas a Astro donde hacía falta.
-  - `stack-traps.md` pierde las secciones propias de Next (middleware,
-    `next/image`, OG con satori, Turbopack) y suma tres de Astro: las dos
-    trampas de las islas (el contexto de React no cruza entre islas, y
-    `MotionConfig` va en cada isla que anima) y la de `sizes` en
-    `astro:assets`. La lección de serialización de textos quedó reescrita
-    como "a las islas se les pasan solo los textos que usan".
-- `CLAUDE.md` nuevo a partir del viejo, para tres proyectos publicados, con la
-  estructura de Astro marcada como objetivo.
-- `docs/proceso/` con esta bitácora, la tabla de decisiones, el registro de
-  uso de IA, el historial de la versión Next y la carpeta de capturas.
-- `README.md` como esqueleto con las secciones que pide la consigna. Solo
-  está completa la parte de instalación y ejecución.
+- Tailwind v4 con `@tailwindcss/vite`, siguiendo la guía oficial de Tailwind
+  para Astro.
+- `src/styles/global.css`: tokens de marca, `@theme`, variante `dark` por
+  clase, reset y estilos base dentro de `@layer base`, textura de grano,
+  scrollbar y transición entre páginas (`@view-transition`). Dos clases del
+  CSS anterior que ningún componente usaba no se migraron.
+- Fuentes (Geist, Geist Mono y Space Grotesk) con la API de fuentes de Astro,
+  con los mismos pesos y variables CSS que antes.
+- `BaseLayout.astro`: idioma de la página, metadata y Open Graph, favicon,
+  tema y skip link.
+- Rutas por idioma (`/en`, `/es`) con el i18n nativo de Astro, los
+  diccionarios en `src/i18n/` y una función `t()` para leerlos.
 
 **Problemas y cómo se resolvieron**
 
-- Las afirmaciones sobre Astro de `stack-traps.md` se verificaron en
-  docs.astro.build (guía de imágenes, referencia de `astro:assets`, guía de
-  framework components, receta de estado compartido entre islas e i18n).
-  La guía de framework components no dice explícitamente que las islas sean
-  independientes; eso sale de la receta de estado compartido.
-- Los archivos del repo viejo tenían finales de línea CRLF y el repo nuevo
-  usa LF (`.gitattributes`): los reemplazos sobre texto exacto fallaban hasta
-  normalizar.
-- `git grep` solo busca en archivos versionados: antes del primer `git add`
-  de esta fase, un control sin `--untracked` da vacío aunque haya
-  coincidencias en los archivos nuevos.
+- **La redirección de `/` a `/en`.** La opción `redirectToDefaultLocale` de
+  Astro genera, en un build estático, una página con meta refresh de 2
+  segundos (la trata como redirección temporal 302), y además produce un
+  warning de rutas en conflicto con `src/pages/index.astro`, que es
+  obligatorio cuando todas las URLs llevan prefijo de idioma. Probé cambiar
+  `trailingSlash` (no influye) y desactivar la opción (el warning
+  desaparece). La solución: la opción queda desactivada y `index.astro`
+  redirige con `Astro.redirect('/en/', 307)`. Sale sin warning y con refresh
+  de 0 segundos. La guía de i18n no documenta qué genera `/` en un build
+  estático: lo averigüé buildeando y leyendo el código de Astro.
+- **Metadata.** En el sitio anterior el título, la descripción y Open Graph
+  estaban fijos en inglés para los dos idiomas. Pasaron a un bloque `meta` en
+  los diccionarios con los mismos textos: el HTML sale igual que antes y la
+  versión en castellano se puede traducir sin tocar código.
+- **El tema sin parpadeo.** Para conservar la preferencia de quien ya visitó
+  el sitio, el script replica lo que hacía `next-themes` (leído en su código):
+  la clave `theme` en `localStorage`, la clase del tema en `<html>` y
+  `color-scheme`. Va inline en el `<head>` porque los scripts que procesa
+  Astro son módulos y corren después de pintar.
+- **Comentarios publicados.** El contenido de un `<script is:inline>` sale tal
+  cual en el HTML, comentarios incluidos. La explicación del script pasó a un
+  comentario de Astro, que no se publica.
+- **`Astro.site` posiblemente indefinido.** El editor lo marcaba como error de
+  tipos. Una guarda explícita corta el build con un mensaje claro si falta
+  `site` en la configuración.
 
-**Decidido al cerrar la fase**
+**Verificación**
 
-- `AGENTS.md`, que vino con la plantilla de Astro, se queda y se importa desde
-  `CLAUDE.md`: trae el modo de dev server en segundo plano y los links a las
-  guías oficiales.
-- Los cambios de `imagenes.md` se revisaron y aprobaron antes de guardarlo.
-- El PDF del CV no se versiona. La URL `/tiago-collado-cv.pdf` va a redirigir
-  con un 307 a una copia externa; cómo se implementa se decide en F4.
-- El skip link pasa a `.astro` con un `<script>` chico que mueve el foco.
-- Quedan para F4: cómo usar imágenes optimizadas dentro de las islas y qué
-  tecnologías muestra el carrusel del Stack.
+- `npm run build` sin errores ni warnings.
+- El `<head>` generado coincide con el del sitio publicado. Solo cambia la URL
+  de la imagen de Open Graph, y el PNG es idéntico byte a byte al anterior.
+- Las fuentes se sirven desde el propio sitio, con `font-display: swap`, un
+  fallback con métricas ajustadas para que el cambio de fuente no mueva el
+  texto, y preload.
+
+**Pendiente**
+
+- Probar en el navegador, en los dos temas, que no haya parpadeo de tema ni
+  salto de tipografía al recargar.
+- El sitio anterior usa URLs sin barra final (`/en`) y Astro genera `/en/`.
+  Falta verificar en staging qué hace Vercel con cada una.
