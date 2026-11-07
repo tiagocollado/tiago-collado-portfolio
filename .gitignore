@@ -34,3 +34,6 @@ desktop.ini
 .claude/*
 !.claude/rules/
 !.claude/skills/
+# skills de terceros (Anthropic): se usan en local, no se redistribuyen acá
+.claude/skills/design-critique/
+.claude/skills/frontend-design/
