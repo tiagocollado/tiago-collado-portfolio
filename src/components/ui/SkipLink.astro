@@ -1,0 +1,26 @@
+---
+import { createTranslator } from '../../i18n/translate.js';
+
+const t = createTranslator(Astro.currentLocale);
+---
+
+<a
+  href="#main"
+  data-skip-link
+  class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:inline-flex focus:items-center focus:px-5 focus:py-2.5 focus:rounded-full focus:border focus:text-sm focus:font-medium focus:no-underline focus:border-accent focus:text-(--ink-primary) focus:bg-(--color-surface)"
+>
+  {t('a11y.skip_to_content')}
+</a>
+
+<script>
+  // Lenis intercepta los clicks en anclas para hacer su propio scroll suave,
+  // y eso puede comerse el movimiento de foco del navegador. Acá lo único que
+  // importa es el foco (<main> ya arranca arriba, no hay nada que scrollear),
+  // así que se cancela el ancla y se mueve el foco a mano.
+  const skipLink = document.querySelector('[data-skip-link]');
+
+  skipLink?.addEventListener('click', (event) => {
+    event.preventDefault();
+    document.getElementById('main')?.focus();
+  });
+</script>

@@ -1,0 +1,82 @@
+---
+import { Font } from 'astro:assets';
+import SkipLink from '../components/ui/SkipLink.astro';
+import { createTranslator } from '../i18n/translate.js';
+import '../styles/global.css';
+
+const locale = Astro.currentLocale;
+const t = createTranslator(locale);
+
+if (!Astro.site) {
+  throw new Error('Falta "site" en astro.config.mjs: Open Graph necesita la URL absoluta del sitio.');
+}
+
+const siteUrl = Astro.site.origin;
+const ogImageUrl = new URL('/og-image.png', Astro.site).href;
+---
+
+<!doctype html>
+<html lang={locale} class="dark" style="color-scheme: dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    {/*
+      Pone el tema antes de que el navegador pinte la página. Tiene que ser
+      inline y bloqueante: un <script> procesado por Astro es un módulo, y los
+      módulos corren después de pintar, así que se vería un parpadeo de tema.
+      Usa la misma clave ("theme") y los mismos valores que next-themes en el
+      sitio anterior, así se conserva lo que cada visita ya eligió. Sin
+      preferencia guardada, queda en oscuro. El comentario va acá afuera
+      porque lo que está adentro de un is:inline se publica tal cual.
+    */}
+    <script is:inline>
+      (function () {
+        var root = document.documentElement;
+        var theme = 'dark';
+        try {
+          var saved = localStorage.getItem('theme');
+          if (saved === 'light' || saved === 'dark') theme = saved;
+        } catch (error) {}
+        root.classList.remove('light', 'dark');
+        root.classList.add(theme);
+        root.style.colorScheme = theme;
+      })();
+    </script>
+
+    <title>{t('meta.title')}</title>
+    <meta name="description" content={t('meta.description')} />
+
+    <meta property="og:title" content={t('meta.og_title')} />
+    <meta property="og:description" content={t('meta.description')} />
+    <meta property="og:url" content={siteUrl} />
+    <meta property="og:site_name" content={t('meta.site_name')} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={t('meta.og_image_alt')} />
+    <meta property="og:type" content="website" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={t('meta.og_title')} />
+    <meta name="twitter:description" content={t('meta.description')} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content={t('meta.og_image_alt')} />
+    <meta name="twitter:image:type" content="image/png" />
+    <meta name="twitter:image:width" content="1200" />
+    <meta name="twitter:image:height" content="630" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any" />
+
+    <Font cssVariable="--font-geist-sans" preload />
+    <Font cssVariable="--font-geist-mono" preload />
+    <Font cssVariable="--font-space-grotesk" preload />
+  </head>
+  <body>
+    <SkipLink />
+    <main id="main" tabindex="-1" class="pt-16 focus:outline-none">
+      <slot />
+    </main>
+  </body>
+</html>
