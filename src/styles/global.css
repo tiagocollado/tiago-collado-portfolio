@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@view-transition {
+  navigation: auto;
+}
+
+@theme {
+  --font-display: var(--font-space-grotesk), sans-serif;
+  --font-body:    var(--font-geist-sans), sans-serif;
+  --font-mono:    var(--font-geist-mono), monospace;
+
+  --color-accent:        #C96A3A;
+  --color-accent-hover:  #B05A2E;
+  --color-accent-subtle: #F3E4DA;
+
+  --radius-card: 12px;
+  --radius-pill: 999px;
+
+  --ease-expo-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root {
+  --bg-primary:   #EDE2CD;
+  --bg-secondary: #E5DAC4;
+  --bg-tertiary:  #DDD2BB;
+
+  --ink-primary:   #111110;
+  --ink-secondary: #4A4845;
+  --ink-muted:     #8A8680;
+
+  --color-surface:       #F4EAD5;
+  --color-surface-hover: #ECE0C7;
+
+  --border-default: rgba(17, 17, 16, 0.10);
+  --border-strong:  rgba(17, 17, 16, 0.20);
+}
+
+.dark {
+  --bg-primary:   #111110;
+  --bg-secondary: #1C1B1A;
+  --bg-tertiary:  #242320;
+
+  --ink-primary:   #F0EDE8;
+  --ink-secondary: #A8A49F;
+  --ink-muted:     #6A6660;
+
+  --color-surface:       #1C1B1A;
+  --color-surface-hover: #252320;
+
+  --border-default: rgba(240, 237, 232, 0.10);
+  --border-strong:  rgba(240, 237, 232, 0.20);
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--ink-primary);
+    font-family: var(--font-body);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: color-mix(in srgb, var(--ink-muted) 50%, transparent);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    border-radius: 999px;
+    transition: background-color 0.2s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-accent);
+  }
+
+  ::-webkit-scrollbar-thumb:active {
+    background-color: var(--color-accent-hover);
+  }
+
+  @supports (-moz-appearance: none) {
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: color-mix(in srgb, var(--ink-muted) 50%, transparent) transparent;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
