@@ -1,0 +1,177 @@
+{
+  "meta": {
+    "title": "Gotya by Tiago Collado — UX/UI Design & Web Development",
+    "description": "Designing experiences with empathy. Building them with precision.",
+    "og_title": "Gotya by Tiago Collado",
+    "site_name": "Gotya",
+    "og_image_alt": "Gotya by Tiago Collado"
+  },
+  "a11y": {
+    "skip_to_content": "Saltar al contenido"
+  },
+  "nav": {
+    "projects": "Proyectos",
+    "about": "Sobre Gotya",
+    "contact": "Contacto",
+    "download_cv": "Descargar CV",
+    "contact_marquee": "Hablemos"
+  },
+  "hero": {
+    "name": "Gotya",
+    "role": "UX/UI Designer & Frontend Developer",
+    "availability": "Disponible para colaborar",
+    "headline": "Diseñar experiencias con empatía.",
+    "subheadline": "Crearlas con precisión.",
+    "cta_projects": "Ver proyectos",
+    "cta_contact": "Contactar",
+    "cta_cv": "Descargar CV"
+  },
+  "contact": {
+    "label": "CONTACTO",
+    "title": "¿Por dónde arrancamos?",
+    "email_label": "EMAIL",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "download_cv": "Descargar CV"
+  },
+  "case_study": {
+    "back": "Volver al inicio",
+    "next_project_label": "Próximo proyecto",
+    "view_all_projects": "Ver todos los proyectos",
+    "view_live": "Ver producto final",
+    "view_github_frontend": "Ver código (Frontend)",
+    "view_github_backend": "Ver código (Backend)",
+    "meta_client": "Cliente",
+    "meta_year": "Año",
+    "meta_role": "Rol",
+    "meta_duration": "Duración",
+    "meta_team": "Equipo",
+    "meta_stack": "Stack",
+    "meta_links": "Links",
+    "cs_challenge": "El desafío",
+    "cs_decisions": "Cómo lo resolví",
+    "cs_delivered": "Lo entregado",
+    "cs_closing": "Cierre"
+  },
+  "projects": {
+    "label": "PROYECTOS",
+    "statement": "Proceso, criterio y ejecución.",
+    "view_project": "Ver proyecto",
+    "view_all": "Ver todos los proyectos"
+  },
+  "case_study_el-ritual-del-tono": {
+    "intro": "Diseñé y programé El Ritual del Tono, una tienda para guitarristas. Elegís un artista, entrás a una de sus canciones y ves el equipo detrás de ese sonido, listo para agregar al carrito. Proyecto universitario para Programación Multimedial III, con frontend en Next.js y backend en Node, Express y MongoDB.",
+    "challenge": "Antes de programar comparé lo que ya existía. Equipboard lista el equipo de cada artista, pero no por canción. Los canales de YouTube explican un tono, pero hay que verlos enteros para encontrar un dato. Y en los foros la información está dispersa. La tienda tenía que ordenar el equipo por canción.\n\nLo que más me costó fue el One-Click Setup, el botón Comprar Sonido Completo, que agrega al carrito los dos o tres equipos de una canción. En un solo clic hay varios cambios seguidos sobre el mismo carrito.",
+    "decision_1_title": "Cada agregado parte del anterior",
+    "decision_1_body": "El botón recorre el setup y agrega los equipos de a uno. Funciona porque el carrito se actualiza sobre su estado anterior, con setCart(prev => …), así que cada llamada recibe el carrito que dejó la anterior. Si las llamadas leyeran la variable cart, todas partirían del mismo carrito viejo y solo quedaría el último equipo. Un equipo que ya estaba en el carrito no se duplica.",
+    "decision_2_title": "Equipos compartidos entre artistas",
+    "decision_2_body": "Revisé qué artistas usaban los mismos equipos para no cargar productos de más. Cada equipo es un solo documento en MongoDB que las canciones referencian por su ObjectId. El Tube Screamer de Cerati es el mismo documento que el de Stevie Ray Vaughan. Las 26 canciones apuntan a 18 equipos, y 8 de ellos los comparten dos artistas o más.",
+    "decision_3_title": "Scope cortado, MVP funcional",
+    "decision_3_body": "Recorté el catálogo de equipos, porque cargar cada pedal de cada artista no iba a terminar nunca. Los 13 artistas con dos canciones cada uno fueron el alcance desde el principio. El checkout guarda la orden en MongoDB sin cobrar, y alcanza para recorrer la tienda de la canción al pedido.",
+    "delivered_1": "Backend Node.js + Express con API REST y 3 colecciones MongoDB",
+    "delivered_2": "Frontend en Next.js, React Context y Tailwind, con interfaz oscura y el naranja como color de acción",
+    "delivered_3": "Deploy en Vercel con live demo end-to-end (artista → canción → carrito → checkout)",
+    "closing": "Si lo volviera a hacer, arreglaría tres limitaciones que la demo tiene hoy. El botón de setup pisa la cantidad. Si un equipo estaba en el carrito con tres unidades, vuelve a una. El stock no se valida nunca, ni al agregar ni al confirmar el pedido. Y el carrito vive solo en memoria y se pierde al recargar la página. Las resolvería sumando la cantidad en vez de reemplazarla, validando el stock en el backend cuando llega el pedido y guardando el carrito para que sobreviva a una recarga."
+  },
+  "case_study_cabify-music-match": {
+    "intro": "Cabify ya tenía una opción de música, pero solo cambiaba la radio (tecnología muerta). Diseñé Music Match: una feature que fusiona los gustos de conductor y pasajero usando Spotify, sin friccionar el flujo de pedir un viaje.",
+    "challenge": "Alinear los gustos musicales de dos personas que se acaban de conocer, sin que ninguna sienta que perdió control. Si priorizás al pasajero, el conductor se incomoda; al revés, lo mismo. La solución no podía ser un override unilateral.",
+    "decision_1_title": "Algoritmo de fusión, con fallbacks claros",
+    "decision_1_body": "Detecta coincidencias en géneros y artistas entre ambos perfiles de Spotify y genera una playlist temporal del viaje. Si no hay match suficiente, ofrece playlists pre-curadas por mood (energizante, relajante, neutral). Y siempre está la opción 'Silencio', porque no todo el mundo quiere música.",
+    "decision_2_title": "Onboarding opcional y progresivo",
+    "decision_2_body": "Vincular Spotify no puede friccionar el flujo de pedir un viaje. Modal explicativo skippable la primera vez. Si lo omite, Music Match no aparece. Si vincula, se activa automáticamente con un toggle simple para desactivar.",
+    "decision_3_title": "Validar el modo silencio fue clave",
+    "decision_3_body": "El research mostró que mucha gente prefiere no escuchar nada. Validar esto evitó forzar una feature donde a veces la mejor solución es no usarla. La opción 'Silencio' está al mismo nivel jerárquico que las otras dos, no escondida en un menú.",
+    "delivered_1": "Prototipo Figma iPhone 14 con onboarding, OAuth simulado, controles y settings",
+    "delivered_2": "User flows testeados con conductores y pasajeros reales",
+    "delivered_3": "UI alineada al manual de marca oficial de Cabify (brand.cabify.com)",
+    "closing": "Las mejores features no son las más complejas. Son las que resuelven problemas emocionales (la incomodidad del silencio en un viaje con un desconocido) con tecnología simple (conectar dos cuentas de Spotify). Si volviera a hacerlo: feedback post-viaje para iterar el algoritmo de fusión con datos reales y convertir Music Match en un diferenciador competitivo."
+  },
+  "case_study_multibrand-design-system": {
+    "intro": "En No Country, equipo de 6 personas en 3 países, 5 semanas, diseñamos un Design System multibrand que permite a múltiples productos EdTech compartir base sin perder identidad: 70% core obligatorio, 30% personalizable.",
+    "challenge": "Definir qué iba en el 70% core (inmutable) vs el 30% personalizable. Cada marca quería libertad creativa, pero demasiada personalización rompe la consistencia educativa que el sistema tenía que garantizar.",
+    "decision_1_title": "Research antes de tokens",
+    "decision_1_body": "Antes de definir el sistema, analizamos 4 plataformas EdTech reales (Coursera, edX, Udemy, Platzi) para identificar patrones comunes. Las personas no eran estudiantes, eran los diseñadores y devs que iban a usar el sistema.",
+    "decision_2_title": "Core como invariante de marca, no como estilo visual",
+    "decision_2_body": "El 70% core lleva grid, espaciado, radios, sombras, comportamiento de componentes, accesibilidad AA y patrones UX (onboarding, errores, progreso). Lo personalizable: solo color primario/secundario/acento, tipografía (3 opciones pre-aprobadas) e iconografía.",
+    "decision_3_title": "UX Writing como sistema, no decoración",
+    "decision_3_body": "Voz y tono codificados con guidelines completas: clara, humana, motivadora sin exagerar. Microcopys estandarizados ('Cargando…', 'Guardado'), errores empáticos, y un sistema de adaptación por marca que ajusta tono sin cambiar voz fundamental.",
+    "delivered_1": "Tokens (color, tipografía, espaciado, radios, sombras, motion) en Figma Variables con light/dark",
+    "delivered_2": "Biblioteca UI: botones, inputs, cards, navegación, modals, alerts, tablas, progress bars",
+    "delivered_3": "Sistema de gobernanza + documentación en Notion para equipos no técnicos",
+    "closing": "Diseñar un Design System es 30% diseño visual y 70% gobernanza y documentación. Componentes bonitos no sirven si nadie sabe cuándo usarlos. La colaboración multicultural me enseñó a justificar cada decisión: no podés decir 'me gusta más así'. Si volviera a hacerlo: menos componentes, mejor documentados."
+  },
+  "case_study_recuerdalo": {
+    "intro": "Diseñé Recuérdalo: una app de recordatorios para adultos 70+ basada en research real con usuarios del rango etario objetivo, no en asunciones sobre lo que 'necesitan'. Proyecto universitario de UX inclusivo.",
+    "challenge": "Equilibrar autonomía vs ayuda. Los adultos mayores quieren sentirse capaces (el orgullo de superar retos es enorme) pero también necesitan soporte cuando se traban. Demasiada ayuda se siente condescendiente. Muy poca genera abandono.",
+    "decision_1_title": "Pasos reversibles visibles, no flujos ciegos",
+    "decision_1_body": "El insight clave vino de un entrevistado de 80 años: 'arranco bien, pero si me equivoco en el tercer paso, no sé volver para atrás'. La solución no era simplificar, era hacer la reversibilidad evidente. Indicador numérico (Paso 1 de 3), botones 'Volver' grandes en cada pantalla, confirmaciones visuales inmediatas.",
+    "decision_2_title": "Arquitectura por contexto emocional, no por función",
+    "decision_2_body": "Card sorting abierto con 3 usuarios mayores y 15 tarjetas. Agruparon por contexto emocional, no por tipo de función: 'Mis Obligaciones y Salud', 'Mi Gente', 'Para Entretenerme y Pensar', 'Cosas Importantes y Ayuda'. La arquitectura siguió ese mapeo, no la lógica de un diseñador.",
+    "decision_3_title": "Accesibilidad como base, no capa extra",
+    "decision_3_body": "Tipografía mínima 18px (vs 14px estándar) para visión envejecida. Contraste AA en todo. Touch targets de 60×60px (vs 44px recomendado general) para dedos menos precisos. Botón 'Ayuda' flotante siempre visible: tutoriales contextuales o llamada a contacto de emergencia.",
+    "delivered_1": "Research documentado: entrevistas, transcripciones, affinity diagrams, journey map del usuario principal",
+    "delivered_2": "User personas con quotes reales de los entrevistados",
+    "delivered_3": "Prototipo Figma alta fidelidad con todas las pantallas principales",
+    "closing": "El diseño inclusivo no es una capa estética que agregás al final, es la base de una buena experiencia. Diseñar para los 3 entrevistados, con sus limitaciones visuales y memoria secuencial frágil, terminó creando un producto más claro y robusto para cualquiera. Si volviera a hacerlo: un 'Sistema de Tranquilidad Familiar' que vincule la app con los hijos para reducir ansiedad familiar y reforzar la red de apoyo."
+  },
+  "about": {
+    "title": "SOBRE GOTYA",
+    "based": "BASED IN BUENOS AIRES / WORLDWIDE",
+    "claim_1": "El punto exacto donde el",
+    "claim_2": "diseño",
+    "claim_3": "entiende al",
+    "claim_4": "negocio.",
+    "body_1": "Diseñar para humanos implica salir del mood de diseño. Significa sentarse en cualquier mesa y entender la dinámica de las demás áreas para aportar valor de verdad.",
+    "body_2": "Gotya viene de gotcha (“entendido”). Es la confirmación de que la esencia está captada. Ese entendimiento es lo que convierte un objetivo de negocio en una experiencia que la gente recuerda.",
+    "signature": "Gotya. Entendido.",
+    "byline": "by Tiago Collado"
+  },
+  "services": {
+    "label": "Servicios que ofrezco",
+    "items": [
+      "UX Research",
+      "Prototipado",
+      "Diseñador UX/UI",
+      "Sistemas de diseño",
+      "Desarrollo Frontend",
+      "Accesibilidad"
+    ]
+  },
+  "stack": {
+    "title": "Tecnologías que Utilizo"
+  },
+  "footer": {
+    "credit": "Diseñado y desarrollado por Tiago Collado",
+    "back_to_top": "Volver arriba"
+  },
+  "case_study_paseo-guemes-hotel": {
+    "intro": "Paseo Güemes Hotel es un hotel 3 estrellas en el corazón de la Ciudad de Salta, en la zona de bares y a pasos del casco histórico. Abrió en febrero de 2026, así que llegué a un negocio nuevo, todavía definiendo su público entre turismo nacional, internacional y un segmento corporativo.",
+    "challenge": "En lo digital el punto de partida era mínimo: dominio, hosting y WordPress instalados, y el motor de reservas ya funcionando, pero ninguna web armada. Sin sitio propio, el hotel dependía de las OTAs y sus comisiones, perdía reservas directas y recibía las consultas dispersas en mensajes que se perdían sin contexto. Trabajé con cinco restricciones: presupuesto acotado, una web que el propio hotel pudiera mantener, hosting y dominio heredados, contenido que llegaba de a poco y un motor de reservas al que no tenía acceso directo, porque lo administra la gerenta.",
+    "process": "No fui directo a maquetar. Arranqué con un brief al dueño (negocio, objetivos, competencia y público), hice un análisis del mercado hotelero salteño con mapa de posicionamiento y definición del huésped ideal, y recién con eso armé los wireframes de desktop y mobile en Figma.",
+    "decision_1_title": "Reserva directa primero, OTAs en segundo plano",
+    "decision_1_body": "Todo el sitio empuja al motor de reservas propio y las OTAs quedan como vidriera de captación, no como canal principal. El objetivo del negocio era reducir comisiones y dejar de perder reservas directas, así que el mensaje y los CTAs se ordenaron alrededor de eso.",
+    "decision_2_title": "Stack editable por el cliente, no desarrollo a medida",
+    "decision_2_body": "Con presupuesto acotado y la necesidad de que el hotel mantuviera la web sin depender de mí, un stack editable le ganaba a un desarrollo hecho a mano. Elegí un tema liviano con constructor de cabecera y pie incluido para cuidar la performance en mobile sin sumar licencias.",
+    "decision_3_title": "Jerarquía del hero y CTAs repartidos por recorrido",
+    "decision_3_body": "Hero con video del Monumento a Güemes, porque la ubicación es el activo número uno del hotel, y un único CTA fuerte de reserva. Los llamados secundarios se repartieron por sección para no gastar el botón de reservar repitiéndolo en cada bloque. Para las consultas sumé un botón flotante de WhatsApp en lugar de depender de mensajes de Instagram: llega con contexto y no se pierde.",
+    "delivered_1": "Sitio mobile-first con Inicio, Habitaciones, Beneficios, Ubicación y Contacto",
+    "delivered_2": "Identidad aplicada de punta a punta: paleta extraída del logo, sistema tipográfico y logo en versiones para fondo claro y oscuro",
+    "delivered_3": "Reserva directa integrada, WhatsApp y formulario de contacto",
+    "closing": "El sitio ya está publicado, pero todavía no hay métricas duras y prefiero no inventarlas. El hotel pasa de depender de las OTAs a tener canal propio de reserva directa, y las consultas entran por WhatsApp con contexto en lugar de perderse. Construir con contenido que llegaba de a poco me obligó a trabajar por bloques y a dejar textos y fotos provisorios en vez de bloquearme esperando. También aprendí a elegir el flujo robusto por sobre el vistoso: no forzar el motor de reservas dentro del hero y resolverlo con un botón directo. Si lo hiciera de nuevo, cerraría antes las fotos reales, que es lo que un huésped mira primero, y pediría los accesos del motor desde el arranque."
+  },
+  "case_study_pulso-creativo": {
+    "intro": "Pulso Creativo es una consultora B2B con más de 25 años en marketing, branding y coaching. Me encargué de su sitio institucional completo, del diseño a la publicación.",
+    "challenge": "Trabajaron con marcas como Messe Frankfurt Argentina, pero sin sitio propio no tenían dónde mostrarlo. El otro problema era el contenido. Los casos de éxito llegaron como párrafos largos que en un celular no se podían leer.",
+    "decision_1_title": "Logos de clientes en el primer scroll",
+    "decision_1_body": "El carrusel de logos va pegado a la frase de los 25 años de trayectoria, así la afirmación y la evidencia se leen juntas, antes de que el sitio explique los servicios. Para quien evalúa proveedores, reconocer marcas conocidas es una prueba que no hace falta leer. En el celular muestra tres logos por vez, para que cada uno se siga reconociendo.",
+    "decision_2_title": "Casos de éxito en viñetas, no en bloques de texto",
+    "decision_2_body": "Reorganicé cada caso con la misma estructura: una bajada corta, tres logros en viñetas y una línea de resultado al final. Los resultados se encuentran sin leer párrafos, y como los tres casos repiten el formato, se comparan de un vistazo.",
+    "decision_3_title": "Dos vías de contacto según la intención",
+    "decision_3_body": "Puse un botón de WhatsApp flotante en todas las páginas, con el mensaje ya escrito, para quien quiere una respuesta rápida. Está siempre en el mismo lugar y al alcance del pulgar. Para una consulta más formal está el formulario de Contacto, con un campo de asunto que le dice al equipo de qué se trata antes de responder.",
+    "delivered_1": "Sitio institucional en WordPress con Inicio, Nosotros, Servicios, Casos de éxito y Contacto",
+    "delivered_2": "Casos de éxito reescritos con una estructura fija: bajada, logros y resultado",
+    "delivered_3": "Contacto por WhatsApp desde cualquier página y formulario con campo de asunto",
+    "closing": "Lo más difícil fue negociar con el cliente. Pulso quería contar todo el trabajo detrás de cada caso, y quien visita el sitio quiere ver resultados rápido. Si lo hiciera de nuevo, haría dos cosas antes de publicar: configurar la medición, porque hoy no tengo números de consultas para mostrar, y que el mensaje de WhatsApp diga desde qué página escribe cada persona."
+  }
+}
