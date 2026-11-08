@@ -37,27 +37,33 @@ Pendiente. El detalle de cada decisión está en
 [`NowPlaying.jsx`](src/components/sections/NowPlaying.jsx) es una isla de
 React que se hidrata al entrar en pantalla (`client:visible`), en el About.
 Muestra lo que escucho, con datos de Last.fm (ver
-[Datos en vivo](#datos-en-vivo)), en dos vistas que elige quien visita:
+[Datos en vivo](#datos-en-vivo)), como un tocadiscos:
 
-- **Ahora**: el tema que suena, con un ecualizador animado, o el último que
-  sonó y hace cuánto.
-- **Últimos 5**: los últimos cinco temas, cada uno con su link a Last.fm.
+- **Arriba, el tema destacado**: un vinilo dibujado en SVG con la G de la
+  marca como etiqueta, y al lado el título (link a su página en Last.fm) y el
+  artista. Por defecto es el tema más reciente.
+- **Abajo, los últimos cinco temas**, como el listado de un disco. Elegir uno
+  lo pone en el tocadiscos.
+
+El disco gira siempre: es ambiente. Si de verdad estoy escuchando algo lo
+dice un cartel **"En vivo"**, arriba a la derecha y siempre visible, como el
+"On Air" de un estudio: apagado si no suena nada, prendido (con el punto en
+terracota, brillando) si suena. Al poner un tema, el disco se asienta en el plato con una escala
+corta: es la respuesta a la acción.
 
 Se ocupa de tres cosas: pedir los datos al endpoint propio (y volver a
 pedirlos al volver a la pestaña), traducir el `state` de la respuesta a lo
-que muestra (carga, datos, vacío, privado o error) y manejar la selección
-entre las dos vistas. Recibe del `.astro` solo los textos que usa, ya
-traducidos, y el idioma de la página para el tiempo relativo.
+que muestra (carga, datos, vacío, privado o error) y manejar qué tema está en
+el tocadiscos. Recibe del `.astro` solo los textos que usa, ya traducidos.
 
 Pendiente: el resto de los componentes propios.
 
 ## Datos en vivo
 
-En la sección About, el widget **"Lo que suena cuando diseño"** muestra el
-tema que estoy escuchando o, si no suena nada, el último que sonó y hace
-cuánto. Con las pestañas **Ahora / Últimos 5** se pasa a la lista de los
-últimos cinco temas. Los datos son de [Last.fm](https://www.last.fm), que
-registra lo que escucho.
+En la sección About, el widget **"Lo que suena cuando diseño"** muestra lo
+último que escuché como un tocadiscos: el tema más reciente en el plato y,
+abajo, los últimos cinco para elegir cuál poner. Los datos son de
+[Last.fm](https://www.last.fm), que registra lo que escucho.
 
 ```
 navegador ──► /api/now-playing.json ──► Last.fm (user.getRecentTracks)
@@ -81,19 +87,23 @@ navegador ──► /api/now-playing.json ──► Last.fm (user.getRecentTrack
   a Last.fm se corta a los 5 segundos.
 - **El widget** ([`NowPlaying.jsx`](src/components/sections/NowPlaying.jsx))
   pide los datos al hacerse visible y otra vez al volver a la pestaña, si pasó
-  más de un minuto. Las dos vistas salen del mismo pedido, así que cambiar de
-  pestaña no espera ni vuelve a pedir nada. El tiempo relativo ("hace 12
-  minutos" / "12 minutes ago") sale de `Intl.RelativeTimeFormat`, en el idioma
-  de la página.
-- **Las pestañas** siguen el patrón Tabs de WAI-ARIA: la lista de pestañas
-  toma su nombre del título visible del widget, cada pestaña indica si está
-  seleccionada y a qué panel controla, y se usan con teclado (Tab entra a la
-  pestaña activa, las flechas cambian de pestaña, Inicio y Fin van a la
-  primera y a la última, Tab otra vez pasa al panel). Se activan al recibir el
-  foco porque los dos paneles ya están cargados.
-- **El widget crece sin saltos.** La lista es más alta que la vista Ahora. La
-  tarjeta mide el alto de su contenido y lo anima, así lo que viene abajo se
-  desliza en vez de saltar. Con movimiento reducido el cambio es instantáneo.
+  más de un minuto. Del endpoint toma los cinco temas más recientes, contando
+  el que suena. Elegir un tema no hace otro pedido: los datos ya están.
+- **Nunca dice algo que no es cierto.** El cartel "En vivo" se prende solo si
+  algún tema tiene `isNowPlaying`, y la fila de ese tema muestra un
+  ecualizador. Para el lector de pantalla, el cartel prendido dice "Sonando
+  ahora"; apagado no anuncia nada. No muestra tiempo
+  relativo ("hace X"). Está pensado para el caso común: que cuando alguien
+  entra, yo no esté escuchando nada.
+- **La lista** sigue el patrón Listbox de WAI-ARIA, de selección única: toma su
+  nombre del label visible "Últimos 5", la fila elegida se anuncia como
+  seleccionada, y se usa con teclado (Tab entra a la fila elegida, las flechas
+  arriba y abajo mueven y eligen a la vez, Inicio y Fin van a la primera y a
+  la última). Incluye al tema destacado, marcado, y su orden no cambia nunca.
+- **El alto no salta.** El destacado mide siempre lo que el disco (el título
+  se corta en tres líneas), así que elegir un tema no cambia el alto. Entre
+  estados (carga, datos, error) la tarjeta anima su alto.
+- **Movimiento reducido**: el disco no gira y los cambios son instantáneos.
 
 ### Si la API falla o no hay datos
 
@@ -103,8 +113,8 @@ error queda como un 500 sin explicación.
 
 | Situación | `state` | HTTP | Qué muestra el widget |
 |---|---|---|---|
-| Hay un tema sonando | `ok` | 200 | El tema, con un ecualizador animado, y la pestaña Últimos 5 |
-| No suena nada | `ok` | 200 | El último tema y hace cuánto sonó, y la pestaña Últimos 5 |
+| Hay un tema sonando | `ok` | 200 | Ese tema en el tocadiscos, el cartel "En vivo" prendido y la lista, con un ecualizador en su fila |
+| No suena nada | `ok` | 200 | El tema más reciente, el cartel apagado y la lista |
 | La cuenta no tiene temas | `empty` | 200 | "Todavía no registré ningún tema." |
 | El perfil oculta lo que escucha (error 17 de Last.fm) | `private` | 403 | "Mi historial de Last.fm está en privado." |
 | Usuario inexistente, clave inválida o suspendida (errores 6, 10, 26) | `user-not-found` · `invalid-key` · `key-suspended` | 502 | "No pude cargar la música ahora." |
@@ -116,12 +126,11 @@ error queda como un 500 sin explicación.
 - **Los errores no se cachean** (`Cache-Control: no-store`): el próximo pedido
   vuelve a intentar.
 - **Mientras carga**, el widget muestra un esqueleto con las medidas del
-  contenido más común (las pestañas y un tema), así el paso a los datos no
-  cambia el alto.
-- **Vacío, privado y error** se muestran en una tarjeta compacta, del alto del
-  mensaje, sin pestañas: no hay nada entre qué elegir.
-- **Si la lista no suma nada** (suena un tema y no hay otros, o la cuenta
-  tiene un solo tema), las pestañas no aparecen y queda la vista Ahora.
+  contenido más común (el destacado y cinco filas), así el paso a los datos
+  no cambia el alto.
+- **Vacío, privado y error** muestran el disco con el mensaje al lado y el
+  cartel apagado, sin lista: la tarjeta queda del alto del disco.
+- **Con un solo tema** no hay lista: no hay entre qué elegir.
 - **Sin JavaScript** el widget no puede pedir los datos, así que no se
   muestra.
 
@@ -139,9 +148,10 @@ Pendiente.
   [API](https://www.last.fm/api), bajo sus
   [términos de uso](https://www.last.fm/api/tos), que permiten solo uso no
   comercial y piden acreditar a Last.fm con un link. El widget lleva un link
-  de texto "Datos de Last.fm": el botón *"powered by AudioScrobbler"* que
-  nombran los términos ya no se publica entre los recursos de Last.fm. Cada
-  tema enlaza a su página en Last.fm, como piden los términos. No se muestran
+  de texto "vía Last.fm": el botón *"powered by AudioScrobbler"* que
+  nombran los términos ya no se publica entre los recursos de Last.fm. El
+  título del tema destacado enlaza a su página en Last.fm, como piden los
+  términos. No se muestran
   portadas de discos, porque los términos excluyen las imágenes y el arte de
   lo que se puede usar.
 - Skills de IA de Anthropic, usadas en local y no incluidas en este
