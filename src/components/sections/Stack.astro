@@ -12,7 +12,15 @@ const carouselLoop = [...carouselItems, ...carouselItems];
 <section class="pt-8 md:pt-10 lg:pt-12 pb-16 md:pb-20 lg:pb-28">
   <div class="px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32">
     <div class="max-w-7xl mx-auto">
-      <div>
+      {/* Entrada del encabezado: fade + subida de 40px cuando entra en
+          pantalla (margen -100px). El carrusel de abajo no la necesita: ya
+          se mueve solo. */}
+      <div
+        data-reveal-trigger
+        data-reveal-margin="-100px"
+        data-reveal
+        style="--reveal-y: 40px; --reveal-duration: 0.7s;"
+      >
         <div class="max-w-3xl">
           <p
             class="text-xs font-mono tracking-[0.2em] uppercase mb-5"
@@ -63,6 +71,10 @@ const carouselLoop = [...carouselItems, ...carouselItems];
     </div>
   </div>
 </section>
+
+<script>
+  import '../../scripts/reveal.js';
+</script>
 
 <style>
   .carousel-container {
