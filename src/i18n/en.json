@@ -60,7 +60,7 @@
     "view_all": "View all projects"
   },
   "case_study_el-ritual-del-tono": {
-    "intro": "I designed and built El Ritual del Tono, a store for guitarists. You pick an artist, open one of their songs, and see the gear behind that sound, ready to add to the cart. A university project for my Programación Multimedial III course, with a Next.js frontend and a Node, Express, and MongoDB backend.",
+    "intro": "I designed and built El Ritual del Tono, a store for guitarists. You pick an artist, open one of their songs, and see the gear behind that sound, ready to add to the cart. University project, with a Next.js frontend and a Node, Express, and MongoDB backend.",
     "challenge": "Before writing code, I compared what already existed. Equipboard lists each artist's gear, but not by song. YouTube channels explain a tone, but you have to watch the whole thing to find one detail. And on forums the information is scattered. The store had to organize gear by song.\n\nThe hardest part was the One-Click Setup, the button that adds a song's two or three pieces of gear to the cart. A single click triggers several updates in a row to the same cart.",
     "decision_1_title": "Each update builds on the last",
     "decision_1_body": "The button walks through the setup and adds the gear one piece at a time. It works because the cart is updated from its previous state, with setCart(prev => …), so each call gets the cart the previous one left. If the calls read the cart variable instead, they would all start from the same stale cart and only the last piece would stay. Gear that's already in the cart isn't duplicated.",

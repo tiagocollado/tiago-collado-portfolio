@@ -60,7 +60,7 @@
     "view_all": "Ver todos los proyectos"
   },
   "case_study_el-ritual-del-tono": {
-    "intro": "Diseñé y programé El Ritual del Tono, una tienda para guitarristas. Elegís un artista, entrás a una de sus canciones y ves el equipo detrás de ese sonido, listo para agregar al carrito. Proyecto universitario para Programación Multimedial III, con frontend en Next.js y backend en Node, Express y MongoDB.",
+    "intro": "Diseñé y programé El Ritual del Tono, una tienda para guitarristas. Elegís un artista, entrás a una de sus canciones y ves el equipo detrás de ese sonido, listo para agregar al carrito. Proyecto universitario, con frontend en Next.js y backend en Node, Express y MongoDB.",
     "challenge": "Antes de programar comparé lo que ya existía. Equipboard lista el equipo de cada artista, pero no por canción. Los canales de YouTube explican un tono, pero hay que verlos enteros para encontrar un dato. Y en los foros la información está dispersa. La tienda tenía que ordenar el equipo por canción.\n\nLo que más me costó fue el One-Click Setup, el botón Comprar Sonido Completo, que agrega al carrito los dos o tres equipos de una canción. En un solo clic hay varios cambios seguidos sobre el mismo carrito.",
     "decision_1_title": "Cada agregado parte del anterior",
     "decision_1_body": "El botón recorre el setup y agrega los equipos de a uno. Funciona porque el carrito se actualiza sobre su estado anterior, con setCart(prev => …), así que cada llamada recibe el carrito que dejó la anterior. Si las llamadas leyeran la variable cart, todas partirían del mismo carrito viejo y solo quedaría el último equipo. Un equipo que ya estaba en el carrito no se duplica.",

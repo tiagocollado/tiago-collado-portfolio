@@ -13,6 +13,11 @@ const dictionaries = { en, es };
  *
  * Si la key no existe, corta el build con un error que la nombra. Es a
  * propósito: un texto que falta y no avisa se publica como un hueco.
+ *
+ * Dos variantes para los casos que no son un texto suelto:
+ * - t.list('services.items') devuelve una lista de textos.
+ * - t.has('case_study_x.process') dice si existe una key opcional, sin cortar
+ *   el build si falta.
  */
 export function createTranslator(locale) {
   const dictionary = dictionaries[locale];
@@ -21,15 +26,28 @@ export function createTranslator(locale) {
     throw new Error(`No hay diccionario para el idioma "${locale}".`);
   }
 
-  return function t(key) {
-    const text = key
-      .split('.')
-      .reduce((section, part) => section?.[part], dictionary);
+  const lookup = (key) =>
+    key.split('.').reduce((section, part) => section?.[part], dictionary);
 
+  function t(key) {
+    const text = lookup(key);
     if (typeof text !== 'string') {
       throw new Error(`Falta el texto "${key}" en ${locale}.json.`);
     }
-
     return text;
+  }
+
+  t.list = function list(key) {
+    const texts = lookup(key);
+    if (!Array.isArray(texts)) {
+      throw new Error(`Falta la lista "${key}" en ${locale}.json.`);
+    }
+    return texts;
   };
+
+  t.has = function has(key) {
+    return typeof lookup(key) === 'string';
+  };
+
+  return t;
 }
