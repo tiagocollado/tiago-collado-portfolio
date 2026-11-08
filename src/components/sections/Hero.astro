@@ -1,0 +1,43 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import HeroContent from './HeroContent.jsx';
+import InteractiveDotGrid from '../ui/InteractiveDotGrid.jsx';
+import { createTranslator } from '../../i18n/translate.js';
+
+const locale = Astro.currentLocale;
+const t = createTranslator(locale);
+
+const heroTexts = {
+  headline: t('hero.headline'),
+  subheadline: t('hero.subheadline'),
+  ctaProjects: t('hero.cta_projects'),
+  homeLink: t('a11y.home_link'),
+};
+---
+
+{/*
+  La sección es HTML estático; adentro van dos islas con directivas
+  distintas, porque no necesitan su JavaScript al mismo tiempo:
+
+  - InteractiveDotGrid, client:idle: es fondo. Se ve igual antes de hidratar
+    (los puntos aparecen al montar), así que puede esperar a que el
+    navegador termine lo urgente.
+  - HeroContent, client:load: el wordmark y el lema animan apenas se abre
+    la página y el wordmark sigue al scroll desde el primer momento.
+
+  id="top" es el destino del back-to-top del Footer. Sin este id el botón
+  no hace nada y no hay ningún error que lo avise.
+
+  -mt-16 y el pt grande suben la sección por detrás del navbar fijo, para
+  que la grilla de puntos cubra desde el borde de arriba de la pantalla.
+*/}
+<section
+  id="top"
+  class="min-h-screen flex flex-col px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32 pb-8 md:pb-10 lg:pb-12 relative overflow-hidden -mt-16 pt-40 md:pt-48 lg:pt-56"
+>
+  {/* --ink-secondary y no el --ink-muted por defecto: sobre el beige del
+      tema claro, el muted casi no se distingue del fondo. */}
+  <InteractiveDotGrid client:idle opacity={0.7} colorVar="--ink-secondary" />
+
+  <HeroContent client:load texts={heroTexts} homeHref={getRelativeLocaleUrl(locale)} />
+</section>
