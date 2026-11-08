@@ -75,18 +75,18 @@ const NO_BREAK_SPACE = '\u00a0';
     </p>
 
     {/*
-      Copy con la firma y widget de música. El copy va primero en el DOM:
-      es lo principal de la sección y así encabeza el apilado en mobile y el
-      orden de tabulación. En lg el widget pasa a la columna izquierda, que
-      sin él queda vacía bajo el claim (order).
+      Copy con la firma, en la misma posición que tenía antes de que
+      existiera el widget: el texto es lo principal de la sección.
 
-      items-start, no items-end: si el widget cambia de alto (al cargar o
-      ante un error), solo se estira hacia abajo y el copy de la derecha no
-      se mueve.
+      El widget de música es un detalle personal, secundario: va después de
+      la firma en el HTML (y en el orden de tabulación). En celular y tablet
+      queda debajo del copy. En escritorio pasa a la columna izquierda,
+      alineado abajo con la firma, en posición absoluta: así no empuja el
+      copy ni estira la sección. Su alto no cambia al elegir un tema.
     */}
-    <div class="flex flex-col gap-16 lg:flex-row lg:items-start lg:justify-between mt-16 md:mt-20 lg:mt-24">
+    <div class="relative flex flex-col items-end mt-16 md:mt-20 lg:mt-24">
       <div
-        class="max-w-xl space-y-6 md:text-right md:self-end lg:order-2"
+        class="max-w-xl space-y-6 md:text-right"
         data-reveal-trigger
         data-reveal-margin="-80px"
         data-reveal
@@ -117,7 +117,7 @@ const NO_BREAK_SPACE = '\u00a0';
         de abajo). data-now-playing es el gancho de esa regla.
       */}
       <div
-        class="w-full max-w-sm md:self-end lg:self-auto lg:order-1"
+        class="w-full max-w-sm mt-16 lg:mt-0 lg:absolute lg:left-0 lg:bottom-0 lg:w-72"
         data-now-playing
         data-reveal-trigger
         data-reveal-margin="-80px"

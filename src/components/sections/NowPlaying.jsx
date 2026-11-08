@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 
 /*
  * NowPlaying: lo que estoy escuchando, con datos de Last.fm, como un
- * tocadiscos.
+ * tocadiscos. Es un detalle personal del About, no su protagonista: por eso
+ * es compacto y va en tonos neutros.
  *
  * Pide los datos a /api/now-playing.json, el endpoint propio del sitio (que
  * es el que habla con Last.fm y guarda la clave). Arriba va el tema
@@ -42,9 +43,14 @@ const TRACKS_IN_LIST = 5;
 // aria-labelledby para que la lista tome su nombre del label visible.
 const LIST_LABEL_ID = 'now-playing-list-label';
 
-// Mismo valor que el token --ease-expo-out de global.css. Hace falta acá
-// porque la animación de "poner el disco" se arma desde JavaScript.
-const EASE_EXPO_OUT = 'cubic-bezier(0.16, 1, 0.3, 1)';
+/*
+ * Alto de cada fila de la lista: 44 px con un dedo (la medida táctil
+ * recomendada) y 28 px con mouse o trackpad, por encima de los 24 px que pide
+ * WCAG 2.5.8 y lo bastante compacto para que el widget no supere al texto
+ * del About en escritorio. Lo decide el tipo de puntero, no el ancho de
+ * pantalla: una tablet en horizontal es ancha y se usa con el dedo.
+ */
+const ROW_HEIGHT = 'h-11 pointer-fine:h-7';
 
 /*
  * Convierte la respuesta del endpoint en lo que necesita la vista. El
@@ -66,9 +72,6 @@ function viewFromResponse(body) {
 
 export default function NowPlaying({ texts }) {
   const [view, setView] = useState({ status: 'loading' });
-  // Cuántas veces se puso un tema en el tocadiscos. Cada cambio dispara la
-  // animación corta de "poner el disco" (ver Vinyl).
-  const [placedCount, setPlacedCount] = useState(0);
   const [contentRef, contentHeight] = useElementHeight();
 
   useEffect(() => {
@@ -106,7 +109,6 @@ export default function NowPlaying({ texts }) {
   function selectTrack(index) {
     if (index === view.selectedIndex) return;
     setView({ ...view, selectedIndex: index });
-    setPlacedCount((count) => count + 1);
   }
 
   const featured = view.status === 'ok' ? view.tracks[view.selectedIndex] : null;
@@ -115,37 +117,46 @@ export default function NowPlaying({ texts }) {
 
   return (
     <div>
-      <h3
-        className="text-xs font-mono tracking-[0.2em] uppercase"
-        style={{ color: 'var(--color-accent)' }}
-      >
-        {texts.label}
-      </h3>
+      {/* En tinta secundaria y no en terracota: el widget no compite con
+          el eyebrow del About. */}
+      <h3 className="text-[11px] font-mono tracking-[0.2em] uppercase text-(--ink-secondary)">{texts.label}</h3>
 
       {/* El alto de la card se anima: sigue al del contenido (medido abajo)
-          con una transición CSS, así el paso entre estados desliza lo que
-          viene después en vez de hacerlo saltar. Elegir un tema no cambia
-          el alto: el destacado mide siempre lo que el disco.
+          con una transición CSS, así el paso entre estados desliza en vez de
+          saltar. Elegir un tema no cambia el alto: el destacado mide
+          siempre lo que el disco.
           box-content: el alto medido es el del contenido con su padding, y
           el borde va por fuera. Con movimiento reducido, la regla global de
           global.css deja la transición en 0 y el cambio es instantáneo. */}
       <div
-        className="mt-4 box-content overflow-hidden rounded-xl border border-(--border-default) bg-(--color-surface) transition-[height] duration-600 ease-expo-out"
+        className="mt-3 box-content overflow-hidden rounded-xl border border-(--border-default) bg-(--color-surface) transition-[height] duration-600 ease-expo-out"
         style={{ height: contentHeight ?? 'auto' }}
       >
-        <div ref={contentRef} className="p-5 md:p-6">
-          {/* Siempre visible, también mientras carga o ante un error: ahí
-              queda apagado, porque no hay nada que diga que suena algo. */}
-          <div className="flex justify-end">
+        <div ref={contentRef} className="p-4">
+          {/* Fila de arriba: el crédito a la izquierda y el cartel a la
+              derecha. Los dos están siempre, en cualquier estado (el cartel,
+              apagado mientras carga o ante un error: no hay nada que diga
+              que suena algo), y compartir la fila ahorra un renglón. */}
+          <div className="flex items-center justify-between gap-3">
+            <a
+              href="https://www.last.fm"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cursor="link"
+              className="text-[11px] font-mono tracking-[0.18em] transition-colors duration-300 ease-expo-out text-(--ink-secondary) hover:text-accent"
+            >
+              {texts.credit}
+              <span className="sr-only select-none"> {texts.new_tab}</span>
+            </a>
             <LiveSign isLive={isLive} texts={texts} />
           </div>
 
-          <div className="mt-4">
+          <div className="mt-3">
             {view.status === 'loading' && <LoadingSkeleton label={texts.loading} />}
 
             {view.status === 'ok' && (
               <>
-                <Turntable track={featured} placedCount={placedCount} texts={texts} />
+                <Turntable track={featured} texts={texts} />
                 {view.tracks.length > 1 && (
                   <Tracklist
                     tracks={view.tracks}
@@ -161,19 +172,6 @@ export default function NowPlaying({ texts }) {
             {view.status === 'private' && <EmptyTurntable message={texts.private} />}
             {view.status === 'error' && <EmptyTurntable message={texts.error} />}
           </div>
-
-          <div className="flex justify-end mt-4">
-            <a
-              href="https://www.last.fm"
-              target="_blank"
-              rel="noopener noreferrer"
-              data-cursor="link"
-              className="text-[11px] font-mono tracking-[0.18em] transition-colors duration-300 ease-expo-out text-(--ink-secondary) hover:text-accent"
-            >
-              {texts.credit}
-              <span className="sr-only select-none"> {texts.new_tab}</span>
-            </a>
-          </div>
         </div>
       </div>
     </div>
@@ -181,39 +179,33 @@ export default function NowPlaying({ texts }) {
 }
 
 /*
- * Cartel "En vivo", como el "On Air" de un estudio.
+ * Cartel "En vivo", como el "On Air" de un estudio: un rectángulo chico con
+ * el texto adentro, sin animación.
  *
- * - Apagado: punto hueco y texto gris tenue, como una luz sin corriente.
- * - Prendido: texto en --ink-primary y el punto lleno en terracota, con un
- *   brillo suave, pulsando despacio (motion-safe: con movimiento reducido,
- *   quieto). El texto no va en terracota: a este tamaño no llega al
- *   contraste mínimo en tema claro.
+ * - Apagado: borde y texto tenues, como un cartel sin corriente.
+ * - Prendido: relleno terracota sólido con el texto en la tinta oscura de la
+ *   marca (#111110), fija en los dos temas porque el fondo terracota también
+ *   lo es. Contraste 5:1.
  *
- * El estado no depende solo del color (WCAG 1.4.1): cambian también la forma
- * del punto (hueco o lleno), el brillo y la intensidad del texto.
+ * El estado no depende solo del color (WCAG 1.4.1): prendido, el cartel pasa
+ * de un contorno a un bloque lleno.
  *
  * Para el lector de pantalla, lo visible va oculto (aria-hidden) y solo se
  * anuncia "Sonando ahora" cuando está prendido. Apagado no se anuncia nada:
  * el texto "En vivo" leído sería falso, y "No está sonando" tampoco sería
  * cierto mientras carga o ante un error, cuando no se sabe.
  */
-const LIVE_DOT_GLOW = '0 0 8px color-mix(in srgb, var(--color-accent) 60%, transparent)';
-
 function LiveSign({ isLive, texts }) {
   return (
-    <div
-      className={`flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.18em] transition-colors duration-600 ease-expo-out ${
-        isLive ? 'text-(--ink-primary)' : 'text-(--ink-muted)'
-      }`}
-    >
+    <div>
       <span
         aria-hidden="true"
-        className={`size-2 rounded-full border transition-[background-color,border-color] duration-600 ease-expo-out ${
-          isLive ? 'border-accent bg-accent motion-safe:animate-live-pulse' : 'border-(--ink-muted) bg-transparent'
+        className={`block border px-1.5 py-0.5 text-[11px] leading-none font-mono uppercase tracking-[0.18em] transition-colors duration-600 ease-expo-out ${
+          isLive ? 'border-accent bg-accent text-[#111110]' : 'border-(--border-strong) text-(--ink-muted)'
         }`}
-        style={isLive ? { boxShadow: LIVE_DOT_GLOW } : undefined}
-      />
-      <span aria-hidden="true">{texts.live}</span>
+      >
+        {texts.live}
+      </span>
       {isLive && <span className="sr-only">{texts.status_playing}</span>}
     </div>
   );
@@ -223,17 +215,16 @@ function LiveSign({ isLive, texts }) {
  * El tema destacado: el disco y, al lado, el título (link a su página en
  * Last.fm, como piden los términos de la API) y el artista.
  *
- * El texto va centrado al lado del disco y el título se corta en tres
- * líneas (solo visual: el lector de pantalla lee el título completo), así
- * el bloque mide siempre lo que el disco y elegir otro tema no cambia el
- * alto de la card.
+ * El texto va centrado al lado del disco y el título se corta en dos líneas
+ * (solo visual: el lector de pantalla lee el título completo), así el bloque
+ * mide siempre lo que el disco y elegir otro tema no cambia el alto.
  */
-function Turntable({ track, placedCount, texts }) {
+function Turntable({ track, texts }) {
   const byline = track.album ? `${track.artist} — ${track.album}` : track.artist;
 
   return (
-    <div className="flex items-center gap-5 md:gap-6">
-      <Vinyl placedCount={placedCount} />
+    <div className="flex items-center gap-4">
+      <Vinyl />
 
       {/* key: al cambiar de tema el bloque se vuelve a montar y entra con
           un fade corto. */}
@@ -243,7 +234,7 @@ function Turntable({ track, placedCount, texts }) {
           target="_blank"
           rel="noopener noreferrer"
           data-cursor="link"
-          className="line-clamp-3 font-display text-lg md:text-xl leading-tight text-(--ink-primary) underline decoration-(--border-strong) underline-offset-4 transition-[color,text-decoration-color,text-underline-offset] duration-300 ease-expo-out hover:text-accent hover:decoration-accent hover:underline-offset-8"
+          className="line-clamp-2 font-display text-base leading-tight text-(--ink-primary) underline decoration-(--border-strong) underline-offset-4 transition-[color,text-decoration-color,text-underline-offset] duration-300 ease-expo-out hover:text-accent hover:decoration-accent hover:underline-offset-8"
         >
           {track.title}
           {/* select-none: el texto sr-only sigue siendo seleccionable y
@@ -251,7 +242,7 @@ function Turntable({ track, placedCount, texts }) {
           <span className="sr-only select-none"> {texts.track_link}</span>
         </a>
 
-        {byline && <p className="mt-2 truncate text-sm leading-relaxed text-(--ink-secondary)">{byline}</p>}
+        {byline && <p className="mt-1 truncate text-xs leading-relaxed text-(--ink-secondary)">{byline}</p>}
       </div>
     </div>
   );
@@ -292,7 +283,7 @@ function Tracklist({ tracks, selectedIndex, onSelect, texts }) {
   }
 
   return (
-    <div className="mt-6">
+    <div className="mt-3">
       <p
         id={LIST_LABEL_ID}
         className="text-[11px] font-mono uppercase tracking-[0.18em] text-(--ink-secondary)"
@@ -300,7 +291,7 @@ function Tracklist({ tracks, selectedIndex, onSelect, texts }) {
         {texts.list_label}
       </p>
 
-      <ul role="listbox" aria-labelledby={LIST_LABEL_ID} onKeyDown={onListKeyDown} className="mt-2">
+      <ul role="listbox" aria-labelledby={LIST_LABEL_ID} onKeyDown={onListKeyDown} className="mt-1">
         {tracks.map((track, index) => {
           const isSelected = index === selectedIndex;
           return (
@@ -314,7 +305,7 @@ function Tracklist({ tracks, selectedIndex, onSelect, texts }) {
               tabIndex={isSelected ? 0 : -1}
               onClick={() => onSelect(index)}
               data-cursor="link"
-              className={`group flex items-center gap-3 h-11 -mx-3 px-3 rounded-lg cursor-pointer text-sm transition-colors duration-300 ease-expo-out ${
+              className={`group flex items-center gap-3 ${ROW_HEIGHT} -mx-2 px-2 rounded-lg cursor-pointer text-xs transition-colors duration-300 ease-expo-out ${
                 isSelected ? 'bg-(--color-surface-hover) font-medium' : ''
               }`}
             >
@@ -328,7 +319,7 @@ function Tracklist({ tracks, selectedIndex, onSelect, texts }) {
                   overflow-hidden): así nunca queda un "·" suelto. Si el
                   título solo no entra, se corta con "…". El artista sigue en
                   el DOM, así que el lector de pantalla lo lee igual. */}
-              <span className="flex flex-1 flex-wrap h-5 min-w-0 overflow-hidden">
+              <span className="flex flex-1 flex-wrap h-4 min-w-0 overflow-hidden">
                 <span className="max-w-full truncate text-(--ink-primary) transition-colors duration-300 ease-expo-out group-hover:text-accent">
                   {track.title}
                 </span>
@@ -384,14 +375,6 @@ function TrackMarker({ number, isPlaying, isSelected }) {
  * infinita parpadee). El reflejo va en otra capa que no gira, como en un
  * disco de verdad: lo que se ve girar es la G.
  *
- * Al poner un tema, el disco se asienta: arranca apenas más chico y vuelve a
- * su tamaño con la curva de la marca. Es la respuesta a la acción, distinta
- * del giro (escala, no rotación). Va en la capa de afuera, que no gira: una
- * animación de transform en la capa que gira pisaría el giro mientras dura.
- * Se arma con la Web Animations API porque se repite en cada elección, sin
- * volver a montar el disco (montarlo de nuevo reiniciaría el giro en 0°).
- * Esa API no pasa por CSS, así que el movimiento reducido se chequea a mano.
- *
  * La G es /favicon.svg como imagen: el trazado vive en un solo archivo, y si
  * la marca cambia, el disco la sigue.
  */
@@ -400,21 +383,9 @@ const LABEL_COLOR = '#EDE2CD';
 const GROOVE_COLOR = '#F0EDE8';
 const GROOVE_RADII = [44, 39, 34, 29];
 
-function Vinyl({ placedCount }) {
-  const discRef = useRef(null);
-
-  useEffect(() => {
-    // 0: todavía no se eligió nada (la primera carga no se anima).
-    if (placedCount === 0) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    discRef.current.animate([{ transform: 'scale(0.96)' }, { transform: 'scale(1)' }], {
-      duration: 400,
-      easing: EASE_EXPO_OUT,
-    });
-  }, [placedCount]);
-
+function Vinyl() {
   return (
-    <div ref={discRef} aria-hidden="true" className="relative size-24 md:size-28 shrink-0">
+    <div aria-hidden="true" className="relative size-16 shrink-0">
       <div className="size-full motion-safe:animate-spin-record">
         <svg viewBox="0 0 100 100" className="size-full">
           <circle cx="50" cy="50" r="49.25" fill={RECORD_COLOR} strokeWidth="1.5" className="stroke-(--ink-muted)" />
@@ -456,9 +427,9 @@ function Vinyl({ placedCount }) {
  */
 function EmptyTurntable({ message }) {
   return (
-    <div className="flex items-center gap-5 md:gap-6 motion-safe:animate-fade-in">
-      <Vinyl placedCount={0} />
-      <p className="text-sm leading-relaxed text-(--ink-secondary)">{message}</p>
+    <div className="flex items-center gap-4 motion-safe:animate-fade-in">
+      <Vinyl />
+      <p className="text-xs leading-relaxed text-(--ink-secondary)">{message}</p>
     </div>
   );
 }
@@ -499,19 +470,19 @@ function LoadingSkeleton({ label }) {
     <div>
       <span className="sr-only">{label}</span>
       <div aria-hidden="true">
-        <div className="flex items-center gap-5 md:gap-6">
-          <div className={`size-24 md:size-28 shrink-0 rounded-full ${pulse}`} />
+        <div className="flex items-center gap-4">
+          <div className={`size-16 shrink-0 rounded-full ${pulse}`} />
           <div className="flex-1">
-            <div className={`h-6 w-3/4 ${bar}`} />
-            <div className={`h-4 w-1/2 mt-3 ${bar}`} />
+            <div className={`h-4 w-3/4 ${bar}`} />
+            <div className={`h-3 w-1/2 mt-2 ${bar}`} />
           </div>
         </div>
-        <div className="mt-6">
+        <div className="mt-3">
           <div className={`h-3 w-20 ${bar}`} />
-          <div className="mt-2">
+          <div className="mt-1">
             {Array.from({ length: TRACKS_IN_LIST }, (_, index) => (
-              <div key={index} className="flex items-center h-11">
-                <div className={`h-3 w-3/4 ${bar}`} />
+              <div key={index} className={`flex items-center ${ROW_HEIGHT}`}>
+                <div className={`h-2.5 w-3/4 ${bar}`} />
               </div>
             ))}
           </div>

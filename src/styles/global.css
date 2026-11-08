@@ -46,16 +46,7 @@
 
   @keyframes spin-record {
     to { transform: rotate(360deg); }
-  }
-
-  /* Pulsación lenta del punto del cartel "En vivo" mientras está prendido. */
-  --animate-live-pulse: live-pulse 2.4s ease-in-out infinite;
-
-  @keyframes live-pulse {
-    0%, 100% { opacity: 1; }
-    50%      { opacity: 0.45; }
-  }
-}
+  }}
 
 :root {
   --bg-primary:   #EDE2CD;
