@@ -88,6 +88,18 @@ const ogImageUrl = new URL('/og-image.png', Astro.site).href;
       })();
     </script>
 
+    {/*
+      Sin JavaScript, el script de animaciones de entrada nunca corre y los
+      bloques con data-reveal quedarían invisibles (arrancan con opacidad 0).
+      Esto los muestra quietos en su lugar. is:inline hace que Astro deje el
+      <style> acá, adentro del <noscript>, en vez de procesarlo y moverlo.
+    */}
+    <noscript>
+      <style is:inline>
+        [data-reveal] { opacity: 1 !important; transform: none !important; }
+      </style>
+    </noscript>
+
     <title>{t('meta.title')}</title>
     <meta name="description" content={t('meta.description')} />
 
