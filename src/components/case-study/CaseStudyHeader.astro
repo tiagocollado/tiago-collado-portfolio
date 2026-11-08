@@ -1,5 +1,6 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
+import SplitText from '../ui/SplitText.jsx';
 import { createTranslator } from '../../i18n/translate.js';
 
 const { project } = Astro.props;
@@ -9,8 +10,27 @@ const t = createTranslator(locale);
 const servicesLabel = project.services[locale].join(' & ');
 ---
 
-<div>
-  <div class="mb-10 md:mb-14">
+{/*
+  Entrada en cascada al cargar la página: el back link, los servicios y el
+  tagline entran uno detrás del otro (0.12 s entre cada uno), mientras el
+  h1 entra letra por letra.
+
+  - La cascada es CSS (src/scripts/reveal.js): el div raíz es el disparador
+    y cada bloque lleva su delay.
+  - El h1 es una isla chica de React, porque SplitText anima cada letra con
+    Framer Motion. client:load: anima apenas se abre la página, no al entrar
+    en pantalla. La isla se renderiza también en el servidor, así que el h1
+    sale en el HTML.
+
+  El reveal del back link va en su div y no en el <a>: el <a> tiene
+  transition-all, que reemplazaría la transición de entrada.
+*/}
+<div data-reveal-trigger="load">
+  <div
+    class="mb-10 md:mb-14"
+    data-reveal
+    style="--reveal-y: 16px; --reveal-duration: 0.6s; --reveal-delay: 0.05s;"
+  >
     <a
       href={getRelativeLocaleUrl(locale)}
       data-cursor="link"
@@ -29,19 +49,35 @@ const servicesLabel = project.services[locale].join(' & ');
 
   <p
     class="text-xs font-mono tracking-[0.2em] uppercase mb-5"
-    style="color: var(--color-accent);"
+    data-reveal
+    style="color: var(--color-accent); --reveal-y: 16px; --reveal-duration: 0.6s; --reveal-delay: 0.17s;"
   >
     {servicesLabel}
   </p>
 
-  <h1 class="font-display text-5xl md:text-7xl font-semibold tracking-tight leading-[1.05] mb-6 md:mb-8 max-w-4xl text-balance block text-(--ink-primary)">
-    {project.title}
-  </h1>
+  {/* El delay de 0.35 s arranca las letras cuando el back link y los
+      servicios ya están entrando. */}
+  <SplitText
+    client:load
+    as="h1"
+    text={project.title}
+    stagger={0.025}
+    delay={0.35}
+    yFrom={20}
+    blurFrom={6}
+    duration={0.7}
+    className="font-display text-5xl md:text-7xl font-semibold tracking-tight leading-[1.05] mb-6 md:mb-8 max-w-4xl text-balance block text-(--ink-primary)"
+  />
 
   <p
     class="text-lg md:text-2xl leading-relaxed mb-10 md:mb-12 max-w-3xl text-balance"
-    style="color: var(--ink-secondary);"
+    data-reveal
+    style="color: var(--ink-secondary); --reveal-y: 16px; --reveal-duration: 0.6s; --reveal-delay: 0.29s;"
   >
     {project.tagline[locale]}
   </p>
 </div>
+
+<script>
+  import '../../scripts/reveal.js';
+</script>

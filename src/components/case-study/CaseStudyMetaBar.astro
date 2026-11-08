@@ -23,15 +23,37 @@ const projectLinks = [
   project.links.github && { href: project.links.github, label: t('case_study.view_github_frontend') },
   project.links.githubBack && { href: project.links.githubBack, label: t('case_study.view_github_backend') },
 ].filter(Boolean);
+
+/*
+ * Entrada: los bloques aparecen de a uno, 0.06 s entre cada uno, cuando la
+ * barra entra en pantalla. El primero espera 0.5 s, así en desktop (donde la
+ * barra está a la vista desde el inicio) entra después de la cascada del
+ * header y la página se lee como un solo movimiento.
+ *
+ * Al entrar en pantalla y no al cargar: en mobile la barra queda debajo del
+ * intro, fuera de la primera pantalla, y animarla al cargar sería animarla
+ * donde nadie la ve. Sin margen de detección (0px), a diferencia de las
+ * secciones: con uno negativo, en una laptop baja la barra podía quedar fuera
+ * del área observada al cargar y no entrar hasta el primer scroll.
+ */
+const BLOCK_FIRST_DELAY = 0.5;
+const BLOCK_STAGGER = 0.06;
+// toFixed(2) redondea la suma: 0.5 + 3 × 0.06 da 0.6799999999999999 en JS.
+const blockRevealStyle = (position) => {
+  const delay = (BLOCK_FIRST_DELAY + position * BLOCK_STAGGER).toFixed(2);
+  return `--reveal-y: 12px; --reveal-duration: 0.5s; --reveal-delay: ${delay}s;`;
+};
 ---
 
 {metadata && (
   <aside
+    data-reveal-trigger
+    data-reveal-margin="0px"
     class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-8 py-8 md:py-10 border-y"
     style="border-color: var(--border-default);"
   >
-    {metadataBlocks.map((block) => (
-      <div>
+    {metadataBlocks.map((block, position) => (
+      <div data-reveal style={blockRevealStyle(position)}>
         <p
           class="text-[11px] font-mono uppercase tracking-[0.18em] mb-2"
           style="color: var(--ink-muted);"
@@ -58,7 +80,7 @@ const projectLinks = [
     ))}
 
     {projectLinks.length > 0 && (
-      <div>
+      <div data-reveal style={blockRevealStyle(metadataBlocks.length)}>
         <p
           class="text-[11px] font-mono uppercase tracking-[0.18em] mb-2"
           style="color: var(--ink-muted);"
@@ -91,3 +113,7 @@ const projectLinks = [
     )}
   </aside>
 )}
+
+<script>
+  import '../../scripts/reveal.js';
+</script>

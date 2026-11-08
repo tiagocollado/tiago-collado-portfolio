@@ -2,11 +2,28 @@
 const { label } = Astro.props;
 ---
 
-<section class="relative">
+{/*
+  Entrada: la sección entera hace fade + subida de 16px cuando entra en
+  pantalla (margen -15% arriba y abajo: tiene que estar un poco adentro).
+  El label hace además su propia subida de 8px, más corta, adentro de la de
+  la sección. Las dos arrancan juntas; el contenido entra con la sección.
+
+  El label es un <h2> aunque se vea como micro-label: con un <p>, el outline
+  del caso quedaba h1 → h3. El tamaño chico es una decisión visual, no
+  jerárquica.
+*/}
+<section
+  class="relative"
+  data-reveal-trigger
+  data-reveal-margin="-15% 0px"
+  data-reveal
+  style="--reveal-y: 16px; --reveal-duration: 0.6s;"
+>
   {label && (
     <h2
       class="text-[11px] font-mono uppercase tracking-[0.18em] mb-6 md:mb-8"
-      style="color: var(--color-accent);"
+      data-reveal
+      style="color: var(--color-accent); --reveal-y: 8px; --reveal-duration: 0.5s;"
     >
       {label}
     </h2>
@@ -15,3 +32,7 @@ const { label } = Astro.props;
     <slot />
   </div>
 </section>
+
+<script>
+  import '../../scripts/reveal.js';
+</script>
