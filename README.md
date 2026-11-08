@@ -32,14 +32,32 @@ Pendiente. El detalle de cada decisión está en
 
 ## Componentes
 
-Pendiente.
+### NowPlaying: lo que suena cuando diseño
+
+[`NowPlaying.jsx`](src/components/sections/NowPlaying.jsx) es una isla de
+React que se hidrata al entrar en pantalla (`client:visible`), en el About.
+Muestra lo que escucho, con datos de Last.fm (ver
+[Datos en vivo](#datos-en-vivo)), en dos vistas que elige quien visita:
+
+- **Ahora**: el tema que suena, con un ecualizador animado, o el último que
+  sonó y hace cuánto.
+- **Últimos 5**: los últimos cinco temas, cada uno con su link a Last.fm.
+
+Se ocupa de tres cosas: pedir los datos al endpoint propio (y volver a
+pedirlos al volver a la pestaña), traducir el `state` de la respuesta a lo
+que muestra (carga, datos, vacío, privado o error) y manejar la selección
+entre las dos vistas. Recibe del `.astro` solo los textos que usa, ya
+traducidos, y el idioma de la página para el tiempo relativo.
+
+Pendiente: el resto de los componentes propios.
 
 ## Datos en vivo
 
 En la sección About, el widget **"Lo que suena cuando diseño"** muestra el
 tema que estoy escuchando o, si no suena nada, el último que sonó y hace
-cuánto. Los datos son de [Last.fm](https://www.last.fm), que registra lo que
-escucho.
+cuánto. Con las pestañas **Ahora / Últimos 5** se pasa a la lista de los
+últimos cinco temas. Los datos son de [Last.fm](https://www.last.fm), que
+registra lo que escucho.
 
 ```
 navegador ──► /api/now-playing.json ──► Last.fm (user.getRecentTracks)
@@ -63,8 +81,19 @@ navegador ──► /api/now-playing.json ──► Last.fm (user.getRecentTrack
   a Last.fm se corta a los 5 segundos.
 - **El widget** ([`NowPlaying.jsx`](src/components/sections/NowPlaying.jsx))
   pide los datos al hacerse visible y otra vez al volver a la pestaña, si pasó
-  más de un minuto. El tiempo relativo ("hace 12 minutos" / "12 minutes ago")
-  sale de `Intl.RelativeTimeFormat`, en el idioma de la página.
+  más de un minuto. Las dos vistas salen del mismo pedido, así que cambiar de
+  pestaña no espera ni vuelve a pedir nada. El tiempo relativo ("hace 12
+  minutos" / "12 minutes ago") sale de `Intl.RelativeTimeFormat`, en el idioma
+  de la página.
+- **Las pestañas** siguen el patrón Tabs de WAI-ARIA: la lista de pestañas
+  toma su nombre del título visible del widget, cada pestaña indica si está
+  seleccionada y a qué panel controla, y se usan con teclado (Tab entra a la
+  pestaña activa, las flechas cambian de pestaña, Inicio y Fin van a la
+  primera y a la última, Tab otra vez pasa al panel). Se activan al recibir el
+  foco porque los dos paneles ya están cargados.
+- **El widget crece sin saltos.** La lista es más alta que la vista Ahora. La
+  tarjeta mide el alto de su contenido y lo anima, así lo que viene abajo se
+  desliza en vez de saltar. Con movimiento reducido el cambio es instantáneo.
 
 ### Si la API falla o no hay datos
 
@@ -74,8 +103,8 @@ error queda como un 500 sin explicación.
 
 | Situación | `state` | HTTP | Qué muestra el widget |
 |---|---|---|---|
-| Hay un tema sonando | `ok` | 200 | El tema, con un ecualizador animado |
-| No suena nada | `ok` | 200 | El último tema y hace cuánto sonó |
+| Hay un tema sonando | `ok` | 200 | El tema, con un ecualizador animado, y la pestaña Últimos 5 |
+| No suena nada | `ok` | 200 | El último tema y hace cuánto sonó, y la pestaña Últimos 5 |
 | La cuenta no tiene temas | `empty` | 200 | "Todavía no registré ningún tema." |
 | El perfil oculta lo que escucha (error 17 de Last.fm) | `private` | 403 | "Mi historial de Last.fm está en privado." |
 | Usuario inexistente, clave inválida o suspendida (errores 6, 10, 26) | `user-not-found` · `invalid-key` · `key-suspended` | 502 | "No pude cargar la música ahora." |
@@ -87,7 +116,12 @@ error queda como un 500 sin explicación.
 - **Los errores no se cachean** (`Cache-Control: no-store`): el próximo pedido
   vuelve a intentar.
 - **Mientras carga**, el widget muestra un esqueleto con las medidas del
-  contenido, así el paso a cualquier estado no mueve la página.
+  contenido más común (las pestañas y un tema), así el paso a los datos no
+  cambia el alto.
+- **Vacío, privado y error** se muestran en una tarjeta compacta, del alto del
+  mensaje, sin pestañas: no hay nada entre qué elegir.
+- **Si la lista no suma nada** (suena un tema y no hay otros, o la cuenta
+  tiene un solo tema), las pestañas no aparecen y queda la vista Ahora.
 - **Sin JavaScript** el widget no puede pedir los datos, así que no se
   muestra.
 
