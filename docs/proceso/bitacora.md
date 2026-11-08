@@ -153,6 +153,67 @@ diccionarios. El texto del cursor ("View" / "Ver") también.
   carácter literal que al leer el archivo no se distingue de un espacio común,
   y llegó a confundirse con un bug. Pasó a una constante con nombre
   (`NO_BREAK_SPACE`) definida con su secuencia de escape.
+- **El cursor aparecía en la esquina al cargar cada página.** Su posición
+  arranca en (0, 0) hasta el primer movimiento del mouse. En el sitio anterior
+  la navegación era del lado del cliente y el cursor persistía entre páginas,
+  así que no se notaba; con navegación de página completa pasa en cada carga.
+  Ahora no se dibuja hasta el primer movimiento, y ese primer movimiento lo
+  ubica sin animar, en vez de hacerlo viajar desde la esquina.
+
+---
+
+## Datos en vivo: Last.fm
+
+**Qué se hizo.** El adapter de Vercel, con el sitio todavía estático salvo una
+ruta; las variables de entorno validadas con `astro:env`; el endpoint
+`/api/now-playing.json`, que pide a Last.fm lo que estoy escuchando y lo
+devuelve normalizado, con un estado para cada error y caché en la CDN; y el
+widget en el About, con sus seis estados. Las dos redirecciones del sitio (`/`
+y el CV) pasaron a ser HTTP reales desde la configuración de Astro.
+
+**Qué costó.**
+
+- **`vercel.json` dejó de ser confiable.** Con el adapter, el build le pasa a
+  Vercel la configuración de rutas ya armada, y el código del adapter muestra
+  que la arma solo desde `astro.config.mjs`: no copia los `redirects` de
+  `vercel.json`. La documentación de Vercel no dice si igual los aplica. En
+  vez de depender de eso, la redirección del CV y la barra final pasaron a la
+  configuración de Astro, y `vercel.json` se eliminó. Verificado en staging:
+  `/en` da 308, el CV da 307.
+- **`/` seguía siendo un meta refresh.** `index.astro` es una página
+  prerenderizada y el adapter no cambia eso. Una regla de `redirects` para `/`
+  da un 307 real, pero contradice la documentación, que dice que la página
+  gana. Lo comprobé buildeando: el adapter escribe la regla y Astro deja de
+  generar la página. Como no está documentado, la configuración generada se
+  revisa después de cada actualización (ver "Cómo se verifica").
+- **Una variable secreta obligatoria rompe el endpoint sin explicación.**
+  Astro valida las secretas al importarlas: si falta, el módulo falla al
+  cargar y la respuesta es un 500 genérico. Las dos variables son opcionales
+  y el endpoint chequea que estén, para responder `not-configured`.
+- **Lo que la documentación de Last.fm no dice.** Lo averigüé con pedidos
+  reales: los errores llegan como JSON con un status HTTP distinto de 200 (así
+  que el JSON se lee siempre); no manda headers de caché, así que no hay una
+  duración suya que respetar; el error 6, que la documentación describe como
+  "faltan parámetros", es el que devuelve para un usuario inexistente; y con
+  un solo tema devuelve un objeto en vez de una lista. Que el error 17
+  signifique "perfil privado" es comportamiento conocido, no documentado para
+  este método.
+- **Probar cada estado sin romper nada.** Para forzar los errores de Last.fm,
+  el tiempo agotado y las respuestas inesperadas, el servidor de desarrollo
+  cargó un reemplazo de `fetch`, fuera del repositorio, que intercepta solo los
+  pedidos a Last.fm. Así se probaron los diecisiete casos sin tocar el código
+  del endpoint.
+- **La clave viaja en la URL del pedido a Last.fm.** Por eso el endpoint
+  nunca loguea la URL, ni siquiera en los errores de red.
+- **Los términos de Last.fm.** Excluyen las imágenes y el arte de los discos,
+  así que el widget no muestra portadas. Piden acreditar con un botón
+  *"powered by AudioScrobbler"* que Last.fm ya no publica: el crédito es un
+  link de texto. Cada tema enlaza a su página en Last.fm.
+- **Un widget que va a crecer.** La vista de los últimos cinco temas lo va a
+  hacer más alto. En escritorio va alineado arriba con el texto del About, no
+  abajo: así solo se estira hacia abajo y el texto de al lado no se mueve. La
+  tarjeta tiene una altura mínima igual a la del contenido, para que el paso
+  de "cargando" a cualquier estado no mueva la página.
 
 ---
 
@@ -168,21 +229,29 @@ En cada etapa, antes de commitear:
 - Que las islas reciban solo los textos y datos que muestran: ningún texto de
   otros proyectos ni de otros idiomas viaja al navegador.
 - Un control de secretos y otro de palabras que no corresponden al
-  repositorio, los dos con `git grep -I`.
-- JavaScript por página, con gzip: ~134 KB en la home y ~128 KB en un caso de
+  repositorio, los dos con `git grep -I`. Además, que el valor de la clave de
+  Last.fm no aparezca en ningún archivo de la salida del build
+  (`.vercel/output/`, incluida la función del servidor) ni del repositorio.
+  El script que lo busca imprime solo nombres de archivo, nunca el valor.
+- En staging, con `curl -I`: `/` da 307 a `/en/`, `/en` y las páginas de caso
+  sin barra dan 308 a su versión con barra, `/tiago-collado-cv.pdf` da 307 al
+  CV, una URL inexistente da 404 y el endpoint responde con
+  `X-Vercel-Cache: HIT` en el segundo pedido.
+- Después de actualizar Astro o el adapter de Vercel: que
+  `.vercel/output/config.json` siga teniendo la regla de `/` con 307 y que no
+  exista `.vercel/output/static/index.html`.
+- JavaScript por página, con gzip: ~136 KB en la home y ~128 KB en un caso de
   estudio. React y Framer Motion son ~106 KB de eso y los comparten todas las
-  islas.
+  islas; el widget de música suma 1,7 KB.
 
 ## Abierto
 
 - **Probar en el navegador** todo lo interactivo (cursor, menú, tema,
   wordmark, parallax, grilla de puntos, entradas, copiado del mail,
   back-to-top), en los dos idiomas, con movimiento reducido y en táctil.
-- **Repetir las redirecciones con el adapter de Vercel.** Sin el adapter ya
-  están verificadas en staging: `/en` y las páginas de caso sin barra final
-  redirigen con 308 a su versión con barra, y `/tiago-collado-cv.pdf` da 307
-  directo al CV, sin recibir barra. El adapter cambia cómo se arma la salida
-  del build, así que las tres se vuelven a probar cuando se sume.
+- **Links que abren en otra pestaña sin avisarlo.** Los links externos de la
+  barra de metadata de los casos abren en una pestaña nueva y no lo anuncian a
+  los lectores de pantalla; los del widget de música sí. Hay que igualarlos.
 - **Títulos sin JavaScript.** Los títulos que entran letra por letra salen del
   servidor con cada letra en opacidad 0, así que sin JavaScript no se ven
   (los lectores de pantalla sí los leen). Pasaba igual en el sitio anterior.

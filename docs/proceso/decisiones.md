@@ -385,6 +385,88 @@ Last.fm directo.
 la conexión de Last.fm con Spotify se corta, el widget muestra lo último
 escuchado en vez de romperse.
 
+### Sitio estático con una sola ruta a pedido
+
+**Contexto.** El endpoint de Last.fm tiene que ejecutarse en cada pedido; las
+páginas no cambian entre deploys.
+
+**Decisión.** El adapter de Vercel con `output: 'static'`, el default. Solo
+`/api/now-playing.json` lleva `export const prerender = false` y corre como
+función.
+
+**Por qué.** Las páginas se siguen sirviendo como archivos desde la CDN, sin
+ejecutar código. El adapter hace falta únicamente para la ruta que lo
+necesita.
+
+### Un estado explícito para cada respuesta del endpoint
+
+**Contexto.** Last.fm falla de varias maneras (perfil privado, usuario
+inexistente, clave suspendida, límite superado, caída, demora), y el widget
+tiene que mostrar algo distinto según el caso.
+
+**Decisión.** El endpoint responde siempre JSON con un campo `state`, también
+en los errores, y el código HTTP de un intermediario: 502 si Last.fm rechazó
+el pedido, 503 si está caído o limitando, 504 si no respondió a tiempo, 403
+para el perfil privado y 500 solo si faltan las variables de entorno. El
+pedido a Last.fm se corta a los 5 segundos.
+
+**Por qué.** El widget lee el estado y no tiene que interpretar códigos HTTP.
+Los códigos igual dicen la verdad para quien consulte el endpoint con `curl`
+o lea los logs, y ningún error termina en un 500 sin explicación.
+
+### Caché de 30 segundos solo para las respuestas correctas
+
+**Contexto.** Los términos de Last.fm piden cachear según los headers HTTP de
+su API, y su API no manda ninguno.
+
+**Decisión.** `Cache-Control: public, s-maxage=30, stale-while-revalidate=60`
+en la respuesta correcta; `no-store` en los errores.
+
+**Por qué.** Con cualquier cantidad de visitas, Last.fm recibe como mucho un
+pedido cada 30 segundos por región de la CDN, y lo que suena se sigue viendo
+casi en vivo. Un error no se guarda, para que el pedido siguiente vuelva a
+intentar.
+
+### Variables de entorno opcionales y chequeadas en el endpoint
+
+**Contexto.** Astro valida las variables secretas cuando se importan: si una
+obligatoria falta, el módulo del endpoint falla al cargar y la respuesta es un
+500 genérico.
+
+**Decisión.** `LASTFM_API_KEY` (secreta) y `LASTFM_USERNAME` (pública de
+servidor) se declaran opcionales en `env.schema`, y el endpoint chequea que
+estén.
+
+**Por qué.** Si faltan, el endpoint responde `not-configured` y el widget
+muestra su mensaje de error, en vez de una falla sin explicación.
+
+### Sin portadas y con crédito de texto
+
+**Contexto.** Los términos de Last.fm excluyen las imágenes y el arte de los
+discos de lo que se puede usar (cláusula 5.1.8), y piden acreditar con un
+botón *"powered by AudioScrobbler"* (cláusula 2.7) que Last.fm ya no publica
+entre sus recursos.
+
+**Decisión.** El endpoint no devuelve portadas y el widget es solo
+tipográfico. El crédito es un link de texto, "Datos de Last.fm", y cada tema
+enlaza a su página en Last.fm.
+
+**Por qué.** Cumple lo que los términos permiten con lo que Last.fm ofrece
+hoy. Además, una portada sería el único color fuerte del About y competiría
+con los covers de los proyectos.
+
+### El widget va en el About, alineado arriba
+
+**Contexto.** El widget cuenta algo de quién soy, y la vista de los últimos
+cinco temas lo va a hacer crecer.
+
+**Decisión.** En el About, en la columna izquierda que queda libre bajo el
+claim, alineado arriba con el texto. En mobile va después de la firma.
+
+**Por qué.** Lo personal queda junto a la presentación (Proximidad), sin sumar
+una sección entre los proyectos y el contacto (Hick). Alineado arriba, cuando
+crezca solo se estira hacia abajo y el texto de al lado no se mueve.
+
 ### La interacción principal está en el widget de música
 
 **Decisión.** El widget permite alternar entre "ahora" y "últimos 5", y elegir

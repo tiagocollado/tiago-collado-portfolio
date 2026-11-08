@@ -19,6 +19,12 @@ npm run dev
 npm run build
 ```
 
+El widget de música necesita dos variables de entorno: copiar `.env.example`
+como `.env` y completar `LASTFM_API_KEY` (se pide en
+[last.fm/api/account/create](https://www.last.fm/api/account/create)) y
+`LASTFM_USERNAME`. Sin ellas el sitio funciona igual y el widget muestra que
+la música no está disponible.
+
 ## Stack y decisiones
 
 Pendiente. El detalle de cada decisión está en
@@ -30,11 +36,60 @@ Pendiente.
 
 ## Datos en vivo
 
-Pendiente.
+En la sección About, el widget **"Lo que suena cuando diseño"** muestra el
+tema que estoy escuchando o, si no suena nada, el último que sonó y hace
+cuánto. Los datos son de [Last.fm](https://www.last.fm), que registra lo que
+escucho.
+
+```
+navegador ──► /api/now-playing.json ──► Last.fm (user.getRecentTracks)
+              endpoint propio, con la clave
+```
+
+- **El navegador nunca habla con Last.fm.** Llama a
+  [`/api/now-playing.json`](src/pages/api/now-playing.json.js), la única ruta
+  del sitio que se ejecuta a pedido (una función de Vercel); todo lo demás es
+  estático. El endpoint agrega la clave, que es una variable secreta de
+  servidor (`astro:env`) y no aparece en el código generado ni en el
+  JavaScript del navegador.
+- **Qué devuelve.** El tema que suena ahora (si hay uno) y los últimos cinco,
+  cada uno con título, artista, álbum, link a su página en Last.fm, si está
+  sonando y cuándo sonó. Nada más: la respuesta es chica y no trae portadas
+  (ver [Créditos y licencias](#créditos-y-licencias)).
+- **Límites.** La respuesta correcta se guarda 30 segundos en la CDN de
+  Vercel (`Cache-Control: public, s-maxage=30, stale-while-revalidate=60`):
+  con cualquier cantidad de visitas, Last.fm recibe como mucho un pedido cada
+  30 segundos por región. Last.fm no manda headers de caché propios. El pedido
+  a Last.fm se corta a los 5 segundos.
+- **El widget** ([`NowPlaying.jsx`](src/components/sections/NowPlaying.jsx))
+  pide los datos al hacerse visible y otra vez al volver a la pestaña, si pasó
+  más de un minuto. El tiempo relativo ("hace 12 minutos" / "12 minutes ago")
+  sale de `Intl.RelativeTimeFormat`, en el idioma de la página.
 
 ### Si la API falla o no hay datos
 
-Pendiente.
+El endpoint siempre responde JSON con un campo `state`, también cuando falla,
+así que el widget decide qué mostrar sin interpretar códigos HTTP. Ningún
+error queda como un 500 sin explicación.
+
+| Situación | `state` | HTTP | Qué muestra el widget |
+|---|---|---|---|
+| Hay un tema sonando | `ok` | 200 | El tema, con un ecualizador animado |
+| No suena nada | `ok` | 200 | El último tema y hace cuánto sonó |
+| La cuenta no tiene temas | `empty` | 200 | "Todavía no registré ningún tema." |
+| El perfil oculta lo que escucha (error 17 de Last.fm) | `private` | 403 | "Mi historial de Last.fm está en privado." |
+| Usuario inexistente, clave inválida o suspendida (errores 6, 10, 26) | `user-not-found` · `invalid-key` · `key-suspended` | 502 | "No pude cargar la música ahora." |
+| Last.fm caído o limitando pedidos (errores 8, 11, 16, 29) | `unavailable` · `rate-limited` | 503 | ídem |
+| Last.fm no responde en 5 segundos | `timeout` | 504 | ídem |
+| Respuesta inesperada o falla de red | `unavailable` | 502 | ídem |
+| Faltan las variables de entorno | `not-configured` | 500 | ídem |
+
+- **Los errores no se cachean** (`Cache-Control: no-store`): el próximo pedido
+  vuelve a intentar.
+- **Mientras carga**, el widget muestra un esqueleto con las medidas del
+  contenido, así el paso a cualquier estado no mueve la página.
+- **Sin JavaScript** el widget no puede pedir los datos, así que no se
+  muestra.
 
 ## Responsive y accesibilidad
 
@@ -79,7 +134,8 @@ API contra la documentación y el código de las librerías, configurar
 herramientas y redactar documentación. La IA propone un enfoque y lo ejecuta
 cuando lo apruebo; yo reviso, tomo las decisiones de diseño, alcance y
 arquitectura, y hago los commits. No puede abrir un navegador: lo visual y lo
-interactivo lo pruebo yo.
+interactivo lo pruebo yo. Tampoco abre el archivo `.env`: la clave de la API
+la cargo yo.
 
 - **Reglas.** Lee en cada sesión [CLAUDE.md](CLAUDE.md) y
   [.claude/rules/](.claude/rules/): tokens de diseño, producción de imágenes y

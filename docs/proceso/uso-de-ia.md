@@ -20,17 +20,20 @@ interactivo (animaciones, cursor, tema, táctil) lo pruebo yo.
 
 ---
 
-## Migración de componentes
+## Migración de componentes y componentes nuevos
 
 **Qué hizo la IA.** Portó a Astro los datos, las imágenes, las secciones y los
 componentes interactivos del sitio en Next. Antes de cada tanda leyó cómo se
 coordinaban las piezas en el sitio anterior y propuso cómo resolver cada una
-sin el contexto de React, que no cruza entre islas.
+sin el contexto de React, que no cruza entre islas. Para el widget de música,
+que no existía, propuso primero dónde va, cómo se ve y cada uno de sus
+estados, y lo construyó después de mi aprobación.
 
 **Qué revisé, adapté o descarté.** Aprobé la estrategia de cada isla antes de
 que escribiera, y cambié dos cosas de lo que se había previsto: el selector de
 idioma pasó de botones a links, y la grilla de puntos se separó en su propia
-isla para hidratarla más tarde.
+isla para hidratarla más tarde. Del widget revisé en el navegador los seis
+estados, el celular de 320 px, el ecualizador y el cursor.
 
 **Errores y límites detectados.**
 
@@ -41,23 +44,30 @@ isla para hidratarla más tarde.
   no se distingue de un espacio común al leer el archivo. Lo descubrió al
   revisar los bytes antes de editar.
 
+- Para cumplir una condición que le puse al widget (que al crecer no mueva lo
+  de al lado), cambió la alineación del diseño aprobado de abajo a arriba, y
+  lo avisó al presentarlo en vez de hacerlo en silencio.
+
 **Qué decidí yo.** La directiva de hidratación de cada isla; que ningún texto
 accesible quede fijo en un idioma; las animaciones de entrada en CSS y el
 título letra por letra como isla chica, en vez de convertir componentes
-enteros en islas.
+enteros en islas. Del widget: su lugar en el About y que no muestre portadas.
 
 ---
 
 ## Verificación contra la documentación y el código
 
 **Qué hizo la IA.** Contrastó cada API que usa el proyecto con la
-documentación oficial (Astro, Tailwind, Motion, Vercel, MDN). Cuando la
-documentación no alcanzaba, leyó el código instalado de la librería.
+documentación oficial (Astro, Tailwind, Motion, Vercel, Last.fm, MDN). Cuando
+la documentación no alcanzaba, leyó el código instalado de la librería o hizo
+pedidos reales a la API. En cada tarea separó lo verificado en la
+documentación, lo verificado en el código y lo que no pudo verificar.
 
 **Qué revisé, adapté o descarté.** Elegí entre las alternativas que presentó
 cuando la documentación ofrecía más de una vía: `getImage()` para las imágenes
-de las islas, `vercel.json` para la redirección del CV, la redirección de `/`
-hecha a mano.
+de las islas, la redirección de `/` hecha a mano. Algunas se reemplazaron
+cuando entró el adapter de Vercel: la redirección del CV pasó de `vercel.json`
+a la configuración de Astro, y la de `/` pasó a ser HTTP real.
 
 **Errores y límites detectados.**
 
@@ -69,21 +79,37 @@ hecha a mano.
   aunque un comentario del sitio anterior decía que anulaba todo.
 - El README actual de Lenis describe soporte de movimiento reducido que la
   versión instalada no tiene.
-- Quedan sin respuesta en la documentación, para probar en staging: si
-  `vercel.json` sigue aplicando con el adapter de Vercel, y en qué orden
-  aplica Vercel la barra final y las redirecciones.
+- La documentación de Vercel no dice si aplica `vercel.json` cuando el build
+  le pasa la configuración de rutas ya armada. Leyendo el código del adapter
+  vio que esa configuración sale solo de `astro.config.mjs`, y propuso mover
+  ahí las reglas en vez de depender de algo que no se podía confirmar.
+- La documentación de routing de Astro dice que una página le gana a un
+  redirect en la misma ruta; buildeando apareció lo contrario. Lo presentó
+  como comportamiento no documentado, con su riesgo, antes de recomendarlo.
+- La documentación de Last.fm no dice que los errores llegan con un status
+  HTTP distinto de 200, ni que el error 6 es el de usuario inexistente, ni que
+  no manda headers de caché. Salió de pedidos reales.
 
 **Qué decidí yo.** El movimiento reducido igual que el comportamiento real
 del sitio anterior (solo el fade, sin desplazamiento), no como decía el
-comentario.
+comentario. La redirección real de `/`, aceptando que depende de un
+comportamiento no documentado y que se revisa en cada actualización. Cómo
+cumplir los términos de Last.fm: sin portadas y con crédito de texto.
 
 ---
 
 ## Herramientas y configuración
 
-**Qué hizo la IA.** Configuró el repositorio, Tailwind, las fuentes, React y
-los controles que corren antes de cada commit (build, secretos, palabras que
-no corresponden al repositorio).
+**Qué hizo la IA.** Configuró el repositorio, Tailwind, las fuentes, React, el
+adapter de Vercel, las variables de entorno y los controles que corren antes
+de cada commit (build, secretos, palabras que no corresponden al
+repositorio). Para probar el endpoint en cada estado armó un reemplazo de
+`fetch` que vive fuera del repositorio.
+
+**Un límite puesto a propósito.** La IA no abre el archivo `.env`: la clave de
+Last.fm la cargo yo. Para probar, el servidor de desarrollo lee el archivo
+como lo haría en cualquier máquina, y el control que busca la clave en el
+build imprime solo nombres de archivo, nunca el valor.
 
 **Qué revisé, adapté o descarté.** Fijé las versiones de las librerías en las
 del sitio publicado, después de que `npm install` trajera unas más nuevas.
@@ -96,6 +122,9 @@ del sitio publicado, después de que `npm install` trajera unas más nuevas.
   espacio duro) llegaban a los archivos convertidos en el carácter real. Un
   script falló y tres archivos quedaron alterados; lo detectó revisando los
   bytes y lo corrigió.
+- Si la clave de Last.fm hubiera sido obligatoria, faltar habría dado un 500
+  genérico, porque Astro valida las secretas al importarlas. Lo detectó en la
+  documentación antes de escribir el endpoint.
 
 **Qué decidí yo.** El preset `base` del `tsconfig`, porque el proyecto no usa
 TypeScript.
@@ -113,10 +142,21 @@ imágenes antes de que se guardaran, elegí qué partes del historial anterior
 entraban en la bitácora y redefiní el criterio de estos documentos: sin
 fechas, por etapa o por tipo de tarea, sin paso a paso.
 
-**Errores y límites detectados.** Dos skills eran de terceros, y una declaraba
-su licencia en un archivo que no se había copiado.
+**Errores y límites detectados.**
+
+- Dos skills eran de terceros, y una declaraba su licencia en un archivo que
+  no se había copiado.
+- En el copy del widget, la pasada de hechos de la skill de auditoría marcó
+  dos cosas en sus propios borradores: un "Probá de nuevo en un rato" que es
+  falso cuando la falla es de configuración (reintentar no cambia nada), y un
+  título que, encima de "Sonando ahora", decía que estoy diseñando en ese
+  momento.
+- Escribió dos veces, en la documentación, una palabra que el control de
+  palabras del repositorio no admite. El control la detectó las dos veces; la
+  primera, después de un push.
 
 **Qué decidí yo.** Las skills de Anthropic se usan en local y no se versionan
 (se citan en Créditos y licencias); la skill propia de auditoría de copy sí se
-versiona. En el copy, que El Ritual del Tono siga rotulado como proyecto
+versiona. El título del widget ("Lo que suena cuando diseño" / "Music I
+design to") y la aprobación de cada texto de sus estados. En el copy, que El Ritual del Tono siga rotulado como proyecto
 universitario y que su intro no nombre el curso.
