@@ -8,6 +8,13 @@ import react from '@astrojs/react';
 export default defineConfig({
   site: 'https://tiagocollado.vercel.app',
 
+  // Todas las URLs de páginas terminan en "/" (/en/, /en/projects/x/), igual
+  // que las carpetas que genera el build (build.format: 'directory') y que
+  // los links que arma getRelativeLocaleUrl. Rige en el servidor de dev; en
+  // producción, las páginas estáticas las resuelve Vercel con el
+  // "trailingSlash": true de vercel.json, que redirige /en a /en/.
+  trailingSlash: 'always',
+
   i18n: {
     locales: ['es', 'en'],
     defaultLocale: 'en',
