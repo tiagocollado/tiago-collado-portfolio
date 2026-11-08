@@ -151,8 +151,9 @@ const ogImageUrl = new URL('/og-image.png', Astro.site).href;
       client:only porque el cursor depende del mouse y de la ventana, que no
       existen en el servidor: no hay nada útil que dibujar ahí. Las variantes
       las piden los elementos con data-cursor (ver CustomCursor.jsx).
+      viewLabel es el texto del anillo en la variante "view", traducido.
     */}
-    <CustomCursor client:only="react" />
+    <CustomCursor client:only="react" viewLabel={t('cursor.view')} />
 
     {/*
       Smooth scroll con Lenis (src/scripts/smoothScroll.js). Es un <script>

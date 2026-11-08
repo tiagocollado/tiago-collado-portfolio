@@ -15,6 +15,9 @@
     "menu_close": "Cerrar menú",
     "change_language": "Cambiar idioma"
   },
+  "cursor": {
+    "view": "Ver"
+  },
   "nav": {
     "projects": "Proyectos",
     "about": "Sobre Gotya",

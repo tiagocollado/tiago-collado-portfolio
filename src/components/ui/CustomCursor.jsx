@@ -8,7 +8,7 @@ import { MotionConfig, motion, useMotionValue, useReducedMotion, useSpring } fro
  * Variantes:
  *   default  punto + anillo de 32px
  *   link     el anillo crece a 64px
- *   view     el anillo crece a 80px con "View" adentro
+ *   view     el anillo crece a 80px con `viewLabel` adentro ("View" / "Ver")
  *   drag     punto grande, sin anillo
  *
  * Cómo sabe qué variante mostrar. Cada isla de Astro es su propia app de
@@ -47,7 +47,7 @@ function variantUnderPointer(target) {
   return VARIANTS.includes(variant) ? variant : 'default';
 }
 
-export default function CustomCursor() {
+export default function CustomCursor({ viewLabel }) {
   const hasFinePointer = useSyncExternalStore(subscribeFinePointer, readFinePointer, readFinePointerOnServer);
   const prefersReducedMotion = useReducedMotion();
 
@@ -56,12 +56,12 @@ export default function CustomCursor() {
 
   return (
     <MotionConfig reducedMotion="user">
-      <CursorShapes />
+      <CursorShapes viewLabel={viewLabel} />
     </MotionConfig>
   );
 }
 
-function CursorShapes() {
+function CursorShapes({ viewLabel }) {
   const [variant, setVariant] = useState('default');
 
   const pointerX = useMotionValue(0);
@@ -143,7 +143,7 @@ function CursorShapes() {
       >
         {variant === 'view' && (
           <span className="font-mono text-[10px] tracking-widest uppercase text-(--ink-primary) font-semibold">
-            View
+            {viewLabel}
           </span>
         )}
       </motion.div>
