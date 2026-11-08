@@ -70,8 +70,8 @@ los de la versión Next; dónde cae cada uno en Astro está en §10.
 
 > ⚠️ **El PDF del CV no entra al repo, ni ahora ni después.** Vive afuera, y
 > `/tiago-collado-cv.pdf` redirige ahí con una **redirección temporal (307)**,
-> para que la URL que ya tienen los recruiters siga funcionando. Es tarea de
-> F4 (plan, §8).
+> para que la URL que ya tienen los recruiters siga funcionando. Está en
+> `vercel.json`; con el adapter de Vercel (F6) hay que verificar que siga dando 307.
 
 **Defaults**: tema **dark**, locale **`en`** (`/` redirige a `/en`; las URLs `/es/...` siguen vivas).
 
@@ -236,7 +236,7 @@ El título de la card da la marca y el campo **`services`** da la categoría, co
 ### Stack que se muestra en el carrusel
 Solo lo que Tiago pueda defender en una entrevista.
 - ✅ **Diseño**: Figma, FigJam, Photoshop, Illustrator, Premiere
-- ✅ **Frontend**: HTML5, CSS3, React, Next.js, Tailwind
+- ✅ **Frontend**: HTML5, CSS3, React, Next.js, Astro, Tailwind
 - ✅ **UX**: Research, Writing, Prototyping, User Testing, Card Sorting, Design Systems, Accessibility
 - ✅ **Otros**: IA generativa aplicada al diseño, Git/GitHub, WordPress
 - ❌ **No incluir**: MongoDB, Node.js, TypeScript, Express (los tocó, no los domina)
@@ -287,17 +287,19 @@ Sale de la versión Next: `next-intl` (lo reemplazan los JSON + una `t()` propia
 astro.config.mjs                # ✅ site · i18n (defaultLocale "en",
                                 # prefixDefaultLocale: true,
                                 # redirectToDefaultLocale: false) · fuentes ·
-                                # Tailwind (@tailwindcss/vite)
+                                # Tailwind (@tailwindcss/vite) · React
                                 # pendiente: adapter de Vercel y env.schema
                                 # con LASTFM_API_KEY (server, secret) (F6)
+vercel.json                     # ✅ /tiago-collado-cv.pdf → CV en Drive (307).
+                                # Verificar en F6 que siga aplicando con el adapter
+tsconfig.json                   # ✅ preset "base" de Astro (sin modo estricto:
+                                # el proyecto es JavaScript)
 .env.example                    # LASTFM_API_KEY= (sin valor; .env no se versiona)
 public/                         # se sirve tal cual, sin optimizar (§11)
 ├── favicon.svg                 # ✅ la "G" de Gotya
 └── og-image.png                # ✅ OG estática de la G, 1200x630
-                                # el CV NO va acá: /tiago-collado-cv.pdf
-                                # redirige (307) afuera (F4)
 src/
-├── assets/                     # imágenes que optimiza astro:assets (F4)
+├── assets/                     # ✅ imágenes que optimiza astro:assets
 │   ├── covers/                 # {slug}-cover.jpg
 │   └── case-study/{slug}/      # {nn}-{nombre}.jpg
 ├── layouts/
@@ -306,25 +308,31 @@ src/
 │   ├── index.astro             # ✅ obligatorio con i18n; redirige a /en/ con
 │   │                           # Astro.redirect(…, 307), no con
 │   │                           # redirectToDefaultLocale (ver nota abajo)
-│   ├── en/ · es/               # ✅ carpetas por idioma · home (hoy de prueba)
-│   │                           # + projects/[slug].astro con getStaticPaths (F4)
+│   ├── en/ · es/               # ✅ carpetas por idioma: index.astro y
+│   │                           # projects/[slug].astro (getStaticPaths con los
+│   │                           # publicados). Cada una usa un componente compartido
 │   └── api/
 │       └── now-playing.json.js # prerender = false · pide a Last.fm con caché
 │                               # en la CDN de Vercel (F6)
 ├── components/
-│   ├── case-study/             # Header · MetaBar · Section · ImageRun · NextNav (.astro)
-│   │                           # CaseStudyImage.jsx (isla) + imageSpec.js
-│   ├── sections/               # Hero.jsx (isla) · ServicesMarquee · Projects ·
-│   │                           # About · Stack (.astro) · ProjectCard.jsx ·
-│   │                           # Contact.jsx (islas)
-│   └── ui/                     # islas: Navbar · NameLogo · NavLogo · CustomCursor ·
-│                               # SplitText · MagneticLink · MarqueeLink · Footer ·
-│                               # InteractiveDotGrid · NowPlaying
-│                               # .astro: SkipLink (✅, con <script>) · StackIcon ·
-│                               # cambio de idioma
-├── data/                       # projects.js · stack.js
+│   ├── HomePage.astro          # ✅ la home, compartida por /en y /es
+│   ├── case-study/             # ✅ CaseStudyPage · Header · MetaBar · Section ·
+│   │                           # ImageRun · NextNav (.astro) · CaseStudyImage.jsx
+│   │                           # (isla) · imageSpec.js
+│   ├── sections/               # ✅ ServicesMarquee · Projects · About · Stack
+│   │                           # (.astro) · ProjectCard.jsx (isla)
+│   │                           # F5: Hero.jsx · Contact.jsx (islas)
+│   └── ui/                     # ✅ .astro: SkipLink (con <script>) · StackIcon
+│                               # F5, islas: Navbar · NameLogo · NavLogo ·
+│                               # CustomCursor · SplitText · MagneticLink ·
+│                               # MarqueeLink · Footer · InteractiveDotGrid
+│                               # F6: NowPlaying · cambio de idioma (.astro)
+├── data/                       # ✅ projects.js · stack.js
+├── utils/
+│   └── responsiveImage.js      # ✅ getImage() para las islas (solo servidor)
 ├── i18n/                       # ✅ es.json · en.json · translate.js
-│                               # (createTranslator(locale) devuelve t('a.b'))
+│                               # (createTranslator(locale) devuelve t('a.b'),
+│                               # t.list() y t.has())
 └── styles/
     └── global.css              # ✅ @theme, tokens, variante dark por clase,
                                 # @view-transition, reset en @layer base
@@ -349,7 +357,11 @@ src/
 
 **Imágenes**: covers en `src/assets/covers/` y piezas de case study en `src/assets/case-study/{slug}/{nn}-{nombre}.*` — el número es el orden, el nombre es el tipo de pieza (`mockup`, `tira`, `cluster`…), nunca la sección. 📋 **Las medidas, el vocabulario de tipos, la dirección de arte y cómo cablear una imagen están en `.claude/rules/imagenes.md`.** En `public/` va solo lo que tiene que servirse tal cual: **todo lo que está ahí se sirve en producción** (§11).
 
-**Íconos**: en Next, `lucide-react` para UI · `simple-icons` para marcas del Stack · Adobe como cuadrados con iniciales. El Footer no usa SVGs de marca: sus links son mono + glifo (↗ navega, ↓ descarga). Todo monocromo con `currentColor`. Cómo se resuelven en un `StackIcon.astro` sin React se define en F4.
+**Imágenes dentro de islas**: el `<Image />` de Astro no se puede usar adentro de un `.jsx`. El `.astro` llama a `getResponsiveImageProps()` (`src/utils/responsiveImage.js`, que usa `getImage()`) y le pasa a la isla `src`, `srcset` y `sizes` como props; la isla arma su propio `<img>` (o `motion.img`, para el parallax). Los anchos del `srcset` y la calidad salen de `imageSpec.js`, y son los que usaba `next/image` por defecto. En `.astro` (el thumbnail de `CaseStudyNextNav`) se usa `<Image />` directo, con los mismos anchos.
+
+**Íconos**: `StackIcon.astro`, sin JavaScript. `simple-icons` para marcas del Stack, `lucide-react` para habilidades sin marca y Adobe como cuadrados con iniciales. Los íconos de `lucide-react` son componentes de React, pero sin directiva `client:*` Astro los renderiza a SVG en el build. El Footer no usa SVGs de marca: sus links son mono + glifo (↗ navega, ↓ descarga). Todo monocromo con `currentColor`.
+
+**Versiones**: `framer-motion` 12.38.0, `lucide-react` 1.11.0 y `simple-icons` 16.17.0 quedan fijadas en el lock con las mismas versiones que el sitio publicado, para que los íconos y las animaciones salgan idénticos.
 
 ---
 

@@ -162,6 +162,30 @@ el preload.
 **Por qué.** Astro solo optimiza las imágenes de `src/`. Las de `public/` se
 sirven tal cual.
 
+### Imágenes optimizadas dentro de las islas con `getImage()` · 2026-11-07
+
+**Contexto.** Dos componentes con animación son islas de React: la card de
+proyecto y la imagen del caso de estudio (que tiene parallax). El `<Image />`
+de Astro no se puede usar adentro de un componente de React. La documentación
+ofrece dos vías: pasarle a la isla el `<Image />` ya renderizado como hijo, o
+generar la imagen con `getImage()` y pasarle los datos.
+
+**Decisión.** `getImage()` en el `.astro`. La isla recibe `src`, `srcset` y
+`sizes` como props y arma su propio `<img>`.
+
+**Por qué.** El parallax anima el propio `<img>` con Framer Motion. Si la
+imagen llegara como HTML ya renderizado, Framer no podría animarla y habría
+que cambiar el markup. Así el HTML queda igual al del sitio anterior.
+
+### Anchos y calidad de las imágenes iguales a `next/image` · 2026-11-07
+
+**Decisión.** El `srcset` usa los anchos que generaba `next/image` por
+defecto (640 a 2048 px) hasta el ancho del archivo, más el original. Calidad
+75.
+
+**Por qué.** Paridad: cada dispositivo baja una variante del mismo tamaño que
+antes. Nunca se genera una variante más grande que el archivo.
+
 ### Imagen de Open Graph estática · 2026-11-06
 
 **Contexto.** El sitio anterior generaba la imagen de Open Graph en el build,
@@ -218,6 +242,42 @@ a una copia alojada afuera.
 
 **Por qué.** El repositorio es público y el CV es un documento aparte del
 sitio. Con la redirección, la URL que ya circula sigue funcionando.
+
+### Redirección del CV en `vercel.json` · 2026-11-07
+
+**Contexto.** La redirección tiene que ser 307. La opción `redirects` de
+Astro acepta 307, pero en un build estático sin adapter genera una página con
+meta refresh, sin código de estado. `vercel.json` con `"permanent": false` da
+un 307 real y acepta un destino externo, según la documentación de Vercel.
+
+**Decisión.** `vercel.json`.
+
+**Por qué.** Da el 307 hoy, con el sitio estático. Queda por verificar si
+sigue aplicando cuando se sume el adapter de Vercel para el endpoint de la
+API: la documentación no lo aclara, así que se prueba con `curl` en staging.
+
+### Componentes de página compartidos entre idiomas · 2026-11-07
+
+**Contexto.** Con carpetas por idioma, `/en` y `/es` tienen cada una su
+archivo de home y de caso de estudio.
+
+**Decisión.** Las páginas de cada idioma son mínimas y usan un componente
+compartido (`HomePage.astro`, `CaseStudyPage.astro`). Las de caso de estudio
+tienen su propio `getStaticPaths()`, que solo genera los proyectos publicados.
+
+**Por qué.** Una sola fuente para cada página: los dos idiomas no pueden
+divergir en markup.
+
+### `tsconfig` con el preset `base` de Astro · 2026-11-07
+
+**Contexto.** La plantilla trae el preset `strict`, que activa el modo
+estricto de TypeScript. En un proyecto en JavaScript eso solo produce errores
+de tipos en el editor ("any implícito") que no afectan el build.
+
+**Decisión.** Preset `base`.
+
+**Por qué.** El proyecto no usa TypeScript. El `tsconfig` queda solo para que
+el editor entienda los imports y el JSX.
 
 ### Instrucciones del asistente de IA en el repositorio · 2026-11-06
 

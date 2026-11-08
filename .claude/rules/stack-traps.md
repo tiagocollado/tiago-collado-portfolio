@@ -105,6 +105,15 @@ se le pasa viaja en la página, se muestre o no:
   se ignora sin avisar.
 - **Solo se optimiza lo que está en `src/`.** Las imágenes de `public/` no se
   optimizan nunca y no tienen imágenes responsive.
+- **`<Image />` no funciona adentro de una isla.** Es un componente de Astro y
+  una isla solo puede tener código de su framework. Se resuelve con
+  `getResponsiveImageProps()` (`src/utils/responsiveImage.js`) en el `.astro`,
+  que le pasa a la isla `src`, `srcset` y `sizes`. Ese módulo importa
+  `getImage()`, que solo corre en el servidor: **nunca se importa desde un
+  `.jsx`**, porque la isla rompería en el navegador. Por eso `imageSpec.js` no
+  lo importa: lo usan las dos partes.
+- **`getImage()` no acepta `sizes`.** El `sizes` sale de `imageSpec.js` y se
+  pasa aparte.
 
 ---
 
@@ -207,6 +216,11 @@ por el CTA principal.
 ---
 
 ## Git y edición de archivos
+
+- **`git grep` busca también adentro de los binarios.** En los bytes de un JPG
+  aparecen por azar secuencias de letras que coinciden con palabras cortas, así
+  que un control de palabras da falsos positivos en las imágenes. Siempre con
+  `-I`, que saltea los binarios.
 
 - **`npm run build` compila el árbol de trabajo, no el commit.** Un build verde
   local no prueba que un commit parcial sea auto-consistente. Antes de pushear

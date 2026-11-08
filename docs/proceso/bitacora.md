@@ -136,3 +136,67 @@ la URL pública no se cae en el medio.
   salto de tipografía al recargar.
 - El sitio anterior usa URLs sin barra final (`/en`) y Astro genera `/en/`.
   Falta verificar en staging qué hace Vercel con cada una.
+
+---
+
+## 2026-11-07 · Contenido y casos de estudio
+
+**Qué se hizo**
+
+- Datos en `src/data/projects.js` (los tres proyectos publicados y tres más
+  sin publicar) y `src/data/stack.js`, con el mismo copy del sitio publicado.
+- Las 17 imágenes de los proyectos publicados, en `src/assets/`, idénticas a
+  las originales (verificado con md5).
+- `imageSpec.js`: el tipo de cada imagen decide su ancho, su recorte, el
+  parallax y el `sizes`, con la misma lógica que la versión anterior.
+- Integración de React con `npx astro add react`, y las tres librerías que
+  usan los componentes (`framer-motion`, `lucide-react`, `simple-icons`) con
+  las mismas versiones que el sitio publicado.
+- Secciones de la home y del caso de estudio como componentes `.astro` sin
+  JavaScript, y dos islas de React con su animación de Framer Motion: la card
+  de proyecto y la imagen del caso de estudio.
+- Páginas `/en`, `/es` y los tres casos en los dos idiomas, generados con
+  `getStaticPaths()` solo para los proyectos publicados.
+- Redirección de `/tiago-collado-cv.pdf` en `vercel.json`, con 307.
+
+**Problemas y cómo se resolvieron**
+
+- **Imágenes optimizadas dentro de las islas.** El `<Image />` de Astro no se
+  puede usar en un componente de React. La documentación ofrece pasarle el
+  `<Image />` ya renderizado como hijo o usar `getImage()`. Elegí
+  `getImage()`: el parallax anima el propio `<img>` con Framer Motion, y como
+  HTML ya renderizado no se podría animar sin cambiar el markup. La función
+  que llama a `getImage()` quedó en un módulo propio
+  (`src/utils/responsiveImage.js`), porque `imageSpec.js` también lo importa
+  la isla, y `getImage()` rompe si llega al navegador.
+- **Íconos sin React en el navegador.** Los íconos de `lucide-react` son
+  componentes de React. Usados en un `.astro` sin directiva `client:*`, Astro
+  los renderiza a SVG en el build y no manda JavaScript.
+- **Versiones.** `npm install` traía versiones menores más nuevas de las tres
+  librerías. Se fijaron en el lock las mismas que el sitio publicado, para que
+  los íconos y las animaciones salgan idénticos.
+- **Errores de tipos en el editor.** El preset `strict` del `tsconfig` marcaba
+  "any implícito" en archivos JavaScript. Se pasó al preset `base`, sin modo
+  estricto. El build no cambia.
+- **Falsos positivos en el control de palabras.** `git grep` también busca
+  adentro de los JPG, donde aparecen por azar secuencias de letras que
+  coinciden con palabras cortas. El control se corre con `-I`, que saltea los
+  binarios.
+
+**Verificación**
+
+- `npm run build` sin errores ni warnings: `/`, `/en/`, `/es/` y los seis
+  casos, ninguna página más.
+- Cada imagen sale con `srcset` y con el `sizes` de su tipo; la del hero, con
+  `fetchpriority="high"`.
+- Las islas reciben solo los datos que muestran: ningún texto de otros
+  proyectos ni de otros idiomas viaja al navegador.
+
+**Pendiente**
+
+- Las animaciones de entrada de los componentes que quedaron sin JavaScript
+  (encabezado y barra de metadata del caso, secciones, About, Stack, el título
+  de la grilla) se suman con la capa de interacción, junto con el Hero, el
+  Navbar, el Contact y el Footer.
+- Verificar en staging que la redirección del CV dé 307 y qué hace Vercel con
+  las URLs con y sin barra final.
