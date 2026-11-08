@@ -47,9 +47,12 @@ Muestra lo que escucho, con datos de Last.fm (ver
 
 El disco gira siempre: es ambiente. Si de verdad estoy escuchando algo lo
 dice un cartel **"En vivo"**, arriba a la derecha y siempre visible, como el
-"On Air" de un estudio: apagado si no suena nada, prendido (con el punto en
-terracota, brillando) si suena. Al poner un tema, el disco se asienta en el plato con una escala
-corta: es la respuesta a la acción.
+"On Air" de un estudio: un rectángulo chico, con borde tenue si no suena
+nada y relleno terracota si suena.
+
+Es un detalle personal, secundario al texto del About: compacto, en tonos
+neutros, y en escritorio en la columna izquierda alineado abajo con la firma,
+sin empujar el texto ni estirar la sección.
 
 Se ocupa de tres cosas: pedir los datos al endpoint propio (y volver a
 pedirlos al volver a la pestaña), traducir el `state` de la respuesta a lo
@@ -101,7 +104,7 @@ navegador ──► /api/now-playing.json ──► Last.fm (user.getRecentTrack
   arriba y abajo mueven y eligen a la vez, Inicio y Fin van a la primera y a
   la última). Incluye al tema destacado, marcado, y su orden no cambia nunca.
 - **El alto no salta.** El destacado mide siempre lo que el disco (el título
-  se corta en tres líneas), así que elegir un tema no cambia el alto. Entre
+  se corta en dos líneas), así que elegir un tema no cambia el alto. Entre
   estados (carga, datos, error) la tarjeta anima su alto.
 - **Movimiento reducido**: el disco no gira y los cambios son instantáneos.
 
@@ -177,8 +180,9 @@ cuatro tipos de tarea: migrar componentes del sitio anterior, verificar cada
 API contra la documentación y el código de las librerías, configurar
 herramientas y redactar documentación. La IA propone un enfoque y lo ejecuta
 cuando lo apruebo; yo reviso, tomo las decisiones de diseño, alcance y
-arquitectura, y hago los commits. No puede abrir un navegador: lo visual y lo
-interactivo lo pruebo yo. Tampoco abre el archivo `.env`: la clave de la API
+arquitectura, y hago los commits. No usa el sitio como una persona: puede
+medir y capturar páginas con Chrome headless, pero lo interactivo y el juicio
+visual final los pongo yo. Tampoco abre el archivo `.env`: la clave de la API
 la cargo yo.
 
 - **Reglas.** Lee en cada sesión [CLAUDE.md](CLAUDE.md) y
