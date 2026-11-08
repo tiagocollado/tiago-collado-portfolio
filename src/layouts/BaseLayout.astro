@@ -1,11 +1,55 @@
 ---
 import { Font } from 'astro:assets';
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import SkipLink from '../components/ui/SkipLink.astro';
+import CustomCursor from '../components/ui/CustomCursor.jsx';
+import Navbar from '../components/ui/Navbar.jsx';
 import { createTranslator } from '../i18n/translate.js';
 import '../styles/global.css';
 
 const locale = Astro.currentLocale;
+if (!locale) {
+  throw new Error(`La página ${Astro.url.pathname} usa BaseLayout pero no está adentro de /en ni de /es.`);
+}
 const t = createTranslator(locale);
+
+// La ruta de la página sin el idioma adelante: "" en la home,
+// "projects/pulso-creativo" en un caso de estudio. Con ella se arma la misma
+// página en el otro idioma y se sabe si estamos en la home.
+const pathInsideLocale = Astro.url.pathname
+  .replace(new RegExp(`^/${locale}(/|$)`), '')
+  .replace(/\/$/, '');
+const isHome = pathInsideLocale === '';
+
+// Mismo orden que el selector del sitio anterior: EN primero. Cada idioma
+// se nombra en su propio idioma ("English", "Español"), como recomienda el
+// W3C para los selectores de idioma: quien busca su idioma lo reconoce aunque
+// no entienda el de la página. Por eso estos dos no salen de los JSON.
+const LANGUAGES = [
+  { code: 'en', label: 'English' },
+  { code: 'es', label: 'Español' },
+];
+const languageLinks = LANGUAGES.map(({ code, label }) => ({
+  code,
+  label,
+  href: getRelativeLocaleUrl(code, pathInsideLocale),
+  current: code === locale,
+}));
+const homeHref = getRelativeLocaleUrl(locale);
+
+// A la isla del Navbar se le pasan solo los textos que usa, visibles y
+// accesibles (aria-label), ya traducidos.
+const navbarTexts = {
+  projects: t('nav.projects'),
+  about: t('nav.about'),
+  contactMarquee: t('nav.contact_marquee'),
+  homeLink: t('a11y.home_link'),
+  themeToLight: t('a11y.theme_to_light'),
+  themeToDark: t('a11y.theme_to_dark'),
+  menuOpen: t('a11y.menu_open'),
+  menuClose: t('a11y.menu_close'),
+  changeLanguage: t('a11y.change_language'),
+};
 
 if (!Astro.site) {
   throw new Error('Falta "site" en astro.config.mjs: Open Graph necesita la URL absoluta del sitio.');
@@ -75,9 +119,36 @@ const ogImageUrl = new URL('/og-image.png', Astro.site).href;
   </head>
   <body>
     <SkipLink />
-    <!-- isla de F5: Navbar -->
+    {/*
+      client:load: el navbar está arriba de todo en todas las páginas, así
+      que tiene que responder (menú, tema, NavLogo con el scroll) apenas
+      carga la página.
+    */}
+    <Navbar
+      client:load
+      texts={navbarTexts}
+      homeHref={homeHref}
+      isHome={isHome}
+      languageLinks={languageLinks}
+    />
     <main id="main" tabindex="-1" class="pt-16 focus:outline-none">
       <slot />
     </main>
+
+    {/*
+      client:only porque el cursor depende del mouse y de la ventana, que no
+      existen en el servidor: no hay nada útil que dibujar ahí. Las variantes
+      las piden los elementos con data-cursor (ver CustomCursor.jsx).
+    */}
+    <CustomCursor client:only="react" />
+
+    {/*
+      Smooth scroll con Lenis (src/scripts/smoothScroll.js). Es un <script>
+      procesado por Astro, que se empaqueta y se incluye una sola vez por
+      página, y no una isla: no dibuja nada, así que no necesita React.
+    */}
+    <script>
+      import '../scripts/smoothScroll.js';
+    </script>
   </body>
 </html>

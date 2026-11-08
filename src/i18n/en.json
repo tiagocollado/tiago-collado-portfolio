@@ -7,7 +7,13 @@
     "og_image_alt": "Gotya by Tiago Collado"
   },
   "a11y": {
-    "skip_to_content": "Skip to content"
+    "skip_to_content": "Skip to content",
+    "home_link": "Gotya — back to home",
+    "theme_to_light": "Light mode",
+    "theme_to_dark": "Dark mode",
+    "menu_open": "Open menu",
+    "menu_close": "Close menu",
+    "change_language": "Change language"
   },
   "nav": {
     "projects": "Projects",
