@@ -5,6 +5,7 @@ import CaseStudyMetaBar from './CaseStudyMetaBar.astro';
 import CaseStudySection from './CaseStudySection.astro';
 import CaseStudyImageRun from './CaseStudyImageRun.astro';
 import CaseStudyNextNav from './CaseStudyNextNav.astro';
+import Footer from '../ui/Footer.jsx';
 import { createTranslator } from '../../i18n/translate.js';
 import { publishedProjects } from '../../data/projects.js';
 
@@ -37,6 +38,11 @@ const currentPosition = publishedProjects.findIndex((published) => published.slu
 const nextProject = publishedProjects[(currentPosition + 1) % publishedProjects.length];
 
 const ITEM_NUMBERS = [1, 2, 3];
+
+const footerTexts = {
+  credit: t('footer.credit'),
+  backToTop: t('footer.back_to_top'),
+};
 ---
 
 <BaseLayout>
@@ -156,6 +162,8 @@ const ITEM_NUMBERS = [1, 2, 3];
 
     <CaseStudyNextNav nextProject={nextProject} />
 
-    <!-- isla de F5: Footer -->
+    {/* client:visible: está al pie de una página larga y solo anima al
+        entrar en pantalla. Su back-to-top apunta al id="top" de este div. */}
+    <Footer client:visible texts={footerTexts} />
   </div>
 </BaseLayout>

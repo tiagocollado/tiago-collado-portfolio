@@ -1,17 +1,29 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from './sections/Hero.astro';
 import ServicesMarquee from './sections/ServicesMarquee.astro';
 import Projects from './sections/Projects.astro';
 import About from './sections/About.astro';
 import Stack from './sections/Stack.astro';
+import Footer from './ui/Footer.jsx';
+import { createTranslator } from '../i18n/translate.js';
+
+const t = createTranslator(Astro.currentLocale);
+
+const footerTexts = {
+  credit: t('footer.credit'),
+  backToTop: t('footer.back_to_top'),
+};
 ---
 
 <BaseLayout>
-  <!-- isla de F5: Hero -->
+  <Hero />
   <ServicesMarquee />
   <Projects />
   <About />
   <Stack />
   <!-- isla de F5: Contact -->
-  <!-- isla de F5: Footer -->
+  {/* client:visible: está al final de la página y solo anima al entrar en
+      pantalla. Su back-to-top apunta al id="top" del Hero. */}
+  <Footer client:visible texts={footerTexts} />
 </BaseLayout>
