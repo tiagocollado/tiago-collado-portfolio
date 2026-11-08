@@ -58,11 +58,15 @@ Tiago sigue estudiando y la programación no es su fuerte. **El código tiene qu
 
 ## 6. Qué hace hoy el sitio publicado — la referencia de paridad
 
-Describe el sitio publicado (versión Next). La migración es 1:1 (plan, §8):
+Describe el comportamiento del sitio publicado. **Desde el 8/11/2026,
+producción sirve la versión en Astro, construida desde este repo**; los
+deployments de la versión Next quedan en el proyecto de Vercel como rollback
+hasta la limpieza (plan, "Limpieza del sitio viejo"). La migración fue 1:1:
 **cualquier diferencia contra esto es un bug**. Los nombres de componente son
 los de la versión Next; dónde cae cada uno en Astro está en §10.
 
-**Deploy**: https://tiagocollado.vercel.app/ · la URL no cambia con la migración.
+**Deploy**: https://tiagocollado.vercel.app/ · proyecto `tiagocollado` de
+Vercel, conectado a este repo. La URL no cambió con la migración.
 
 **URLs que tienen que seguir iguales**: `/` (redirige a `/en`), `/en`, `/es`,
 `/{en,es}/projects/paseo-guemes-hotel`, `/{en,es}/projects/pulso-creativo`,
@@ -393,7 +397,7 @@ src/
 ## 12. Workflow y comunicación
 
 - **Dev**: `npm run dev` (localhost:4321) · **Build**: `npm run build` · **Preview del build**: `npm run preview`.
-- **Deploy**: Vercel. Staging conectado al repo nuevo desde F2; producción pasa a este repo en la fase "Cambio" del plan.
+- **Deploy**: Vercel. Producción (`tiagocollado`) construye desde este repo desde el 8/11/2026; el proyecto de staging se borra en la limpieza del sitio viejo (plan).
 - **Proyecto nuevo**: entry en `src/data/projects.js` + bloque `case_study_{slug}` en **ambos** JSON.
 - **Todo lo que se versiona es público**: README, `docs/`, comentarios y mensajes de commit se escriben con tono profesional, sin charla interna. El detalle está en el plan.
 - **Commits**: los hace Tiago desde su terminal para mantener la autoría. Claude prepara los cambios y le pasa los comandos (git add + git commit con el mensaje), en castellano, con prefijo convencional y **sin trailers `Co-Authored-By`**. Claude sí puede correr los comandos de git que solo leen (status, log, diff, show).

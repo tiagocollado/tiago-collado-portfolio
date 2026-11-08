@@ -302,6 +302,42 @@ tocadiscos", "El widget queda pasivo" y "El disco gira siempre").
 
 ---
 
+## Paso a producción
+
+**Qué se hizo.** El proyecto de Vercel que sirve
+[tiagocollado.vercel.app](https://tiagocollado.vercel.app) dejó de construir el
+repositorio de la versión en Next y pasó a construir este. La URL, las rutas y
+la redirección del CV quedaron iguales. Con `curl -I` sobre producción: `/` da
+307 a `/en/`; `/en`, `/es` y los tres casos en los dos idiomas, sin barra, dan
+308 a su versión con barra, que da 200; el CV da 307 a Drive; el proyecto que
+salió del portfolio y una URL inexistente dan 404; y el endpoint de música
+responde `X-Vercel-Cache: HIT` en el segundo pedido.
+
+**Cómo se evitó que la URL quedara caída.**
+
+- **Las variables antes que el código.** Las dos variables de Last.fm se
+  cargaron en el proyecto de producción antes de conectarlo a este
+  repositorio. Sin ellas el sitio no se rompe (el endpoint responde
+  `not-configured`), pero el widget habría salido vacío en el primer deploy.
+- **El framework del proyecto.** El preset de Vercel pasó de Next.js a Astro,
+  para que el build que corre sea el de este repositorio y no el de la versión
+  anterior.
+- **El cambio de repositorio.** El dominio pertenece al proyecto de Vercel, no
+  al repositorio: reconectar el proyecto no lo toca.
+- **Deploy atómico.** Vercel no mueve el dominio al deployment nuevo hasta que
+  termina de construirse. Mientras corría el build, la URL siguió sirviendo la
+  versión en Next. El primer deploy se disparó con un commit vacío.
+- **Rollback disponible.** Los deployments de la versión en Next siguen en el
+  proyecto: volver atrás es promover el último a producción, sin construir
+  nada. Por eso no se borran hasta confirmar que producción está estable.
+
+**Qué costó.** Un detalle que confunde al leer los headers: el endpoint
+manda `s-maxage`, pero el navegador recibe solo `Cache-Control: public`.
+Vercel consume esa directiva en su CDN y no la reenvía. Lo que prueba que la
+caché funciona es el `HIT` del segundo pedido, no el header que llega.
+
+---
+
 ## Cómo se verifica
 
 En cada etapa, antes de commitear:
@@ -318,9 +354,9 @@ En cada etapa, antes de commitear:
   Last.fm no aparezca en ningún archivo de la salida del build
   (`.vercel/output/`, incluida la función del servidor) ni del repositorio.
   El script que lo busca imprime solo nombres de archivo, nunca el valor.
-- En staging, con `curl -I`: `/` da 307 a `/en/`, `/en` y las páginas de caso
-  sin barra dan 308 a su versión con barra, `/tiago-collado-cv.pdf` da 307 al
-  CV, una URL inexistente da 404 y el endpoint responde con
+- En producción, con `curl -I`: `/` da 307 a `/en/`, `/en` y las páginas de
+  caso sin barra dan 308 a su versión con barra, `/tiago-collado-cv.pdf` da
+  307 al CV, una URL inexistente da 404 y el endpoint responde con
   `X-Vercel-Cache: HIT` en el segundo pedido.
 - Después de actualizar Astro o el adapter de Vercel: que
   `.vercel/output/config.json` siga teniendo la regla de `/` con 307 y que no
