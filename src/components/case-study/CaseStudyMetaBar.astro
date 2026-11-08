@@ -1,0 +1,93 @@
+---
+import { createTranslator } from '../../i18n/translate.js';
+
+const { project } = Astro.props;
+const locale = Astro.currentLocale;
+const t = createTranslator(locale);
+
+const metadata = project.metadata;
+
+const metadataBlocks = metadata
+  ? [
+      { label: t('case_study.meta_client'),   value: metadata.client?.[locale] ?? null },
+      { label: t('case_study.meta_year'),     value: project.year ? String(project.year) : null },
+      { label: t('case_study.meta_role'),     value: metadata.role?.[locale] ?? null },
+      { label: t('case_study.meta_duration'), value: metadata.duration?.[locale] ?? null },
+      { label: t('case_study.meta_team'),     value: metadata.team?.[locale] ?? null },
+      { label: t('case_study.meta_stack'),    value: metadata.stack ?? null },
+    ].filter((block) => block.value !== null)
+  : [];
+
+const projectLinks = [
+  project.links.live && { href: project.links.live, label: t('case_study.view_live') },
+  project.links.github && { href: project.links.github, label: t('case_study.view_github_frontend') },
+  project.links.githubBack && { href: project.links.githubBack, label: t('case_study.view_github_backend') },
+].filter(Boolean);
+---
+
+{metadata && (
+  <aside
+    class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-8 py-8 md:py-10 border-y"
+    style="border-color: var(--border-default);"
+  >
+    {metadataBlocks.map((block) => (
+      <div>
+        <p
+          class="text-[11px] font-mono uppercase tracking-[0.18em] mb-2"
+          style="color: var(--ink-muted);"
+        >
+          {block.label}
+        </p>
+        {Array.isArray(block.value) ? (
+          <ul class="space-y-1">
+            {block.value.map((item) => (
+              <li class="text-sm md:text-base font-display" style="color: var(--ink-primary);">
+                {item}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p
+            class="text-sm md:text-base font-display leading-snug whitespace-pre-line"
+            style="color: var(--ink-primary);"
+          >
+            {block.value}
+          </p>
+        )}
+      </div>
+    ))}
+
+    {projectLinks.length > 0 && (
+      <div>
+        <p
+          class="text-[11px] font-mono uppercase tracking-[0.18em] mb-2"
+          style="color: var(--ink-muted);"
+        >
+          {t('case_study.meta_links')}
+        </p>
+        <ul class="space-y-2">
+          {projectLinks.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-cursor="link"
+                class="group inline-flex items-center gap-2 text-sm md:text-base font-display leading-snug transition-colors duration-300 text-(--ink-primary) hover:text-accent"
+              >
+                <span>{link.label}</span>
+                <span
+                  aria-hidden="true"
+                  class="inline-block transition-transform duration-300 ease-expo-out group-hover:translate-x-1 group-hover:-translate-y-1"
+                  style="color: var(--color-accent);"
+                >
+                  ↗
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </aside>
+)}

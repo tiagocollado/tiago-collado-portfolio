@@ -1,0 +1,41 @@
+---
+import CaseStudyImage from './CaseStudyImage.jsx';
+import { IMAGE_TYPE_SPEC, SIZES_BLEED, SIZES_SHELL } from './imageSpec.js';
+import { getResponsiveImageProps } from '../../utils/responsiveImage.js';
+
+const { briefs, locale, isHeroSlot = false } = Astro.props;
+
+const images = await Promise.all(
+  briefs.map(async (brief, positionInRun) => {
+    const spec = IMAGE_TYPE_SPEC[brief.type];
+    const dimensions = brief.frame ?? spec.frame;
+    return {
+      type: brief.type,
+      bleed: spec.bleed,
+      image: await getResponsiveImageProps(brief.src, spec.bleed ? SIZES_BLEED : SIZES_SHELL),
+      alt: brief.alt[locale],
+      width: dimensions.width,
+      height: dimensions.height,
+      isPageHero: isHeroSlot && positionInRun === 0,
+    };
+  })
+);
+---
+
+{images.length > 0 && (
+  <div class="space-y-6 md:space-y-8">
+    {images.map(({ bleed, ...imageProps }) =>
+      bleed ? (
+        <div>
+          <CaseStudyImage client:visible {...imageProps} />
+        </div>
+      ) : (
+        <div class="px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32">
+          <div class="max-w-7xl mx-auto">
+            <CaseStudyImage client:visible {...imageProps} />
+          </div>
+        </div>
+      )
+    )}
+  </div>
+)}

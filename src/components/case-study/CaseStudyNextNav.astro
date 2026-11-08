@@ -1,0 +1,81 @@
+---
+import { Image } from 'astro:assets';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { createTranslator } from '../../i18n/translate.js';
+import { IMAGE_QUALITY, SIZES_NEXT_THUMBNAIL, srcsetWidthsFor } from './imageSpec.js';
+
+const { nextProject } = Astro.props;
+const locale = Astro.currentLocale;
+const t = createTranslator(locale);
+---
+
+<div class="px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32 mt-28 md:mt-40">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-8 md:gap-10 md:items-center">
+      <a
+        href={getRelativeLocaleUrl(locale, `projects/${nextProject.slug}`)}
+        data-cursor="link"
+        class="group block p-6 md:p-8 lg:p-10 rounded-2xl border transition-all duration-300 hover:-translate-y-2 border-(--border-default) hover:border-accent hover:shadow-2xl hover:shadow-accent/15 md:order-2"
+        style="background-color: var(--color-surface);"
+      >
+        <div class="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 md:gap-10 items-center">
+          <div>
+            <p
+              class="text-xs font-mono tracking-[0.2em] uppercase mb-3"
+              style="color: var(--color-accent);"
+            >
+              {t('case_study.next_project_label')}
+            </p>
+            <div class="flex items-baseline gap-4 flex-wrap">
+              <h2
+                class="font-display text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight leading-tight"
+                style="color: var(--ink-primary);"
+              >
+                {nextProject.title}
+              </h2>
+              <span
+                aria-hidden="true"
+                class="text-xl md:text-2xl inline-block transition-transform duration-300 ease-expo-out group-hover:translate-x-2"
+                style="color: var(--color-accent);"
+              >
+                →
+              </span>
+            </div>
+          </div>
+
+          {nextProject.coverImage && (
+            <div class="relative w-full md:w-32 lg:w-40 aspect-square rounded-xl overflow-hidden shrink-0">
+              <Image
+                src={nextProject.coverImage}
+                widths={srcsetWidthsFor(nextProject.coverImage)}
+                sizes={SIZES_NEXT_THUMBNAIL}
+                quality={IMAGE_QUALITY}
+                alt=""
+                aria-hidden="true"
+                style="position: absolute; height: 100%; width: 100%; left: 0; top: 0; right: 0; bottom: 0; color: transparent;"
+                class="object-cover opacity-70 grayscale scale-105 transition-all duration-500 ease-out group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-110"
+              />
+            </div>
+          )}
+        </div>
+      </a>
+
+      <div class="flex justify-center md:justify-start md:order-1">
+        <a
+          href={`${getRelativeLocaleUrl(locale)}#projects`}
+          data-cursor="link"
+          class="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border transition-all duration-300 hover:-translate-y-0.5 border-(--border-default) text-(--ink-secondary) hover:border-accent hover:text-(--ink-primary)"
+          style="background-color: var(--color-surface);"
+        >
+          <span
+            aria-hidden="true"
+            class="inline-block transition-transform duration-300 ease-expo-out group-hover:-translate-x-1"
+          >
+            ←
+          </span>
+          {t('case_study.view_all_projects')}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

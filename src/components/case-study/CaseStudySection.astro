@@ -1,0 +1,17 @@
+---
+const { label } = Astro.props;
+---
+
+<section class="relative">
+  {label && (
+    <h2
+      class="text-[11px] font-mono uppercase tracking-[0.18em] mb-6 md:mb-8"
+      style="color: var(--color-accent);"
+    >
+      {label}
+    </h2>
+  )}
+  <div class="space-y-8 md:space-y-10">
+    <slot />
+  </div>
+</section>
