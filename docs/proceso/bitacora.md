@@ -169,11 +169,20 @@ ruta; las variables de entorno validadas con `astro:env`; el endpoint
 `/api/now-playing.json`, que pide a Last.fm lo que estoy escuchando y lo
 devuelve normalizado, con un estado para cada error y caché en la CDN; y el
 widget en el About, con sus seis estados. Las dos redirecciones del sitio (`/`
-y el CV) pasaron a ser HTTP reales desde la configuración de Astro. Después,
-la interacción del widget: pestañas "Ahora / Últimos 5" con el patrón Tabs de
-WAI-ARIA, la lista de los últimos cinco temas y un alto que se anima al
-cambiar de vista o de estado. El detalle por tema quedó afuera (ver
-[decisiones.md](decisiones.md), "Sin detalle por tema").
+y el CV) pasaron a ser HTTP reales desde la configuración de Astro.
+
+Después, la interacción del widget, en dos versiones. La primera fueron
+pestañas "Ahora / Últimos 5" con el patrón Tabs de WAI-ARIA y un alto que se
+anima al cambiar de vista o de estado. Vista construida, funcionaba pero no
+transmitía música, y estaba pensada alrededor del tema que suena, que es la
+excepción. La segunda, la actual, es un tocadiscos: un vinilo dibujado en SVG
+con la G como etiqueta y el tema más reciente al lado, y abajo los últimos
+cinco temas como un listbox, donde elegir uno lo pone en el plato. Al
+principio el disco giraba solo si el tema sonaba; ahora gira siempre, como
+ambiente, y si estoy escuchando lo dice un cartel "En vivo", prendido o
+apagado. El detalle por tema quedó afuera en las dos versiones (ver
+[decisiones.md](decisiones.md): "Sin detalle por tema", "De pestañas a
+tocadiscos" y "El disco gira siempre; el estado en vivo lo dice el cartel").
 
 **Qué costó.**
 
@@ -212,26 +221,62 @@ cambiar de vista o de estado. El detalle por tema quedó afuera (ver
 - **Los términos de Last.fm.** Excluyen las imágenes y el arte de los discos,
   así que el widget no muestra portadas. Piden acreditar con un botón
   *"powered by AudioScrobbler"* que Last.fm ya no publica: el crédito es un
-  link de texto. Cada tema enlaza a su página en Last.fm.
-- **Un widget que crece.** La lista de los últimos cinco temas es bastante
-  más alta que la vista Ahora. En escritorio va alineado arriba con el texto del About, no
-  abajo, así solo se estira hacia abajo y el texto de al lado no se mueve.
-  Para que tampoco salte lo que viene después, la tarjeta anima su alto. CSS
-  no anima desde ni hacia `auto`, así que un `ResizeObserver` mide el
-  contenido y el alto se pasa en píxeles; la tarjeta usa `box-content` para
-  que el borde quede fuera de esa medida. La primera medida se aplica sin
-  animar, porque parte de `auto`.
+  link de texto, "vía Last.fm". El título del tema destacado enlaza a su
+  página en Last.fm.
+- **Un widget que cambia de alto.** En la versión con pestañas, la lista era
+  bastante más alta que la vista Ahora. En escritorio el widget va alineado
+  arriba con el texto del About, no abajo, así solo se estira hacia abajo y el
+  texto de al lado no se mueve. Para que tampoco salte lo que viene después,
+  la tarjeta anima su alto. CSS no anima desde ni hacia `auto`, así que un
+  `ResizeObserver` mide el contenido y el alto se pasa en píxeles; la tarjeta
+  usa `box-content` para que el borde quede fuera de esa medida. La primera
+  medida se aplica sin animar, porque parte de `auto`. En el tocadiscos,
+  elegir un tema ya no cambia el alto: el destacado mide siempre lo que el
+  disco, y el título se corta en tres líneas.
 - **Estados sin datos demasiado grandes.** La altura mínima pensada para un
   tema dejaba los mensajes de vacío y de error en una tarjeta grande y casi
   vacía. Con el alto animado ya no hace falta: el esqueleto de carga tiene
-  las medidas del contenido más común (pestañas y un tema) y los mensajes
-  ocupan lo que miden.
+  las medidas del contenido más común, y en el tocadiscos los mensajes van al
+  lado del disco.
+- **Un widget pensado para la excepción.** Las pestañas giraban alrededor de
+  "sonando ahora", y la mayoría de las visitas caen cuando no estoy
+  escuchando: la pestaña "Ahora" terminaba mostrando un tema del pasado con
+  "hace X". Se vio recién con el widget construido. El tocadiscos parte del
+  caso común: siempre hay un tema en el plato y algo para elegir.
+- **Un disco que nunca se pausó.** En la primera versión del tocadiscos el
+  disco tenía que girar solo si el tema sonaba. Tenía
+  `motion-safe:animate-spin-record` (el shorthand `animation`) y, para
+  pausarlo, `[animation-play-state:paused]`. Tailwind v4 escribe la regla de
+  la variante dentro de un `@media`, en la misma capa, con la misma
+  especificidad y **después** de la otra: su `animation` resetea
+  `animation-play-state` y el disco giraba siempre. El build pasó, la clase
+  estaba en el HTML, y las pruebas con jsdom miraban las clases, no el efecto:
+  se vio en el navegador. Quedó anotado en las trampas del stack.
+- **Del giro como señal al giro como ambiente.** Con el disco quieto casi
+  todo el tiempo (casi nunca suena nada cuando alguien entra), el widget no
+  decía "música". El giro pasó a ser permanente y el estado real a un cartel
+  "En vivo", como el "On Air" de un estudio. La media vuelta de feedback al
+  poner un tema, que tenía sentido sobre un disco quieto, sobre uno que gira
+  se leía como una aceleración: la reemplaza una escala corta (el disco se
+  asienta en el plato). Esa escala se arma con la Web Animations API sobre la
+  capa de afuera, que no gira, porque en la capa que gira pisaría la rotación
+  mientras dura. Como esa API no pasa por CSS, el movimiento reducido se
+  chequea a mano.
+- **El "·" suelto.** En la lista, cuando el título se cortaba, el separador
+  entre título y artista quedaba solo al final. Ahora el separador va adentro
+  del bloque del artista, y la línea usa `flex-wrap` con el alto de una sola
+  línea y `overflow-hidden`: el artista entra entero al lado del título o baja
+  a una segunda línea que no se ve, y se lleva el separador.
 - **Probar la isla sin navegador.** Para recorrer cada estado, la isla real se
   montó en jsdom, instalado fuera del repositorio, con respuestas falsas del
-  endpoint. Así se probaron los datos con y sin un tema sonando, la lista
-  sin temas extra, las filas sin artista, los cinco tipos de error, la falla
-  de red y el JSON inválido, además del teclado, los atributos ARIA y que el
-  refresco conserve la pestaña elegida.
+  endpoint. Se probaron los datos con y sin un tema sonando, la lista con uno
+  o con seis temas, las filas sin artista, los cinco tipos de error, la falla
+  de red y el JSON inválido; además, el teclado de la lista, los atributos
+  ARIA, el cartel prendido y apagado, y cuándo se dispara la animación de
+  poner el disco. **Límite**: jsdom no aplica CSS, así que estas pruebas
+  confirman qué clases tiene cada elemento, no qué hace la cascada. Lo que
+  depende del orden de las reglas se revisa en el CSS del build y en el
+  navegador.
 
 ---
 
@@ -260,7 +305,9 @@ En cada etapa, antes de commitear:
   exista `.vercel/output/static/index.html`.
 - Los estados del widget de música, con la isla montada en jsdom (fuera del
   repositorio) y respuestas falsas del endpoint: cada estado, el teclado de
-  las pestañas y sus atributos ARIA.
+  la lista, sus atributos ARIA, el cartel "En vivo" y la animación de poner
+  el disco. Como jsdom no aplica CSS, lo que depende de la cascada se revisa
+  además en el CSS del build.
 - JavaScript por página, con gzip: ~137 KB en la home y ~128 KB en un caso de
   estudio. React y Framer Motion son ~106 KB de eso y los comparten todas las
   islas; el widget de música suma 2,9 KB.
@@ -269,7 +316,7 @@ En cada etapa, antes de commitear:
 
 - **Probar en el navegador** todo lo interactivo (cursor, menú, tema,
   wordmark, parallax, grilla de puntos, entradas, copiado del mail,
-  back-to-top, pestañas del widget de música), en los dos idiomas, con
+  back-to-top, tocadiscos del widget de música), en los dos idiomas, con
   movimiento reducido y en táctil.
 - **Links que abren en otra pestaña sin avisarlo.** Los links externos de la
   barra de metadata de los casos abren en una pestaña nueva y no lo anuncian a

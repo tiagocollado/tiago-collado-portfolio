@@ -29,7 +29,11 @@ sin el contexto de React, que no cruza entre islas. Para el widget de música,
 que no existía, propuso primero dónde va, cómo se ve y cada uno de sus
 estados, y lo construyó después de mi aprobación. Para su interacción hizo lo
 mismo: el patrón de accesibilidad del selector, cómo se ve cada estado nuevo,
-cómo crece sin saltos y si convenía sumar un detalle por tema.
+cómo crece sin saltos y si convenía sumar un detalle por tema. Cuando
+reemplacé las pestañas por el concepto del tocadiscos, bajó ese concepto a
+un diseño: cada estado en los dos temas y en celular, el patrón de la
+selección verificado en la guía de WAI-ARIA, qué incluye la lista y qué se
+reutilizaba del código.
 
 **Qué revisé, adapté o descarté.** Aprobé la estrategia de cada isla antes de
 que escribiera, y cambié dos cosas de lo que se había previsto: el selector de
@@ -50,6 +54,22 @@ títulos largos a 320 px, el movimiento reducido y el estado de error.
 - Para cumplir una condición que le puse al widget (que al crecer no mueva lo
   de al lado), cambió la alineación del diseño aprobado de abajo a arriba, y
   lo avisó al presentarlo en vez de hacerlo en silencio.
+- La primera versión de la interacción, las pestañas, cumplía todo lo pedido
+  y pasó las pruebas, pero giraba alrededor del tema que suena, que es el
+  caso menos común. No lo marcó: lo vi yo con el widget construido.
+- En el diseño del tocadiscos calculó los contrastes en vez de estimarlos.
+  Así aparecieron el disco casi invisible contra la card en tema oscuro
+  (1,10:1, se resolvió con un borde) y el crédito en `--ink-muted`, que no
+  llega al mínimo para texto. También anticipó que el giro infinito, sin
+  `motion-safe`, parpadearía con la regla global de movimiento reducido.
+- La pausa del disco no funcionó nunca, y sus pruebas dieron todo verde: en
+  jsdom revisaban que el elemento tuviera la clase de pausa, no que el disco
+  se detuviera. Una regla de la variante `motion-safe:` salía después en el
+  CSS y la pisaba. Lo detecté yo en el navegador; la IA lo confirmó en el CSS
+  generado, lo sumó a las trampas del stack y dejó escrito en la bitácora el
+  límite de esas pruebas: no aplican CSS.
+- Al revisar los separadores de la lista encontré un "·" suelto cuando el
+  título se cortaba; la primera versión de las filas no lo contemplaba.
 
 **Qué decidí yo.** La directiva de hidratación de cada isla; que ningún texto
 accesible quede fijo en un idioma; las animaciones de entrada en CSS y el
@@ -57,7 +77,13 @@ título letra por letra como isla chica, en vez de convertir componentes
 enteros en islas. Del widget: su lugar en el About y que no muestre portadas.
 De su interacción: dejar afuera el detalle por tema, los títulos de la lista
 en una sola línea y el tiempo relativo con más contraste también en la vista
-Ahora.
+Ahora. Después, reemplazar las pestañas por el tocadiscos y su concepto
+entero: sin tiempo relativo, sin flechas, la lista siempre visible en
+celular y la velocidad del giro. Primero, que el disco girara solo si el tema
+sonaba, con media vuelta al poner un tema; después cambié de criterio: el
+disco gira siempre, como ambiente, y el estado real lo dice un cartel "En
+vivo" prendido o apagado. La IA recomendó reemplazar la media vuelta por una
+escala corta, y qué anunciar con el cartel apagado (nada).
 
 ---
 

@@ -447,9 +447,11 @@ discos de lo que se puede usar (cláusula 5.1.8), y piden acreditar con un
 botón *"powered by AudioScrobbler"* (cláusula 2.7) que Last.fm ya no publica
 entre sus recursos.
 
-**Decisión.** El endpoint no devuelve portadas y el widget es solo
-tipográfico. El crédito es un link de texto, "Datos de Last.fm", y cada tema
-enlaza a su página en Last.fm.
+**Decisión.** El endpoint no devuelve portadas. El disco del widget es un
+dibujo propio, con la G de la marca como etiqueta, no el arte de ningún
+disco. El crédito es un link de texto, "vía Last.fm" (antes "Datos de
+Last.fm"), que avisa a los lectores de pantalla que abre en otra pestaña, y
+el título del tema destacado enlaza a su página en Last.fm.
 
 **Por qué.** Cumple lo que los términos permiten con lo que Last.fm ofrece
 hoy. Además, una portada sería el único color fuerte del About y competiría
@@ -457,8 +459,8 @@ con los covers de los proyectos.
 
 ### El widget va en el About, alineado arriba
 
-**Contexto.** El widget cuenta algo de quién soy, y la vista de los últimos
-cinco temas lo hace crecer.
+**Contexto.** El widget cuenta algo de quién soy, y su alto cambia entre
+estados (carga, datos, error).
 
 **Decisión.** En el About, en la columna izquierda que queda libre bajo el
 claim, alineado arriba con el texto. En mobile va después de la firma.
@@ -469,12 +471,14 @@ crezca solo se estira hacia abajo y el texto de al lado no se mueve.
 
 ### La interacción principal está en el widget de música
 
-**Decisión.** El widget permite alternar entre "Ahora" (el tema que suena o
-el último) y "Últimos 5" (la lista). El detalle por tema, que también estaba
-previsto, quedó afuera (ver la decisión siguiente).
+**Decisión.** Elegir un tema de la lista de los últimos cinco lo pone en el
+tocadiscos: cambia el tema destacado. La primera versión alternaba entre
+pestañas "Ahora / Últimos 5" (ver "De pestañas a tocadiscos"). El detalle
+por tema, que también estaba previsto, quedó afuera (ver la decisión
+siguiente).
 
 **Por qué.** Junta en un componente la API, sus estados (carga, error, vacío)
-y una interacción que cambia lo que se muestra. Las dos vistas salen del
+y una interacción que cambia lo que se muestra. Los cinco temas salen del
 mismo pedido al endpoint, así que la interacción no suma pedidos a Last.fm.
 
 ### Sin detalle por tema
@@ -504,6 +508,9 @@ detalle" de la decisión anterior.
 
 ### Pestañas con el patrón Tabs, no botones con `aria-pressed`
 
+> **Reemplazada** por "De pestañas a tocadiscos": el widget ya no tiene
+> pestañas. Queda como registro de la primera versión.
+
 **Contexto.** El selector cambia entre dos vistas que se excluyen. WAI-ARIA
 tiene dos patrones posibles: un botón conmutador (`aria-pressed`) o pestañas.
 
@@ -517,22 +524,115 @@ seleccionada, 1 de 2" y conectan cada una con su panel (`aria-controls`). La
 guía de WAI-ARIA recomienda la activación automática cuando los paneles se
 muestran sin espera, que es el caso: los dos salen del mismo pedido.
 
+### De pestañas a tocadiscos
+
+**Contexto.** La primera versión de la interacción eran pestañas "Ahora /
+Últimos 5". Funcionaba, pero vista construida no transmitía música, y estaba
+pensada alrededor del caso "sonando ahora", que es la excepción: la mayoría
+de las visitas caen cuando no estoy escuchando nada. En ese caso la pestaña
+"Ahora" mostraba un tema del pasado con "Lo último que sonó · hace X".
+
+**Decisión.** Un tocadiscos. Arriba, el tema destacado: un vinilo dibujado
+en SVG con la G como etiqueta, el título y el artista, y un cartel "En vivo"
+(ver "El disco gira siempre; el estado en vivo lo dice el cartel"). Por defecto es el tema
+más reciente. Abajo, los últimos cinco temas como el listado de un disco, y
+elegir uno lo pone en el tocadiscos. Sin tiempo relativo en ninguna parte,
+sin flechas ni íconos de link: las filas se ven elegibles por su hover y por
+el cursor.
+
+**Por qué.** Parte del caso común en vez de la excepción: sin nada sonando,
+el widget igual tiene algo que mostrar y algo para hacer. La metáfora del
+disco hace que la lista se entienda sin explicarla (Jakob: un listado de
+temas se reconoce), y la elección cambia lo que se ve arriba, que es una
+interacción con efecto visible y no un cambio de vista. Sacar el tiempo
+relativo saca también el único dato que hacía falta actualizar con el reloj.
+
+### La selección con el patrón Listbox
+
+**Contexto.** Elegir un tema es elegir uno de una lista. WAI-ARIA ofrece
+varios patrones posibles: listbox, radio group, botones con `aria-pressed` o
+botones con `aria-current`.
+
+**Decisión.** Listbox de selección única (`listbox`, `option`,
+`aria-selected`), con nombre desde el label visible "Últimos 5". La
+selección sigue al foco: las flechas mueven y eligen a la vez. Tab entra a la
+fila elegida, Inicio y Fin van a la primera y a la última. La lista incluye al
+tema destacado, marcado, y su orden no cambia nunca. Sin región `aria-live`.
+
+**Por qué.** Es el patrón para elegir un ítem de una lista. Radio group se
+comporta casi igual, pero se anuncia como "botón de opción", el lenguaje de un
+formulario. Dos botones con `aria-pressed` se anuncian como interruptores
+independientes, y `aria-current` en botones no es un patrón de la guía.
+El listbox exige que las filas no tengan elementos interactivos adentro: el
+único link es el título del destacado. La guía recomienda que la selección
+siga al foco cuando el cambio es instantáneo, y acá lo es (no hay pedido). La
+fila elegida se anuncia "título, artista, seleccionado, 2 de 5", que es el
+mismo contenido del destacado: una región viva lo repetiría en cada flecha.
+Si la fila elegida desapareciera de la lista, las demás se correrían bajo el
+cursor; por eso se queda, marcada con un mini disco (y no solo con color).
+
+### El disco gira siempre; el estado en vivo lo dice el cartel
+
+> Reemplaza a "El disco gira solo si suena", la primera versión del
+> tocadiscos: el giro continuo solo con `isNowPlaying`, y al poner un tema que
+> no suena, media vuelta y quieto.
+
+**Contexto.** El widget no puede decir algo que no es cierto. En la primera
+versión del tocadiscos el giro hacía las dos cosas: era el ambiente del
+widget y la señal de "está sonando". Como casi nunca suena nada cuando
+alguien entra, el disco pasaba la mayor parte del tiempo quieto, y un disco
+quieto no dice "música". Además, la pausa nunca funcionó: una trampa de
+Tailwind v4 dejaba la animación siempre corriendo (ver la bitácora).
+
+**Decisión.** Se separan las dos funciones.
+
+- **El disco gira siempre**, una vuelta cada 8 s, con `motion-safe`: con
+  movimiento reducido, quieto. La velocidad vive en un solo lugar, el token
+  `--animate-spin-record` de `global.css`.
+- **Si estoy escuchando lo dice un cartel "En vivo"**, arriba a la derecha de
+  la card y siempre visible, como el "On Air" de un estudio. Apagado: punto
+  hueco y texto gris tenue. Prendido (algún tema tiene `isNowPlaying`): texto
+  en `--ink-primary` y punto lleno en terracota, con brillo y una pulsación
+  lenta con `motion-safe`. El texto no va en terracota: a 11 px da 3,1:1 en
+  tema claro, debajo del 4,5:1 que pide WCAG; la luz la da el punto. El
+  lector de pantalla oye "Sonando ahora" solo cuando está prendido; apagado
+  no se anuncia nada.
+- **Al poner un tema, el disco se asienta**: arranca al 96% y vuelve a su
+  tamaño en 0,4 s, con la curva de la marca. Reemplaza a la media vuelta.
+- **La fila del tema que suena conserva su ecualizador.**
+
+**Por qué.** El giro pasa a ser ambiente: dice "esto es música" en cualquier
+momento, que es lo que el widget tiene que transmitir. El estado real, que es
+binario, queda en una pieza que existe solo para eso, prendida o apagada, y
+un cartel apagado no afirma nada. El estado no depende solo del color (WCAG
+1.4.1): cambian también la forma del punto, el brillo y la intensidad.
+Apagado no se anuncia porque "En vivo" leído sería falso, y "No está
+sonando" tampoco sería cierto mientras carga o ante un error, cuando no se
+sabe. Con el disco siempre girando, media vuelta más se lee como una
+aceleración, no como "poner el disco". Una escala chica es otro movimiento
+(escala, no rotación) y se lee como el disco que se apoya en el plato. El
+cartel dice *que* algo suena y el ecualizador de la fila dice *cuál*, algo
+que el cartel no puede decir cuando está elegido otro tema.
+
 ### El alto del widget se anima
 
-**Contexto.** La lista de cinco temas es más alta que la vista Ahora, y los
-estados vacío y error tenían una altura mínima pensada para un tema: una
-tarjeta grande y casi vacía.
+**Contexto.** Los estados vacío y error tenían una altura mínima pensada para
+un tema: una tarjeta grande y casi vacía. Además, el widget cambia de alto
+entre estados, y en la primera versión crecía al pasar a la pestaña de la
+lista.
 
 **Decisión.** La tarjeta mide el alto de su contenido con un
 `ResizeObserver` y lo anima con una transición CSS de 0,6 s con la curva de
 la marca. La altura mínima se fue: el esqueleto de carga ya tiene las medidas
-del contenido, y los mensajes ocupan lo que miden. Con movimiento reducido,
-la regla global deja la transición en 0 y el cambio es instantáneo.
+del contenido, y vacío, privado y error muestran el disco con el
+mensaje al lado. En el tocadiscos, el bloque destacado mide siempre lo que el
+disco (el título se corta en tres líneas), así que elegir un tema no cambia
+el alto. Con movimiento reducido, la regla global deja la transición en 0 y
+el cambio es instantáneo.
 
-**Por qué.** El widget crece hacia abajo (va alineado arriba): las pestañas
-no se mueven bajo el foco, y lo que viene después se desliza en vez de
-saltar. Se descartó reservar siempre el alto de la lista, porque dejaba la
-vista Ahora grande y vacía, que es el problema de los estados sin datos. CSS
+**Por qué.** El widget crece hacia abajo (va alineado arriba) y lo que viene
+después se desliza en vez de saltar. Se descartó reservar siempre el alto
+máximo, porque deja la tarjeta grande y vacía en los estados sin datos. CSS
 no anima desde ni hacia `auto`, por eso el alto se mide y se pasa en píxeles.
 No se usó Framer Motion: la isla no lo usaba, y la transición CSS ya respeta
 la regla de movimiento reducido del sitio.
