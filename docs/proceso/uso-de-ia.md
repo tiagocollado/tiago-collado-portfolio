@@ -42,7 +42,10 @@ idioma pasó de botones a links, y la grilla de puntos se separó en su propia
 isla para hidratarla más tarde. Del widget revisé en el navegador los seis
 estados, el celular de 320 px, el ecualizador y el cursor. De su interacción,
 las pestañas y el alto animado en los dos temas, el uso con teclado, los
-títulos largos a 320 px, el movimiento reducido y el estado de error.
+títulos largos a 320 px, el movimiento reducido y el estado de error. De la
+versión final, en staging: que el tema se lea primero, que "vía Last.fm"
+apenas se vea, que las filas abran su página en Last.fm, que el disco gire
+y que el cartel "En vivo" se prenda cuando estoy escuchando.
 
 **Errores y límites detectados.**
 
