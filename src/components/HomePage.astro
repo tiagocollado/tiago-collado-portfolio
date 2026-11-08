@@ -5,10 +5,20 @@ import ServicesMarquee from './sections/ServicesMarquee.astro';
 import Projects from './sections/Projects.astro';
 import About from './sections/About.astro';
 import Stack from './sections/Stack.astro';
+import Contact from './sections/Contact.jsx';
 import Footer from './ui/Footer.jsx';
 import { createTranslator } from '../i18n/translate.js';
 
 const t = createTranslator(Astro.currentLocale);
+
+const contactTexts = {
+  label: t('contact.label'),
+  title: t('contact.title'),
+  emailLabel: t('contact.email_label'),
+  copy: t('contact.copy'),
+  copied: t('contact.copied'),
+  downloadCv: t('contact.download_cv'),
+};
 
 const footerTexts = {
   credit: t('footer.credit'),
@@ -22,8 +32,21 @@ const footerTexts = {
   <Projects />
   <About />
   <Stack />
-  <!-- isla de F5: Contact -->
-  {/* client:visible: está al final de la página y solo anima al entrar en
-      pantalla. Su back-to-top apunta al id="top" del Hero. */}
-  <Footer client:visible texts={footerTexts} />
+  {/*
+    Bloque de cierre a pantalla completa. Al entrar por el ancla #contact
+    (el "Hablemos" del navbar), min-h-screen + justify-between hacen que
+    Contact y el Footer ocupen exactamente una pantalla: Contact arriba y la
+    barra del footer pegada abajo.
+
+    El envoltorio es un <div> a propósito: un <section> le sacaría al
+    <footer> el rol de landmark contentinfo.
+
+    Las dos islas van con client:visible: están al final de la página y solo
+    animan al entrar en pantalla. El back-to-top del Footer apunta al
+    id="top" del Hero.
+  */}
+  <div class="min-h-screen flex flex-col justify-between">
+    <Contact client:visible texts={contactTexts} />
+    <Footer client:visible texts={footerTexts} />
+  </div>
 </BaseLayout>
