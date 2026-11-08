@@ -224,15 +224,15 @@ tocadiscos" y "El disco gira siempre; el estado en vivo lo dice el cartel").
   link de texto, "vía Last.fm". El título del tema destacado enlaza a su
   página en Last.fm.
 - **Un widget que cambia de alto.** En la versión con pestañas, la lista era
-  bastante más alta que la vista Ahora. En escritorio el widget va alineado
-  arriba con el texto del About, no abajo, así solo se estira hacia abajo y el
-  texto de al lado no se mueve. Para que tampoco salte lo que viene después,
-  la tarjeta anima su alto. CSS no anima desde ni hacia `auto`, así que un
+  bastante más alta que la vista Ahora. En escritorio el widget iba alineado
+  arriba con el texto del About, así solo se estiraba hacia abajo y el texto
+  de al lado no se movía. Para que tampoco saltara lo que viene después, la
+  tarjeta anima su alto. CSS no anima desde ni hacia `auto`, así que un
   `ResizeObserver` mide el contenido y el alto se pasa en píxeles; la tarjeta
   usa `box-content` para que el borde quede fuera de esa medida. La primera
   medida se aplica sin animar, porque parte de `auto`. En el tocadiscos,
   elegir un tema ya no cambia el alto: el destacado mide siempre lo que el
-  disco, y el título se corta en tres líneas.
+  disco, y el título se corta en dos líneas.
 - **Estados sin datos demasiado grandes.** La altura mínima pensada para un
   tema dejaba los mensajes de vacío y de error en una tarjeta grande y casi
   vacía. Con el alto animado ya no hace falta: el esqueleto de carga tiene
@@ -257,11 +257,20 @@ tocadiscos" y "El disco gira siempre; el estado en vivo lo dice el cartel").
   decía "música". El giro pasó a ser permanente y el estado real a un cartel
   "En vivo", como el "On Air" de un estudio. La media vuelta de feedback al
   poner un tema, que tenía sentido sobre un disco quieto, sobre uno que gira
-  se leía como una aceleración: la reemplaza una escala corta (el disco se
-  asienta en el plato). Esa escala se arma con la Web Animations API sobre la
-  capa de afuera, que no gira, porque en la capa que gira pisaría la rotación
-  mientras dura. Como esa API no pasa por CSS, el movimiento reducido se
-  chequea a mano.
+  se leía como una aceleración: primero la reemplazó una escala corta (el
+  disco se asentaba en el plato), y después se sacó también.
+- **Un widget que le ganaba al texto.** Visto en staging, el widget empujaba
+  el texto del About, estiraba la sección y competía con su eyebrow, y el
+  cartel tenía un punto que pulsaba con brillo. Se reordenó la jerarquía: el
+  texto vuelve a su posición original, el widget va después de la firma y,
+  en escritorio, en posición absoluta, alineado abajo con ella. El cartel
+  pasó a un rectángulo que se prende sin efectos, y elegir un tema ya no
+  tiene animación propia. Lo que costó fue el alto: en posición absoluta, el
+  widget tenía que entrar en el alto del copy sin pegarse al claim. Medido
+  en Chrome headless (por el protocolo de DevTools, sin dependencias en el
+  repositorio), la primera versión compacta medía 381 px contra 292 del copy
+  y quedaba a 7 px del claim. Con el crédito en la fila del cartel y las filas
+  a 28 px con puntero fino (44 px con el dedo) bajó a 328 px y quedó a 60 px.
 - **El "·" suelto.** En la lista, cuando el título se cortaba, el separador
   entre título y artista quedaba solo al final. Ahora el separador va adentro
   del bloque del artista, y la línea usa `flex-wrap` con el alto de una sola

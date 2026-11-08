@@ -14,9 +14,10 @@ o lo cambio. Después ejecuta, verifica y frena para que revise. Los commits los
 hago yo. Si falta un dato (un texto, un rol, una fecha), la regla es preguntar,
 no completarlo.
 
-**Un límite que atraviesa todo.** La IA no puede abrir un navegador. Todo lo
-que verifica es sobre el código, el build y el HTML generado; lo visual y lo
-interactivo (animaciones, cursor, tema, táctil) lo pruebo yo.
+**Un límite que atraviesa todo.** La IA no usa el sitio como una persona.
+Verifica sobre el código, el build y el HTML generado, y puede medir y
+capturar páginas con Chrome headless; lo interactivo (animaciones, cursor,
+tema, táctil) y el juicio visual final los pongo yo, en el navegador.
 
 ---
 
@@ -70,6 +71,10 @@ títulos largos a 320 px, el movimiento reducido y el estado de error.
   límite de esas pruebas: no aplican CSS.
 - Al revisar los separadores de la lista encontré un "·" suelto cuando el
   título se cortaba; la primera versión de las filas no lo contemplaba.
+- Al pasar el widget a posición absoluta junto a la firma, su primera versión
+  compacta (381 px) era más alta que el texto del About (292 px) y quedaba a
+  7 px del claim. Lo detectó midiendo con Chrome headless antes de
+  entregarlo, y lo resolvió sin tocar el alto táctil de las filas.
 
 **Qué decidí yo.** La directiva de hidratación de cada isla; que ningún texto
 accesible quede fijo en un idioma; las animaciones de entrada en CSS y el
@@ -83,7 +88,10 @@ celular y la velocidad del giro. Primero, que el disco girara solo si el tema
 sonaba, con media vuelta al poner un tema; después cambié de criterio: el
 disco gira siempre, como ambiente, y el estado real lo dice un cartel "En
 vivo" prendido o apagado. La IA recomendó reemplazar la media vuelta por una
-escala corta, y qué anunciar con el cartel apagado (nada).
+escala corta, y qué anunciar con el cartel apagado (nada). Revisando en
+staging decidí la jerarquía del About: el widget es secundario, va después
+de la firma y alineado abajo con ella, más compacto y con el label en tinta
+neutra. También el cartel como un rectángulo sin efectos, y sacar la escala.
 
 ---
 
@@ -142,7 +150,10 @@ de cada commit (build, secretos, palabras que no corresponden al
 repositorio). Para probar el endpoint en cada estado armó un reemplazo de
 `fetch` que vive fuera del repositorio. Para probar los estados y el teclado
 del widget sin navegador, montó la isla real en jsdom, también instalado
-fuera del repositorio, con respuestas falsas del endpoint.
+fuera del repositorio, con respuestas falsas del endpoint. Para medir el
+layout del About usó Chrome headless por el protocolo de DevTools, con un
+script fuera del repositorio que mide posiciones y saca capturas en varios
+anchos y en los dos temas.
 
 **Un límite puesto a propósito.** La IA no abre el archivo `.env`: la clave de
 Last.fm la cargo yo. Para probar, el servidor de desarrollo lee el archivo

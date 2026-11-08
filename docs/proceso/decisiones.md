@@ -457,17 +457,44 @@ el título del tema destacado enlaza a su página en Last.fm.
 hoy. Además, una portada sería el único color fuerte del About y competiría
 con los covers de los proyectos.
 
-### El widget va en el About, alineado arriba
+### El widget es secundario en el About
 
-**Contexto.** El widget cuenta algo de quién soy, y su alto cambia entre
-estados (carga, datos, error).
+> Reemplaza a "El widget va en el About, alineado arriba", que lo ponía al
+> lado del copy, alineado arriba, para que al crecer solo se estirara hacia
+> abajo.
 
-**Decisión.** En el About, en la columna izquierda que queda libre bajo el
-claim, alineado arriba con el texto. En mobile va después de la firma.
+**Contexto.** Visto en staging, el widget competía con el texto del About:
+lo empujaba, estiraba la sección y su label en terracota peleaba con el
+eyebrow de la sección. El texto es lo principal; el widget es un detalle
+personal, no el protagonista. Además, el motivo de alinearlo arriba ya no
+existía: el tocadiscos tiene altura fija.
 
-**Por qué.** Lo personal queda junto a la presentación (Proximidad), sin sumar
-una sección entre los proyectos y el contacto (Hick). Alineado arriba, cuando
-crezca solo se estira hacia abajo y el texto de al lado no se mueve.
+**Decisión.**
+
+- **El claim, el copy y la firma vuelven a su posición original**, la que
+  tenían antes del widget.
+- **El widget va después de la firma** en el HTML (y en el orden de
+  tabulación). En celular y tablet queda debajo del copy. En escritorio va en
+  la columna izquierda, **alineado abajo con la firma**, en posición
+  absoluta: no empuja el copy ni estira la sección.
+- **Más compacto y con menos peso**: el disco baja de 112 a 64 px, el padding
+  de 24 a 16 px y la tipografía un escalón (el título de `text-xl` a
+  `text-base`, cortado en dos líneas; las filas de `text-sm` a `text-xs`). El
+  crédito "vía Last.fm" comparte la fila con el cartel. Las filas miden 44 px
+  con el dedo y 28 px con mouse o trackpad (`pointer-fine`), por encima de los
+  24 px que pide WCAG 2.5.8.
+- **El label "Lo que suena cuando diseño" va en `--ink-secondary`**, no en
+  terracota (`--ink-muted` no llega al contraste mínimo para texto).
+
+**Por qué.** La jerarquía tiene que decir qué importa: el texto del About es
+lo que un reclutador tiene que leer, y el widget suma personalidad sin pedir
+atención (Estética-Usabilidad: menos peso en lo secundario). Lo personal sigue
+junto a la presentación (Proximidad), sin sumar una sección entre los
+proyectos y el contacto (Hick). En posición absoluta, el widget tiene que
+entrar en el alto del copy: se midió en Chrome headless a 1024, 1280, 1440 y
+1920 px. La primera versión compacta medía 381 px contra 292 del copy y
+quedaba a 7 px del claim; con el crédito en la fila del cartel y las filas de
+28 px con puntero fino mide 328 px y deja 60 px.
 
 ### La interacción principal está en el widget de música
 
@@ -590,29 +617,34 @@ Tailwind v4 dejaba la animación siempre corriendo (ver la bitácora).
   movimiento reducido, quieto. La velocidad vive en un solo lugar, el token
   `--animate-spin-record` de `global.css`.
 - **Si estoy escuchando lo dice un cartel "En vivo"**, arriba a la derecha de
-  la card y siempre visible, como el "On Air" de un estudio. Apagado: punto
-  hueco y texto gris tenue. Prendido (algún tema tiene `isNowPlaying`): texto
-  en `--ink-primary` y punto lleno en terracota, con brillo y una pulsación
-  lenta con `motion-safe`. El texto no va en terracota: a 11 px da 3,1:1 en
-  tema claro, debajo del 4,5:1 que pide WCAG; la luz la da el punto. El
-  lector de pantalla oye "Sonando ahora" solo cuando está prendido; apagado
-  no se anuncia nada.
-- **Al poner un tema, el disco se asienta**: arranca al 96% y vuelve a su
-  tamaño en 0,4 s, con la curva de la marca. Reemplaza a la media vuelta.
+  la card y siempre visible, como el "On Air" de un estudio: un rectángulo
+  chico con el texto adentro, sin animación. Apagado: borde y texto tenues.
+  Prendido (algún tema tiene `isNowPlaying`): relleno terracota sólido con el
+  texto en la tinta oscura de la marca (`#111110`, fija en los dos temas),
+  que da 5:1. El lector de pantalla oye "Sonando ahora" solo cuando está
+  prendido; apagado no se anuncia nada.
+- **Elegir un tema no tiene animación propia**: queda el fade del título y la
+  fila marcada en la lista.
 - **La fila del tema que suena conserva su ecualizador.**
 
 **Por qué.** El giro pasa a ser ambiente: dice "esto es música" en cualquier
 momento, que es lo que el widget tiene que transmitir. El estado real, que es
 binario, queda en una pieza que existe solo para eso, prendida o apagada, y
 un cartel apagado no afirma nada. El estado no depende solo del color (WCAG
-1.4.1): cambian también la forma del punto, el brillo y la intensidad.
-Apagado no se anuncia porque "En vivo" leído sería falso, y "No está
-sonando" tampoco sería cierto mientras carga o ante un error, cuando no se
-sabe. Con el disco siempre girando, media vuelta más se lee como una
-aceleración, no como "poner el disco". Una escala chica es otro movimiento
-(escala, no rotación) y se lee como el disco que se apoya en el plato. El
-cartel dice *que* algo suena y el ecualizador de la fila dice *cuál*, algo
-que el cartel no puede decir cuando está elegido otro tema.
+1.4.1): el cartel pasa de un contorno a un bloque lleno. Apagado no se
+anuncia porque "En vivo" leído sería falso, y "No está sonando" tampoco sería
+cierto mientras carga o ante un error, cuando no se sabe. El cartel dice
+*que* algo suena y el ecualizador de la fila dice *cuál*, algo que el cartel
+no puede decir cuando está elegido otro tema.
+
+**Cartel sin efectos, y sin escala al elegir** (revisión en staging). La
+primera versión del cartel tenía un punto que pulsaba con brillo, y elegir un
+tema hacía que el disco se asentara con una escala. Con el disco girando
+siempre, eran demasiados movimientos para un detalle secundario: un cartel
+real de estudio es un bloque que se prende, sin efectos, y el fade del título
+más la fila marcada ya alcanzan como respuesta a la elección. Además, el
+texto en terracota sobre la card no llegaba al contraste a 11 px; el texto
+oscuro sobre el relleno terracota sí.
 
 ### El alto del widget se anima
 
@@ -626,12 +658,13 @@ lista.
 la marca. La altura mínima se fue: el esqueleto de carga ya tiene las medidas
 del contenido, y vacío, privado y error muestran el disco con el
 mensaje al lado. En el tocadiscos, el bloque destacado mide siempre lo que el
-disco (el título se corta en tres líneas), así que elegir un tema no cambia
+disco (el título se corta en dos líneas), así que elegir un tema no cambia
 el alto. Con movimiento reducido, la regla global deja la transición en 0 y
 el cambio es instantáneo.
 
-**Por qué.** El widget crece hacia abajo (va alineado arriba) y lo que viene
-después se desliza en vez de saltar. Se descartó reservar siempre el alto
+**Por qué.** Lo que viene después se desliza en vez de saltar (en
+escritorio el widget está en posición absoluta y no mueve nada; en celular y
+tablet, sí). Se descartó reservar siempre el alto
 máximo, porque deja la tarjeta grande y vacía en los estados sin datos. CSS
 no anima desde ni hacia `auto`, por eso el alto se mide y se pasa en píxeles.
 No se usó Framer Motion: la isla no lo usaba, y la transición CSS ya respeta
