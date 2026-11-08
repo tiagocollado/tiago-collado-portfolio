@@ -46,6 +46,15 @@ Pendiente.
 
 ## Créditos y licencias
 
+- **Datos de música**: [Last.fm](https://www.last.fm), vía su
+  [API](https://www.last.fm/api), bajo sus
+  [términos de uso](https://www.last.fm/api/tos), que permiten solo uso no
+  comercial y piden acreditar a Last.fm con un link. El widget lleva un link
+  de texto "Datos de Last.fm": el botón *"powered by AudioScrobbler"* que
+  nombran los términos ya no se publica entre los recursos de Last.fm. Cada
+  tema enlaza a su página en Last.fm, como piden los términos. No se muestran
+  portadas de discos, porque los términos excluyen las imágenes y el arte de
+  lo que se puede usar.
 - Skills de IA de Anthropic, usadas en local y no incluidas en este
   repositorio: [`frontend-design`](https://github.com/anthropics/skills/tree/main/skills/frontend-design)
   y [`design-critique`](https://github.com/anthropics/knowledge-work-plugins/tree/main/design/skills/design-critique).

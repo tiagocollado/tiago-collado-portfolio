@@ -136,6 +136,17 @@
     "signature": "Gotya. Got it.",
     "byline": "by Tiago Collado"
   },
+  "now_playing": {
+    "label": "MUSIC I DESIGN TO",
+    "status_playing": "Playing now",
+    "status_recent": "Last played",
+    "loading": "Loading what I’m listening to",
+    "empty": "I haven’t logged any tracks yet.",
+    "private": "My Last.fm history is private.",
+    "error": "Couldn’t load the music right now.",
+    "credit": "Data from Last.fm",
+    "track_link": "on Last.fm (opens in a new tab)"
+  },
   "services": {
     "label": "Services I offer",
     "items": [

@@ -136,6 +136,17 @@
     "signature": "Gotya. Entendido.",
     "byline": "by Tiago Collado"
   },
+  "now_playing": {
+    "label": "LO QUE SUENA CUANDO DISEÑO",
+    "status_playing": "Sonando ahora",
+    "status_recent": "Lo último que sonó",
+    "loading": "Cargando lo que estoy escuchando",
+    "empty": "Todavía no registré ningún tema.",
+    "private": "Mi historial de Last.fm está en privado.",
+    "error": "No pude cargar la música ahora.",
+    "credit": "Datos de Last.fm",
+    "track_link": "en Last.fm (abre en otra pestaña)"
+  },
   "services": {
     "label": "Servicios que ofrezco",
     "items": [

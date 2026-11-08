@@ -19,6 +19,23 @@
   --radius-pill: 999px;
 
   --ease-expo-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Barras del widget de música mientras suena un tema. Cada barra arranca
+     con otro delay para que no suban juntas. */
+  --animate-equalizer: equalizer 1s ease-in-out infinite;
+
+  @keyframes equalizer {
+    0%, 100% { transform: scaleY(0.3); }
+    50%      { transform: scaleY(1); }
+  }
+
+  /* Entrada del contenido del widget de música cuando llegan los datos. */
+  --animate-fade-in: fade-in 0.4s var(--ease-expo-out);
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
 }
 
 :root {

@@ -1,7 +1,21 @@
 ---
+import NowPlaying from './NowPlaying.jsx';
 import { createTranslator } from '../../i18n/translate.js';
 
 const t = createTranslator(Astro.currentLocale);
+
+// La isla recibe solo los textos que usa, ya traducidos.
+const nowPlayingTexts = {
+  label: t('now_playing.label'),
+  status_playing: t('now_playing.status_playing'),
+  status_recent: t('now_playing.status_recent'),
+  loading: t('now_playing.loading'),
+  empty: t('now_playing.empty'),
+  private: t('now_playing.private'),
+  error: t('now_playing.error'),
+  credit: t('now_playing.credit'),
+  track_link: t('now_playing.track_link'),
+};
 
 /*
  * Espacio duro entre fragmentos del claim. En ES esas uniones son "el diseño"
@@ -15,10 +29,10 @@ const NO_BREAK_SPACE = '\u00a0';
 ---
 
 {/*
-  Entrada: tres bloques con fade + subida, cada uno cuando entra en pantalla
-  (margen -80px): la fila de labels, el claim y el copy con la firma. El
-  claim y el copy esperan 0.1 y 0.15 s, así en una pantalla alta, donde
-  entran juntos, se leen en orden.
+  Entrada: cuatro bloques con fade + subida, cada uno cuando entra en
+  pantalla (margen -80px): la fila de labels, el claim, el copy con la firma
+  y el widget de música. Esperan 0, 0.1, 0.15 y 0.2 s, así en una pantalla
+  alta, donde entran juntos, se leen en orden.
 */}
 <section
   id="about"
@@ -58,9 +72,18 @@ const NO_BREAK_SPACE = '\u00a0';
       {t('about.claim_1')}{NO_BREAK_SPACE}<strong class="font-semibold">{t('about.claim_2')}</strong>{' '}{t('about.claim_3')}{NO_BREAK_SPACE}<strong class="font-semibold">{t('about.claim_4')}</strong>
     </p>
 
-    <div class="flex justify-end mt-16 md:mt-20 lg:mt-24">
+    {/*
+      Copy con la firma y widget de música. El copy va primero en el DOM:
+      es lo principal de la sección y así encabeza el apilado en mobile y el
+      orden de tabulación. En lg el widget pasa a la columna izquierda, que
+      sin él queda vacía bajo el claim (order).
+
+      items-start, no items-end: cuando el widget muestre más temas y crezca,
+      solo se estira hacia abajo y el copy de la derecha no se mueve.
+    */}
+    <div class="flex flex-col gap-16 lg:flex-row lg:items-start lg:justify-between mt-16 md:mt-20 lg:mt-24">
       <div
-        class="max-w-xl space-y-6 md:text-right"
+        class="max-w-xl space-y-6 md:text-right md:self-end lg:order-2"
         data-reveal-trigger
         data-reveal-margin="-80px"
         data-reveal
@@ -84,9 +107,31 @@ const NO_BREAK_SPACE = '\u00a0';
           </p>
         </div>
       </div>
+
+      {/*
+        Widget de música. Sin JavaScript no puede pedir los datos y se
+        quedaría en "cargando" para siempre, así que se oculta (el <noscript>
+        de abajo). data-now-playing es el gancho de esa regla.
+      */}
+      <div
+        class="w-full max-w-sm md:self-end lg:self-auto lg:order-1"
+        data-now-playing
+        data-reveal-trigger
+        data-reveal-margin="-80px"
+        data-reveal
+        style="--reveal-y: 24px; --reveal-duration: 0.7s; --reveal-delay: 0.2s;"
+      >
+        <NowPlaying client:visible texts={nowPlayingTexts} locale={Astro.currentLocale} />
+      </div>
     </div>
   </div>
 </section>
+
+<noscript>
+  <style is:inline>
+    [data-now-playing] { display: none; }
+  </style>
+</noscript>
 
 <script>
   import '../../scripts/reveal.js';
