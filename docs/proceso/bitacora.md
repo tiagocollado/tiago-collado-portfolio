@@ -200,3 +200,115 @@ la URL pública no se cae en el medio.
   Navbar, el Contact y el Footer.
 - Verificar en staging que la redirección del CV dé 307 y qué hace Vercel con
   las URLs con y sin barra final.
+
+## 2026-11-07 · Scroll, cursor, navegación, Hero y footer
+
+**Qué se hizo**
+
+- **Smooth scroll con Lenis** (`src/scripts/smoothScroll.js`), cargado desde
+  un `<script>` del layout, sin React. Mismas opciones que el sitio publicado
+  y la misma versión (1.3.23). Con movimiento reducido no se monta.
+- **Cursor custom** (`CustomCursor.jsx`, `client:only="react"`): punto y
+  anillo con cuatro variantes (`default`, `link`, `view`, `drag`).
+- **Navbar** (`client:load`): menú desplegable en mobile con
+  `AnimatePresence`, NavLogo que aparece con el scroll, botón de tema y
+  selector de idioma.
+- **Hero**: una sección estática con dos islas, la grilla de puntos
+  (`client:idle`) y el contenido animado (`client:load`: wordmark, lema y
+  CTA magnético).
+- **Footer** (`client:visible`) en la home y en los tres casos de estudio.
+- **Textos accesibles traducidos**: los `aria-label` del navbar, del
+  wordmark y del selector de idioma salen de los diccionarios. En el sitio
+  anterior estaban fijos en castellano en las dos versiones.
+- **Barra final en todas las URLs**: `trailingSlash: 'always'` en Astro y
+  `"trailingSlash": true` en `vercel.json`.
+
+**Cómo se coordinan las islas**
+
+En la versión anterior, cuatro contextos de React envolvían el sitio entero:
+el del cursor, el del tema, el de los textos y la configuración de
+movimiento reducido. En Astro cada isla es su propia app de React y el
+contexto no cruza de una a otra, así que cada uno se resolvió distinto:
+
+- **Cursor**: los elementos declaran la variante con un atributo
+  (`data-cursor="link"`) y el cursor escucha un solo `mouseover` en el
+  documento. Así una isla o un `.astro` sin JavaScript pueden pedir una
+  variante sin conocer al cursor. Como la variante sale del elemento que
+  está bajo el puntero, ya no puede quedar "pegada" después de un click,
+  que era un bug que la versión anterior resolvía reseteando en cada cambio
+  de ruta.
+- **Wordmark del Hero y logo del navbar**: no compartían estado ni antes.
+  Cada uno lee el scroll de la ventana por su cuenta, y los coordinan sus
+  rangos: el wordmark se achica entre 0 y 500px y se desvanece desde los
+  405, y el logo aparece entre 200 y 400. Lenis no reemplaza el scroll del
+  navegador (en cada frame llama a `window.scrollTo`, verificado en su
+  código), así que las dos islas leen la misma posición real.
+- **Tema**: vive en la clase de `<html>`. El navbar la lee con
+  `useSyncExternalStore` y un `MutationObserver`, y la escribe junto con
+  `localStorage`, con la misma clave que lee el script inline del `<head>`.
+- **Textos**: cada isla recibe como props solo los textos que usa, ya
+  traducidos en el `.astro`.
+- **Movimiento reducido**: `<MotionConfig reducedMotion="user">` en cada
+  isla que anima.
+
+**Problemas y cómo se resolvieron**
+
+- **La grilla de puntos dejaba de responder al separarla en su propia
+  isla.** La grilla mide su contenedor y escucha el mouse sobre él, y lo
+  tomaba como el padre directo del `<canvas>`. Al pasar a ser una isla
+  aparte, Astro la envuelve en un elemento `<astro-island>` con
+  `display: contents`. Ese envoltorio no genera caja, así que mide 0 × 0 y
+  no recibe los eventos del mouse de la sección. El resultado habría sido
+  un canvas vacío y quieto, sin ningún error en el build ni en la consola.
+  Se resolvió tomando como contenedor el `offsetParent` del canvas, que es
+  el ancestro posicionado más cercano. Saltea el envoltorio y llega a la
+  `<section>` del Hero, que es contra la que el canvas ya se posicionaba.
+  Separar la grilla permite hidratarla con `client:idle`: es fondo y puede
+  esperar a que el navegador termine lo urgente.
+- **Las anclas y la barra final.** Lenis intercepta un ancla solo si el
+  pathname del link coincide exactamente con el de la página. Si alguien
+  entraba por `/en`, el link `/en/#projects` del navbar habría recargado la
+  página en vez de scrollear. Con la barra final obligatoria, todas las
+  URLs de página tienen una sola forma. Según la documentación de Vercel,
+  las rutas con extensión de archivo no reciben barra, así que la
+  redirección del CV no debería verse afectada.
+- **Tipos en un `<script>` de Astro.** Astro procesa los `<script>` como
+  TypeScript, y el editor marcaba un parámetro sin tipo. TypeScript no lee
+  anotaciones JSDoc, así que el código de Lenis pasó a un archivo `.js`
+  propio que el `<script>` importa.
+- **El selector de idioma pasó de botones a links.** En el sitio anterior
+  eran botones que navegaban por JavaScript. Ahora son `<a>` armados en el
+  servidor, con `hreflang`, `lang` y `aria-current="page"` en el idioma
+  activo, y funcionan sin JavaScript. Cada idioma se nombra en su propio
+  idioma ("English", "Español"), como recomienda el W3C para los selectores
+  de idioma.
+
+**Verificación**
+
+- `npm run build` sin errores ni warnings. Ningún `.ts` en `src/`.
+- En el HTML generado: un `<header>`, un `<nav>`, un `<main>` y un
+  `<footer role="contentinfo">` por página; un `id="top"` en cada página que
+  tiene back-to-top; los links de idioma apuntan a la misma página en el
+  otro idioma, también en los casos de estudio.
+- El Hero conserva el árbol de cajas del sitio publicado: el build trae la
+  regla `astro-island { display: contents }`, así que los envoltorios de las
+  islas no se meten en el layout.
+- JavaScript por página, con gzip: ~131 KB en la home y ~127 KB en un caso
+  de estudio. React y Framer Motion son ~106 KB de eso y los comparten todas
+  las islas; Lenis, ~5 KB.
+- En el servidor de desarrollo, `/en/` responde 200 y `/en` muestra el aviso
+  de `trailingSlash`.
+
+**Pendiente**
+
+- Probar en el navegador: cursor, menú, cambio de tema, achique del
+  wordmark, parallax, grilla de puntos y back-to-top, también con movimiento
+  reducido y en táctil.
+- Verificar en staging que `/en` y `/en/projects/pulso-creativo` redirijan
+  con 308 a su versión con barra, y que `/tiago-collado-cv.pdf` siga dando
+  307.
+- El texto del anillo del cursor ("View") está fijo en inglés en los dos
+  idiomas.
+- Contact, y con él el bloque de cierre de la home que agrupa Contact y
+  Footer en una pantalla, junto con las animaciones de entrada de las
+  secciones sin JavaScript.
