@@ -91,12 +91,22 @@ según la documentación de Vercel.
 sitio de páginas completas.
 
 **Decisión.** Páginas completas, con `@view-transition { navigation: auto; }`
-en CSS para la transición entre páginas. `ClientRouter` se evalúa aparte.
+en CSS para la transición entre páginas. `ClientRouter` no se adopta mientras
+el sitio no esté en producción.
 
 **Por qué.** Cada página arranca limpia: no hay estado que reiniciar entre
 páginas (scroll, cursor, animaciones). En los navegadores sin soporte de
-`@view-transition` la regla se ignora y la navegación es normal, sin
-animación.
+`@view-transition` (hoy, Firefox estable) la regla se ignora y la navegación
+es normal, sin animación.
+
+`ClientRouter` haría persistir el cursor y el scroll suave entre páginas, pero
+obliga a adaptar todo lo que hoy asume una página nueva: los scripts
+empaquetados corren una sola vez (las animaciones de entrada y el skip link no
+verían la página siguiente), el tema se tiene que reaplicar después de cada
+cambio de página, el scroll se tiene que resetear a mano y la variante del
+cursor puede quedar pegada al link que se clickeó. Son fallas que no dan
+error. El costo no compensa lo que gana antes de tener el sitio estable en
+producción.
 
 ### Selector de idioma con links
 
@@ -308,6 +318,24 @@ defecto (640 a 2048 px) hasta el ancho del archivo, más el original. Calidad
 
 **Por qué.** Paridad: cada dispositivo baja una variante del mismo tamaño que
 antes. Nunca se genera una variante más grande que el archivo.
+
+### La imagen principal del caso, sin preload en el `<head>`
+
+**Contexto.** En el sitio anterior, `next/image` con `priority` agregaba un
+`<link rel="preload">` en el `<head>` para la imagen principal de cada caso.
+Acá la imagen sale con `fetchpriority="high"`. React 19 también genera un
+preload para esa imagen, pero dentro del `<body>`, justo antes del `<img>`,
+porque Astro renderiza cada isla por separado.
+
+**Decisión.** Solo `fetchpriority="high"`, sin agregar un preload en el
+`<head>`.
+
+**Por qué.** El preload sirve para que el navegador descubra antes un recurso
+que encontraría tarde (un fondo de CSS, una imagen que inserta un script). Esta
+imagen está en el HTML inicial, así que el navegador la encuentra igual, y
+`fetchpriority` ya le da prioridad alta. Agregar el preload obligaría a armar
+en el layout el `srcset` y el `sizes` de una imagen que vive en una isla, para
+casi ninguna ganancia.
 
 ### Imagen de Open Graph estática
 

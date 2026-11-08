@@ -178,8 +178,11 @@ En cada etapa, antes de commitear:
 - **Probar en el navegador** todo lo interactivo (cursor, menú, tema,
   wordmark, parallax, grilla de puntos, entradas, copiado del mail,
   back-to-top), en los dos idiomas, con movimiento reducido y en táctil.
-- **Verificar en staging** que `/en` redirija con 308 a `/en/` y que
-  `/tiago-collado-cv.pdf` siga dando 307.
+- **Repetir las redirecciones con el adapter de Vercel.** Sin el adapter ya
+  están verificadas en staging: `/en` y las páginas de caso sin barra final
+  redirigen con 308 a su versión con barra, y `/tiago-collado-cv.pdf` da 307
+  directo al CV, sin recibir barra. El adapter cambia cómo se arma la salida
+  del build, así que las tres se vuelven a probar cuando se sume.
 - **Títulos sin JavaScript.** Los títulos que entran letra por letra salen del
   servidor con cada letra en opacidad 0, así que sin JavaScript no se ven
   (los lectores de pantalla sí los leen). Pasaba igual en el sitio anterior.
