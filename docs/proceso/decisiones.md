@@ -458,7 +458,7 @@ con los covers de los proyectos.
 ### El widget va en el About, alineado arriba
 
 **Contexto.** El widget cuenta algo de quién soy, y la vista de los últimos
-cinco temas lo va a hacer crecer.
+cinco temas lo hace crecer.
 
 **Decisión.** En el About, en la columna izquierda que queda libre bajo el
 claim, alineado arriba con el texto. En mobile va después de la firma.
@@ -469,11 +469,73 @@ crezca solo se estira hacia abajo y el texto de al lado no se mueve.
 
 ### La interacción principal está en el widget de música
 
-**Decisión.** El widget permite alternar entre "ahora" y "últimos 5", y elegir
-un tema para ver su detalle.
+**Decisión.** El widget permite alternar entre "Ahora" (el tema que suena o
+el último) y "Últimos 5" (la lista). El detalle por tema, que también estaba
+previsto, quedó afuera (ver la decisión siguiente).
 
 **Por qué.** Junta en un componente la API, sus estados (carga, error, vacío)
-y una interacción que cambia lo que se muestra.
+y una interacción que cambia lo que se muestra. Las dos vistas salen del
+mismo pedido al endpoint, así que la interacción no suma pedidos a Last.fm.
+
+### Sin detalle por tema
+
+**Contexto.** El plan incluía elegir un tema de la lista para ver su detalle
+con `track.getInfo` de Last.fm: cuántas veces lo escuché, sus etiquetas y su
+duración.
+
+**Decisión.** No se hace. Reemplaza la parte de "elegir un tema para ver su
+detalle" de la decisión anterior.
+
+**Por qué.**
+
+- **Sería un proxy abierto a Last.fm con mi clave.** El endpoint del detalle
+  tendría que recibir el artista y el tema desde el navegador, y cualquiera
+  podría pedirle combinaciones inventadas. Cada una es un pedido nuevo que la
+  caché no cubre.
+- **El límite de Last.fm es por IP**, y la IP es la de la función de Vercel.
+  Un abuso del detalle agotaría el límite también para el widget principal,
+  que dejaría de cargar para todos. Evitarlo exige comparar cada pedido contra
+  los temas recientes, que es otra llamada o una caché compartida.
+- **Lo que más interesa no está documentado.** La documentación de
+  `track.getInfo` dice que con el usuario devuelve sus escuchas y si marcó el
+  tema como favorito, pero no nombra esos campos ni los muestra en el ejemplo.
+  Además sumaría cuatro o cinco estados (cargando, no encontrado, datos a
+  medias, error) para un dato que no cambia lo que cuenta el widget.
+
+### Pestañas con el patrón Tabs, no botones con `aria-pressed`
+
+**Contexto.** El selector cambia entre dos vistas que se excluyen. WAI-ARIA
+tiene dos patrones posibles: un botón conmutador (`aria-pressed`) o pestañas.
+
+**Decisión.** Pestañas (`tablist`, `tab`, `tabpanel`), con activación
+automática y el teclado del patrón: flechas, Inicio y Fin.
+
+**Por qué.** Un botón conmutador es *un* botón con dos estados. Dos botones
+con `aria-pressed` se anuncian como interruptores independientes: no dicen que
+se excluyen ni qué contenido cambian. Las pestañas dicen "pestaña,
+seleccionada, 1 de 2" y conectan cada una con su panel (`aria-controls`). La
+guía de WAI-ARIA recomienda la activación automática cuando los paneles se
+muestran sin espera, que es el caso: los dos salen del mismo pedido.
+
+### El alto del widget se anima
+
+**Contexto.** La lista de cinco temas es más alta que la vista Ahora, y los
+estados vacío y error tenían una altura mínima pensada para un tema: una
+tarjeta grande y casi vacía.
+
+**Decisión.** La tarjeta mide el alto de su contenido con un
+`ResizeObserver` y lo anima con una transición CSS de 0,6 s con la curva de
+la marca. La altura mínima se fue: el esqueleto de carga ya tiene las medidas
+del contenido, y los mensajes ocupan lo que miden. Con movimiento reducido,
+la regla global deja la transición en 0 y el cambio es instantáneo.
+
+**Por qué.** El widget crece hacia abajo (va alineado arriba): las pestañas
+no se mueven bajo el foco, y lo que viene después se desliza en vez de
+saltar. Se descartó reservar siempre el alto de la lista, porque dejaba la
+vista Ahora grande y vacía, que es el problema de los estados sin datos. CSS
+no anima desde ni hacia `auto`, por eso el alto se mide y se pasa en píxeles.
+No se usó Framer Motion: la isla no lo usaba, y la transición CSS ya respeta
+la regla de movimiento reducido del sitio.
 
 ---
 

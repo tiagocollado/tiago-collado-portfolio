@@ -169,7 +169,11 @@ ruta; las variables de entorno validadas con `astro:env`; el endpoint
 `/api/now-playing.json`, que pide a Last.fm lo que estoy escuchando y lo
 devuelve normalizado, con un estado para cada error y caché en la CDN; y el
 widget en el About, con sus seis estados. Las dos redirecciones del sitio (`/`
-y el CV) pasaron a ser HTTP reales desde la configuración de Astro.
+y el CV) pasaron a ser HTTP reales desde la configuración de Astro. Después,
+la interacción del widget: pestañas "Ahora / Últimos 5" con el patrón Tabs de
+WAI-ARIA, la lista de los últimos cinco temas y un alto que se anima al
+cambiar de vista o de estado. El detalle por tema quedó afuera (ver
+[decisiones.md](decisiones.md), "Sin detalle por tema").
 
 **Qué costó.**
 
@@ -209,11 +213,25 @@ y el CV) pasaron a ser HTTP reales desde la configuración de Astro.
   así que el widget no muestra portadas. Piden acreditar con un botón
   *"powered by AudioScrobbler"* que Last.fm ya no publica: el crédito es un
   link de texto. Cada tema enlaza a su página en Last.fm.
-- **Un widget que va a crecer.** La vista de los últimos cinco temas lo va a
-  hacer más alto. En escritorio va alineado arriba con el texto del About, no
-  abajo: así solo se estira hacia abajo y el texto de al lado no se mueve. La
-  tarjeta tiene una altura mínima igual a la del contenido, para que el paso
-  de "cargando" a cualquier estado no mueva la página.
+- **Un widget que crece.** La lista de los últimos cinco temas es bastante
+  más alta que la vista Ahora. En escritorio va alineado arriba con el texto del About, no
+  abajo, así solo se estira hacia abajo y el texto de al lado no se mueve.
+  Para que tampoco salte lo que viene después, la tarjeta anima su alto. CSS
+  no anima desde ni hacia `auto`, así que un `ResizeObserver` mide el
+  contenido y el alto se pasa en píxeles; la tarjeta usa `box-content` para
+  que el borde quede fuera de esa medida. La primera medida se aplica sin
+  animar, porque parte de `auto`.
+- **Estados sin datos demasiado grandes.** La altura mínima pensada para un
+  tema dejaba los mensajes de vacío y de error en una tarjeta grande y casi
+  vacía. Con el alto animado ya no hace falta: el esqueleto de carga tiene
+  las medidas del contenido más común (pestañas y un tema) y los mensajes
+  ocupan lo que miden.
+- **Probar la isla sin navegador.** Para recorrer cada estado, la isla real se
+  montó en jsdom, instalado fuera del repositorio, con respuestas falsas del
+  endpoint. Así se probaron los datos con y sin un tema sonando, la lista
+  sin temas extra, las filas sin artista, los cinco tipos de error, la falla
+  de red y el JSON inválido, además del teclado, los atributos ARIA y que el
+  refresco conserve la pestaña elegida.
 
 ---
 
@@ -240,15 +258,19 @@ En cada etapa, antes de commitear:
 - Después de actualizar Astro o el adapter de Vercel: que
   `.vercel/output/config.json` siga teniendo la regla de `/` con 307 y que no
   exista `.vercel/output/static/index.html`.
-- JavaScript por página, con gzip: ~136 KB en la home y ~128 KB en un caso de
+- Los estados del widget de música, con la isla montada en jsdom (fuera del
+  repositorio) y respuestas falsas del endpoint: cada estado, el teclado de
+  las pestañas y sus atributos ARIA.
+- JavaScript por página, con gzip: ~137 KB en la home y ~128 KB en un caso de
   estudio. React y Framer Motion son ~106 KB de eso y los comparten todas las
-  islas; el widget de música suma 1,7 KB.
+  islas; el widget de música suma 2,9 KB.
 
 ## Abierto
 
 - **Probar en el navegador** todo lo interactivo (cursor, menú, tema,
   wordmark, parallax, grilla de puntos, entradas, copiado del mail,
-  back-to-top), en los dos idiomas, con movimiento reducido y en táctil.
+  back-to-top, pestañas del widget de música), en los dos idiomas, con
+  movimiento reducido y en táctil.
 - **Links que abren en otra pestaña sin avisarlo.** Los links externos de la
   barra de metadata de los casos abren en una pestaña nueva y no lo anuncian a
   los lectores de pantalla; los del widget de música sí. Hay que igualarlos.

@@ -27,13 +27,17 @@ componentes interactivos del sitio en Next. Antes de cada tanda leyó cómo se
 coordinaban las piezas en el sitio anterior y propuso cómo resolver cada una
 sin el contexto de React, que no cruza entre islas. Para el widget de música,
 que no existía, propuso primero dónde va, cómo se ve y cada uno de sus
-estados, y lo construyó después de mi aprobación.
+estados, y lo construyó después de mi aprobación. Para su interacción hizo lo
+mismo: el patrón de accesibilidad del selector, cómo se ve cada estado nuevo,
+cómo crece sin saltos y si convenía sumar un detalle por tema.
 
 **Qué revisé, adapté o descarté.** Aprobé la estrategia de cada isla antes de
 que escribiera, y cambié dos cosas de lo que se había previsto: el selector de
 idioma pasó de botones a links, y la grilla de puntos se separó en su propia
 isla para hidratarla más tarde. Del widget revisé en el navegador los seis
-estados, el celular de 320 px, el ecualizador y el cursor.
+estados, el celular de 320 px, el ecualizador y el cursor. De su interacción,
+las pestañas y el alto animado en los dos temas, el uso con teclado, los
+títulos largos a 320 px, el movimiento reducido y el estado de error.
 
 **Errores y límites detectados.**
 
@@ -43,7 +47,6 @@ estados, el celular de 320 px, el ecualizador y el cursor.
 - Marcó como bug un espacio duro que estaba bien: era un carácter literal que
   no se distingue de un espacio común al leer el archivo. Lo descubrió al
   revisar los bytes antes de editar.
-
 - Para cumplir una condición que le puse al widget (que al crecer no mueva lo
   de al lado), cambió la alineación del diseño aprobado de abajo a arriba, y
   lo avisó al presentarlo en vez de hacerlo en silencio.
@@ -52,6 +55,9 @@ estados, el celular de 320 px, el ecualizador y el cursor.
 accesible quede fijo en un idioma; las animaciones de entrada en CSS y el
 título letra por letra como isla chica, en vez de convertir componentes
 enteros en islas. Del widget: su lugar en el About y que no muestre portadas.
+De su interacción: dejar afuera el detalle por tema, los títulos de la lista
+en una sola línea y el tiempo relativo con más contraste también en la vista
+Ahora.
 
 ---
 
@@ -89,6 +95,10 @@ a la configuración de Astro, y la de `/` pasó a ser HTTP real.
 - La documentación de Last.fm no dice que los errores llegan con un status
   HTTP distinto de 200, ni que el error 6 es el de usuario inexistente, ni que
   no manda headers de caché. Salió de pedidos reales.
+- La documentación de `track.getInfo` dice que con el usuario devuelve sus
+  escuchas y si marcó el tema como favorito, pero no nombra esos campos ni los
+  muestra en el ejemplo. Lo presentó como no verificado, junto con el riesgo
+  de abrir un proxy a Last.fm, al evaluar el detalle por tema.
 
 **Qué decidí yo.** El movimiento reducido igual que el comportamiento real
 del sitio anterior (solo el fade, sin desplazamiento), no como decía el
@@ -104,7 +114,9 @@ cumplir los términos de Last.fm: sin portadas y con crédito de texto.
 adapter de Vercel, las variables de entorno y los controles que corren antes
 de cada commit (build, secretos, palabras que no corresponden al
 repositorio). Para probar el endpoint en cada estado armó un reemplazo de
-`fetch` que vive fuera del repositorio.
+`fetch` que vive fuera del repositorio. Para probar los estados y el teclado
+del widget sin navegador, montó la isla real en jsdom, también instalado
+fuera del repositorio, con respuestas falsas del endpoint.
 
 **Un límite puesto a propósito.** La IA no abre el archivo `.env`: la clave de
 Last.fm la cargo yo. Para probar, el servidor de desarrollo lee el archivo
@@ -151,6 +163,9 @@ fechas, por etapa o por tipo de tarea, sin paso a paso.
   falso cuando la falla es de configuración (reintentar no cambia nada), y un
   título que, encima de "Sonando ahora", decía que estoy diseñando en ese
   momento.
+- En las pestañas, la misma pasada marcó que "Últimos 5" ata el número del
+  copy a una constante del endpoint: si cambia la cantidad, el texto miente.
+  Lo dejé así porque dice el tamaño de la lista antes de abrirla.
 - Escribió dos veces, en la documentación, una palabra que el control de
   palabras del repositorio no admite. El control la detectó las dos veces; la
   primera, después de un push.
