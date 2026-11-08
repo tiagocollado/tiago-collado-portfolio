@@ -1,0 +1,58 @@
+---
+import { createTranslator } from '../../i18n/translate.js';
+
+const t = createTranslator(Astro.currentLocale);
+---
+
+<section
+  id="about"
+  aria-labelledby="about-heading"
+  class="pt-16 md:pt-20 lg:pt-28 pb-8 md:pb-10 lg:pb-12 px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32"
+>
+  <div class="max-w-7xl mx-auto">
+    <div class="flex items-start justify-between gap-6">
+      <h2
+        id="about-heading"
+        class="text-xs font-mono tracking-[0.2em] uppercase"
+        style="color: var(--color-accent);"
+      >
+        {t('about.title')}
+      </h2>
+      <p
+        class="text-xs font-mono tracking-[0.2em] uppercase text-right"
+        style="color: var(--ink-muted);"
+      >
+        {t('about.based')}
+      </p>
+    </div>
+
+    <p
+      class="font-display text-3xl md:text-4xl lg:text-5xl leading-[1.15] tracking-tight max-w-4xl mt-12 md:mt-16 lg:mt-20 text-pretty"
+      style="color: var(--ink-primary);"
+    >
+      {t('about.claim_1')}{' '}<strong class="font-semibold">{t('about.claim_2')}</strong>{' '}{t('about.claim_3')}{' '}<strong class="font-semibold">{t('about.claim_4')}</strong>
+    </p>
+
+    <div class="flex justify-end mt-16 md:mt-20 lg:mt-24">
+      <div class="max-w-xl space-y-6 md:text-right">
+        <p class="text-base md:text-lg leading-relaxed text-pretty" style="color: var(--ink-secondary);">
+          {t('about.body_1')}
+        </p>
+        <p class="text-base md:text-lg leading-relaxed text-pretty" style="color: var(--ink-secondary);">
+          {t('about.body_2')}
+        </p>
+        <div class="pt-2">
+          <p class="font-display text-xl md:text-2xl font-semibold" style="color: var(--ink-primary);">
+            {t('about.signature')}
+          </p>
+          <p
+            class="text-xs font-mono tracking-[0.2em] uppercase mt-3"
+            style="color: var(--ink-muted);"
+          >
+            {t('about.byline')}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
