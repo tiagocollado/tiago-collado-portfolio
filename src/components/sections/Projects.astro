@@ -1,6 +1,7 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import ProjectCard from './ProjectCard.jsx';
+import SplitText from '../ui/SplitText.jsx';
 import { createTranslator } from '../../i18n/translate.js';
 import { publishedProjects } from '../../data/projects.js';
 import { SIZES_COVER } from '../case-study/imageSpec.js';
@@ -44,16 +45,39 @@ const columns = [
 
 <section id="projects" class="py-16 md:py-20 lg:py-28 px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32">
   <div class="max-w-7xl mx-auto">
+    {/*
+      Encabezado: el label entra primero (fade + subida corta) y después el
+      statement letra por letra, cada uno cuando entra en pantalla.
+
+      - El label usa el script de entrada (src/scripts/reveal.js), con
+        margen -50px.
+      - El h2 es una isla chica de React con SplitText, que tiene su propio
+        IntersectionObserver (margen -10% arriba y abajo). El rootMargin de
+        200px de client:visible la hidrata antes de que llegue, así ese
+        observer ya está escuchando cuando el título entra.
+    */}
     <div>
       <p
         class="text-xs font-mono tracking-[0.2em] mb-6 uppercase"
-        style="color: var(--color-accent);"
+        data-reveal-trigger
+        data-reveal-margin="-50px"
+        data-reveal
+        style="color: var(--color-accent); --reveal-y: 16px; --reveal-duration: 0.5s;"
       >
         {t('projects.label')}
       </p>
-      <h2 class="font-display text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.1] block text-(--ink-primary)">
-        {t('projects.statement')}
-      </h2>
+      <SplitText
+        client:visible={{ rootMargin: '200px' }}
+        as="h2"
+        text={t('projects.statement')}
+        stagger={0.015}
+        delay={0.15}
+        yFrom={20}
+        blurFrom={4}
+        duration={0.6}
+        whileInView
+        className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.1] block text-(--ink-primary)"
+      />
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 mt-12 md:mt-16">
@@ -71,3 +95,7 @@ const columns = [
     </div>
   </div>
 </section>
+
+<script>
+  import '../../scripts/reveal.js';
+</script>
