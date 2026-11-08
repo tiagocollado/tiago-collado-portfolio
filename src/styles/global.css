@@ -36,6 +36,25 @@
     from { opacity: 0; }
     to   { opacity: 1; }
   }
+
+  /* Giro del disco del widget de música. Gira siempre: es ambiente, no dice
+     si algo suena (eso lo dice el cartel "En vivo"). El primer valor es lo
+     que tarda una vuelta: para cambiar la velocidad se ajusta solo acá. Es
+     más lento que un disco real (33⅓ rpm, una vuelta cada 1,8 s) para no
+     competir con el título. */
+  --animate-spin-record: spin-record 8s linear infinite;
+
+  @keyframes spin-record {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Pulsación lenta del punto del cartel "En vivo" mientras está prendido. */
+  --animate-live-pulse: live-pulse 2.4s ease-in-out infinite;
+
+  @keyframes live-pulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.45; }
+  }
 }
 
 :root {

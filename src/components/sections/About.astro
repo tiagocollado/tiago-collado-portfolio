@@ -7,15 +7,15 @@ const t = createTranslator(Astro.currentLocale);
 // La isla recibe solo los textos que usa, ya traducidos.
 const nowPlayingTexts = {
   label: t('now_playing.label'),
-  tab_now: t('now_playing.tab_now'),
-  tab_recent: t('now_playing.tab_recent'),
+  list_label: t('now_playing.list_label'),
+  live: t('now_playing.live'),
   status_playing: t('now_playing.status_playing'),
-  status_recent: t('now_playing.status_recent'),
   loading: t('now_playing.loading'),
   empty: t('now_playing.empty'),
   private: t('now_playing.private'),
   error: t('now_playing.error'),
   credit: t('now_playing.credit'),
+  new_tab: t('now_playing.new_tab'),
   track_link: t('now_playing.track_link'),
 };
 
@@ -80,9 +80,9 @@ const NO_BREAK_SPACE = '\u00a0';
       orden de tabulación. En lg el widget pasa a la columna izquierda, que
       sin él queda vacía bajo el claim (order).
 
-      items-start, no items-end: cuando el widget muestra los últimos cinco
-      temas y crece, solo se estira hacia abajo y el copy de la derecha no se
-      mueve.
+      items-start, no items-end: si el widget cambia de alto (al cargar o
+      ante un error), solo se estira hacia abajo y el copy de la derecha no
+      se mueve.
     */}
     <div class="flex flex-col gap-16 lg:flex-row lg:items-start lg:justify-between mt-16 md:mt-20 lg:mt-24">
       <div
@@ -124,7 +124,7 @@ const NO_BREAK_SPACE = '\u00a0';
         data-reveal
         style="--reveal-y: 24px; --reveal-duration: 0.7s; --reveal-delay: 0.2s;"
       >
-        <NowPlaying client:visible texts={nowPlayingTexts} locale={Astro.currentLocale} />
+        <NowPlaying client:visible texts={nowPlayingTexts} />
       </div>
     </div>
   </div>
