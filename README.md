@@ -39,11 +39,14 @@ React que se hidrata al entrar en pantalla (`client:visible`), en el About.
 Muestra lo que escucho, con datos de Last.fm (ver
 [Datos en vivo](#datos-en-vivo)), como un tocadiscos:
 
-- **Arriba, el tema destacado**: un vinilo dibujado en SVG con la G de la
-  marca como etiqueta, y al lado el título (link a su página en Last.fm) y el
-  artista. Por defecto es el tema más reciente.
-- **Abajo, los últimos cinco temas**, como el listado de un disco. Elegir uno
-  lo pone en el tocadiscos.
+- **Arriba, el tema que suena o, si no suena nada, el último**: un vinilo
+  dibujado en SVG con la G de la marca como etiqueta, y al lado el título y el
+  artista.
+- **Abajo, los últimos cinco temas**, como el listado de un disco.
+
+El título de arriba y cada fila de la lista son links a la página del tema en
+Last.fm. El widget no tiene otra interacción: es un detalle personal con
+datos en vivo, no un control.
 
 El disco gira siempre: es ambiente. Si de verdad estoy escuchando algo lo
 dice un cartel **"En vivo"**, arriba a la derecha y siempre visible, como el
@@ -56,16 +59,16 @@ sin empujar el texto ni estirar la sección.
 
 Se ocupa de tres cosas: pedir los datos al endpoint propio (y volver a
 pedirlos al volver a la pestaña), traducir el `state` de la respuesta a lo
-que muestra (carga, datos, vacío, privado o error) y manejar qué tema está en
-el tocadiscos. Recibe del `.astro` solo los textos que usa, ya traducidos.
+que muestra (carga, datos, vacío, privado o error) y mostrar cada estado sin
+saltos de alto. Recibe del `.astro` solo los textos que usa, ya traducidos.
 
 Pendiente: el resto de los componentes propios.
 
 ## Datos en vivo
 
 En la sección About, el widget **"Lo que suena cuando diseño"** muestra lo
-último que escuché como un tocadiscos: el tema más reciente en el plato y,
-abajo, los últimos cinco para elegir cuál poner. Los datos son de
+último que escuché como un tocadiscos: el tema que suena (o el último) en el
+plato y, abajo, los últimos cinco. Los datos son de
 [Last.fm](https://www.last.fm), que registra lo que escucho.
 
 ```
@@ -91,21 +94,21 @@ navegador ──► /api/now-playing.json ──► Last.fm (user.getRecentTrack
 - **El widget** ([`NowPlaying.jsx`](src/components/sections/NowPlaying.jsx))
   pide los datos al hacerse visible y otra vez al volver a la pestaña, si pasó
   más de un minuto. Del endpoint toma los cinco temas más recientes, contando
-  el que suena. Elegir un tema no hace otro pedido: los datos ya están.
+  el que suena.
 - **Nunca dice algo que no es cierto.** El cartel "En vivo" se prende solo si
   algún tema tiene `isNowPlaying`, y la fila de ese tema muestra un
   ecualizador. Para el lector de pantalla, el cartel prendido dice "Sonando
   ahora"; apagado no anuncia nada. No muestra tiempo
   relativo ("hace X"). Está pensado para el caso común: que cuando alguien
   entra, yo no esté escuchando nada.
-- **La lista** sigue el patrón Listbox de WAI-ARIA, de selección única: toma su
-  nombre del label visible "Últimos 5", la fila elegida se anuncia como
-  seleccionada, y se usa con teclado (Tab entra a la fila elegida, las flechas
-  arriba y abajo mueven y eligen a la vez, Inicio y Fin van a la primera y a
-  la última). Incluye al tema destacado, marcado, y su orden no cambia nunca.
-- **El alto no salta.** El destacado mide siempre lo que el disco (el título
-  se corta en dos líneas), así que elegir un tema no cambia el alto. Entre
-  estados (carga, datos, error) la tarjeta anima su alto.
+- **La lista** es una lista ordenada (`<ol>`, del más nuevo al más viejo) que
+  toma su nombre del label visible "Últimos 5". Cada fila es un link a la
+  página del tema en Last.fm, con el mismo hover que el título de arriba y el
+  mismo aviso de pestaña nueva para lectores de pantalla. Incluye al tema de
+  arriba, así siempre tiene cinco.
+- **El alto no salta.** El tema de arriba mide siempre lo que el disco (el
+  título se corta en dos líneas, balanceadas), y entre estados (carga, datos,
+  error) la tarjeta anima su alto.
 - **Movimiento reducido**: el disco no gira y los cambios son instantáneos.
 
 ### Si la API falla o no hay datos
@@ -133,7 +136,7 @@ error queda como un 500 sin explicación.
   no cambia el alto.
 - **Vacío, privado y error** muestran el disco con el mensaje al lado y el
   cartel apagado, sin lista: la tarjeta queda del alto del disco.
-- **Con un solo tema** no hay lista: no hay entre qué elegir.
+- **Con un solo tema** no hay lista: repetiría el de arriba.
 - **Sin JavaScript** el widget no puede pedir los datos, así que no se
   muestra.
 
