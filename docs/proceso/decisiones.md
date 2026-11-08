@@ -498,6 +498,9 @@ quedaba a 7 px del claim; con el crédito en la fila del cartel y las filas de
 
 ### La interacción principal está en el widget de música
 
+> **Reemplazada** por "El widget queda pasivo; la interacción significativa
+> pasa al cambio de tema". Queda como registro de lo que se intentó.
+
 **Decisión.** Elegir un tema de la lista de los últimos cinco lo pone en el
 tocadiscos: cambia el tema destacado. La primera versión alternaba entre
 pestañas "Ahora / Últimos 5" (ver "De pestañas a tocadiscos"). El detalle
@@ -507,6 +510,33 @@ siguiente).
 **Por qué.** Junta en un componente la API, sus estados (carga, error, vacío)
 y una interacción que cambia lo que se muestra. Los cinco temas salen del
 mismo pedido al endpoint, así que la interacción no suma pedidos a Last.fm.
+
+### El widget queda pasivo; la interacción significativa pasa al cambio de tema
+
+**Contexto.** El widget pasó por dos interacciones. Las pestañas "Ahora /
+Últimos 5" no transmitían música. El tocadiscos con selección sí, pero
+elegir un tema de la lista no aportaba nada que la lista no mostrara ya:
+ponía arriba, más grande, un título y un artista que estaban a la vista.
+
+**Decisión.** El widget queda pasivo, como detalle personal con datos en
+vivo y sus estados (carga, en vivo, último escuchado, vacío, privado, error).
+Arriba va siempre el tema que suena o, si no suena nada, el último. El
+título de arriba y cada fila de la lista son links a la página del tema en
+Last.fm, con el mismo hover y el mismo aviso de pestaña nueva para lectores
+de pantalla. Se sacan el listbox, el mini disco de la fila elegida y el
+estado de "tema elegido"; la fila del tema que suena conserva su
+ecualizador. La interacción significativa del sitio pasa al cambio de tema
+claro / oscuro, que se rediseña junto con la revisión de la identidad
+visual.
+
+**Por qué.** Una interacción que no cambia nada que importe es decoración con
+costo: un patrón de teclado más, un estado más y un listbox que el lector de
+pantalla anuncia como control. Como links, las filas hacen lo único útil que
+podían hacer: llevar al tema. El cambio de tema sí modifica la experiencia
+entera (la paleta de todo el sitio), así que es el lugar natural para la
+interacción que el sitio quiere mostrar. La lista sigue incluyendo al tema
+de arriba: sin él, cuando no suena nada quedarían cuatro filas y "Últimos 5"
+mentiría.
 
 ### Sin detalle por tema
 
@@ -561,20 +591,22 @@ de las visitas caen cuando no estoy escuchando nada. En ese caso la pestaña
 
 **Decisión.** Un tocadiscos. Arriba, el tema destacado: un vinilo dibujado
 en SVG con la G como etiqueta, el título y el artista, y un cartel "En vivo"
-(ver "El disco gira siempre; el estado en vivo lo dice el cartel"). Por defecto es el tema
-más reciente. Abajo, los últimos cinco temas como el listado de un disco, y
-elegir uno lo pone en el tocadiscos. Sin tiempo relativo en ninguna parte,
-sin flechas ni íconos de link: las filas se ven elegibles por su hover y por
-el cursor.
+(ver "El disco gira siempre; el estado en vivo lo dice el cartel"). Por
+defecto es el tema más reciente. Abajo, los últimos cinco temas como el
+listado de un disco, y elegir uno lo ponía en el tocadiscos (después se sacó:
+ver "El widget queda pasivo"). Sin tiempo relativo en ninguna parte, sin
+flechas ni íconos de link: lo que dice "link" es el hover y el cursor.
 
 **Por qué.** Parte del caso común en vez de la excepción: sin nada sonando,
-el widget igual tiene algo que mostrar y algo para hacer. La metáfora del
-disco hace que la lista se entienda sin explicarla (Jakob: un listado de
-temas se reconoce), y la elección cambia lo que se ve arriba, que es una
-interacción con efecto visible y no un cambio de vista. Sacar el tiempo
-relativo saca también el único dato que hacía falta actualizar con el reloj.
+el widget igual tiene algo que mostrar. La metáfora del disco hace que la
+lista se entienda sin explicarla (Jakob: un listado de temas se reconoce).
+Sacar el tiempo relativo saca también el único dato que hacía falta
+actualizar con el reloj.
 
 ### La selección con el patrón Listbox
+
+> **Reemplazada** por "El widget queda pasivo": la lista ya no se elige, cada
+> fila es un link. Queda como registro del patrón que se usó.
 
 **Contexto.** Elegir un tema es elegir uno de una lista. WAI-ARIA ofrece
 varios patrones posibles: listbox, radio group, botones con `aria-pressed` o
@@ -613,9 +645,9 @@ Tailwind v4 dejaba la animación siempre corriendo (ver la bitácora).
 
 **Decisión.** Se separan las dos funciones.
 
-- **El disco gira siempre**, una vuelta cada 8 s, con `motion-safe`: con
-  movimiento reducido, quieto. La velocidad vive en un solo lugar, el token
-  `--animate-spin-record` de `global.css`.
+- **El disco gira siempre**, una vuelta cada 4 s (al principio eran 8), con
+  `motion-safe`: con movimiento reducido, quieto. La velocidad vive en un solo lugar, el
+  token `--animate-spin-record` de `global.css`.
 - **Si estoy escuchando lo dice un cartel "En vivo"**, arriba a la derecha de
   la card y siempre visible, como el "On Air" de un estudio: un rectángulo
   chico con el texto adentro, sin animación. Apagado: borde y texto tenues.
@@ -623,8 +655,6 @@ Tailwind v4 dejaba la animación siempre corriendo (ver la bitácora).
   texto en la tinta oscura de la marca (`#111110`, fija en los dos temas),
   que da 5:1. El lector de pantalla oye "Sonando ahora" solo cuando está
   prendido; apagado no se anuncia nada.
-- **Elegir un tema no tiene animación propia**: queda el fade del título y la
-  fila marcada en la lista.
 - **La fila del tema que suena conserva su ecualizador.**
 
 **Por qué.** El giro pasa a ser ambiente: dice "esto es música" en cualquier
@@ -634,17 +664,15 @@ un cartel apagado no afirma nada. El estado no depende solo del color (WCAG
 1.4.1): el cartel pasa de un contorno a un bloque lleno. Apagado no se
 anuncia porque "En vivo" leído sería falso, y "No está sonando" tampoco sería
 cierto mientras carga o ante un error, cuando no se sabe. El cartel dice
-*que* algo suena y el ecualizador de la fila dice *cuál*, algo que el cartel
-no puede decir cuando está elegido otro tema.
+*que* algo suena y el ecualizador de la fila dice *cuál*.
 
 **Cartel sin efectos, y sin escala al elegir** (revisión en staging). La
 primera versión del cartel tenía un punto que pulsaba con brillo, y elegir un
 tema hacía que el disco se asentara con una escala. Con el disco girando
 siempre, eran demasiados movimientos para un detalle secundario: un cartel
-real de estudio es un bloque que se prende, sin efectos, y el fade del título
-más la fila marcada ya alcanzan como respuesta a la elección. Además, el
-texto en terracota sobre la card no llegaba al contraste a 11 px; el texto
-oscuro sobre el relleno terracota sí.
+real de estudio es un bloque que se prende, sin efectos. Además, el texto en
+terracota sobre la card no llegaba al contraste a 11 px; el texto oscuro
+sobre el relleno terracota sí.
 
 ### El alto del widget se anima
 
@@ -657,10 +685,11 @@ lista.
 `ResizeObserver` y lo anima con una transición CSS de 0,6 s con la curva de
 la marca. La altura mínima se fue: el esqueleto de carga ya tiene las medidas
 del contenido, y vacío, privado y error muestran el disco con el
-mensaje al lado. En el tocadiscos, el bloque destacado mide siempre lo que el
-disco (el título se corta en dos líneas), así que elegir un tema no cambia
-el alto. Con movimiento reducido, la regla global deja la transición en 0 y
-el cambio es instantáneo.
+mensaje al lado. En el tocadiscos, el bloque de arriba mide siempre lo que
+el disco: el título se corta en dos líneas, con `text-wrap: balance` para
+que no quede una palabra sola en la segunda ("Another One / Bites the Dust",
+no "Another One Bites the / Dust"). Con movimiento reducido, la regla global
+deja la transición en 0 y el cambio es instantáneo.
 
 **Por qué.** Lo que viene después se desliza en vez de saltar (en
 escritorio el widget está en posición absoluta y no mueve nada; en celular y

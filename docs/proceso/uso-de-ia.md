@@ -57,7 +57,12 @@ títulos largos a 320 px, el movimiento reducido y el estado de error.
   lo avisó al presentarlo en vez de hacerlo en silencio.
 - La primera versión de la interacción, las pestañas, cumplía todo lo pedido
   y pasó las pruebas, pero giraba alrededor del tema que suena, que es el
-  caso menos común. No lo marcó: lo vi yo con el widget construido.
+  caso menos común. No lo marcó: lo vi yo con el widget construido. Lo mismo
+  con la selección del tocadiscos: la diseñó e implementó bien, con su patrón
+  de accesibilidad verificado, pero no cuestionó si elegir un tema aportaba
+  algo. Eso también lo vi yo, y se sacó.
+- Al documentar el cambio de velocidad del disco escribió un motivo que yo
+  no había dado; lo detectó al releer y lo sacó antes de entregarlo.
 - En el diseño del tocadiscos calculó los contrastes en vez de estimarlos.
   Así aparecieron el disco casi invisible contra la card en tema oscuro
   (1,10:1, se resolvió con un borde) y el crédito en `--ink-muted`, que no
@@ -92,6 +97,11 @@ escala corta, y qué anunciar con el cartel apagado (nada). Revisando en
 staging decidí la jerarquía del About: el widget es secundario, va después
 de la firma y alineado abajo con ella, más compacto y con el label en tinta
 neutra. También el cartel como un rectángulo sin efectos, y sacar la escala.
+Al final, sacar la selección: elegir un tema no aportaba nada que la lista no
+mostrara, así que el widget quedó pasivo (cada fila es un link a Last.fm), y
+la interacción significativa del sitio pasa al cambio de tema, que se
+rediseña con la identidad visual. Y dos detalles: el título balanceado en dos
+líneas y el giro a 4 s por vuelta.
 
 ---
 
