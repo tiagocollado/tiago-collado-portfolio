@@ -7,6 +7,8 @@ const t = createTranslator(Astro.currentLocale);
 // La isla recibe solo los textos que usa, ya traducidos.
 const nowPlayingTexts = {
   label: t('now_playing.label'),
+  tab_now: t('now_playing.tab_now'),
+  tab_recent: t('now_playing.tab_recent'),
   status_playing: t('now_playing.status_playing'),
   status_recent: t('now_playing.status_recent'),
   loading: t('now_playing.loading'),
@@ -78,8 +80,9 @@ const NO_BREAK_SPACE = '\u00a0';
       orden de tabulación. En lg el widget pasa a la columna izquierda, que
       sin él queda vacía bajo el claim (order).
 
-      items-start, no items-end: cuando el widget muestre más temas y crezca,
-      solo se estira hacia abajo y el copy de la derecha no se mueve.
+      items-start, no items-end: cuando el widget muestra los últimos cinco
+      temas y crece, solo se estira hacia abajo y el copy de la derecha no se
+      mueve.
     */}
     <div class="flex flex-col gap-16 lg:flex-row lg:items-start lg:justify-between mt-16 md:mt-20 lg:mt-24">
       <div

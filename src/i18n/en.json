@@ -138,6 +138,8 @@
   },
   "now_playing": {
     "label": "MUSIC I DESIGN TO",
+    "tab_now": "Now",
+    "tab_recent": "Last 5",
     "status_playing": "Playing now",
     "status_recent": "Last played",
     "loading": "Loading what I’m listening to",

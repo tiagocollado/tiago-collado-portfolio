@@ -138,6 +138,8 @@
   },
   "now_playing": {
     "label": "LO QUE SUENA CUANDO DISEÑO",
+    "tab_now": "Ahora",
+    "tab_recent": "Últimos 5",
     "status_playing": "Sonando ahora",
     "status_recent": "Lo último que sonó",
     "loading": "Cargando lo que estoy escuchando",
