@@ -63,21 +63,30 @@ export default function CustomCursor({ viewLabel }) {
 
 function CursorShapes({ viewLabel }) {
   const [variant, setVariant] = useState('default');
+  // Hasta el primer movimiento no se sabe dónde está el mouse: la posición
+  // arranca en (0, 0) y el cursor se vería en la esquina superior izquierda.
+  // Por eso no se dibuja hasta el primer mousemove.
+  const [hasPointerPosition, setHasPointerPosition] = useState(false);
 
   const pointerX = useMotionValue(0);
   const pointerY = useMotionValue(0);
   // Dos resortes sobre la misma posición: el del punto es rígido (lo sigue
   // casi pegado) y el del anillo es blando (se queda atrás). Ese retraso es
   // lo que se lee como "anillo que persigue al punto".
-  const dotX = useSpring(pointerX, { stiffness: 800, damping: 35, mass: 0.3 });
-  const dotY = useSpring(pointerY, { stiffness: 800, damping: 35, mass: 0.3 });
-  const ringX = useSpring(pointerX, { stiffness: 200, damping: 25, mass: 0.5 });
-  const ringY = useSpring(pointerY, { stiffness: 200, damping: 25, mass: 0.5 });
+  // skipInitialAnimation: el primer cambio de posición salta sin animar, así
+  // el cursor aparece directo bajo el mouse en vez de viajar desde (0, 0).
+  const dotSpring = { stiffness: 800, damping: 35, mass: 0.3, skipInitialAnimation: true };
+  const ringSpring = { stiffness: 200, damping: 25, mass: 0.5, skipInitialAnimation: true };
+  const dotX = useSpring(pointerX, dotSpring);
+  const dotY = useSpring(pointerY, dotSpring);
+  const ringX = useSpring(pointerX, ringSpring);
+  const ringY = useSpring(pointerY, ringSpring);
 
   useEffect(() => {
     const onMove = (event) => {
       pointerX.set(event.clientX);
       pointerY.set(event.clientY);
+      setHasPointerPosition(true);
     };
     const onOver = (event) => setVariant(variantUnderPointer(event.target));
     // Al salir de la ventana no hay elemento debajo: vuelve a default.
@@ -105,6 +114,8 @@ function CursorShapes({ viewLabel }) {
   const ringSize = variant === 'link' ? 64 : variant === 'view' ? 80 : 32;
   const ringOpacity = variant === 'drag' ? 0 : 1;
   const dotSize = variant === 'drag' ? 14 : 6;
+
+  if (!hasPointerPosition) return null;
 
   return (
     <>
