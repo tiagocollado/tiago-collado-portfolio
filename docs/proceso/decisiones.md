@@ -78,8 +78,9 @@ exactamente con el de la página. Si la misma página se puede abrir como `/en`
 y como `/en/`, el link `/en/#projects` recarga la página en vez de scrollear
 cuando se entró por la otra forma.
 
-**Decisión.** `trailingSlash: 'always'` en Astro y `"trailingSlash": true` en
-`vercel.json`, que redirige con 308 la URL sin barra a la que la tiene.
+**Decisión.** `trailingSlash: 'always'` en Astro. El adapter de Vercel lo
+traduce a la configuración de rutas del deploy, que redirige con 308 la URL
+sin barra a la que la tiene.
 
 **Por qué.** Cada página tiene una sola URL, y las anclas funcionan entren por
 donde entren. Las rutas con extensión de archivo (el CV) no reciben barra,
@@ -386,18 +387,26 @@ copia alojada afuera.
 **Por qué.** El CV es un documento aparte del sitio. Con la redirección, la
 URL que ya circula sigue funcionando.
 
-### Redirección del CV en `vercel.json`
+### Redirección del CV en la configuración de Astro
 
-**Contexto.** La redirección tiene que ser 307. La opción `redirects` de
-Astro acepta 307, pero en un build estático sin adapter genera una página con
-meta refresh, sin código de estado. `vercel.json` con `"permanent": false` da
-un 307 real y acepta un destino externo, según la documentación de Vercel.
+*Reemplaza a "Redirección del CV en `vercel.json`".*
 
-**Decisión.** `vercel.json`.
+**Contexto.** La redirección tiene que ser 307. Sin adapter, la opción
+`redirects` de Astro genera una página con meta refresh, sin código de
+estado, así que la redirección vivía en `vercel.json`. Con el adapter de
+Vercel, el build entrega la configuración de rutas del deploy ya armada
+(`.vercel/output/config.json`), y el adapter la genera solo a partir de
+`astro.config.mjs`: no copia los `redirects` de `vercel.json`. La
+documentación de Vercel no aclara si los aplica igual.
 
-**Por qué.** Da el 307 con el sitio estático. Queda por verificar si sigue
-aplicando cuando se sume el adapter de Vercel para el endpoint de la API: la
-documentación no lo aclara, así que se prueba con `curl` en staging.
+**Decisión.** La redirección pasa a los `redirects` de `astro.config.mjs` con
+`status: 307`, y `vercel.json` se elimina: su otra regla, la barra final, ya
+sale del `trailingSlash` de Astro.
+
+**Por qué.** Con el adapter, los `redirects` de Astro sí dan un código de
+estado real, y la regla queda en el `config.json` generado, donde se puede
+revisar antes del deploy. Toda la configuración de rutas queda en un solo
+archivo.
 
 ### Componentes de página compartidos entre idiomas
 

@@ -70,8 +70,9 @@ los de la versión Next; dónde cae cada uno en Astro está en §10.
 
 > ⚠️ **El PDF del CV no entra al repo, ni ahora ni después.** Vive afuera, y
 > `/tiago-collado-cv.pdf` redirige ahí con una **redirección temporal (307)**,
-> para que la URL que ya tienen los recruiters siga funcionando. Está en
-> `vercel.json`; con el adapter de Vercel (F6) hay que verificar que siga dando 307.
+> para que la URL que ya tienen los recruiters siga funcionando. Está en los
+> `redirects` de `astro.config.mjs` con `status: 307`; el adapter de Vercel la
+> escribe en la configuración de rutas del deploy.
 
 **Defaults**: tema **dark**, locale **`en`** (`/` redirige a `/en`; las URLs `/es/...` siguen vivas).
 
@@ -284,17 +285,20 @@ El plan de la migración a Astro (fases, calendario, decisiones y reglas de trab
 Sale de la versión Next: `next-intl` (lo reemplazan los JSON + una `t()` propia), `next-themes` (lo reemplaza un script inline en el `<head>`), `next/image` (lo reemplaza `astro:assets`) y la OG generada con satori (la reemplaza un PNG estático).
 
 ```
-astro.config.mjs                # ✅ site · i18n (defaultLocale "en",
+astro.config.mjs                # ✅ site · adapter de Vercel · trailingSlash
+                                # 'always' · redirects (/tiago-collado-cv.pdf →
+                                # CV en Drive, 307) · env.schema (LASTFM_API_KEY
+                                # server secret, LASTFM_USERNAME server public)
+                                # · i18n (defaultLocale "en",
                                 # prefixDefaultLocale: true,
                                 # redirectToDefaultLocale: false) · fuentes ·
                                 # Tailwind (@tailwindcss/vite) · React
-                                # pendiente: adapter de Vercel y env.schema
-                                # con LASTFM_API_KEY (server, secret) (F6)
-vercel.json                     # ✅ /tiago-collado-cv.pdf → CV en Drive (307).
-                                # Verificar en F6 que siga aplicando con el adapter
+                                # Sin vercel.json: el adapter arma la config de
+                                # rutas del deploy solo desde astro.config.mjs
 tsconfig.json                   # ✅ preset "base" de Astro (sin modo estricto:
                                 # el proyecto es JavaScript)
-.env.example                    # LASTFM_API_KEY= (sin valor; .env no se versiona)
+.env.example                    # ✅ LASTFM_API_KEY= y LASTFM_USERNAME= (sin
+                                # valor; .env no se versiona)
 public/                         # se sirve tal cual, sin optimizar (§11)
 ├── favicon.svg                 # ✅ la "G" de Gotya
 └── og-image.png                # ✅ OG estática de la G, 1200x630
