@@ -3,13 +3,15 @@ import { useEffect, useRef, useState } from 'react';
 /*
  * NowPlaying: lo que estoy escuchando, con datos de Last.fm, como un
  * tocadiscos. Es un detalle personal del About, no su protagonista: por eso
- * es compacto y va en tonos neutros.
+ * es compacto, va en tonos neutros y no tiene interacción propia más allá de
+ * sus links.
  *
  * Pide los datos a /api/now-playing.json, el endpoint propio del sitio (que
- * es el que habla con Last.fm y guarda la clave). Arriba va el tema
- * destacado: un vinilo con la G como etiqueta, el título y el artista. Abajo,
- * los últimos cinco temas, como el listado de un disco. Elegir uno lo pone
- * en el tocadiscos.
+ * es el que habla con Last.fm y guarda la clave). Arriba va el tema que
+ * suena o, si no suena nada, el último: un vinilo con la G como etiqueta, el
+ * título y el artista. Abajo, los últimos cinco temas, como el listado de un
+ * disco. El título de arriba y cada fila son links a la página del tema en
+ * Last.fm.
  *
  * El disco gira siempre: es ambiente, dice "esto es música". Si de verdad
  * estoy escuchando algo lo dice el cartel "En vivo" de arriba a la derecha,
@@ -56,14 +58,10 @@ const ROW_HEIGHT = 'h-11 pointer-fine:h-7';
  * Convierte la respuesta del endpoint en lo que necesita la vista. El
  * endpoint siempre manda JSON con `state`, también cuando responde un error,
  * así que el JSON se lee sin mirar el código HTTP.
- *
- * Cada respuesta nueva vuelve a destacar el tema más reciente
- * (selectedIndex 0): si se conservara la posición elegida, con datos nuevos
- * quedaría elegido otro tema sin aviso.
  */
 function viewFromResponse(body) {
   if (body?.state === 'ok' && body.tracks?.length > 0) {
-    return { status: 'ok', tracks: body.tracks.slice(0, TRACKS_IN_LIST), selectedIndex: 0 };
+    return { status: 'ok', tracks: body.tracks.slice(0, TRACKS_IN_LIST) };
   }
   if (body?.state === 'empty') return { status: 'empty' };
   if (body?.state === 'private') return { status: 'private' };
@@ -105,14 +103,9 @@ export default function NowPlaying({ texts }) {
     };
   }, []);
 
-  // Pone un tema en el tocadiscos.
-  function selectTrack(index) {
-    if (index === view.selectedIndex) return;
-    setView({ ...view, selectedIndex: index });
-  }
-
-  const featured = view.status === 'ok' ? view.tracks[view.selectedIndex] : null;
-  // El cartel dice si estoy escuchando algo, no si suena el tema elegido.
+  // El destacado es siempre el primero: el que suena o, si no suena nada, el
+  // último que sonó (el endpoint los manda en ese orden).
+  const featured = view.status === 'ok' ? view.tracks[0] : null;
   const isLive = view.status === 'ok' && view.tracks.some((track) => track.isNowPlaying);
 
   return (
@@ -123,8 +116,7 @@ export default function NowPlaying({ texts }) {
 
       {/* El alto de la card se anima: sigue al del contenido (medido abajo)
           con una transición CSS, así el paso entre estados desliza en vez de
-          saltar. Elegir un tema no cambia el alto: el destacado mide
-          siempre lo que el disco.
+          saltar.
           box-content: el alto medido es el del contenido con su padding, y
           el borde va por fuera. Con movimiento reducido, la regla global de
           global.css deja la transición en 0 y el cambio es instantáneo. */}
@@ -157,14 +149,7 @@ export default function NowPlaying({ texts }) {
             {view.status === 'ok' && (
               <>
                 <Turntable track={featured} texts={texts} />
-                {view.tracks.length > 1 && (
-                  <Tracklist
-                    tracks={view.tracks}
-                    selectedIndex={view.selectedIndex}
-                    onSelect={selectTrack}
-                    texts={texts}
-                  />
-                )}
+                {view.tracks.length > 1 && <Tracklist tracks={view.tracks} texts={texts} />}
               </>
             )}
 
@@ -212,12 +197,22 @@ function LiveSign({ isLive, texts }) {
 }
 
 /*
+ * Hover de los links a Last.fm (el título del destacado y las filas):
+ * terracota, con el subrayado que se separa del texto. Sin flechas: lo que
+ * dice "link" es el hover y el cursor. En las filas es el mismo, con group-:
+ * la fila entera es el link y lo que cambia es su título.
+ */
+const TRACK_LINK_HOVER =
+  'transition-[color,text-decoration-color,text-underline-offset] duration-300 ease-expo-out hover:text-accent hover:decoration-accent hover:underline-offset-8';
+
+/*
  * El tema destacado: el disco y, al lado, el título (link a su página en
  * Last.fm, como piden los términos de la API) y el artista.
  *
- * El texto va centrado al lado del disco y el título se corta en dos líneas
- * (solo visual: el lector de pantalla lee el título completo), así el bloque
- * mide siempre lo que el disco y elegir otro tema no cambia el alto.
+ * El título se corta en dos líneas (solo visual: el lector de pantalla lee
+ * el título completo), así el bloque mide siempre lo que el disco. Con
+ * text-balance las dos líneas quedan parejas y no queda una palabra sola
+ * abajo ("Another One / Bites the Dust", no "Another One Bites the / Dust").
  */
 function Turntable({ track, texts }) {
   const byline = track.album ? `${track.artist} — ${track.album}` : track.artist;
@@ -226,15 +221,15 @@ function Turntable({ track, texts }) {
     <div className="flex items-center gap-4">
       <Vinyl />
 
-      {/* key: al cambiar de tema el bloque se vuelve a montar y entra con
-          un fade corto. */}
+      {/* key: si un refresco trae otro tema, el bloque se vuelve a montar y
+          entra con un fade corto. */}
       <div key={`${track.url}-${track.playedAt}`} className="min-w-0 motion-safe:animate-fade-in">
         <a
           href={track.url}
           target="_blank"
           rel="noopener noreferrer"
           data-cursor="link"
-          className="line-clamp-2 font-display text-base leading-tight text-(--ink-primary) underline decoration-(--border-strong) underline-offset-4 transition-[color,text-decoration-color,text-underline-offset] duration-300 ease-expo-out hover:text-accent hover:decoration-accent hover:underline-offset-8"
+          className={`line-clamp-2 text-balance font-display text-base leading-tight text-(--ink-primary) underline decoration-(--border-strong) underline-offset-4 ${TRACK_LINK_HOVER}`}
         >
           {track.title}
           {/* select-none: el texto sr-only sigue siendo seleccionable y
@@ -249,39 +244,13 @@ function Turntable({ track, texts }) {
 }
 
 /*
- * Los últimos cinco, como el listado de un disco, según el patrón Listbox de
- * WAI-ARIA (selección única):
- *
- * - La lista incluye al tema destacado, marcado como elegido, y el orden no
- *   cambia nunca: si la fila elegida desapareciera, las demás se correrían
- *   bajo el cursor.
- * - La selección sigue al foco: las flechas mueven y eligen a la vez, porque
- *   el cambio es local e instantáneo (no hace ningún pedido).
- * - Teclado: Tab entra a la fila elegida (las demás quedan con tabindex -1),
- *   flecha abajo y arriba van a la siguiente y a la anterior, Inicio y Fin a
- *   la primera y a la última, y Tab sale.
- * - Las filas no tienen links adentro (el patrón no lo admite): el link a
- *   Last.fm es el título del destacado.
+ * Los últimos cinco, del más nuevo al más viejo (por eso <ol>), como el
+ * listado de un disco. Incluye al destacado: así la lista siempre tiene
+ * cinco, suene algo o no. Cada fila es un link a la página del tema en
+ * Last.fm, con el mismo hover y el mismo aviso para lector de pantalla que el
+ * título de arriba.
  */
-function Tracklist({ tracks, selectedIndex, onSelect, texts }) {
-  const optionRefs = useRef([]);
-
-  function selectAndFocus(index) {
-    onSelect(index);
-    optionRefs.current[index].focus();
-  }
-
-  function onListKeyDown(event) {
-    const last = tracks.length - 1;
-    if (event.key === 'ArrowDown') selectAndFocus(Math.min(selectedIndex + 1, last));
-    else if (event.key === 'ArrowUp') selectAndFocus(Math.max(selectedIndex - 1, 0));
-    else if (event.key === 'Home') selectAndFocus(0);
-    else if (event.key === 'End') selectAndFocus(last);
-    else return;
-    // Que las flechas, Inicio y Fin no scrolleen la página.
-    event.preventDefault();
-  }
-
+function Tracklist({ tracks, texts }) {
   return (
     <div className="mt-3">
       <p
@@ -291,26 +260,24 @@ function Tracklist({ tracks, selectedIndex, onSelect, texts }) {
         {texts.list_label}
       </p>
 
-      <ul role="listbox" aria-labelledby={LIST_LABEL_ID} onKeyDown={onListKeyDown} className="mt-1">
-        {tracks.map((track, index) => {
-          const isSelected = index === selectedIndex;
-          return (
-            <li
-              key={`${index}-${track.url}`}
-              ref={(element) => {
-                optionRefs.current[index] = element;
-              }}
-              role="option"
-              aria-selected={isSelected}
-              tabIndex={isSelected ? 0 : -1}
-              onClick={() => onSelect(index)}
+      <ol aria-labelledby={LIST_LABEL_ID} className="mt-1">
+        {tracks.map((track, index) => (
+          <li key={`${index}-${track.url}`}>
+            <a
+              href={track.url}
+              target="_blank"
+              rel="noopener noreferrer"
               data-cursor="link"
-              className={`group flex items-center gap-3 ${ROW_HEIGHT} -mx-2 px-2 rounded-lg cursor-pointer text-xs transition-colors duration-300 ease-expo-out ${
-                isSelected ? 'bg-(--color-surface-hover) font-medium' : ''
-              }`}
+              className={`group flex items-center gap-3 ${ROW_HEIGHT} -mx-2 px-2 rounded-lg text-xs`}
             >
               <span aria-hidden="true" className="flex items-center w-5 shrink-0">
-                <TrackMarker number={index + 1} isPlaying={track.isNowPlaying} isSelected={isSelected} />
+                {track.isNowPlaying ? (
+                  <Equalizer />
+                ) : (
+                  <span className="font-mono text-[11px] text-(--ink-secondary)">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                )}
               </span>
 
               {/* Título y artista en una sola línea. El artista, con su
@@ -320,7 +287,7 @@ function Tracklist({ tracks, selectedIndex, onSelect, texts }) {
                   título solo no entra, se corta con "…". El artista sigue en
                   el DOM, así que el lector de pantalla lo lee igual. */}
               <span className="flex flex-1 flex-wrap h-4 min-w-0 overflow-hidden">
-                <span className="max-w-full truncate text-(--ink-primary) transition-colors duration-300 ease-expo-out group-hover:text-accent">
+                <span className="max-w-full truncate text-(--ink-primary) underline decoration-transparent underline-offset-4 transition-[color,text-decoration-color,text-underline-offset] duration-300 ease-expo-out group-hover:text-accent group-hover:decoration-accent group-hover:underline-offset-8">
                   {track.title}
                 </span>
                 {track.artist && (
@@ -334,33 +301,12 @@ function Tracklist({ tracks, selectedIndex, onSelect, texts }) {
               </span>
 
               {track.isNowPlaying && <span className="sr-only">{texts.status_playing}</span>}
-            </li>
-          );
-        })}
-      </ul>
+              <span className="sr-only select-none"> {texts.track_link}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
     </div>
-  );
-}
-
-/*
- * Lo que va a la izquierda de cada fila: el ecualizador si el tema suena
- * (aunque esté elegido otro: el cartel dice que algo suena, el ecualizador
- * dice cuál), un mini disco si es el que está en el tocadiscos, y si no, su
- * número. El mini disco hace que el elegido no se distinga solo por el color.
- */
-function TrackMarker({ number, isPlaying, isSelected }) {
-  if (isPlaying) return <Equalizer />;
-  if (isSelected) {
-    return (
-      <span className="flex items-center justify-center size-2.5 rounded-full bg-accent">
-        <span className="size-1 rounded-full bg-(--color-surface-hover)" />
-      </span>
-    );
-  }
-  return (
-    <span className="font-mono text-[11px] text-(--ink-secondary)">
-      {String(number).padStart(2, '0')}
-    </span>
   );
 }
 

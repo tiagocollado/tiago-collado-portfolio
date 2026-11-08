@@ -42,7 +42,7 @@
      que tarda una vuelta: para cambiar la velocidad se ajusta solo acá. Es
      más lento que un disco real (33⅓ rpm, una vuelta cada 1,8 s) para no
      competir con el título. */
-  --animate-spin-record: spin-record 8s linear infinite;
+  --animate-spin-record: spin-record 4s linear infinite;
 
   @keyframes spin-record {
     to { transform: rotate(360deg); }

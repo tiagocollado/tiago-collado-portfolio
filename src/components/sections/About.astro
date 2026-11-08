@@ -82,7 +82,8 @@ const NO_BREAK_SPACE = '\u00a0';
       la firma en el HTML (y en el orden de tabulación). En celular y tablet
       queda debajo del copy. En escritorio pasa a la columna izquierda,
       alineado abajo con la firma, en posición absoluta: así no empuja el
-      copy ni estira la sección. Su alto no cambia al elegir un tema.
+      copy ni estira la sección. Su alto solo cambia entre estados (carga,
+      datos, error), nunca por encima del texto.
     */}
     <div class="relative flex flex-col items-end mt-16 md:mt-20 lg:mt-24">
       <div
