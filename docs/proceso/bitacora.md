@@ -282,6 +282,8 @@ tocadiscos", "El widget queda pasivo" y "El disco gira siempre").
   repositorio), la primera versión compacta medía 381 px contra 292 del copy
   y quedaba a 7 px del claim. Con el crédito en la fila del cartel y las filas
   a 28 px con puntero fino (44 px con el dedo) bajó a 328 px y quedó a 60 px.
+  Después el crédito pasó al pie, chico y tenue (tiene que estar, pero apenas
+  verse): 347 px, a 41 px del claim.
 - **El "·" suelto.** En la lista, cuando el título se cortaba, el separador
   entre título y artista quedaba solo al final. Ahora el separador va adentro
   del bloque del artista, y la línea usa `flex-wrap` con el alto de una sola

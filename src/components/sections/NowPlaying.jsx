@@ -125,21 +125,10 @@ export default function NowPlaying({ texts }) {
         style={{ height: contentHeight ?? 'auto' }}
       >
         <div ref={contentRef} className="p-4">
-          {/* Fila de arriba: el crédito a la izquierda y el cartel a la
-              derecha. Los dos están siempre, en cualquier estado (el cartel,
-              apagado mientras carga o ante un error: no hay nada que diga
-              que suena algo), y compartir la fila ahorra un renglón. */}
-          <div className="flex items-center justify-between gap-3">
-            <a
-              href="https://www.last.fm"
-              target="_blank"
-              rel="noopener noreferrer"
-              data-cursor="link"
-              className="text-[11px] font-mono tracking-[0.18em] transition-colors duration-300 ease-expo-out text-(--ink-secondary) hover:text-accent"
-            >
-              {texts.credit}
-              <span className="sr-only select-none"> {texts.new_tab}</span>
-            </a>
+          {/* El cartel, solo en la fila de arriba. Está siempre, también
+              mientras carga o ante un error: ahí queda apagado, porque no
+              hay nada que diga que suena algo. */}
+          <div className="flex justify-end">
             <LiveSign isLive={isLive} texts={texts} />
           </div>
 
@@ -156,6 +145,24 @@ export default function NowPlaying({ texts }) {
             {view.status === 'empty' && <EmptyTurntable message={texts.empty} />}
             {view.status === 'private' && <EmptyTurntable message={texts.private} />}
             {view.status === 'error' && <EmptyTurntable message={texts.error} />}
+          </div>
+
+          {/* Crédito a Last.fm: los términos de su API piden el link, así
+              que está en todos los estados, pero apenas se ve. Va al final,
+              chico y en --ink-muted, a propósito: es una atribución, no
+              contenido. Ese tono no llega al contraste mínimo para texto
+              (3:1 contra el 4,5:1 de WCAG); se prioriza que sea discreto. */}
+          <div className="flex justify-end mt-2">
+            <a
+              href="https://www.last.fm"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cursor="link"
+              className="text-[11px] leading-none font-mono tracking-[0.18em] transition-colors duration-300 ease-expo-out text-(--ink-muted) hover:text-accent"
+            >
+              {texts.credit}
+              <span className="sr-only select-none"> {texts.new_tab}</span>
+            </a>
           </div>
         </div>
       </div>

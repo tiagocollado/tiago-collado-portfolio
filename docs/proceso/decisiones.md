@@ -451,11 +451,21 @@ entre sus recursos.
 dibujo propio, con la G de la marca como etiqueta, no el arte de ningún
 disco. El crédito es un link de texto, "vía Last.fm" (antes "Datos de
 Last.fm"), que avisa a los lectores de pantalla que abre en otra pestaña, y
-el título del tema destacado enlaza a su página en Last.fm.
+el título del tema de arriba y cada fila enlazan a su página en Last.fm.
+
+El crédito va **al final del widget**, debajo de la lista, alineado a la
+derecha, a 11 px y en `--ink-muted`. Antes estuvo arriba, en la fila del
+cartel "En vivo", que ahora queda solo.
 
 **Por qué.** Cumple lo que los términos permiten con lo que Last.fm ofrece
 hoy. Además, una portada sería el único color fuerte del About y competiría
-con los covers de los proyectos.
+con los covers de los proyectos. El crédito tiene que estar (lo piden los
+términos), pero apenas se tiene que ver: es una atribución, no contenido, y
+al final y en tono tenue se lee como el pie de una ficha. Es una decisión
+consciente contra el contraste: `--ink-muted` da 3:1, debajo del
+4,5:1 que pide WCAG para texto, y se prioriza que sea discreto. El link
+sigue siendo un link con su texto y su aviso para lectores de pantalla, así
+que la información está disponible.
 
 ### El widget es secundario en el About
 
@@ -479,10 +489,9 @@ existía: el tocadiscos tiene altura fija.
   absoluta: no empuja el copy ni estira la sección.
 - **Más compacto y con menos peso**: el disco baja de 112 a 64 px, el padding
   de 24 a 16 px y la tipografía un escalón (el título de `text-xl` a
-  `text-base`, cortado en dos líneas; las filas de `text-sm` a `text-xs`). El
-  crédito "vía Last.fm" comparte la fila con el cartel. Las filas miden 44 px
-  con el dedo y 28 px con mouse o trackpad (`pointer-fine`), por encima de los
-  24 px que pide WCAG 2.5.8.
+  `text-base`, cortado en dos líneas; las filas de `text-sm` a `text-xs`).
+  Las filas miden 44 px con el dedo y 28 px con mouse o trackpad
+  (`pointer-fine`), por encima de los 24 px que pide WCAG 2.5.8.
 - **El label "Lo que suena cuando diseño" va en `--ink-secondary`**, no en
   terracota (`--ink-muted` no llega al contraste mínimo para texto).
 
@@ -494,7 +503,9 @@ proyectos y el contacto (Hick). En posición absoluta, el widget tiene que
 entrar en el alto del copy: se midió en Chrome headless a 1024, 1280, 1440 y
 1920 px. La primera versión compacta medía 381 px contra 292 del copy y
 quedaba a 7 px del claim; con el crédito en la fila del cartel y las filas de
-28 px con puntero fino mide 328 px y deja 60 px.
+28 px con puntero fino bajó a 328 px y dejaba 60 px. Con el crédito
+después al pie, mide 347 px y deja 41 px, por encima de los 32 px que la
+escala de espaciado pide como mínimo debajo de un título.
 
 ### La interacción principal está en el widget de música
 
