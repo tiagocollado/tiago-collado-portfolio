@@ -71,6 +71,27 @@ redirige con `Astro.redirect('/en/', 307)`.
 inmediata del sitio anterior. Que sea una redirección HTTP real depende del
 adapter de Vercel, que se suma con el endpoint de la API.
 
+### Redirección de `/` en la configuración de Astro
+
+*Reemplaza a "Redirección de `/` hecha a mano".*
+
+**Contexto.** Con el adapter de Vercel, `index.astro` sigue siendo una página
+prerenderizada: `/` responde 200 con un meta refresh, no una redirección HTTP.
+Es la URL que más circula del sitio.
+
+**Decisión.** `/` redirige con un 307 desde los `redirects` de
+`astro.config.mjs`, como el CV. `src/pages/index.astro` se queda: el i18n lo
+exige con `prefixDefaultLocale: true`, y sigue redirigiendo por su cuenta si
+la regla deja de aplicarse.
+
+**Por qué.** Es una redirección HTTP real que resuelve el CDN de Vercel, sin
+servir una página intermedia ni ejecutar la función. El costo: la
+documentación de routing dice que una página le gana a un redirect en la
+misma ruta, y en el build pasa al revés (el adapter escribe la regla y Astro
+deja de generar `index.html`). Como es un comportamiento observado y no
+documentado, se revisa la configuración generada después de cada
+actualización de Astro o del adapter.
+
 ### Barra final en todas las URLs
 
 **Contexto.** Lenis intercepta un ancla solo si el pathname del link coincide
@@ -394,8 +415,8 @@ URL que ya circula sigue funcionando.
 **Contexto.** La redirección tiene que ser 307. Sin adapter, la opción
 `redirects` de Astro genera una página con meta refresh, sin código de
 estado, así que la redirección vivía en `vercel.json`. Con el adapter de
-Vercel, el build entrega la configuración de rutas del deploy ya armada
-(`.vercel/output/config.json`), y el adapter la genera solo a partir de
+Vercel, la configuración de rutas del deploy sale del build ya armada
+(`.vercel/output/config.json`), y el adapter la arma solo a partir de
 `astro.config.mjs`: no copia los `redirects` de `vercel.json`. La
 documentación de Vercel no aclara si los aplica igual.
 

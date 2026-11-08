@@ -309,9 +309,10 @@ src/
 ├── layouts/
 │   └── BaseLayout.astro        # ✅ <head>, script de tema, fuentes, metadata + OG
 ├── pages/
-│   ├── index.astro             # ✅ obligatorio con i18n; redirige a /en/ con
-│   │                           # Astro.redirect(…, 307), no con
-│   │                           # redirectToDefaultLocale (ver nota abajo)
+│   ├── index.astro             # ✅ obligatorio con i18n. La redirección real
+│   │                           # de / a /en/ (307) está en `redirects` de
+│   │                           # astro.config.mjs; esta página queda de
+│   │                           # respaldo con Astro.redirect (ver nota abajo)
 │   ├── en/ · es/               # ✅ carpetas por idioma: index.astro y
 │   │                           # projects/[slug].astro (getStaticPaths con los
 │   │                           # publicados). Cada una usa un componente compartido
@@ -347,7 +348,15 @@ src/
 > trata como 302) y el build tira un warning de rutas en conflicto con
 > `src/pages/index.astro`, que es obligatorio. Con la redirección a mano en
 > `index.astro` (`Astro.redirect(…, 307)`) sale sin warning y con refresh de 0
-> segundos. La redirección HTTP real depende del adapter de Vercel (F6).
+> segundos.
+>
+> ⚠️ **La redirección HTTP real de `/` sale de `redirects` en
+> `astro.config.mjs`** (307), que el adapter escribe en
+> `.vercel/output/config.json` y que hace que el build no genere `index.html`.
+> Contradice la doc de routing (la página debería ganar), así que **después de
+> actualizar Astro o el adapter se revisa que la regla `^/$` siga en el
+> `config.json` y que no exista `.vercel/output/static/index.html`**. En dev
+> responde 301 en vez de 307.
 
 **Fuentes**: API de fuentes de Astro (`fonts` en `astro.config.mjs`, estable en 7.4.7) + `<Font cssVariable preload />` en el layout. Descarga las fuentes de Google en el build y las sirve desde el sitio, con `font-display: swap`, un fallback con métricas ajustadas (para que el cambio de fuente no mueva el layout) y preload: la misma estrategia que usaba `next/font`. Las variables CSS son las de antes (`--font-geist-sans`, `--font-geist-mono`, `--font-space-grotesk`).
 

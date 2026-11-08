@@ -22,11 +22,17 @@ export default defineConfig({
   // de rutas del deploy, que redirige /en a /en/ con un 308.
   trailingSlash: 'always',
 
-  // El CV vive en Google Drive y no entra al repo. La redirección es
-  // temporal (307) para poder cambiar el destino sin que los navegadores
-  // guarden la anterior. El adapter la escribe en la configuración de rutas
-  // de Vercel, así que es una redirección HTTP real.
+  // Redirecciones HTTP reales: el adapter las escribe en la configuración de
+  // rutas de Vercel. Las dos son temporales (307): un 301 o un 308 quedan
+  // guardados en el navegador y después no se pueden cambiar.
   redirects: {
+    // La home sin idioma va al inglés, el idioma por defecto. Gana sobre
+    // src/pages/index.astro, que sigue existiendo porque el i18n lo exige
+    // (el porqué, en ese archivo). Después de actualizar Astro o el adapter,
+    // revisar que .vercel/output/config.json siga teniendo esta regla.
+    '/': { status: 307, destination: '/en/' },
+
+    // El CV vive en Google Drive y no entra al repo.
     '/tiago-collado-cv.pdf': {
       status: 307,
       destination:
