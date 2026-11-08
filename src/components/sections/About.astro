@@ -2,15 +2,37 @@
 import { createTranslator } from '../../i18n/translate.js';
 
 const t = createTranslator(Astro.currentLocale);
+
+/*
+ * Espacio duro entre fragmentos del claim. En ES esas uniones son "el diseño"
+ * y "al negocio": un salto de línea ahí dejaría el artículo solo al final
+ * del renglón. text-pretty corta por largo de línea, no por gramática, así
+ * que el corte bueno se fija a mano y aguanta cualquier ancho de pantalla.
+ * Va con nombre y escapado porque el carácter literal no se distingue de un
+ * espacio común al leer el archivo.
+ */
+const NO_BREAK_SPACE = '\u00a0';
 ---
 
+{/*
+  Entrada: tres bloques con fade + subida, cada uno cuando entra en pantalla
+  (margen -80px): la fila de labels, el claim y el copy con la firma. El
+  claim y el copy esperan 0.1 y 0.15 s, así en una pantalla alta, donde
+  entran juntos, se leen en orden.
+*/}
 <section
   id="about"
   aria-labelledby="about-heading"
   class="pt-16 md:pt-20 lg:pt-28 pb-8 md:pb-10 lg:pb-12 px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32"
 >
   <div class="max-w-7xl mx-auto">
-    <div class="flex items-start justify-between gap-6">
+    <div
+      class="flex items-start justify-between gap-6"
+      data-reveal-trigger
+      data-reveal-margin="-80px"
+      data-reveal
+      style="--reveal-y: 12px; --reveal-duration: 0.6s;"
+    >
       <h2
         id="about-heading"
         class="text-xs font-mono tracking-[0.2em] uppercase"
@@ -28,13 +50,22 @@ const t = createTranslator(Astro.currentLocale);
 
     <p
       class="font-display text-3xl md:text-4xl lg:text-5xl leading-[1.15] tracking-tight max-w-4xl mt-12 md:mt-16 lg:mt-20 text-pretty"
-      style="color: var(--ink-primary);"
+      data-reveal-trigger
+      data-reveal-margin="-80px"
+      data-reveal
+      style="color: var(--ink-primary); --reveal-y: 24px; --reveal-duration: 0.7s; --reveal-delay: 0.1s;"
     >
-      {t('about.claim_1')}{' '}<strong class="font-semibold">{t('about.claim_2')}</strong>{' '}{t('about.claim_3')}{' '}<strong class="font-semibold">{t('about.claim_4')}</strong>
+      {t('about.claim_1')}{NO_BREAK_SPACE}<strong class="font-semibold">{t('about.claim_2')}</strong>{' '}{t('about.claim_3')}{NO_BREAK_SPACE}<strong class="font-semibold">{t('about.claim_4')}</strong>
     </p>
 
     <div class="flex justify-end mt-16 md:mt-20 lg:mt-24">
-      <div class="max-w-xl space-y-6 md:text-right">
+      <div
+        class="max-w-xl space-y-6 md:text-right"
+        data-reveal-trigger
+        data-reveal-margin="-80px"
+        data-reveal
+        style="--reveal-y: 24px; --reveal-duration: 0.7s; --reveal-delay: 0.15s;"
+      >
         <p class="text-base md:text-lg leading-relaxed text-pretty" style="color: var(--ink-secondary);">
           {t('about.body_1')}
         </p>
@@ -56,3 +87,7 @@ const t = createTranslator(Astro.currentLocale);
     </div>
   </div>
 </section>
+
+<script>
+  import '../../scripts/reveal.js';
+</script>
