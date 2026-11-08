@@ -43,6 +43,32 @@ escapan casos.
 Son síntoma, no prolijidad rota. Antes de sacarlos, verificar que las utilities
 funcionen: si están muertas por el bug de arriba, al sacarlos quedás con cero padding.
 
+### Un shorthand en una variante con media query pisa a la propiedad suelta
+
+Las utilities con variante de media query (`motion-safe:`, `md:`, `dark:` si es
+por media) salen **después** de las utilities comunes en el CSS, dentro de la
+misma `@layer utilities` y con la misma especificidad (una clase). A igual
+especificidad gana la que sale después. Si esa regla usa un **shorthand**,
+resetea todas sus propiedades sueltas, también las que vienen de otra clase.
+
+Caso real: el disco del widget de música tenía
+`motion-safe:animate-spin-record` (que es `animation: …`, un shorthand) y,
+para pausarlo, `[animation-play-state:paused]`. La regla de la variante sale
+después (dentro de `@media (prefers-reduced-motion: no-preference)`), su
+`animation` resetea `animation-play-state` a `running`, y el disco nunca se
+pausó. El build pasó y la clase estaba en el HTML, así que una prueba que
+mira las clases tampoco lo vio: se vio en el navegador.
+
+- ✅ La propiedad suelta va **en la misma variante** que el shorthand
+  (`motion-safe:[animation-play-state:paused]`), o se evita mezclar las dos.
+- ✅ Vale para cualquier par shorthand / propiedad suelta: `animation` /
+  `animation-*`, `transition` / `transition-*`, `border` / `border-color`,
+  `background` / `background-color`, `font` / `font-weight`.
+
+🔍 Si una utility "no hace nada", buscar la otra clase del mismo elemento que
+use un shorthand de esa propiedad con una variante de media query, y comparar
+el orden de las dos reglas en el CSS del build.
+
 ---
 
 ## Islas de Astro
