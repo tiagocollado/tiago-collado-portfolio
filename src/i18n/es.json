@@ -50,6 +50,7 @@
     "view_live": "Ver producto final",
     "view_github_frontend": "Ver código (Frontend)",
     "view_github_backend": "Ver código (Backend)",
+    "view_prototype": "Ver prototipo",
     "meta_client": "Cliente",
     "meta_year": "Año",
     "meta_role": "Rol",
@@ -84,7 +85,7 @@
   },
   "case_study_cabify-playlist-del-viaje": {
     "intro": "Diseñé una función para elegir la música del viaje. El pasajero conecta Spotify o Apple Music, o elige géneros y artistas, y en el viaje suena una mezcla con los gustos del conductor.",
-    "challenge": "En 2023, la pantalla Mis preferencias de Cabify trataba la música como un sí o un no. Si el pasajero quería escuchar algo, lo único que podía hacer era indicar la frecuencia de su radio favorita. No había forma de llevar su propia música al viaje.\n\nLa propuesta tenía que sumar eso sin romper lo que ya funcionaba, así que las demás preferencias quedaron como estaban.",
+    "challenge": "En 2023, la pantalla Mis preferencias de Cabify trataba la música como un sí o un no. Si el pasajero quería escuchar algo, lo único que podía hacer era indicar la frecuencia de su radio favorita. No había forma de llevar su propia música al viaje.",
     "process": "Separé la función en dos recorridos: configurar la música una vez, desde Mis preferencias, y usarla durante el viaje. En el diagrama, el primero está arriba y el segundo abajo.",
     "decision_1_title": "La música vive donde Cabify ya la tenía",
     "decision_1_body": "En lugar de sumar una sección nueva, puse la función en Mis preferencias, donde la app ya preguntaba por la música, y en un botón sobre el mapa del Home para usarla durante el viaje. Una tarjeta marcada como nueva explica qué hace antes de pedir nada, y desde ahí se configura una sola vez.",

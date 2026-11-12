@@ -50,6 +50,7 @@
     "view_live": "View final product",
     "view_github_frontend": "View code (Frontend)",
     "view_github_backend": "View code (Backend)",
+    "view_prototype": "View prototype",
     "meta_client": "Client",
     "meta_year": "Year",
     "meta_role": "Role",
@@ -84,7 +85,7 @@
   },
   "case_study_cabify-playlist-del-viaje": {
     "intro": "I designed a feature to pick the music for a ride. Passengers connect Spotify or Apple Music, or choose genres and artists, and the ride plays a mix of their taste and the driver's.",
-    "challenge": "In 2023, Cabify's My preferences screen treated music as a yes or a no. If passengers wanted to hear something, the only thing they could do was enter the frequency of their favorite radio station. There was no way to bring their own music into the ride.\n\nThe proposal had to add that without breaking what already worked, so the other preferences stayed as they were.",
+    "challenge": "In 2023, Cabify's My preferences screen treated music as a yes or a no. If passengers wanted to hear something, the only thing they could do was enter the frequency of their favorite radio station. There was no way to bring their own music into the ride.",
     "process": "I split the feature into two flows: setting up the music once, from My preferences, and using it during the ride. In the diagram, the first one is on top and the second one below.",
     "decision_1_title": "Music lives where Cabify already had it",
     "decision_1_body": "Instead of adding a new section, I placed the feature in My preferences, where the app already asked about music, and in a button on the Home map to use it during the ride. A card marked as new explains what it does before asking for anything, and from there it's set up only once.",

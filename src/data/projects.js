@@ -413,7 +413,9 @@ export const projects = [
       es: ['Aplicaciones Móviles', 'Design System'],
       en: ['Mobile Apps', 'Design System'],
     },
-    links: {},
+    links: {
+      prototype: 'https://www.figma.com/proto/lau81Ek16dCN8fJmtncGeK/-2023--Cabify---Playlist-del-viaje?node-id=986-269&p=f&scaling=scale-down&content-scaling=fixed&starting-point-node-id=986%3A269&show-proto-sidebar=1&page-id=127%3A18',
+    },
     cardShape: 'square',
     coverImage: cabifyCover,
     year: 2023,
