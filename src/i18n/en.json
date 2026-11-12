@@ -82,19 +82,20 @@
     "delivered_3": "Deployed on Vercel with end-to-end live demo (artist → song → cart → checkout)",
     "closing": "If I did it again, I'd fix three limitations the demo has today. The setup button overwrites the quantity. If a piece of gear was in the cart with three units, it drops back to one. Stock is never validated, neither when adding to the cart nor when placing the order. And the cart only lives in memory, so it's gone when the page reloads. I'd solve them by adding to the quantity instead of replacing it, checking stock on the backend when the order comes in, and saving the cart so it survives a reload."
   },
-  "case_study_cabify-music-match": {
-    "intro": "Cabify already had a music option, but it only changed the radio station (dead tech). I designed Music Match: a feature that merges driver and passenger tastes via Spotify, without adding friction to the trip request flow.",
-    "challenge": "Aligning the musical tastes of two people who just met, without either feeling they lost control. Prioritize the passenger, the driver gets uncomfortable; flip it, same problem. The solution couldn't be a unilateral override.",
-    "decision_1_title": "Merge algorithm, with clear fallbacks",
-    "decision_1_body": "Detects matches in genres and artists between both Spotify profiles and generates a temporary trip playlist. If there aren't enough matches, it offers pre-curated mood playlists (energizing, relaxing, neutral). And there's always 'Silence', because not everyone wants music.",
-    "decision_2_title": "Optional, progressive onboarding",
-    "decision_2_body": "Linking Spotify can't add friction to the trip request flow. Skippable explanatory modal the first time. If skipped, Music Match doesn't appear. If linked, the feature activates automatically with a simple toggle to opt out.",
-    "decision_3_title": "Validating the silence mode was key",
-    "decision_3_body": "Research showed many people would rather hear nothing. Validating this avoided forcing a feature where sometimes the best solution is not using it. 'Silence' sits at the same hierarchical level as the other two options, not hidden in a menu.",
-    "delivered_1": "iPhone 14 Figma prototype with onboarding, simulated OAuth, controls and settings",
-    "delivered_2": "User flows tested with real drivers and passengers",
-    "delivered_3": "UI aligned with Cabify's official brand guidelines (brand.cabify.com)",
-    "closing": "The best features aren't the most complex. They're the ones that solve emotional problems (the discomfort of silence with a stranger) with simple tech (connecting two Spotify accounts). If I were to redo it: post-trip feedback to iterate the merge algorithm with real data and turn Music Match into a real competitive edge."
+  "case_study_cabify-playlist-del-viaje": {
+    "intro": "I designed a feature to pick the music for a ride. Passengers connect Spotify or Apple Music, or choose genres and artists, and the ride plays a mix of their taste and the driver's.",
+    "challenge": "In 2023, Cabify's My preferences screen treated music as a yes or a no. If passengers wanted to hear something, the only thing they could do was enter the frequency of their favorite radio station. There was no way to bring their own music into the ride.\n\nThe proposal had to add that without breaking what already worked, so the other preferences stayed as they were.",
+    "process": "I split the feature into two flows: setting up the music once, from My preferences, and using it during the ride. In the diagram, the first one is on top and the second one below.",
+    "decision_1_title": "Music lives where Cabify already had it",
+    "decision_1_body": "Instead of adding a new section, I placed the feature in My preferences, where the app already asked about music, and in a button on the Home map to use it during the ride. A card marked as new explains what it does before asking for anything, and from there it's set up only once.",
+    "decision_2_title": "An option for people without a streaming account",
+    "decision_2_body": "Connecting an account couldn't be the only way in. In the panel, Spotify and Apple Music connect directly, and anyone who uses neither picks genres and artists on a screen with chips. I removed the Save button from the panel because each option already does its own action. In Your music taste, Save only turns on once something is selected.",
+    "decision_3_title": "Every state has a way out",
+    "decision_3_body": "I also designed what happens when something doesn't go as expected. While the mix is being built there's a loading screen, and if the Spotify connection fails, passengers can retry or keep riding without music. Riding without music sits in the same list as the playlists, in plain sight, because not everyone wants to listen to something.",
+    "delivered_1": "15 screens across two flows, with a clickable Figma prototype",
+    "delivered_2": "UI Kit built with Atomic Design, with color and spacing variables and eight text styles",
+    "delivered_3": "Loading and error states, plus the option to ride without music",
+    "closing": "The hardest part was figuring out what to do with passengers who don't use any music streaming platform, so they'd feel included too. If I did it again, I'd test the prototype with passengers and drivers before moving to high fidelity. I'd also design the driver's side, because the proposal assumes they agree to mix their music with the passenger's, and that's the biggest open question."
   },
   "case_study_multibrand-design-system": {
     "intro": "At No Country, a team of 6 across 3 countries, 5 weeks, we designed a multibrand Design System that lets multiple EdTech products share a common base without losing identity: 70% mandatory core, 30% customizable.",

@@ -18,6 +18,14 @@ import ritualCluster from '../assets/case-study/el-ritual-del-tono/02-cluster.jp
 import ritualDiagram from '../assets/case-study/el-ritual-del-tono/03-diagrama.jpg';
 import ritualPalette from '../assets/case-study/el-ritual-del-tono/04-paleta.jpg';
 
+import cabifyCover from '../assets/covers/cabify-playlist-del-viaje-cover.jpg';
+import cabifyMockup from '../assets/case-study/cabify-playlist-del-viaje/00-mockup.jpg';
+import cabifyStrip from '../assets/case-study/cabify-playlist-del-viaje/01-tira.jpg';
+import cabifyClusterA from '../assets/case-study/cabify-playlist-del-viaje/02-cluster-a.jpg';
+import cabifyDiagram from '../assets/case-study/cabify-playlist-del-viaje/03-diagrama.jpg';
+import cabifyClusterB from '../assets/case-study/cabify-playlist-del-viaje/04-cluster-b.jpg';
+import cabifyPalette from '../assets/case-study/cabify-playlist-del-viaje/05-paleta.jpg';
+
 /*
  * Campos que no se explican solos:
  * - services: categorías del trabajo, nunca roles ("Diseño Web", no "Diseño UX/UI"). Máximo 2.
@@ -52,7 +60,7 @@ export const projects = [
     year: 2026,
     published: true,
     showOnHome: true,
-    order: 1,
+    order: 2,
     metadata: {
       client:   { es: 'Paseo Güemes Hotel · Salta',                                en: 'Paseo Güemes Hotel · Salta' },
       role:     { es: 'Dirección de arte, diseño UX/UI e implementación en WordPress', en: 'Art direction, UX/UI design & WordPress implementation' },
@@ -118,12 +126,12 @@ export const projects = [
     links: {
       live: 'https://pulsocreativo.com.ar',
     },
-    cardShape: 'square',
+    cardShape: 'wide',
     coverImage: pulsoCover,
     year: 2026,
     published: true,
     showOnHome: true,
-    order: 2,
+    order: 3,
     metadata: {
       client:   { es: 'Pulso Creativo',                                              en: 'Pulso Creativo' },
       role:     { es: 'Diseño UX/UI e implementación en WordPress',                  en: 'UX/UI design & WordPress implementation' },
@@ -205,7 +213,7 @@ export const projects = [
     year: 2025,
     published: true,
     showOnHome: true,
-    order: 3,
+    order: 4,
     metadata: {
       client:   { es: 'Proyecto universitario · Maimónides', en: 'University project · Maimónides' },
       role:     { es: 'Diseño UI y Desarrollo Full-stack',   en: 'UI Design & Full-stack Development' },
@@ -283,7 +291,7 @@ export const projects = [
     year: 2025,
     published: false,
     showOnHome: false,
-    order: 4,
+    order: 5,
     metadata: {
       client:   { es: 'Simulación · No Country',             en: 'Simulation · No Country' },
       role:     { es: 'Diseño UX/UI y Design System',        en: 'UX/UI Design & Design System' },
@@ -347,7 +355,7 @@ export const projects = [
     year: 2025,
     published: false,
     showOnHome: false,
-    order: 5,
+    order: 6,
     metadata: {
       client:   { es: 'Proyecto universitario · Maimónides', en: 'University project · Maimónides' },
       role:     { es: 'Investigación UX y Diseño Inclusivo', en: 'UX Research & Inclusive Design' },
@@ -391,66 +399,88 @@ export const projects = [
     ],
   },
   {
-    slug: 'cabify-music-match',
-    title: 'Cabify Music Match',
+    slug: 'cabify-playlist-del-viaje',
+    title: 'Cabify · Playlist del viaje',
     tagline: {
-      es: 'Nueva feature UX/UI para romper el hielo a través de la música.',
-      en: 'New UX/UI feature to break the ice through music.',
+      es: 'Propuesta de rediseño para llevar la música del pasajero a los viajes de Cabify, mezclada con los gustos del conductor.',
+      en: "Redesign proposal that brings the passenger's music into Cabify rides, mixed with the driver's taste.",
     },
     description: {
-      es: 'Diseño de una funcionalidad para Cabify que fusiona los gustos musicales del conductor y el pasajero en una playlist compartida generada en tiempo real.',
-      en: 'Feature design for Cabify that merges driver and passenger music tastes into a real-time shared playlist.',
+      es: 'Propuesta de rediseño que lleva la música del pasajero a los viajes de Cabify.',
+      en: "Redesign proposal that brings the passenger's music into Cabify rides.",
     },
     services: {
-      es: ['Aplicaciones Móviles'],
-      en: ['Mobile Apps'],
+      es: ['Aplicaciones Móviles', 'Design System'],
+      en: ['Mobile Apps', 'Design System'],
     },
     links: {},
-    cardShape: 'wide',
-    coverImage: null,
+    cardShape: 'square',
+    coverImage: cabifyCover,
     year: 2023,
-    published: false,
-    showOnHome: false,
-    order: 6,
+    published: true,
+    showOnHome: true,
+    order: 1,
     metadata: {
-      client:   { es: 'Concept · Cabify',                    en: 'Concept · Cabify' },
-      role:     { es: 'Diseño UX/UI y Prototipado',          en: 'UX/UI Design & Prototyping' },
-      duration: { es: '3 meses',                             en: '3 months' },
-      team:     { es: 'Proyecto autoiniciado · alcance completo', en: 'Self-initiated · full scope' },
+      client:   { es: 'Propuesta de rediseño · Cabify',                      en: 'Redesign proposal · Cabify' },
+      role:     { es: 'Diseño UX/UI',                                        en: 'UX/UI design' },
+      team:     { es: 'Diseño end-to-end en Figma · del brief al prototipo', en: 'End-to-end design in Figma · from brief to prototype' },
       stack:    ['Figma'],
     },
     imageBriefs: [
       {
-        type: 'detail',
+        type: 'mockup',
         slot: 'hero',
         alt: {
-          es: 'Hero shot — prototipo iPhone 14 mostrando la pantalla principal de Music Match con la playlist fusionada',
-          en: 'Hero shot — iPhone 14 prototype showing the main Music Match screen with the merged playlist',
+          es: 'Cinco pantallas mobile sobre hormigón con luz de ventana: Mis preferencias, Tus gustos musicales, la canción que está sonando, Playlists y la invitación a la jam',
+          en: 'Five mobile screens on concrete with window light: My preferences, Your music taste, the song now playing, Playlists, and the jam invite',
         },
+        src: cabifyMockup,
+      },
+      {
+        type: 'long-strip',
+        slot: 'intro',
+        frame: { width: 1440, height: 810 },
+        alt: {
+          es: 'Tres bocetos en papel de las pantallas y el user flow original sobre hormigón oscuro',
+          en: 'Three paper sketches of the screens and the original user flow on dark concrete',
+        },
+        src: cabifyStrip,
+      },
+      {
+        type: 'screen-cluster',
+        slot: 'challenge',
+        alt: {
+          es: 'La pantalla Mis preferencias de Cabify con el panel de la radio abierto, y ampliadas la fila Música en No y el campo para indicar la frecuencia de la emisora',
+          en: "Cabify's My preferences screen with the radio panel open, and enlarged, the Music row set to No and the field for entering the station frequency",
+        },
+        src: cabifyClusterA,
       },
       {
         type: 'diagram',
-        slot: 'challenge',
+        slot: 'decisions',
         alt: {
-          es: 'Diagrama del algoritmo de fusión: dos perfiles Spotify con géneros y artistas convergen en una playlist compartida',
-          en: 'Merge algorithm diagram: two Spotify profiles with genres and artists converge into a shared playlist',
+          es: 'Las quince pantallas en dos filas sobre hormigón oscuro, arriba el recorrido para configurar la música y abajo el del viaje',
+          en: 'The fifteen screens in two rows on dark concrete, with the music setup flow on top and the ride flow below',
         },
+        src: cabifyDiagram,
       },
       {
         type: 'screen-cluster',
         slot: 'decisions',
         alt: {
-          es: 'User flow del onboarding skippable de Spotify, en 3 pantallas mobile',
-          en: 'Skippable Spotify onboarding user flow across 3 mobile screens',
+          es: 'Tres pantallas mobile sobre hormigón oscuro: el panel para elegir de dónde sale la música, Tus gustos musicales con Guardar deshabilitado y el error de conexión con Spotify',
+          en: 'Three mobile screens on dark concrete: the panel to choose where the music comes from, Your music taste with Save disabled, and the Spotify connection error',
         },
+        src: cabifyClusterB,
       },
       {
-        type: 'screen-cluster',
+        type: 'palette',
         slot: 'delivered',
         alt: {
-          es: 'Tres estados clave de Music Match: fusión, playlist por mood y modo silencio',
-          en: 'Three key Music Match states: merge, mood playlist, and silence mode',
+          es: 'El UI Kit sobre hormigón oscuro, con átomos, una fila de preferencia, el panel que la contiene y la pantalla con la grilla de cuatro columnas, y abajo los colores y la tipografía',
+          en: 'The UI Kit on dark concrete, with atoms, a preference row, the panel that holds it, and the screen with the four-column grid, plus the colors and typography below',
         },
+        src: cabifyPalette,
       },
     ],
   },
