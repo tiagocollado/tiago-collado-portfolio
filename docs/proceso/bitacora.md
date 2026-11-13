@@ -91,6 +91,15 @@ md5); las secciones de la home y del caso de estudio como componentes `.astro`;
 las páginas de los tres casos en los dos idiomas, generadas solo para los
 proyectos publicados; la redirección 307 del CV.
 
+Después de la migración se sumaron dos casos, armados desde sus archivos de
+Figma porque ninguno tiene un sitio publicado que capturar: Cabify · Playlist
+del viaje, una propuesta de rediseño, y Recuérdalo, un caso de accesibilidad
+para personas mayores. En los dos, la tira muestra el proceso (bocetos, user
+flow, card sorting, pantallas en media fidelidad) y la paleta es el UI Kit. La
+barra de metadata suma un link al prototipo navegable, que usan los dos. El
+home pasó a mostrar las cinco cards publicadas, con Recuérdalo primero y en la
+única card cuadrada, y la card de Pulso Creativo pasó a ser vertical.
+
 **Qué costó.**
 
 - **Imágenes optimizadas dentro de las islas.** El `<Image />` de Astro no
@@ -104,6 +113,26 @@ proyectos publicados; la redirección 307 del CV.
 - **Falsos positivos en los controles de texto.** `git grep` también busca
   adentro de los JPG, donde aparecen por azar secuencias que coinciden con
   palabras cortas. Los controles se corren con `-I`, que saltea los binarios.
+- **Fondos que se fundían con el tema oscuro.** Las cinco piezas del caso de
+  Cabify tenían el borde pegado a `#111110`, el fondo del tema por defecto, y
+  en la página no se veía dónde terminaba cada imagen. Se rehicieron sobre
+  hormigón de valor medio, que se separa de los dos temas.
+- **Contenido en la zona que recorta el parallax.** En Recuérdalo, cuatro
+  piezas tenían el contenido a menos de 80 px del borde, la zona segura de los
+  tipos que se recortan: en el desktop más angosto se habrían cortado las
+  barras de las pantallas, y el blanco de la paleta habría quedado como borde
+  de la imagen. Se reexportaron con el contenido centrado y más margen. En la
+  misma pasada, el hero pasó a ser la misma escena que el cover.
+- **Un cover cuadrado en una card vertical.** La card recorta con
+  `object-cover`, así que un cover 1:1 se escala por el alto y se dibuja a 4/3
+  del ancho de la card. Con el `sizes` de las demás cards, el navegador pedía
+  una variante un tercio más chica y la imagen se veía blanda. La card vertical
+  tiene su propio `sizes`.
+- **Medir el hueco de la masonry.** Las dos columnas se estiran al alto de la
+  fila, así que comparar columnas da cero: hay que medir dónde termina la
+  última card de cada una. Además, las cards entran con 32 px de
+  desplazamiento que se anula al aparecer en pantalla; medido sin recorrer la
+  grilla, el hueco daba 32 px de más.
 
 ---
 
@@ -367,6 +396,10 @@ En cada etapa, antes de commitear:
   lo que depende de la cascada se revisa además en el CSS del build, y el
   layout (por ejemplo, que el widget no supere al texto del About) se mide
   en Chrome headless.
+- Las imágenes de un caso nuevo, antes de cablearlas: leídas al 100% (el texto
+  de las pantallas tiene que ser real), con el borde medido contra los dos
+  fondos y el contenido fuera de la zona que recorta el parallax. El copy, con
+  la pasada de hechos de la skill de auditoría contra su fuente.
 - JavaScript por página, con gzip: ~137 KB en la home y ~128 KB en un caso de
   estudio. React y Framer Motion son ~106 KB de eso y los comparten todas las
   islas; el widget de música suma 2,6 KB.

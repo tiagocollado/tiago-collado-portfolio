@@ -371,6 +371,65 @@ mismo, sin la dependencia.
 
 ---
 
+## Casos y grilla del home
+
+### Recuérdalo se presenta por lo que resuelve
+
+**Contexto.** La barra de metadata de cada caso tiene un campo de cliente, y
+Recuérdalo no tuvo cliente.
+
+**Decisión.** Recuérdalo se presenta por lo que resuelve, accesibilidad para
+personas mayores, y la metadata no sugiere un cliente que no hubo: el campo
+dice `Caso de estudio · Diseño accesible`.
+
+**Por qué.** Lo que el caso demuestra es cómo diseñar para personas mayores,
+con decisiones que salen de la investigación. Eso es lo que le sirve a quien
+lo lee, más que el contexto en el que se hizo.
+
+### Un mosaico de pantallas en el cover y el hero de Recuérdalo
+
+**Contexto.** Los covers del home siguen una receta: un dispositivo
+protagonista en un entorno real, con luz dura y direccional. El cover y el
+hero de cada caso son la misma escena, en dos encuadres.
+
+**Decisión.** Recuérdalo usa en el cover y en el hero un mosaico de pantallas
+reales sin marco, inclinado y cortado por los bordes. Los dos siguen saliendo
+de la misma escena.
+
+**Por qué.** Recuérdalo es una app con cinco recorridos. Un mosaico muestra
+varias pantallas reales a la vez, y así se ve el sistema completo y no una
+sola pantalla.
+
+### El home muestra todos los casos publicados
+
+**Contexto.** La grilla del home es masonry de dos columnas y reparte las
+cards alternando. Con cinco cards, la izquierda lleva tres y la derecha dos, y
+la derecha terminaba una card antes.
+
+**Decisión.** El home muestra las cinco cards publicadas.
+
+**Por qué.** Que se vean todos los casos publicados pesa más que una grilla
+pareja. El hueco se achicó después con la card vertical de Pulso Creativo.
+
+### Card vertical para Pulso Creativo
+
+**Contexto.** Con cinco cards, a 1440 px la columna derecha terminaba 636 px
+antes que la izquierda. El cover de Pulso es cuadrado, y la laptop ocupa la
+mitad de su ancho.
+
+**Decisión.** Una forma de card nueva, `portrait`: 3:4 desde `md` y 4:3 en
+mobile. Pulso la usa con el mismo cover, recortado a los costados, y el hueco
+baja a 279 px. Se llama igual que la proporción 3:4 de las imágenes del caso,
+para que el código tenga un solo nombre para ella.
+
+**Por qué.** 3:4 achica el hueco a menos de la mitad y deja hormigón a los
+costados de la laptop. 2:3 lo habría bajado unos 100 px más, con la laptop
+justa contra los bordes de la card. En mobile la grilla es de una columna y no
+hay hueco que achicar: una card vertical a todo el ancho sería la más alta de
+la lista sin ningún motivo.
+
+---
+
 ## Datos dinámicos
 
 ### Last.fm como fuente dinámica

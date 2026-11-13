@@ -197,7 +197,11 @@ TypeScript.
 
 **Qué hizo la IA.** Adaptó a Astro las reglas del proyecto anterior; redactó
 `CLAUDE.md`, la bitácora, el registro de decisiones, este documento y el
-README; revisó el origen de las skills que uso.
+README; revisó el origen de las skills que uso. En el caso de Recuérdalo,
+contrastó el copy (textos, metadata y alts) contra el archivo de Figma del
+proyecto, leído en modo solo lectura: la investigación, el UI Kit y las 29
+pantallas. El contraste de los colores del kit lo calculó, en vez de tomar el
+dato que declara el archivo.
 
 **Qué revisé, adapté o descarté.** Revisé los cambios a las reglas de
 imágenes antes de que se guardaran, elegí qué partes del historial anterior
@@ -216,6 +220,16 @@ fechas, por etapa o por tipo de tarea, sin paso a paso.
 - En las pestañas, la misma pasada marcó que "Últimos 5" ata el número del
   copy a una constante del endpoint: si cambia la cantidad, el texto miente.
   Lo dejé así porque dice el tamaño de la lista antes de abrirla.
+- En el copy de Recuérdalo, la pasada de hechos contra Figma encontró
+  afirmaciones sin respaldo en un texto que ya estaba aprobado: el orgullo de
+  lograr algo solas "en cada entrevista", cuando la investigación lo respalda
+  con una sola cita;
+  "botones de 56 px" cuando el principal mide 64, y "zonas táctiles de 48"
+  cuando el kit fija 56 como mínimo; "limitaciones visuales" que la persona del
+  caso no tiene; y un botón Volver en "cada pantalla", cuando el inicio no lo
+  tiene. Ninguna se nota leyendo el texto; aparecieron al buscar cada una en
+  el archivo. También marcó que la intro repetía el tagline y que el cierre
+  nombraba a la persona sin presentarla.
 - Escribió dos veces, en la documentación, una palabra que el control de
   palabras del repositorio no admite. El control la detectó las dos veces; la
   primera, después de un push.
@@ -224,4 +238,7 @@ fechas, por etapa o por tipo de tarea, sin paso a paso.
 (se citan en Créditos y licencias); la skill propia de auditoría de copy sí se
 versiona. El título del widget ("Lo que suena cuando diseño" / "Music I
 design to") y la aprobación de cada texto de sus estados. En el copy, que El Ritual del Tono siga rotulado como proyecto
-universitario y que su intro no nombre el curso.
+universitario y que su intro no nombre el curso. En Recuérdalo contesté la
+pasada de hechos punto por punto: confirmé lo que solo sabía yo (la duración,
+que el trabajo fue individual), saqué lo que no tenía respaldo y escribí los
+textos de reemplazo del desafío, de los entregables y del cierre.
