@@ -125,7 +125,8 @@ bullets o cards de texto adentro.**
 | | Veredicto |
 |---|---|
 | Un caso de éxito de Pulso con bullets (ya borrado) | ❌ A 330px solo se lee el título; la lista es textura. Tiene texto que hace falta leer y mide menos de 36px |
-| `03-diagrama` de Ritual — un equipo del catálogo y los siete artistas que lo usan | ✅ Su significado está en la estructura y sobrevive al 27% de escala: a 330px se leen el título y los nombres. **Es el estándar a igualar** |
+| `03-diagrama` de Ritual — un equipo del catálogo y los siete artistas que lo usan | ✅ Su significado está en la estructura y sobrevive al 27% de escala: a 330px se leen el título y los nombres. Es el estándar de **comprensión** a igualar, no de texto: su título en castellano es una excepción conocida a la regla de idioma (§2, *"Sin texto que dependa del idioma"*) |
+| `03-diagrama` de Cabify — las quince pantallas del diseño en dos filas | ✅ Sin texto propio: los dos recorridos se leen por la estructura, y el único texto es el de las pantallas |
 
 **Y una sola idea por imagen.** Si hay que entrecerrar los ojos para entender
 qué muestra, está mal: una imagen de Pulso que metía logos + CTA + dos cards
@@ -154,7 +155,7 @@ párrafo-imagen, que se lee predecible.
 | `type` | Archivo | Ancho | Recorte | Frame 1× | Export 2× |
 |---|---|---|---|---|---|
 | **`mockup`** | `mockup` | **a sangre** (viewport) | ninguno | `1280 × 549` (21:9) | `2560 × 1097` |
-| **`long-strip`** | `tira` | **a sangre** (viewport) | ninguno | `1440 × alto real` | `2880 × …` |
+| **`long-strip`** | `tira` | **a sangre** (viewport) | ninguno | `1440 × alto real` | `2400 × …` |
 | **`screen-cluster`** | `cluster` | shell (1280) | 3:2 | `1200 × 800` | `2400 × 1600` |
 | **`palette`** | `paleta` | shell (1280) | 16:9 | `1200 × 675` | `2400 × 1350` |
 | **`diagram`** | `diagrama` | shell (1280) | 3:2 | `1200 × 800` | `2400 × 1600` |
@@ -163,6 +164,15 @@ párrafo-imagen, que se lee predecible.
 La columna **Archivo** es el nombre que lleva la pieza en disco (§5). El `type`
 queda en inglés porque es código; el archivo, en castellano, porque es lo que
 se lee en Figma y en la carpeta.
+
+> **Medidas reales.** Las cuatro tiras publicadas miden **`2400 × 1350`** (16:9)
+> y declaran `frame: { width: 1440, height: 810 }`. El `frame` solo le da al
+> código la **proporción** para reservar el alto antes de que cargue la imagen:
+> no tiene que coincidir en píxeles con el archivo, solo en proporción.
+>
+> Lo mismo con `palette`: `IMAGE_TYPE_SPEC` (`imageSpec.js`) declara
+> `frame: 1600 × 900` y esta tabla dice `1200 × 675`. Las dos son 16:9, así que
+> dan el mismo resultado.
 
 ### Casos reales: ningún proyecto usa todos los tipos
 
@@ -174,7 +184,15 @@ proyecto no usa es tan deliberado como lo que usa.
 | **Pulso Creativo** | hero | intro | decisions | decisions | — | delivered | **5** |
 | **Paseo Güemes** | hero | intro | decisions | delivered | — | — | **4** |
 | **El Ritual del Tono** | hero | intro | decisions | delivered | decisions | — | **5** |
+| **Cabify · Playlist del viaje** | hero | intro | challenge + decisions | delivered | decisions | — | **6** |
 
+- **Cabify no tiene un sitio publicado que capturar**, así que dos tipos cambian
+  de contenido sin cambiar de comportamiento: la **tira** muestra el proceso
+  (tres bocetos en papel y el user flow original) en vez de una página, y la
+  **paleta** es el UI Kit (átomos, un componente, el panel que lo contiene y la
+  pantalla con su grilla, con los colores y la tipografía abajo) en vez de los
+  colores de un cliente. Es el único caso con dos `screen-cluster`, y por eso
+  llevan sufijo (`02-cluster-a`, `04-cluster-b`, §5).
 - **Pulso va sin imagen en "El desafío"**: era texto denso del cliente y
   conflictos de plantillas de WordPress, y no hay nada visual honesto que
   mostrar. El slot vacío no es un hueco por completar.
@@ -234,9 +252,10 @@ tira es recorrerla.
 > todas las columnas a la misma altura para que se lean como una fila.
 
 > **Cómo capturarla.** DevTools con el device toolbar en `1440 × 900` y **DPR
-> 2**, después *Capture full size screenshot*: sale a 2880px de ancho nativos,
-> que es exactamente lo que necesita una imagen a sangre. Componer sobre el
-> fondo en un frame de 1440 y exportar a 2×.
+> 2**, después *Capture full size screenshot*: sale a 2880px de ancho nativos.
+> Se compone sobre el fondo y se exporta a **2400 de ancho**, como las cuatro
+> publicadas. A 1440px con DPR 2 el navegador pediría 2880: 2400 cubre el 83%,
+> el mismo orden que el mockup (§2, *"Por qué 2560 alcanza a sangre"*).
 
 > ⚠️ **Escalar proporcionalmente, nunca deformar.** "Comprimida en vertical"
 > quiere decir que la página entera entra en una tira, no que se achate: una UI
@@ -258,7 +277,7 @@ distinto:
 | `type` | Proporción que asume | Export 2× | Mobile (`< 768px`) | Desktop (`md+`) si no coincide |
 |---|---|---|---|---|
 | **`mockup`** | 21:9 de default, **cualquiera** si se declara `frame` | `2560 × 1097` | Completa | **Nunca recorta.** Si `frame` no coincide con el archivo, la página pega un salto al cargar (CLS) |
-| **`long-strip`** | 1:3 de default, **cualquiera** si se declara `frame` | `2880 × …` | Completa | Igual que `mockup`: sin recorte, solo salto al cargar |
+| **`long-strip`** | 1:3 de default, **cualquiera** si se declara `frame` | `2400 × …` | Completa | Igual que `mockup`: sin recorte, solo salto al cargar |
 | **`screen-cluster`** | **3:2, fija** | `2400 × 1600` | Completa + salto al cargar | **Recorta** con `object-cover` |
 | **`palette`** | **16:9, fija** | `2400 × 1350` | Completa + salto al cargar | **Recorta** con `object-cover` |
 | **`diagram`** | **3:2, fija** | `2400 × 1600` | Completa + salto al cargar | **Recorta** con `object-cover` |
@@ -298,8 +317,10 @@ pieza**. `frame` no la cambia. Si el archivo no coincide:
 plano de color liso. Es lo que hace que un caso se lea como "hay un sistema
 entero acá" aunque no leas una palabra.
 
-**`palette`.** Bandas de color con su nombre. Honesto para los proyectos donde
-el sistema visual salió de los logos del cliente y no de una identidad propia.
+**`palette`.** Bandas de color, con su código hex si hace falta, pero sin
+rótulos que dependan del idioma (*"Sin texto que dependa del idioma"*, abajo).
+Honesto para los proyectos donde el sistema visual salió de los logos del
+cliente y no de una identidad propia.
 
 > **Formato: sin tarjeta.** El logo **grande a la izquierda, apoyado sobre el
 > fondo** —no dentro de una caja— y las bandas grandes a la derecha. El fondo va
@@ -349,6 +370,35 @@ a 330px una pantalla completa es una mancha gris.
 con cards de texto adentro. Si la idea de la imagen es que el lector lea algo,
 no es una imagen: es copy, y el copy va en el cuerpo del case study.
 
+### Sin texto que dependa del idioma
+
+> **Las imágenes de case study no llevan texto que dependa del idioma.** La
+> misma imagen se sirve en `/es` y en `/en`, así que un rótulo en castellano
+> queda en castellano también en la versión en inglés.
+
+Se permite lo que se lee igual en los dos idiomas:
+
+- códigos hex y números,
+- nombres propios y de marca,
+- el texto que forma parte de las pantallas que se muestran: es el producto,
+  no un rótulo de la imagen,
+- y los artefactos de proceso mostrados tal como fueron (bocetos, user flows,
+  documentos de trabajo), igual que las pantallas del producto.
+
+La regla apunta al texto que se **agrega** para explicar la imagen, no al
+contenido del material que se muestra. Lo que la imagen necesita explicar va en
+el copy del caso, que sí está en los dos idiomas.
+
+> ⚠️ **Excepción conocida, a rehacer con baja prioridad.** Cuatro imágenes
+> publicadas no la cumplen: las paletas de Pulso, Paseo y Ritual (nombres de
+> color y *"Paleta extraída del logo"*) y `03-diagrama` de Ritual (título y
+> *"1 documento · 11 canciones"*). No bloquean nada; se rehacen sin rótulos
+> cuando haya tiempo.
+
+> ✅ **Cabify cumple la regla completa.** El único texto de sus imágenes está en
+> las pantallas del diseño y en los artefactos de proceso de la tira (los
+> bocetos y el user flow original, en castellano, tal como fueron).
+
 ---
 
 ## 3. Covers del home
@@ -359,8 +409,11 @@ no es una imagen: es copy, y el copy va en el cuerpo del case study.
 | **Cover cuadrado** | `1200 × 1200` | `2400 × 2400` | 1:1 |
 
 La forma de cada proyecto vive en `cardShape` (`src/data/projects.js`). La
-grilla del home es masonry de dos columnas, así que **cada card tiene el aspect
-exacto de su imagen y `object-cover` no recorta nada**.
+grilla del home es masonry de dos columnas y la card recorta el cover a su
+forma con `object-cover`, centrado. **Si el cover tiene la proporción de la
+card, no se pierde nada**; si no, se recorta al centro (ver *"Mirar
+`cardShape`"*, abajo). En el home hay una sola card cuadrada, la del caso
+protagonista (`CLAUDE.md` §7).
 
 ### Cómo se rendea (leer antes de abrir Figma)
 
@@ -392,7 +445,7 @@ hover    lavado terracota + nombre (arriba izq) + "VER PROYECTO" (abajo izq)
 
 ### La receta única de los covers
 
-Se ven los 3 del home uno al lado del otro, así que la grilla tiene que leerse
+Se ven los 4 del home uno al lado del otro, así que la grilla tiene que leerse
 como un sistema y no como un collage. Los de V2 siguen la misma receta:
 
 > El producto en un entorno real, con **luz dura y direccional**. Un
@@ -410,7 +463,8 @@ como un sistema y no como un collage. Los de V2 siguen la misma receta:
    corta: subile el blur y bajale la opacidad.
 4. **Cada cover tiene su propio protagonista**, para que la serie no se lea
    repetida: Paseo con el celular adelante (el caso es mobile-first), Ritual con
-   un Fender y un pedal.
+   un Fender y un pedal, Cabify con tres celulares en diagonal y el que
+   reproduce la canción al centro.
 
 > ⚠️ **Excepción a la regla 1 — El Ritual del Tono.** Su cover lleva un
 > **amplificador Fender en tweed** (amarillo-marrón) y un pedal al lado de la
@@ -432,7 +486,15 @@ grande y completa.
 > ⚠️ **Mirar `cardShape` antes de exportar el cover.** La card recorta con
 > `object-cover` a su propia forma, así que un cover en la proporción de otra
 > card pierde encuadre: un 1:1 en una card `wide` pierde 300px arriba y 300px
-> abajo del archivo. **Pulso es `square`; Paseo y Ritual son `wide`.**
+> abajo del export de 2400 (150 en el frame de 1200). Además, en reposo la
+> imagen lleva `scale-105`, que come ~2,4% más por lado; en hover vuelve a
+> 100%. **Cabify es `square`; Paseo, Pulso y Ritual son `wide`.**
+>
+> **Pulso conserva su cover 1:1** y la card lo recorta al centro: se verificó
+> que el encuadre resiste. **El cover cuadrado de Cabify está compuesto para el
+> mismo recorte**: a 4:3, y con el `scale-105` de reposo, el celular central
+> queda entero, así que puede pasar a `wide` sin reexportarse cuando deje de
+> ser el caso protagonista (`CLAUDE.md` §7).
 
 > ⚠️ **Lo que sigue prohibido es un hero que sea una versión PEOR del cover.**
 > Que se parezcan es lo que se busca; que el hero pierda calidad, no. **Cómo se
@@ -468,7 +530,7 @@ luminancia del borde (4.2).
 
 | | Entorno | Por qué |
 |---|---|---|
-| **Covers** | **Acromático.** El único color sale de la pantalla (una excepción anotada en §3: el Fender de Ritual) | Los 3 se ven **juntos** en el home. Si cada uno trae el color de su cliente, la grilla se lee como un collage. Es lo que hace que proyectos con paletas distintas parezcan una misma serie |
+| **Covers** | **Acromático.** El único color sale de la pantalla (una excepción anotada en §3: el Fender de Ritual) | Los 4 se ven **juntos** en el home. Si cada uno trae el color de su cliente, la grilla se lee como un collage. Es lo que hace que proyectos con paletas distintas parezcan una misma serie |
 | **Case study** | **Color de marca del cliente**, bienvenido (planos de color, bandas de paleta) | Se ve **solo**, una página a la vez. No hay nada con lo que competir, y el color del cliente es información sobre el proyecto |
 
 > **Es un split deliberado, no una contradicción.** La receta acromática existe
@@ -476,9 +538,13 @@ luminancia del borde (4.2).
 > study ese problema no existe. Si en algún momento se unifican las dos, el
 > home vuelve a leerse como un collage.
 
-**El patrón, que los tres casos repiten sin buscarlo: hormigón para
+**El patrón, que Pulso, Paseo y Ritual repiten sin buscarlo: hormigón para
 las piezas de producto, color de marca en el cluster, y un fondo neutro de
 valor medio para la documentación.**
+
+**Cabify, el cuarto caso, no sigue ese patrón:** todas sus piezas van sobre la
+misma textura de hormigón, clara en el cover y el hero y de valor medio en el
+resto, sin plano de color de marca. El color sale solo de las pantallas.
 
 **Caso real — Pulso Creativo.**
 
@@ -542,6 +608,7 @@ y a `#EDE2CD` ≈ 227):
 |---|---|---|---|---|
 | Pulso `01-tira`, primera versión | casi negro | — | ❌ 71,5% del borde pegado a `#111110` | Se fundía en el tema por defecto |
 | Pulso `04-diagrama` (ya reemplazado) | charcoal, 42 | **25** / 185 | ✅ 0% cerca de los dos | ❌ **Casi no se lee.** El número es un piso, no una prueba |
+| Cabify, cinco piezas del caso, primera versión | hormigón oscurecido, 29–31 | **12–14** / 194–196 | ❌ 52–56% del borde pegado a `#111110` | Se rehicieron en hormigón de valor medio: borde 97–101, distancia 80–84, ✅ |
 | Ritual `03-diagrama` | hormigón alrededor de una tarjeta oscura, 92 | 75 / 135 | ✅ | La primera versión tenía la tarjeta a 48px del borde: en desktops angostos el recorte del parallax se comía el hormigón y el borde visible pasaba a ser la tarjeta oscura. **La zona segura (§2) también protege el borde** |
 
 El único dato que hay para calibrar un umbral mejor: **25 de distancia contra
@@ -562,6 +629,12 @@ proteja.
 ---
 
 ## 5. Exportación y naming
+
+**Dónde está la fuente editable.** Las imágenes de Cabify (cover, hero y las
+cinco del caso) están en su archivo de Figma, página **Presentaciones**,
+sección **"Imágenes del case study · portfolio"**. Los fondos salen de la
+textura de hormigón de esa misma sección: clara para el cover y el hero, de
+valor medio para el resto (§4.2).
 
 **El proceso**, paso a paso:
 

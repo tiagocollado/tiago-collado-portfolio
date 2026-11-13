@@ -46,8 +46,8 @@ Ninguna la detecta una pasada de estilo.
 **Las reglas:**
 
 1. **Listá las afirmaciones una por una antes de reescribir nada**, numeradas,
-   para que Tiago pueda contestar por número. Incluí las de `projects.ts` que se
-   ven en la página: `tagline`, `description`, `tags`, `metadata` y los `alt`.
+   para que Tiago pueda contestar por número. Incluí las de `src/data/projects.js`
+   que se ven en la página: `title`, `tagline`, `services`, `metadata` y los `alt`.
 2. **Cuando falta el dato, se pregunta.** Un hueco en el copy se nota; una
    explicación plausible y falsa, no — y en una entrevista es lo primero que se
    repregunta.
@@ -127,7 +127,7 @@ cualquiera, no dice nada. Borrala o reemplazala por el dato específico.
   poder defenderse con una ley UX. Si el texto explica una decisión, que se vea
   el criterio.
 - **Paridad ES/EN.** Toda corrección en un idioma se revisa en el otro. Los dos
-  JSON son `src/messages/es.json` y `en.json`.
+  JSON son `src/i18n/es.json` y `src/i18n/en.json`.
 
 ## Qué NO tocar
 
