@@ -25,7 +25,7 @@ Lo único que se queda en este archivo, porque es estructura y no arte:
 
 | | |
 |---|---|
-| Forma de la card del home | `cardShape` en `src/data/projects.js` (`wide` 4:3 · `square` 1:1). La card recorta el cover a su forma, centrado: con la misma proporción no se pierde nada. Una sola card cuadrada (§7) |
+| Forma de la card del home | `cardShape` en `src/data/projects.js` (`wide` 4:3 · `square` 1:1 · `portrait` 3:4 desde `md`, 4:3 en mobile). La card recorta el cover a su forma, centrado: con la misma proporción no se pierde nada. Una sola card cuadrada (§7) |
 | Qué imágenes tiene un case study | `imageBriefs` en `src/data/projects.js`. **Sin cantidad fija**: cada brief declara su `type` (qué es) y su `slot` (dónde cae) |
 | Traducción de `type` a layout | `src/components/case-study/imageSpec.js` |
 
@@ -145,14 +145,14 @@ En mobile se ven completas y quietas (sin crop ni parallax); el recorte y el par
 
 ## 7. Proyectos del portfolio
 
-Orden = campo `order`. Si la página existe lo decide **`published`**; qué se muestra en el home, `showOnHome`; la forma de la card, `cardShape` (`wide` 4:3 · `square` 1:1). La grilla es masonry de dos columnas.
+Orden = campo `order`. Si la página existe lo decide **`published`**; qué se muestra en el home, `showOnHome`; la forma de la card, `cardShape` (`wide` 4:3 · `square` 1:1 · `portrait` 3:4 desde `md`, 4:3 en mobile). La grilla es masonry de dos columnas.
 
 | # | Proyecto | Año | Publicado | Home | Forma | Qué es |
 |---|---|---|---|---|---|---|
 | 1 | **Recuérdalo** (`recuerdalo`) | 2025 | ✅ | ✅ | **cuadrada** | Caso de accesibilidad: app que acompaña la memoria cotidiana de personas mayores. 29 pantallas y prototipo navegable en Figma. |
 | 2 | **Cabify · Playlist del viaje** (`cabify-playlist-del-viaje`) | 2023 | ✅ | ✅ | ancha (cover 1:1, recortado al centro) | Propuesta de rediseño de la app de Cabify: elegir la música del viaje. 15 pantallas y prototipo navegable en Figma. |
 | 3 | **Paseo Güemes Hotel** | 2026 | ✅ | ✅ | ancha | Hotel 3★ en Salta. UX/UI + WordPress, reserva directa contra OTAs. |
-| 4 | **Pulso Creativo** | 2026 | ✅ | ✅ | ancha (cover 1:1, recortado al centro) | Consultora B2B 25+ años. Sitio institucional, contacto dual, rediseño UX del contenido. |
+| 4 | **Pulso Creativo** | 2026 | ✅ | ✅ | vertical 3:4 (cover 1:1, recortado a los costados) | Consultora B2B 25+ años. Sitio institucional, contacto dual, rediseño UX del contenido. |
 | 5 | **El Ritual del Tono** | 2025 | ✅ | ✅ | ancha | **Proyecto universitario** (Programación Multimedial III, Maimónides). Full-stack MERN con demo en vivo. |
 | 6 | **Multibrand Design System** | 2025 | — V2 | — | ancha | Simulación laboral No Country, equipo de 6. |
 
@@ -169,7 +169,7 @@ a la derecha. Cuenta la posición en la lista ordenada, no el valor de `order`.
 | Columna | Proyectos |
 |---|---|
 | izquierda | Recuérdalo (**cuadrada**) · Paseo Güemes (ancha) · El Ritual del Tono (ancha) |
-| derecha | Cabify (ancha) · Pulso Creativo (ancha) |
+| derecha | Cabify (ancha) · Pulso Creativo (**vertical**) |
 
 **Las columnas terminan a distinta altura a propósito.** Eso es lo que la hace
 masonry: una grilla con `grid-auto-rows` + `row-span` alinea las filas y se lee
@@ -206,6 +206,8 @@ vuelven a `flex` y el `order` no molesta.
   protagonista** (Tiago, 2026-11-13).
 - **El home muestra las 5 cards publicadas aunque la columna derecha termine
   una card antes** (Tiago, 2026-11-13).
+- **La card de Pulso pasa a vertical 3:4 para achicar el hueco de la masonry**
+  (Tiago, 2026-11-13). A 1440px el hueco baja de 636px a 279px.
 
 ### Qué es una tanda
 

@@ -411,13 +411,20 @@ el copy del caso, que sí está en los dos idiomas.
 |---|---|---|---|
 | **Cover ancho** | `1200 × 900` | `2400 × 1800` | 4:3 |
 | **Cover cuadrado** | `1200 × 1200` | `2400 × 2400` | 1:1 |
+| **Cover vertical** | `1200 × 1600` | `2400 × 3200` | 3:4 |
 
-La forma de cada proyecto vive en `cardShape` (`src/data/projects.js`). La
-grilla del home es masonry de dos columnas y la card recorta el cover a su
-forma con `object-cover`, centrado. **Si el cover tiene la proporción de la
-card, no se pierde nada**; si no, se recorta al centro (ver *"Mirar
-`cardShape`"*, abajo). En el home hay una sola card cuadrada, la del caso
-protagonista (`CLAUDE.md` §7).
+La forma de cada proyecto vive en `cardShape` (`src/data/projects.js`):
+`wide` (4:3), `square` (1:1) o `portrait` (3:4). La grilla del home es masonry
+de dos columnas y la card recorta el cover a su forma con `object-cover`,
+centrado. **Si el cover tiene la proporción de la card, no se pierde nada**; si
+no, se recorta al centro (ver *"Mirar `cardShape`"*, abajo). En el home hay una
+sola card cuadrada, la del caso protagonista (`CLAUDE.md` §7).
+
+> **`portrait` es vertical solo desde `md`.** En mobile la grilla es de una
+> columna y la card vuelve a 4:3, como las anchas: la forma vertical existe
+> para equilibrar las dos columnas, y abajo de `md` no hay columnas que
+> equilibrar. **Un cover para `portrait` tiene que aguantar los dos
+> recortes**: a 3:4 en desktop y a 4:3 en mobile.
 
 ### Cómo se rendea (leer antes de abrir Figma)
 
@@ -492,11 +499,24 @@ grande y completa.
 > card pierde encuadre: un 1:1 en una card `wide` pierde 300px arriba y 300px
 > abajo del export de 2400 (150 en el frame de 1200). Además, en reposo la
 > imagen lleva `scale-105`, que come ~2,4% más por lado; en hover vuelve a
-> 100%. **Recuérdalo, el protagonista, es `square`; Cabify, Paseo, Pulso y
-> Ritual son `wide`.**
+> 100%. **Recuérdalo, el protagonista, es `square`; Pulso es `portrait`;
+> Cabify, Paseo y Ritual son `wide`.**
 >
-> **Pulso conserva su cover 1:1** y la card lo recorta al centro: se verificó
-> que el encuadre resiste. **El cover cuadrado de Cabify está compuesto para el
+> **Cómo se compone un cover para que aguante el recorte a 3:4.** Un cover 1:1
+> en una card `portrait` pierde los costados: queda el 75% central del ancho
+> (12,5% por lado), y el `scale-105` de reposo come ~2,4% más. **El sujeto va
+> dentro del 70% central del ancho**, con aire propio, y los costados se
+> reservan para fondo. Como en mobile la misma card vuelve a 4:3, el cover
+> pierde ahí arriba y abajo: el sujeto tampoco puede tocar esos bordes. Si se
+> exporta en 3:4 nativo (`2400 × 3200`), la card `portrait` no recorta nada en
+> desktop, y su `sizes` vuelve a ser `SIZES_COVER` (`imageSpec.js`).
+>
+> **Pulso conserva su cover 1:1** y la card `portrait` lo recorta a los
+> costados: la laptop ocupa la mitad del ancho y entra entera, con ~14% de
+> hormigón por lado en la card. En mobile, a 4:3, el recorte es arriba y abajo y
+> también resiste. Como el cover es cuadrado, la card usa
+> `SIZES_COVER_PORTRAIT`: la imagen se escala por el alto y se dibuja a 4/3 del
+> ancho de la card. **El cover cuadrado de Cabify está compuesto para el
 > mismo recorte**: a 4:3, y con el `scale-105` de reposo, el celular central
 > queda entero. Pasó a `wide` sin reexportarse cuando Recuérdalo pasó a ser el
 > caso protagonista (`CLAUDE.md` §7).
