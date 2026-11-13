@@ -185,14 +185,18 @@ proyecto no usa es tan deliberado como lo que usa.
 | **Paseo Güemes** | hero | intro | decisions | delivered | — | — | **4** |
 | **El Ritual del Tono** | hero | intro | decisions | delivered | decisions | — | **5** |
 | **Cabify · Playlist del viaje** | hero | intro | challenge + decisions | delivered | decisions | — | **6** |
+| **Recuérdalo** | hero | intro | challenge + decisions | delivered | decisions | — | **6** |
 
 - **Cabify no tiene un sitio publicado que capturar**, así que dos tipos cambian
   de contenido sin cambiar de comportamiento: la **tira** muestra el proceso
   (tres bocetos en papel y el user flow original) en vez de una página, y la
   **paleta** es el UI Kit (átomos, un componente, el panel que lo contiene y la
   pantalla con su grilla, con los colores y la tipografía abajo) en vez de los
-  colores de un cliente. Es el único caso con dos `screen-cluster`, y por eso
-  llevan sufijo (`02-cluster-a`, `04-cluster-b`, §5).
+  colores de un cliente. Tiene dos `screen-cluster`, y por eso llevan sufijo
+  (`02-cluster-a`, `04-cluster-b`, §5).
+- **Recuérdalo sigue el mismo esquema que Cabify**, por la misma razón: no hay
+  sitio publicado. La tira junta el card sorting y las pantallas en media
+  fidelidad, y la paleta es el UI Kit.
 - **Pulso va sin imagen en "El desafío"**: era texto denso del cliente y
   conflictos de plantillas de WordPress, y no hay nada visual honesto que
   mostrar. El slot vacío no es un hueco por completar.
@@ -488,13 +492,14 @@ grande y completa.
 > card pierde encuadre: un 1:1 en una card `wide` pierde 300px arriba y 300px
 > abajo del export de 2400 (150 en el frame de 1200). Además, en reposo la
 > imagen lleva `scale-105`, que come ~2,4% más por lado; en hover vuelve a
-> 100%. **Cabify es `square`; Paseo, Pulso y Ritual son `wide`.**
+> 100%. **Recuérdalo, el protagonista, es `square`; Cabify, Paseo, Pulso y
+> Ritual son `wide`.**
 >
 > **Pulso conserva su cover 1:1** y la card lo recorta al centro: se verificó
 > que el encuadre resiste. **El cover cuadrado de Cabify está compuesto para el
 > mismo recorte**: a 4:3, y con el `scale-105` de reposo, el celular central
-> queda entero, así que puede pasar a `wide` sin reexportarse cuando deje de
-> ser el caso protagonista (`CLAUDE.md` §7).
+> queda entero. Pasó a `wide` sin reexportarse cuando Recuérdalo pasó a ser el
+> caso protagonista (`CLAUDE.md` §7).
 
 > ⚠️ **Lo que sigue prohibido es un hero que sea una versión PEOR del cover.**
 > Que se parezcan es lo que se busca; que el hero pierda calidad, no. **Cómo se

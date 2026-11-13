@@ -83,7 +83,7 @@ Vercel, conectado a este repo. La URL no cambió con la migración.
 
 **Capa "frontend creativo"**: Lenis smooth scroll (con reset de scroll en cambio de ruta) · custom cursor dot+ring con variants `default | link | view | drag` · SplitText char reveal · magnetic hover + `<MagneticLink>` · grain SVG global · scrollbar custom terracota · `<MotionConfig reducedMotion="user">` (en Astro va en cada isla que anima: `.claude/rules/stack-traps.md`).
 
-**Home**: Navbar `h-16` fijo (NavLogo izq · links centrados · LanguageToggle + tema der · hamburger en `<lg`) · Hero con NameLogo GOTYA sticky que achica con el scroll y hace handoff al navbar, lema en dos líneas, CTA magnético con chevrons e `InteractiveDotGrid` · ServicesMarquee con fondo invertido · grilla masonry de proyectos (2 columnas, 4 cards, covers a sangre sin texto) · About 4.0 (micro-labels, claim con bold, copy a la derecha, firma) · Stack con carrusel infinito · **bloque de cierre unificado** (ver abajo).
+**Home**: Navbar `h-16` fijo (NavLogo izq · links centrados · LanguageToggle + tema der · hamburger en `<lg`) · Hero con NameLogo GOTYA sticky que achica con el scroll y hace handoff al navbar, lema en dos líneas, CTA magnético con chevrons e `InteractiveDotGrid` · ServicesMarquee con fondo invertido · grilla masonry de proyectos (2 columnas, 5 cards, covers a sangre sin texto) · About 4.0 (micro-labels, claim con bold, copy a la derecha, firma) · Stack con carrusel infinito · **bloque de cierre unificado** (ver abajo).
 
 **Bloque de cierre** (Contact + Footer): se leen como una sola pieza. Contact no cierra su padding inferior y el Footer arranca pegado, sin `border-t` entre medio. Contact lleva el micro-label, una **pregunta corta sin párrafo de body** (quien llega acá ya hizo click en "Hablemos": viene con intención, no hay que volver a venderle), el mail en **mono grande** con botón de copiar al portapapeles, y los 4 canales (LinkedIn / GitHub / WhatsApp / CV). El Footer es una única barra de tres zonas: copyright · back-to-top · crédito. **En mobile (`<sm`) esa barra pasa a 2 columnas**: copyright y crédito apilados a la izquierda, back-to-top a la derecha abarcando las dos filas (`row-span-2`) y centrado contra ellas — la mitad derecha es la zona de menor costo motor para el pulgar (Fitts). Las posiciones van explícitas (`col-start`/`row-start`) y se resetean con `sm:*-auto`, porque el orden del DOM es copyright → botón → crédito y el auto-placement pondría el crédito en el lugar equivocado.
 
@@ -100,15 +100,15 @@ categoría y las escuadras de las 4 esquinas.
 > van DEBAJO de la card como texto normal. Se decide por `(hover: none)` y no por
 > ancho de pantalla, porque una tablet en horizontal es ancha y tampoco tiene hover.
 
-**El `<Footer />` cierra el home Y los cuatro case studies publicados.** El cierre del case study es `CaseStudyNextNav` + `Footer`: al pie de un case study largo hace falta el camino de vuelta arriba.
+**El `<Footer />` cierra el home Y los cinco case studies publicados.** El cierre del case study es `CaseStudyNextNav` + `Footer`: al pie de un case study largo hace falta el camino de vuelta arriba.
 
 > ⚠️ **`id="top"` es requisito, no detalle.** El back-to-top es un `<a href="#top">`; toda página que renderee el `<Footer />` necesita ese id o el botón queda **muerto sin dar ningún error** — el build pasa, no hay warning, simplemente no scrollea. Hoy vive en el `<section>` del Hero (home) y en el `<div>` raíz del case study.
 
-**Cierre del case study**: el "Próximo proyecto" **cicla solo entre los publicados**, en el orden del home (`order`), y el último vuelve al primero: Cabify → Paseo → Pulso → Ritual → Cabify. Sale de `publishedProjects`, la misma lista que la grilla, así que no pueden divergir. El pill "Ver todos los proyectos" lleva a `/{locale}#projects`, la grilla del home, hasta que exista la página de V2. Los dos paths van en **una sola fila** desde `md+` — pill ghost "Ver todos los proyectos" en columna `auto` a la izquierda, card "Próximo proyecto" en `1fr` a la derecha. La card es el CTA primario inequívoco (tamaño, fondo, thumbnail, glow en hover); la pill no compite (Hick). La card va **primero en el DOM** y las columnas se cruzan con `md:order-*`: así el apilado en mobile sale correcto sin `order`, y el primario encabeza el orden de tabulación.
+**Cierre del case study**: el "Próximo proyecto" **cicla solo entre los publicados**, en el orden del home (`order`), y el último vuelve al primero: Recuérdalo → Cabify → Paseo → Pulso → Ritual → Recuérdalo. Sale de `publishedProjects`, la misma lista que la grilla, así que no pueden divergir. El pill "Ver todos los proyectos" lleva a `/{locale}#projects`, la grilla del home, hasta que exista la página de V2. Los dos paths van en **una sola fila** desde `md+` — pill ghost "Ver todos los proyectos" en columna `auto` a la izquierda, card "Próximo proyecto" en `1fr` a la derecha. La card es el CTA primario inequívoco (tamaño, fondo, thumbnail, glow en hover); la pill no compite (Hick). La card va **primero en el DOM** y las columnas se cruzan con `md:order-*`: así el apilado en mobile sale correcto sin `order`, y el primario encabeza el orden de tabulación.
 
 **Back-to-top**: `<a href="#top">` con el `id="top"` en el `<section>` del Hero. Lenis monta con `anchors: true`, así que lo intercepta y hace el scroll suave él. Nunca `window.scrollTo`: pelearía contra su animación. Las dos flechas apiladas suben en loop mientras hay hover.
 
-**Case studies** (los 4 publicados; los 2 de V2 siguen sin publicar, §7): **secuencia vertical de bloques hermanos**, cada uno declarando su propio ancho — barra de metadata (Cliente / Año / Rol / Duración / Equipo / Stack / Links; **en mobile va debajo del intro**, para que la primera pantalla sea la frase que explica el proyecto y no su duración) + hero a sangre + 5 secciones editoriales — **Intro → El desafío → Cómo lo resolví → Lo entregado → Cierre** — con tiradas de imágenes entre medio. Componentes en `src/components/case-study/`.
+**Case studies** (los 5 publicados; Multibrand sigue sin publicar, §7): **secuencia vertical de bloques hermanos**, cada uno declarando su propio ancho — barra de metadata (Cliente / Año / Rol / Duración / Equipo / Stack / Links; **en mobile va debajo del intro**, para que la primera pantalla sea la frase que explica el proyecto y no su duración) + hero a sangre + 5 secciones editoriales — **Intro → El desafío → Cómo lo resolví → Lo entregado → Cierre** — con tiradas de imágenes entre medio. Componentes en `src/components/case-study/`.
 
 > **Por qué bloques hermanos y no una grilla con sidebar.** Una imagen solo puede ir a sangre si su bloque elige su propio ancho: dentro de una columna compartida queda atada a ella. Hoy el texto vive en un shell de 1280 y **solo `mockup` y `long-strip` salen del shell**.
 
@@ -149,18 +149,18 @@ Orden = campo `order`. Si la página existe lo decide **`published`**; qué se m
 
 | # | Proyecto | Año | Publicado | Home | Forma | Qué es |
 |---|---|---|---|---|---|---|
-| 1 | **Cabify · Playlist del viaje** (`cabify-playlist-del-viaje`) | 2023 | ✅ | ✅ | **cuadrada** | Propuesta de rediseño de la app de Cabify: elegir la música del viaje. 15 pantallas y prototipo navegable en Figma. |
-| 2 | **Paseo Güemes Hotel** | 2026 | ✅ | ✅ | ancha | Hotel 3★ en Salta. UX/UI + WordPress, reserva directa contra OTAs. |
-| 3 | **Pulso Creativo** | 2026 | ✅ | ✅ | ancha (cover 1:1, recortado al centro) | Consultora B2B 25+ años. Sitio institucional, contacto dual, rediseño UX del contenido. |
-| 4 | **El Ritual del Tono** | 2025 | ✅ | ✅ | ancha | **Proyecto universitario** (Programación Multimedial III, Maimónides). Full-stack MERN con demo en vivo. |
-| 5 | **Multibrand Design System** | 2025 | — V2 | — | ancha | Simulación laboral No Country, equipo de 6. |
-| 6 | **Recuérdalo** | 2025 | — V2 (primero) | — | **cuadrada** | Proyecto universitario, UX inclusivo para adultos 70+. |
+| 1 | **Recuérdalo** (`recuerdalo`) | 2025 | ✅ | ✅ | **cuadrada** | Caso de accesibilidad: app que acompaña la memoria cotidiana de personas mayores. 29 pantallas y prototipo navegable en Figma. |
+| 2 | **Cabify · Playlist del viaje** (`cabify-playlist-del-viaje`) | 2023 | ✅ | ✅ | ancha (cover 1:1, recortado al centro) | Propuesta de rediseño de la app de Cabify: elegir la música del viaje. 15 pantallas y prototipo navegable en Figma. |
+| 3 | **Paseo Güemes Hotel** | 2026 | ✅ | ✅ | ancha | Hotel 3★ en Salta. UX/UI + WordPress, reserva directa contra OTAs. |
+| 4 | **Pulso Creativo** | 2026 | ✅ | ✅ | ancha (cover 1:1, recortado al centro) | Consultora B2B 25+ años. Sitio institucional, contacto dual, rediseño UX del contenido. |
+| 5 | **El Ritual del Tono** | 2025 | ✅ | ✅ | ancha | **Proyecto universitario** (Programación Multimedial III, Maimónides). Full-stack MERN con demo en vivo. |
+| 6 | **Multibrand Design System** | 2025 | — V2 | — | ancha | Simulación laboral No Country, equipo de 6. |
 
-> **Multibrand y Recuérdalo no están publicados**: su página da 404 y no aparecen en ningún lado del sitio. **Volver a publicar uno es cambiar `published` a `true`**, después de su tanda (abajo). Todo lo que se ve en el sitio lee de **`publishedProjects`**, así que un proyecto oculto no puede colarse aunque un componente nuevo se olvide de filtrar.
+> **Multibrand no está publicado**: su página da 404 y no aparece en ningún lado del sitio. **Volver a publicarlo es cambiar `published` a `true`**, después de su tanda (abajo). Todo lo que se ve en el sitio lee de **`publishedProjects`**, así que un proyecto oculto no puede colarse aunque un componente nuevo se olvide de filtrar.
 
-**Una sola card cuadrada en el home: la del caso protagonista, que va primero.** El resto va en 4:3. Hoy es Cabify. Cuando se publique Recuérdalo, pasa a ser la cuadrada y primera, y Cabify pasa a 4:3: su cover cuadrado está compuesto para recortarse a 4:3 sin perder el celular central (`.claude/rules/imagenes.md` §3). Al cambiar de protagonista se renumera `order` para que no haya empates: con el mismo valor, el `sort` desempata por la posición en el array de `projects`.
+**Una sola card cuadrada en el home: la del caso protagonista, que va primero.** El resto va en 4:3. Hoy es Recuérdalo. Cabify, el protagonista anterior, pasó a 4:3 sin reexportar: su cover cuadrado está compuesto para recortarse a 4:3 sin perder el celular central (`.claude/rules/imagenes.md` §3). Al cambiar de protagonista se renumera `order` para que no haya empates: con el mismo valor, el `sort` desempata por la posición en el array de `projects`.
 
-**Los 4 del home son los que mejor muestran rango.** Ritual es universitario y **se queda en el home porque es el único full-stack con demo en vivo** (decisión de Tiago, 2026-09-21).
+**Los 5 del home son los que mejor muestran rango.** Ritual es universitario y **se queda en el home porque es el único full-stack con demo en vivo** (decisión de Tiago, 2026-09-21).
 
 La grilla es **masonry**: dos columnas `flex-col` independientes que reparten
 los proyectos **alternando** — las posiciones impares a la izquierda, las pares
@@ -168,22 +168,22 @@ a la derecha. Cuenta la posición en la lista ordenada, no el valor de `order`.
 
 | Columna | Proyectos |
 |---|---|
-| izquierda | Cabify (**cuadrada**) · Pulso Creativo (ancha) |
-| derecha | Paseo Güemes (ancha) · El Ritual del Tono (ancha) |
+| izquierda | Recuérdalo (**cuadrada**) · Paseo Güemes (ancha) · El Ritual del Tono (ancha) |
+| derecha | Cabify (ancha) · Pulso Creativo (ancha) |
 
 **Las columnas terminan a distinta altura a propósito.** Eso es lo que la hace
 masonry: una grilla con `grid-auto-rows` + `row-span` alinea las filas y se lee
 como una grilla común.
 
-**Orden de lectura en mobile**: alternar deja 1·3·2·4 al apilarse, porque ese es
+**Orden de lectura en mobile**: alternar deja 1·3·5·2·4 al apilarse, porque ese es
 el orden del DOM. Se arregla con `display: contents` en las columnas abajo de
 `md`: los `<div>` desaparecen del layout, las cards pasan a ser hijas directas
-del grid y el `order` de cada una las ordena 1·2·3·4. En desktop las columnas
+del grid y el `order` de cada una las ordena 1·2·3·4·5. En desktop las columnas
 vuelven a `flex` y el `order` no molesta.
 
 **Fuera del portfolio**: Retro Kicks, Govah, SoundCloud Redesign, Rick & Morty Explorer.
 
-**Regla**: salvo que se diga "académico" o "universitario", se asume que el proyecto es real. Hoy hay **dos** flageados como universitarios, con el mismo formato en `metadata.client` (`Proyecto universitario · Maimónides`): **Recuérdalo** y **El Ritual del Tono**.
+**Regla**: salvo que se diga "académico" o "universitario", se asume que el proyecto es real. Hoy hay **uno** flageado como universitario, con el formato `Proyecto universitario · Maimónides` en `metadata.client`: **El Ritual del Tono**.
 
 > ⚠️ **Antes de rotular un proyecto, mirar si el sitio publicado dice de dónde salió.** Ritual figuró como "Proyecto personal" hasta que se vio que la página About de su propia demo lo presenta como proyecto universitario.
 
@@ -198,6 +198,14 @@ vuelven a `flex` y el `order` no molesta.
 - **La tira de Pulso** (`01-tira`) se queda con las columnas al ~60% del ancho
   (Tiago, 2026-09-23). La regla de llenar el encuadre sigue valiendo para las
   tiras nuevas (`.claude/rules/imagenes.md` §2).
+- **Recuérdalo se presenta como caso de accesibilidad, sin origen académico**
+  (Tiago, 2026-11-13): no se menciona Maimónides ni el origen universitario en
+  metadata, tagline, copy ni alts, y la metadata no sugiere un cliente.
+- **Recuérdalo usa en cover y hero un mosaico de pantallas sin marco,
+  inclinado y cortado por los bordes, en lugar de la receta de celular
+  protagonista** (Tiago, 2026-11-13).
+- **El home muestra las 5 cards publicadas aunque la columna derecha termine
+  una card antes** (Tiago, 2026-11-13).
 
 ### Qué es una tanda
 
@@ -225,13 +233,15 @@ El título de la card da la marca y el campo **`services`** da la categoría, co
 | Paseo Güemes Hotel | Diseño Web & Dirección de Arte | Website Design & Art Direction | Dirección de arte, diseño UX/UI e implementación en WordPress |
 | El Ritual del Tono | Diseño Web & Desarrollo de Producto | Website Design & Product Development | Diseño UI y Desarrollo Full-stack |
 | Multibrand Design System | Design System | Design System | Diseño UX/UI y Design System |
-| Recuérdalo | Aplicaciones Móviles | Mobile Apps | Investigación UX y Diseño Inclusivo |
+| Recuérdalo | Aplicaciones Móviles & Design System | Mobile Apps & Design System | Investigación UX y Diseño Inclusivo |
 | Cabify · Playlist del viaje | Aplicaciones Móviles & Design System | Mobile Apps & Design System | Diseño UX/UI |
 
 > **Cabify lleva `metadata.client` = `Propuesta de rediseño · Cabify`** /
 > `Redesign proposal · Cabify`. Es el lugar donde se dice de dónde salió un
-> proyecto, el mismo donde Ritual y Recuérdalo dicen `Proyecto universitario ·
-> Maimónides`; el tagline lo repite.
+> proyecto, el mismo donde Ritual dice `Proyecto universitario · Maimónides`;
+> el tagline lo repite. **Recuérdalo** dice `Caso de estudio · Diseño accesible`
+> / `Case study · Accessible design`: no tiene cliente ni se presenta por su
+> origen académico (Decisiones tomadas, arriba).
 
 **Las tres reglas del rótulo:**
 
