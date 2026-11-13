@@ -110,7 +110,7 @@ export default function ProjectCard({
             {CORNER_MARKS.map(([position, edges, offset]) => (
               <span
                 key={position}
-                className={`absolute h-4 w-4 rounded-[2px] transition-transform duration-300 ease-out
+                className={`absolute h-4 w-4 rounded-xs transition-transform duration-300 ease-out
                             group-hover:translate-x-0 group-hover:translate-y-0 group-hover:delay-300
                             ${position} ${edges} ${offset}`}
                 style={{ borderColor: 'rgba(240, 237, 232, 0.70)' }}

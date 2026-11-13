@@ -121,7 +121,7 @@
     "decision_2_title": "Equivocarse tiene vuelta",
     "decision_2_body": "Cada pantalla interna tiene un botón Volver con la palabra escrita y cada panel tiene Cancelar. Agregar un medicamento se hace en tres pasos, de a una pregunta, y la hora se elige con botones grandes, sin teclado. Agregar un turno sigue el mismo camino, en cuatro pasos, y el día se elige en un calendario de la semana. Antes de guardar, una pantalla resume todo y deja cambiar cada dato.",
     "decision_3_title": "La familia tranquila y la persona acompañada",
-    "decision_3_body": "En Mi gente, la persona invita por mail a quien quiera, y esa gente recibe un aviso cada vez que la persona registra una toma o un turno. Pedir ayuda desde un medicamento le avisa solo a la familia. Para que la app no se sintiera fría, el inicio pregunta cómo te sentís, un hornero saluda, recuerda y festeja, y una racha semanal celebra los días con todo registrado sin marcar en rojo los olvidos.",
+    "decision_3_body": "En Mi gente, la persona invita por mail a quien quiera, y cada vez que registra una toma o un turno, esa gente recibe un aviso. Pedir ayuda desde un medicamento le avisa solo a la familia. Para que la app no se sintiera fría, el inicio pregunta cómo te sentís, un hornero saluda, recuerda y festeja, y una racha semanal celebra los días con todo registrado sin marcar en rojo los olvidos.",
     "delivered_1": "29 pantallas en cinco recorridos, con un prototipo navegable en Figma",
     "delivered_2": "UI Kit en Atomic Design, con contraste de 7:1 o más, texto de 18 px o más (16 en etiquetas cortas), todo lo que se toca de 56 px de alto o más y el hornero",
     "delivered_3": "Research documentado: entrevistas, shadowing, card sorting, cuatro patrones y una persona",

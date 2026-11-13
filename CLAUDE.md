@@ -198,9 +198,8 @@ vuelven a `flex` y el `order` no molesta.
 - **La tira de Pulso** (`01-tira`) se queda con las columnas al ~60% del ancho
   (Tiago, 2026-09-23). La regla de llenar el encuadre sigue valiendo para las
   tiras nuevas (`.claude/rules/imagenes.md` §2).
-- **Recuérdalo se presenta como caso de accesibilidad, sin origen académico**
-  (Tiago, 2026-11-13): no se menciona Maimónides ni el origen universitario en
-  metadata, tagline, copy ni alts, y la metadata no sugiere un cliente.
+- **Recuérdalo se rotula `Caso de estudio · Diseño accesible`, sin cliente.**
+  No se le agrega rótulo de proyecto universitario (Tiago, 2026-11-13).
 - **Recuérdalo usa en cover y hero un mosaico de pantallas sin marco,
   inclinado y cortado por los bordes, en lugar de la receta de celular
   protagonista** (Tiago, 2026-11-13).
@@ -242,8 +241,7 @@ El título de la card da la marca y el campo **`services`** da la categoría, co
 > `Redesign proposal · Cabify`. Es el lugar donde se dice de dónde salió un
 > proyecto, el mismo donde Ritual dice `Proyecto universitario · Maimónides`;
 > el tagline lo repite. **Recuérdalo** dice `Caso de estudio · Diseño accesible`
-> / `Case study · Accessible design`: no tiene cliente ni se presenta por su
-> origen académico (Decisiones tomadas, arriba).
+> / `Case study · Accessible design`, sin cliente (Decisiones tomadas, arriba).
 
 **Las tres reglas del rótulo:**
 
