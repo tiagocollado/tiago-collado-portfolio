@@ -6,6 +6,15 @@ const OVERLAY_INK = '#F0EDE8';
 // ejecutándolo. El `order` reordena las cards en mobile (ver Projects.astro).
 const ORDER_CLASSES = ['order-1', 'order-2', 'order-3', 'order-4', 'order-5', 'order-6', 'order-7'];
 
+// Proporción de la card según su `cardShape` (src/data/projects.js). La vertical
+// rige desde `md`, donde la grilla tiene dos columnas: en mobile la card ocupa
+// todo el ancho y vuelve a 4:3, como las demás.
+const CARD_SHAPE_CLASSES = {
+  wide: 'aspect-[4/3]',
+  square: 'aspect-square',
+  portrait: 'aspect-[4/3] md:aspect-[3/4]',
+};
+
 const CORNER_MARKS = [
   ['top-3 left-3', 'border-l-2 border-t-2', '-translate-x-1 -translate-y-1'],
   ['top-3 right-3', 'border-r-2 border-t-2', 'translate-x-1 -translate-y-1'],
@@ -33,7 +42,7 @@ export default function ProjectCard({
   gridPosition = 0,
   viewProjectLabel,
 }) {
-  const shapeClasses = cardShape === 'square' ? 'aspect-square' : 'aspect-[4/3]';
+  const shapeClasses = CARD_SHAPE_CLASSES[cardShape] ?? CARD_SHAPE_CLASSES.wide;
 
   return (
     <MotionConfig reducedMotion="user">

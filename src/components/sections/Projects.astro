@@ -4,7 +4,7 @@ import ProjectCard from './ProjectCard.jsx';
 import SplitText from '../ui/SplitText.jsx';
 import { createTranslator } from '../../i18n/translate.js';
 import { publishedProjects } from '../../data/projects.js';
-import { SIZES_COVER } from '../case-study/imageSpec.js';
+import { SIZES_COVER, SIZES_COVER_PORTRAIT } from '../case-study/imageSpec.js';
 import { getResponsiveImageProps } from '../../utils/responsiveImage.js';
 
 const locale = Astro.currentLocale;
@@ -19,7 +19,10 @@ const cards = await Promise.all(
     servicesLabel: project.services[locale].join(' & '),
     cardShape: project.cardShape,
     coverImage: project.coverImage
-      ? await getResponsiveImageProps(project.coverImage, SIZES_COVER)
+      ? await getResponsiveImageProps(
+          project.coverImage,
+          project.cardShape === 'portrait' ? SIZES_COVER_PORTRAIT : SIZES_COVER
+        )
       : null,
     gridPosition,
   }))

@@ -37,7 +37,8 @@ import recuerdaloPalette from '../assets/case-study/recuerdalo/05-paleta.jpg';
 /*
  * Campos que no se explican solos:
  * - services: categorías del trabajo, nunca roles ("Diseño Web", no "Diseño UX/UI"). Máximo 2.
- * - cardShape: forma de la card en la grilla del home: 'wide' (4:3) o 'square' (1:1).
+ * - cardShape: forma de la card en la grilla del home: 'wide' (4:3), 'square' (1:1) o
+ *   'portrait' (3:4 desde md; en mobile, 4:3). La card recorta el cover al centro.
  * - published: si la página del proyecto existe. Con false no se genera ni aparece en ningún lado.
  * - showOnHome: si, además de existir, aparece en la grilla del home.
  * - order: orden del home y del ciclo de "Próximo proyecto".
@@ -134,7 +135,7 @@ export const projects = [
     links: {
       live: 'https://pulsocreativo.com.ar',
     },
-    cardShape: 'wide',
+    cardShape: 'portrait',
     coverImage: pulsoCover,
     year: 2026,
     published: true,

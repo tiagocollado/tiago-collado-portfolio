@@ -80,8 +80,17 @@ export const SIZES_SHELL = [
   '1280px',
 ].join(', ');
 
-// Las cards del home ocupan una columna del shell en desktop; `wide` y `square` cambian el alto, no el ancho.
+// Las cards del home ocupan una columna del shell en desktop; la forma cambia el alto, no el ancho.
 export const SIZES_COVER = '(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 640px';
+
+/*
+ * Card `portrait` (3:4 desde md) con un cover cuadrado: object-cover escala la
+ * imagen por el alto, así que se dibuja a 4/3 del ancho de la card (50vw → 67vw,
+ * 640px → 854px). Con SIZES_COVER el navegador pediría una variante un tercio
+ * más chica y se vería blanda. En mobile la card vuelve a 4:3: queda igual.
+ * Si algún día el cover se exporta en 3:4, esa card vuelve a SIZES_COVER.
+ */
+export const SIZES_COVER_PORTRAIT = '(max-width: 768px) 100vw, (max-width: 1280px) 67vw, 854px';
 
 // El thumbnail de "Próximo proyecto": ancho completo en mobile, 160px como máximo en desktop.
 export const SIZES_NEXT_THUMBNAIL = '(max-width: 768px) 100vw, 160px';
