@@ -443,8 +443,8 @@ export const projects = [
         slot: 'intro',
         frame: { width: 1440, height: 810 },
         alt: {
-          es: 'Tres bocetos en papel de las pantallas y el user flow original sobre hormigón oscuro',
-          en: 'Three paper sketches of the screens and the original user flow on dark concrete',
+          es: 'Tres bocetos en papel de las pantallas y el user flow original sobre hormigón gris',
+          en: 'Three paper sketches of the screens and the original user flow on gray concrete',
         },
         src: cabifyStrip,
       },
@@ -461,8 +461,8 @@ export const projects = [
         type: 'diagram',
         slot: 'decisions',
         alt: {
-          es: 'Las quince pantallas en dos filas sobre hormigón oscuro, arriba el recorrido para configurar la música y abajo el del viaje',
-          en: 'The fifteen screens in two rows on dark concrete, with the music setup flow on top and the ride flow below',
+          es: 'Las quince pantallas en dos filas sobre hormigón gris, arriba el recorrido para configurar la música y abajo el del viaje',
+          en: 'The fifteen screens in two rows on gray concrete, with the music setup flow on top and the ride flow below',
         },
         src: cabifyDiagram,
       },
@@ -470,8 +470,8 @@ export const projects = [
         type: 'screen-cluster',
         slot: 'decisions',
         alt: {
-          es: 'Tres pantallas mobile sobre hormigón oscuro: el panel para elegir de dónde sale la música, Tus gustos musicales con Guardar deshabilitado y el error de conexión con Spotify',
-          en: 'Three mobile screens on dark concrete: the panel to choose where the music comes from, Your music taste with Save disabled, and the Spotify connection error',
+          es: 'Tres pantallas mobile sobre hormigón gris: el panel para elegir de dónde sale la música, Tus gustos musicales con Guardar deshabilitado y el error de conexión con Spotify',
+          en: 'Three mobile screens on gray concrete: the panel to choose where the music comes from, Your music taste with Save disabled, and the Spotify connection error',
         },
         src: cabifyClusterB,
       },
@@ -479,8 +479,8 @@ export const projects = [
         type: 'palette',
         slot: 'delivered',
         alt: {
-          es: 'El UI Kit sobre hormigón oscuro, con átomos, una fila de preferencia, el panel que la contiene y la pantalla con la grilla de cuatro columnas, y abajo los colores y la tipografía',
-          en: 'The UI Kit on dark concrete, with atoms, a preference row, the panel that holds it, and the screen with the four-column grid, plus the colors and typography below',
+          es: 'El UI Kit sobre hormigón gris, con átomos, una fila de preferencia, el panel que la contiene y la pantalla con la grilla de cuatro columnas, y abajo los colores y la tipografía',
+          en: 'The UI Kit on gray concrete, with atoms, a preference row, the panel that holds it, and the screen with the four-column grid, plus the colors and typography below',
         },
         src: cabifyPalette,
       },
