@@ -113,18 +113,19 @@
     "closing": "Diseñar un Design System es 30% diseño visual y 70% gobernanza y documentación. Componentes bonitos no sirven si nadie sabe cuándo usarlos. La colaboración multicultural me enseñó a justificar cada decisión: no podés decir 'me gusta más así'. Si volviera a hacerlo: menos componentes, mejor documentados."
   },
   "case_study_recuerdalo": {
-    "intro": "Diseñé Recuérdalo: una app de recordatorios para adultos 70+ basada en research real con usuarios del rango etario objetivo, no en asunciones sobre lo que 'necesitan'. Proyecto universitario de UX inclusivo.",
-    "challenge": "Equilibrar autonomía vs ayuda. Los adultos mayores quieren sentirse capaces (el orgullo de superar retos es enorme) pero también necesitan soporte cuando se traban. Demasiada ayuda se siente condescendiente. Muy poca genera abandono.",
-    "decision_1_title": "Pasos reversibles visibles, no flujos ciegos",
-    "decision_1_body": "El insight clave vino de un entrevistado de 80 años: 'arranco bien, pero si me equivoco en el tercer paso, no sé volver para atrás'. La solución no era simplificar, era hacer la reversibilidad evidente. Indicador numérico (Paso 1 de 3), botones 'Volver' grandes en cada pantalla, confirmaciones visuales inmediatas.",
-    "decision_2_title": "Arquitectura por contexto emocional, no por función",
-    "decision_2_body": "Card sorting abierto con 3 usuarios mayores y 15 tarjetas. Agruparon por contexto emocional, no por tipo de función: 'Mis Obligaciones y Salud', 'Mi Gente', 'Para Entretenerme y Pensar', 'Cosas Importantes y Ayuda'. La arquitectura siguió ese mapeo, no la lógica de un diseñador.",
-    "decision_3_title": "Accesibilidad como base, no capa extra",
-    "decision_3_body": "Tipografía mínima 18px (vs 14px estándar) para visión envejecida. Contraste AA en todo. Touch targets de 60×60px (vs 44px recomendado general) para dedos menos precisos. Botón 'Ayuda' flotante siempre visible: tutoriales contextuales o llamada a contacto de emergencia.",
-    "delivered_1": "Research documentado: entrevistas, transcripciones, affinity diagrams, journey map del usuario principal",
-    "delivered_2": "User personas con quotes reales de los entrevistados",
-    "delivered_3": "Prototipo Figma alta fidelidad con todas las pantallas principales",
-    "closing": "El diseño inclusivo no es una capa estética que agregás al final, es la base de una buena experiencia. Diseñar para los 3 entrevistados, con sus limitaciones visuales y memoria secuencial frágil, terminó creando un producto más claro y robusto para cualquiera. Si volviera a hacerlo: un 'Sistema de Tranquilidad Familiar' que vincule la app con los hijos para reducir ansiedad familiar y reforzar la red de apoyo."
+    "intro": "Diseñé Recuérdalo para personas mayores: les recuerda los medicamentos y los turnos, y cada vez que registran una toma o un turno le avisa a su familia. Partí de entrevistas, observaciones y un card sorting con personas de entre 60 y 80 años.",
+    "challenge": "Las personas que entrevisté no le tenían miedo a la tecnología, sino a equivocarse sin poder volver. Una de ellas, de 80 años, lo dijo así: «arranco bien, pero si me equivoco en el tercer paso, no sé volver para atrás». También querían seguir haciendo las cosas por su cuenta, y el orgullo de lograrlo solas se repetía en las entrevistas.",
+    "process": "Ordené la app con las categorías que armaron las personas en el card sorting y diseñé cinco recorridos con una sola acción principal por pantalla. El recorrido central tiene cuatro momentos: el recordatorio, reconocer el medicamento, confirmar la toma y una celebración. En el diagrama, arriba están tomar y posponer un medicamento, y abajo, agregar uno nuevo.",
+    "decision_1_title": "Pocas cosas por pantalla",
+    "decision_1_body": "El inicio tiene un saludo y tres tarjetas con las categorías del card sorting: Mis obligaciones, Mi gente y Para entretenerme. La cuarta, Cosas importantes y ayuda, quedó como Ayuda en la barra de abajo, con las emergencias, los datos de salud y el contacto principal. Cuando hay un medicamento pendiente, la campana lo marca y, al tocarla, abre el recordatorio, que tiene un solo botón principal.",
+    "decision_2_title": "Equivocarse tiene vuelta",
+    "decision_2_body": "Cada pantalla interna tiene un botón Volver con la palabra escrita y cada panel tiene Cancelar. Agregar un medicamento se hace en tres pasos, de a una pregunta, y la hora se elige con botones grandes, sin teclado. Agregar un turno sigue el mismo camino, en cuatro pasos, y el día se elige en un calendario de la semana. Antes de guardar, una pantalla resume todo y deja cambiar cada dato.",
+    "decision_3_title": "La familia tranquila y la persona acompañada",
+    "decision_3_body": "En Mi gente, la persona invita por mail a quien quiera, y esa gente recibe un aviso cada vez que la persona registra una toma o un turno. Pedir ayuda desde un medicamento le avisa solo a la familia. Para que la app no se sintiera fría, el inicio pregunta cómo te sentís, un hornero saluda, recuerda y festeja, y una racha semanal celebra los días con todo registrado sin marcar en rojo los olvidos.",
+    "delivered_1": "29 pantallas en cinco recorridos, con un prototipo navegable en Figma",
+    "delivered_2": "UI Kit en Atomic Design, con contraste de 7:1 o más, texto de 18 px o más (16 en etiquetas cortas), todo lo que se toca de 56 px de alto o más y el hornero",
+    "delivered_3": "Research documentado: entrevistas, shadowing, card sorting, cuatro patrones y una persona",
+    "closing": "Lo más difícil fue diseñar para los miedos de María Marta, la persona que armé con lo que se repitió en las entrevistas, sin que la app se sintiera fría. Me confirmó que el diseño inclusivo es la base y no una capa del final: lo que la ayuda a ella, como el Volver con la palabra escrita o una sola acción por pantalla, hace la app más clara para cualquiera. El próximo paso es probar el prototipo con personas mayores. También queda por diseñar Para entretenerme."
   },
   "about": {
     "title": "SOBRE GOTYA",

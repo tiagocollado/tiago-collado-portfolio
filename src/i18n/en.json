@@ -113,18 +113,19 @@
     "closing": "Designing a Design System is 30% visual design and 70% governance and documentation. Beautiful components are useless if nobody knows when to use them. Multicultural collaboration taught me to justify every decision: you can't just say 'I like it better this way'. If I were to redo it: fewer components, better documented."
   },
   "case_study_recuerdalo": {
-    "intro": "I designed Recuérdalo: a reminder app for adults 70+ grounded in real research with users in the target age range, not on assumptions about what they 'need'. University project in inclusive UX.",
-    "challenge": "Balancing autonomy vs help. Older adults want to feel capable (the pride of overcoming challenges is huge) but they also need support when they get stuck. Too much help feels condescending. Too little drives abandonment.",
-    "decision_1_title": "Visible reversible steps, not blind flows",
-    "decision_1_body": "The key insight came from an 80-year-old interviewee: 'I start fine, but if I make a mistake in the third step, I don't know how to go back'. The solution wasn't to simplify, it was to make reversibility obvious. Numeric indicator (Step 1 of 3), large 'Back' buttons on every screen, immediate visual confirmations.",
-    "decision_2_title": "Architecture by emotional context, not by function",
-    "decision_2_body": "Open card sorting with 3 older users and 15 cards. They grouped by emotional context, not by type of function: 'My Obligations and Health', 'My People', 'To Entertain and Think', 'Important Things and Help'. The architecture followed that mapping, not a designer's logic.",
-    "decision_3_title": "Accessibility as foundation, not extra layer",
-    "decision_3_body": "Minimum 18px typography (vs the standard 14px) for aging vision. AA contrast across the board. 60×60px touch targets (vs the general 44px recommendation) for less precise fingers. Floating 'Help' button always visible: contextual tutorials or emergency contact call.",
-    "delivered_1": "Documented research: interviews, transcripts, affinity diagrams, the main user's journey map",
-    "delivered_2": "User personas with real quotes from interviewees",
-    "delivered_3": "High-fidelity Figma prototype with every main screen",
-    "closing": "Inclusive design isn't an aesthetic layer you add at the end, it's the foundation of a good experience. Designing for the 3 interviewees, with their visual limitations and fragile sequential memory, ended up creating a product that's clearer and more robust for everyone. If I were to redo it: a 'Family Peace-of-Mind System' that links the app with the user's children to reduce family anxiety and strengthen the support network."
+    "intro": "I designed Recuérdalo for older adults: it reminds them of their medications and doctor's appointments, and every time they log a dose or an appointment, it lets their family know. I started with interviews, observations and a card sort with people aged 60 to 80.",
+    "challenge": "The people I interviewed weren't afraid of technology, but of making a mistake and not being able to go back. One of them, aged 80, put it like this: \"I start off fine, but if I make a mistake on the third step, I don't know how to go back.\" They also wanted to keep doing things on their own, and the pride of managing it by themselves came up again and again in the interviews.",
+    "process": "I organized the app with the categories people grouped in the card sorting and designed five flows with a single main action per screen. The core flow has four moments: the reminder, recognizing the medication, confirming the dose and a celebration. In the diagram, taking and postponing a medication are on top, and adding a new one is below.",
+    "decision_1_title": "Few things per screen",
+    "decision_1_body": "Home has a greeting and three cards with the card sorting categories: My to-dos (Mis obligaciones), My people (Mi gente) and To pass the time (Para entretenerme). The fourth, Important things and help, became Help (Ayuda) in the bottom bar, with emergency numbers, health details and the main contact. When a medication is due, the bell shows it and, when tapped, opens the reminder, which has a single main button.",
+    "decision_2_title": "Every mistake has a way back",
+    "decision_2_body": "Every inner screen has a Back button with the word written out, and every panel has Cancel. Adding a medication takes three steps, one question at a time, and the time is set with large buttons, without a keyboard. Adding an appointment follows the same path, in four steps, and the day is picked on a weekly calendar. Before saving, a screen sums everything up and lets you change each detail.",
+    "decision_3_title": "A calm family and a person who feels accompanied",
+    "decision_3_body": "In My people, the person invites anyone they want by email, and those people get a notice every time a dose or an appointment is logged. Asking for help from a medication only notifies the family. So the app wouldn't feel cold, Home asks how you're feeling; a hornero (a bird common in Argentina) greets, reminds and celebrates; and a weekly streak celebrates the days with everything logged without marking the missed ones in red.",
+    "delivered_1": "29 screens across five flows, with a clickable Figma prototype",
+    "delivered_2": "UI Kit built with Atomic Design, with 7:1 contrast or higher, 18 px text or larger (16 px in short labels), every tap target at least 56 px tall, and the hornero",
+    "delivered_3": "Documented research: interviews, shadowing, card sorting, four patterns and a persona",
+    "closing": "The hardest part was designing for the fears of María Marta, the persona I built from what came up again and again in the interviews, without the app feeling cold. Working on it confirmed that inclusive design is the foundation, not a layer added at the end: what helps her, like a Back button with the word written out or a single action per screen, makes the app clearer for anyone. The next step is to test the prototype with older adults. To pass the time is also still to be designed."
   },
   "about": {
     "title": "ABOUT GOTYA",

@@ -26,6 +26,14 @@ import cabifyDiagram from '../assets/case-study/cabify-playlist-del-viaje/03-dia
 import cabifyClusterB from '../assets/case-study/cabify-playlist-del-viaje/04-cluster-b.jpg';
 import cabifyPalette from '../assets/case-study/cabify-playlist-del-viaje/05-paleta.jpg';
 
+import recuerdaloCover from '../assets/covers/recuerdalo-cover.jpg';
+import recuerdaloMockup from '../assets/case-study/recuerdalo/00-mockup.jpg';
+import recuerdaloStrip from '../assets/case-study/recuerdalo/01-tira.jpg';
+import recuerdaloClusterA from '../assets/case-study/recuerdalo/02-cluster-a.jpg';
+import recuerdaloDiagram from '../assets/case-study/recuerdalo/03-diagrama.jpg';
+import recuerdaloClusterB from '../assets/case-study/recuerdalo/04-cluster-b.jpg';
+import recuerdaloPalette from '../assets/case-study/recuerdalo/05-paleta.jpg';
+
 /*
  * Campos que no se explican solos:
  * - services: categorías del trabajo, nunca roles ("Diseño Web", no "Diseño UX/UI"). Máximo 2.
@@ -60,7 +68,7 @@ export const projects = [
     year: 2026,
     published: true,
     showOnHome: true,
-    order: 2,
+    order: 3,
     metadata: {
       client:   { es: 'Paseo Güemes Hotel · Salta',                                en: 'Paseo Güemes Hotel · Salta' },
       role:     { es: 'Dirección de arte, diseño UX/UI e implementación en WordPress', en: 'Art direction, UX/UI design & WordPress implementation' },
@@ -131,7 +139,7 @@ export const projects = [
     year: 2026,
     published: true,
     showOnHome: true,
-    order: 3,
+    order: 4,
     metadata: {
       client:   { es: 'Pulso Creativo',                                              en: 'Pulso Creativo' },
       role:     { es: 'Diseño UX/UI e implementación en WordPress',                  en: 'UX/UI design & WordPress implementation' },
@@ -213,7 +221,7 @@ export const projects = [
     year: 2025,
     published: true,
     showOnHome: true,
-    order: 4,
+    order: 5,
     metadata: {
       client:   { es: 'Proyecto universitario · Maimónides', en: 'University project · Maimónides' },
       role:     { es: 'Diseño UI y Desarrollo Full-stack',   en: 'UI Design & Full-stack Development' },
@@ -291,7 +299,7 @@ export const projects = [
     year: 2025,
     published: false,
     showOnHome: false,
-    order: 5,
+    order: 6,
     metadata: {
       client:   { es: 'Simulación · No Country',             en: 'Simulation · No Country' },
       role:     { es: 'Diseño UX/UI y Design System',        en: 'UX/UI Design & Design System' },
@@ -338,63 +346,88 @@ export const projects = [
     slug: 'recuerdalo',
     title: 'Recuérdalo',
     tagline: {
-      es: 'App de recordatorios diseñada para adultos mayores.',
-      en: 'Reminder app designed for older adults.',
+      es: 'Una app que acompaña la memoria cotidiana de personas mayores: medicamentos, turnos y la gente de confianza.',
+      en: 'An app that supports the everyday memory of older adults: medications, appointments and trusted people.',
     },
     description: {
-      es: 'Proyecto universitario de diseño UX inclusivo: investigación con entrevistas reales, card sorting, journey map y prototipo funcional en Figma para personas mayores de 70 años.',
-      en: 'University project in inclusive UX design: research with real interviews, card sorting, journey map and functional Figma prototype for adults over 70.',
+      es: 'Investigación con personas de entre 60 y 80 años y diseño de la app, del card sorting al prototipo navegable en Figma.',
+      en: 'Research with people aged 60 to 80 and app design, from card sorting to a clickable Figma prototype.',
     },
     services: {
-      es: ['Aplicaciones Móviles'],
-      en: ['Mobile Apps'],
+      es: ['Aplicaciones Móviles', 'Design System'],
+      en: ['Mobile Apps', 'Design System'],
     },
-    links: {},
+    links: {
+      prototype: 'https://www.figma.com/proto/zVhweFzOdX5iSRie0UfNc5/-2025--Recu%C3%A9rdalo---Tiago-Collado?node-id=302-2407&scaling=scale-down&content-scaling=fixed&starting-point-node-id=302%3A2407&show-proto-sidebar=1&page-id=4%3A712',
+    },
     cardShape: 'square',
-    coverImage: null,
+    coverImage: recuerdaloCover,
     year: 2025,
-    published: false,
-    showOnHome: false,
-    order: 6,
+    published: true,
+    showOnHome: true,
+    order: 1,
     metadata: {
-      client:   { es: 'Proyecto universitario · Maimónides', en: 'University project · Maimónides' },
-      role:     { es: 'Investigación UX y Diseño Inclusivo', en: 'UX Research & Inclusive Design' },
-      duration: { es: '3 meses',                             en: '3 months' },
-      team:     { es: 'Responsable de la investigación al prototipo', en: 'Owned it from research through prototype' },
+      client:   { es: 'Caso de estudio · Diseño accesible',                                  en: 'Case study · Accessible design' },
+      role:     { es: 'Investigación UX y Diseño Inclusivo',                                 en: 'UX Research & Inclusive Design' },
+      duration: { es: '3 meses',                                                             en: '3 months' },
+      team:     { es: 'Investigación y diseño en solitario, de las entrevistas al prototipo', en: 'Solo research and design, from interviews to prototype' },
       stack:    ['Figma'],
     },
     imageBriefs: [
       {
-        type: 'detail',
+        type: 'mockup',
         slot: 'hero',
         alt: {
-          es: 'Hero shot — pantalla principal de Recuérdalo con las 4 categorías emergentes del card sorting',
-          en: 'Hero shot — Recuérdalo main screen with the 4 categories that emerged from card sorting',
+          es: 'Pantallas de la app en diagonal sobre hormigón claro con luz de ventana: el recordatorio del medicamento, Inicio, ¡Muy bien!, Tu medicamento y, en los bordes, el turno médico',
+          en: "App screens set diagonally on light concrete with window light: the medication reminder, Home, Well done!, Your medication and, at the edges, the doctor's appointment",
         },
+        src: recuerdaloMockup,
+      },
+      {
+        type: 'long-strip',
+        slot: 'intro',
+        frame: { width: 1440, height: 810 },
+        alt: {
+          es: 'Sobre hormigón gris, el card sorting con las cuatro categorías que armaron las personas y, al lado, Inicio, el recordatorio, Tu medicamento y ¡Muy bien! en media fidelidad, en grises',
+          en: 'On gray concrete, the card sorting with the four categories people created and, next to it, Home, the reminder, Your medication and Well done! as grayscale mid-fidelity wireframes',
+        },
+        src: recuerdaloStrip,
+      },
+      {
+        type: 'screen-cluster',
+        slot: 'challenge',
+        alt: {
+          es: 'La pantalla de Inicio sobre hormigón gris, con tres detalles ampliados: la campana con un aviso, la tarjeta que pregunta cómo te sentís y el botón Ayuda de la barra',
+          en: "The Home screen on gray concrete, with three enlarged details: the bell with a notification, the card that asks how you're feeling and the Help button in the bar",
+        },
+        src: recuerdaloClusterA,
       },
       {
         type: 'diagram',
-        slot: 'challenge',
+        slot: 'decisions',
         alt: {
-          es: 'Card sorting documentado: 15 tarjetas de funcionalidades agrupadas por usuarios mayores en 4 categorías emocionales',
-          en: 'Documented card sorting: 15 feature cards grouped by older users into 4 emotional categories',
+          es: 'Dieciséis pantallas en dos filas sobre hormigón gris: arriba, tomar y posponer un medicamento; abajo, agregar uno nuevo y la ayuda',
+          en: 'Sixteen screens in two rows on gray concrete: taking and postponing a medication on top, and adding a new one and help below',
         },
+        src: recuerdaloDiagram,
       },
       {
         type: 'screen-cluster',
         slot: 'decisions',
         alt: {
-          es: 'Secuencia de pasos reversibles: indicador numérico, botón Volver grande y confirmación visual inmediata',
-          en: 'Reversible steps sequence: numeric indicator, large Back button, and immediate visual confirmation',
+          es: 'Tres pantallas sobre hormigón gris: el panel Pedir ayuda con Ana y Jorge, Ayuda con las emergencias y los datos de salud, y Mi gente',
+          en: 'Three screens on gray concrete: the Ask for help panel with Ana and Jorge, Help with emergency numbers and health details, and My people',
         },
+        src: recuerdaloClusterB,
       },
       {
-        type: 'screen-cluster',
+        type: 'palette',
         slot: 'delivered',
         alt: {
-          es: 'Comparación de accesibilidad: UI estándar versus Recuérdalo con tipografía y touch targets aumentados',
-          en: 'Accessibility comparison: standard UI vs Recuérdalo with enlarged typography and touch targets',
+          es: 'El UI Kit sobre hormigón gris: los botones Ya la tomé, Posponer y Pedir ayuda, la tarjeta que pregunta cómo te sentís, un medicamento pospuesto, el hornero y las etiquetas de estado, y abajo los colores y la tipografía',
+          en: "The UI Kit on gray concrete: the I took it, Postpone and Ask for help buttons, the card that asks how you're feeling, a postponed medication, the hornero and the status labels, plus the colors and typography below",
         },
+        src: recuerdaloPalette,
       },
     ],
   },
@@ -416,12 +449,12 @@ export const projects = [
     links: {
       prototype: 'https://www.figma.com/proto/lau81Ek16dCN8fJmtncGeK/-2023--Cabify---Playlist-del-viaje?node-id=986-269&p=f&scaling=scale-down&content-scaling=fixed&starting-point-node-id=986%3A269&show-proto-sidebar=1&page-id=127%3A18',
     },
-    cardShape: 'square',
+    cardShape: 'wide',
     coverImage: cabifyCover,
     year: 2023,
     published: true,
     showOnHome: true,
-    order: 1,
+    order: 2,
     metadata: {
       client:   { es: 'Propuesta de rediseño · Cabify',                      en: 'Redesign proposal · Cabify' },
       role:     { es: 'Diseño UX/UI',                                        en: 'UX/UI design' },
