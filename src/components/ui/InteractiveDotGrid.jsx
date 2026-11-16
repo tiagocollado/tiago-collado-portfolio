@@ -98,9 +98,6 @@ export default function InteractiveDotGrid({
       if (accent) accentRGB = parseRGB(accent);
     };
     readColor();
-    // El tema cambia la clase de <html>: al cambiar, se releen los colores.
-    const themeObserver = new MutationObserver(readColor);
-    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
     // Cursor en coordenadas del canvas. -9999 = fuera de alcance.
     let mouseX = -9999;
@@ -222,11 +219,31 @@ export default function InteractiveDotGrid({
     };
 
     // ─── Arranque ──────────────────────────────────────────────────────
-    const resizeObserver = new ResizeObserver(buildGrid);
+    // buildGrid() reasigna el tamaño del canvas, y eso lo borra. Con
+    // animación no importa: el loop vuelve a dibujar en el frame siguiente.
+    // Con movimiento reducido no hay loop, así que se redibuja acá. Hace
+    // falta también al arrancar: el ResizeObserver avisa una primera vez
+    // apenas empieza a observar, después del primer render().
+    const rebuildGrid = () => {
+      buildGrid();
+      if (prefersReducedMotion) render();
+    };
+    const resizeObserver = new ResizeObserver(rebuildGrid);
     resizeObserver.observe(container);
     buildGrid();
 
-    // Con movimiento reducido: un solo frame, sin escuchar el mouse.
+    // El tema cambia la clase de <html>: al cambiar, se releen los colores.
+    // Con movimiento reducido tampoco hay loop que los use, así que se
+    // redibuja al momento, sin animar.
+    const onThemeChange = () => {
+      readColor();
+      if (prefersReducedMotion) render();
+    };
+    const themeObserver = new MutationObserver(onThemeChange);
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+    // Con movimiento reducido: un frame quieto (y uno nuevo en cada resize),
+    // sin escuchar el mouse.
     if (!prefersReducedMotion) {
       container.addEventListener('mousemove', onMouseMove);
       container.addEventListener('mouseleave', onMouseLeave);
