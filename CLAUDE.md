@@ -84,7 +84,11 @@ Vercel, conectado a este repo. La URL no cambió con la migración.
 
 **Capa "frontend creativo"**: Lenis smooth scroll (con reset de scroll en cambio de ruta) · custom cursor dot+ring con variants `default | link | view | drag` · SplitText char reveal · magnetic hover + `<MagneticLink>` · grain SVG global · scrollbar custom terracota · `<MotionConfig reducedMotion="user">` (en Astro va en cada isla que anima: `.claude/rules/stack-traps.md`).
 
-**Home**: Navbar `h-16` fijo (NavLogo izq · links centrados · LanguageToggle + tema der · hamburger en `<lg`) · Hero con NameLogo GOTYA sticky que achica con el scroll y hace handoff al navbar, lema en dos líneas, CTA magnético con chevrons e `InteractiveDotGrid` · grilla masonry de proyectos (2 columnas, 6 cards, covers a sangre sin texto) · About 4.0 (micro-labels, claim con bold, copy a la derecha, firma) · Stack con carrusel infinito · **bloque de cierre unificado** (ver abajo).
+**Home**: Navbar `h-16` fijo (NavLogo izq · links centrados · LanguageToggle + tema der · hamburger en `<lg`) · Hero con NameLogo GOTYA sticky que achica con el scroll y hace handoff al navbar, lema en dos líneas, CTA magnético con chevrons e `InteractiveDotGrid` · fila de puntos al pie del hero · grilla masonry de proyectos (2 columnas, 6 cards, covers a sangre sin texto) · About 4.0 (micro-labels, claim con bold, copy a la derecha, firma) · Skills · Stack con carrusel infinito · **bloque de cierre unificado** (ver abajo).
+
+**Fila de puntos al pie del hero**: la grilla de puntos condensada en una sola línea, justo debajo de la `<section>` del Hero. La grilla se apaga al scrollear; la fila queda y marca el final del hero. Solo CSS (`radial-gradient` con `repeat-x`), decorativa (`aria-hidden`). Separación, radio, color y opacidad salen de las mismas constantes de `Hero.astro` que recibe `InteractiveDotGrid`. Con mouse, sus columnas caen en las del canvas (la misma cuenta que `buildGrid()`, hecha en CSS con `round(up, …)`); en táctil, en las de la grilla CSS. Las filas no están alineadas en vertical.
+
+**Skills**: entre About y Stack. Índice de 4 skills en tipografía grande, separadas por ` / ` (decorativas), y debajo el panel de la activa: sus actividades con `/ ` adelante y "Se ve en →" con links a los casos, en el idioma de la página. Datos en `src/data/skills.js`; los títulos de los casos salen de `projects.js`, y un slug que no está publicado corta el build. La activa se marca con dos señales: tinta `--ink-primary` (las demás, `--ink-secondary`) y subrayado terracota: `--color-accent` en tema oscuro (5,04:1 contra el fondo) y `--color-accent-hover` en claro (3,76:1; `--color-accent` ahí da 2,92:1), con la variante `dark` del sitio. De 0,06em de grosor y a 0,28em de la línea base, debajo de los descendentes de Space Grotesk (0,2em). Cada nombre es un `<button>` con `aria-expanded` y `aria-controls`; una sola activa, la primera abierta desde el HTML. Se activa con click o tap, con Enter o Espacio y, con `(pointer: fine)`, con hover tras 150 ms (sin la pausa, bajar al panel cruza otros nombres). **El foco solo no activa**: si lo hiciera, con Tab no se llegaría a los links de las skills 1 a 3. Los paneles comparten una celda de grilla, así que el alto es el del más largo y no salta. Sin JavaScript: sin índice y con todos los paneles abiertos, cada uno con su nombre. `<script>` de Astro, sin isla.
 
 **Bloque de cierre** (Contact + Footer): se leen como una sola pieza. Contact no cierra su padding inferior y el Footer arranca pegado, sin `border-t` entre medio. Contact lleva el micro-label, una **pregunta corta sin párrafo de body** (quien llega acá ya hizo click en "Hablemos": viene con intención, no hay que volver a venderle), el mail en **mono grande** con botón de copiar al portapapeles, y los 4 canales (LinkedIn / GitHub / WhatsApp / CV). El Footer es una única barra de tres zonas: copyright · back-to-top · crédito. **En mobile (`<sm`) esa barra pasa a 2 columnas**: copyright y crédito apilados a la izquierda, back-to-top a la derecha abarcando las dos filas (`row-span-2`) y centrado contra ellas — la mitad derecha es la zona de menor costo motor para el pulgar (Fitts). Las posiciones van explícitas (`col-start`/`row-start`) y se resetean con `sm:*-auto`, porque el orden del DOM es copyright → botón → crédito y el auto-placement pondría el crédito en el lugar equivocado.
 
@@ -366,7 +370,7 @@ src/
 │   ├── case-study/             # ✅ CaseStudyPage · Header · MetaBar · Section ·
 │   │                           # ImageRun · NextNav (.astro) · CaseStudyImage.jsx
 │   │                           # (isla) · imageSpec.js
-│   ├── sections/               # ✅ Projects · About · Stack
+│   ├── sections/               # ✅ Projects · About · Skills · Stack
 │   │                           # (.astro) · ProjectCard.jsx (isla)
 │   │                           # F5: Hero.jsx · Contact.jsx (islas)
 │   └── ui/                     # ✅ .astro: SkipLink (con <script>) · StackIcon
@@ -374,7 +378,7 @@ src/
 │                               # CustomCursor · SplitText · MagneticLink ·
 │                               # MarqueeLink · Footer · InteractiveDotGrid
 │                               # F6: NowPlaying · cambio de idioma (.astro)
-├── data/                       # ✅ projects.js · stack.js
+├── data/                       # ✅ projects.js · stack.js · skills.js
 ├── utils/
 │   └── responsiveImage.js      # ✅ getImage() para las islas (solo servidor)
 ├── i18n/                       # ✅ es.json · en.json · translate.js
