@@ -97,9 +97,10 @@ palabra encima. En hover el lavado terracota **barre de izquierda a derecha**
 (`scale-x` con `origin-left`, no un fade) y después entran nombre, "VER PROYECTO",
 categoría y las escuadras de las 4 esquinas.
 
-> **Premio opcional (`award`)**: si el proyecto lo tiene, va en mono debajo del
-> nombre en el hover, debajo de la categoría en táctil, en el `aria-label` del
-> link y como pill al final del encabezado del caso. En reposo la card sigue sin
+> **Premio opcional (`award`)**: si el proyecto lo tiene, va como una frase en
+> texto común (sin mayúsculas ni mono) debajo del nombre en el hover, debajo de
+> la categoría en táctil, en el `aria-label` del link y como pill al final del
+> encabezado del caso. En reposo la card sigue sin
 > texto. Hoy solo lo tiene miMascota.
 
 > ⚠️ **En táctil no hay hover, así que no hay lavado**: el nombre y la categoría
