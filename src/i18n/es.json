@@ -172,7 +172,8 @@
     "seen_in": "Se ve en"
   },
   "stack": {
-    "title": "Tecnologías que Utilizo"
+    "label": "Stack",
+    "pause": "Pausar el carrusel"
   },
   "footer": {
     "credit": "Diseñado y desarrollado por Tiago Collado",
