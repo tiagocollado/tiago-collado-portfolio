@@ -84,7 +84,7 @@ Vercel, conectado a este repo. La URL no cambió con la migración.
 
 **Capa "frontend creativo"**: Lenis smooth scroll (con reset de scroll en cambio de ruta) · custom cursor dot+ring con variants `default | link | view | drag` · SplitText char reveal · magnetic hover + `<MagneticLink>` · grain SVG global · scrollbar custom terracota · `<MotionConfig reducedMotion="user">` (en Astro va en cada isla que anima: `.claude/rules/stack-traps.md`).
 
-**Home**: Navbar `h-16` fijo (NavLogo izq · links centrados · LanguageToggle + tema der · hamburger en `<lg`) · Hero con NameLogo GOTYA sticky que achica con el scroll y hace handoff al navbar, lema en dos líneas, CTA magnético con chevrons e `InteractiveDotGrid` · ServicesMarquee con fondo invertido · grilla masonry de proyectos (2 columnas, 6 cards, covers a sangre sin texto) · About 4.0 (micro-labels, claim con bold, copy a la derecha, firma) · Stack con carrusel infinito · **bloque de cierre unificado** (ver abajo).
+**Home**: Navbar `h-16` fijo (NavLogo izq · links centrados · LanguageToggle + tema der · hamburger en `<lg`) · Hero con NameLogo GOTYA sticky que achica con el scroll y hace handoff al navbar, lema en dos líneas, CTA magnético con chevrons e `InteractiveDotGrid` · grilla masonry de proyectos (2 columnas, 6 cards, covers a sangre sin texto) · About 4.0 (micro-labels, claim con bold, copy a la derecha, firma) · Stack con carrusel infinito · **bloque de cierre unificado** (ver abajo).
 
 **Bloque de cierre** (Contact + Footer): se leen como una sola pieza. Contact no cierra su padding inferior y el Footer arranca pegado, sin `border-t` entre medio. Contact lleva el micro-label, una **pregunta corta sin párrafo de body** (quien llega acá ya hizo click en "Hablemos": viene con intención, no hay que volver a venderle), el mail en **mono grande** con botón de copiar al portapapeles, y los 4 canales (LinkedIn / GitHub / WhatsApp / CV). El Footer es una única barra de tres zonas: copyright · back-to-top · crédito. **En mobile (`<sm`) esa barra pasa a 2 columnas**: copyright y crédito apilados a la izquierda, back-to-top a la derecha abarcando las dos filas (`row-span-2`) y centrado contra ellas — la mitad derecha es la zona de menor costo motor para el pulgar (Fitts). Las posiciones van explícitas (`col-start`/`row-start`) y se resetean con `sm:*-auto`, porque el orden del DOM es copyright → botón → crédito y el auto-placement pondría el crédito en el lugar equivocado.
 
@@ -329,7 +329,9 @@ astro.config.mjs                # ✅ site · adapter de Vercel · trailingSlash
                                 # · i18n (defaultLocale "en",
                                 # prefixDefaultLocale: true,
                                 # redirectToDefaultLocale: false) · fuentes ·
-                                # Tailwind (@tailwindcss/vite) · React
+                                # Tailwind (@tailwindcss/vite) · React ·
+                                # sitemap (@astrojs/sitemap, con hreflang
+                                # en/es y solo las páginas de /en/ y /es/)
                                 # Sin vercel.json: el adapter arma la config de
                                 # rutas del deploy solo desde astro.config.mjs
 tsconfig.json                   # ✅ preset "base" de Astro (sin modo estricto:
@@ -338,7 +340,8 @@ tsconfig.json                   # ✅ preset "base" de Astro (sin modo estricto:
                                 # valor; .env no se versiona)
 public/                         # se sirve tal cual, sin optimizar (§11)
 ├── favicon.svg                 # ✅ la "G" de Gotya
-└── og-image.png                # ✅ OG estática de la G, 1200x630
+├── og-image.png                # ✅ OG estática de la G, 1200x630
+└── robots.txt                  # ✅ permite todo salvo /api/ · apunta al sitemap
 src/
 ├── assets/                     # ✅ imágenes que optimiza astro:assets
 │   ├── covers/                 # {slug}-cover.jpg
@@ -353,6 +356,8 @@ src/
 │   ├── en/ · es/               # ✅ carpetas por idioma: index.astro y
 │   │                           # projects/[slug].astro (getStaticPaths con los
 │   │                           # publicados). Cada una usa un componente compartido
+│   ├── llms.txt.js             # ✅ /llms.txt estático (prerender = true), armado
+│   │                           # desde publishedProjects y los JSON
 │   └── api/
 │       └── now-playing.json.js # prerender = false · pide a Last.fm con caché
 │                               # en la CDN de Vercel (F6)
@@ -361,7 +366,7 @@ src/
 │   ├── case-study/             # ✅ CaseStudyPage · Header · MetaBar · Section ·
 │   │                           # ImageRun · NextNav (.astro) · CaseStudyImage.jsx
 │   │                           # (isla) · imageSpec.js
-│   ├── sections/               # ✅ ServicesMarquee · Projects · About · Stack
+│   ├── sections/               # ✅ Projects · About · Stack
 │   │                           # (.astro) · ProjectCard.jsx (isla)
 │   │                           # F5: Hero.jsx · Contact.jsx (islas)
 │   └── ui/                     # ✅ .astro: SkipLink (con <script>) · StackIcon
