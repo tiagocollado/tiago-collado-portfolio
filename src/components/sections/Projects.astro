@@ -17,6 +17,8 @@ const cards = await Promise.all(
     href: getRelativeLocaleUrl(locale, `projects/${project.slug}`),
     title: project.title,
     servicesLabel: project.services[locale].join(' & '),
+    // Solo los proyectos con premio lo tienen; el resto recibe null y la card no muestra nada.
+    awardLabel: project.award?.[locale] ?? null,
     cardShape: project.cardShape,
     coverImage: project.coverImage
       ? await getResponsiveImageProps(

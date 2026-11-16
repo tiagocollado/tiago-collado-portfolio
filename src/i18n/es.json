@@ -127,6 +127,21 @@
     "delivered_3": "Research documentado: entrevistas, shadowing, card sorting, cuatro patrones y una persona",
     "closing": "Lo más difícil fue diseñar para los miedos de María Marta, la persona que armé con lo que se repitió en las entrevistas, sin que la app se sintiera fría. Me confirmó que el diseño inclusivo es la base y no una capa del final: lo que la ayuda a ella, como el Volver con la palabra escrita o una sola acción por pantalla, hace la app más clara para cualquiera. El próximo paso es probar el prototipo con personas mayores. También queda por diseñar Para entretenerme."
   },
+  "case_study_mimascota": {
+    "intro": "La idea fue juntar en el celular los datos de salud de una mascota y avisarle a la persona antes de cada vacuna. La diseñamos entre cinco para competir en el UMAI UX Challenge 2022, una hackatón de una semana. Mi rol principal fue Scrum Master y además participé en el diseño: el Crazy 8 en papel y las decisiones de UX/UI.",
+    "challenge": "Antes de diseñar hicimos una encuesta y juntamos más de 200 respuestas. El 96% registraba la salud de su mascota en formato físico y solo el 1% lo hacía en digital. Dentro de ese 96%, 7 de cada 10 se olvidaban de vacunar. El papel guarda el dato, pero no avisa, y teníamos una semana para resolverlo.",
+    "process": "Arrancamos con un Crazy 8 en papel. De esos bocetos salió la estructura de la Home, que pasó a media fidelidad y después a alta.",
+    "decision_1_title": "Tres caminos desde la Home",
+    "decision_1_body": "La Home muestra solo tres botones grandes: datos principales, vacunas e historia clínica. Cada uno tiene su color y su ícono, para reconocerlo sin leer.",
+    "decision_2_title": "Cada dosis con su estado",
+    "decision_2_body": "Las vacunas se ven por dosis, con su estado (pendiente o aplicada) y la fecha. La veterinaria, el lote y el vencimiento quedan plegados hasta tocar el +, así la lista no se llena de datos.",
+    "decision_3_title": "El aviso lo elige la persona",
+    "decision_3_body": "El recordatorio se configura por vacuna: la persona elige con cuánta anticipación quiere el aviso. La notificación llega a la pantalla de bloqueo y abre directo esa vacuna.",
+    "delivered_1": "Diez pantallas en alta fidelidad, incluida la vista del veterinario, que carga cada dosis con su lote y sus fechas",
+    "delivered_2": "El flujo de usuario, tres pantallas en media fidelidad y los bocetos en papel",
+    "delivered_3": "Una guía de estilos con colores, tipografía y componentes",
+    "closing": "El siguiente paso sería probarla con dueños de mascotas y con veterinarios, para ver si el aviso llega a tiempo y si cargar una dosis resulta simple."
+  },
   "about": {
     "title": "SOBRE GOTYA",
     "based": "BASED IN BUENOS AIRES / WORLDWIDE",

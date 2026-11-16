@@ -127,6 +127,21 @@
     "delivered_3": "Documented research: interviews, shadowing, card sorting, four patterns and a persona",
     "closing": "The hardest part was designing for the fears of María Marta, the persona I built from what came up again and again in the interviews, without the app feeling cold. Working on it confirmed that inclusive design is the foundation, not a layer added at the end: what helps her, like a Back button with the word written out or a single action per screen, makes the app clearer for anyone. The next step is to test the prototype with older adults. To pass the time is also still to be designed."
   },
+  "case_study_mimascota": {
+    "intro": "The idea was to bring a pet's health records onto the phone and remind the owner before each vaccine. Five of us designed it to compete in the UMAI UX Challenge 2022, a one-week hackathon. My main role was Scrum Master, and I also took part in the design: the paper Crazy 8 and the UX/UI decisions.",
+    "challenge": "Before designing, we ran a survey and got over 200 responses. 96% kept their pet's health records in physical form and only 1% did it digitally. Within that 96%, 7 out of 10 forgot to vaccinate. Paper keeps the data, but it doesn't remind you, and we had one week to solve it.",
+    "process": "We started with a Crazy 8 on paper. Those sketches gave us the structure of the Home, which moved to mid fidelity and then to high fidelity.",
+    "decision_1_title": "Three paths from the Home",
+    "decision_1_body": "The Home shows only three large buttons: main details, vaccines and medical history. Each one has its own color and icon, so it can be recognized without reading.",
+    "decision_2_title": "Every dose with its status",
+    "decision_2_body": "Vaccines are shown dose by dose, with their status (pending or applied) and the date. The vet clinic, batch number and expiry date stay folded until you tap +, so the list doesn't fill up with data.",
+    "decision_3_title": "The owner chooses the reminder",
+    "decision_3_body": "Reminders are set per vaccine: the owner chooses how far in advance to get notified. The notification shows up on the lock screen and opens that vaccine directly.",
+    "delivered_1": "Ten high-fidelity screens, including the vet's view, which logs each dose with its batch and dates",
+    "delivered_2": "The user flow, three mid-fidelity screens and the paper sketches",
+    "delivered_3": "A style guide with colors, typography and components",
+    "closing": "The next step would be testing it with pet owners and vets, to see whether the reminder arrives in time and whether logging a dose feels simple."
+  },
   "about": {
     "title": "ABOUT GOTYA",
     "based": "BASED IN BUENOS AIRES / WORLDWIDE",

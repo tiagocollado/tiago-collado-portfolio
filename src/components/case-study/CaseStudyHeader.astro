@@ -8,6 +8,9 @@ const locale = Astro.currentLocale;
 const t = createTranslator(locale);
 
 const servicesLabel = project.services[locale].join(' & ');
+
+// Opcional: solo los proyectos con premio lo tienen (ver `award` en src/data/projects.js).
+const awardLabel = project.award?.[locale] ?? null;
 ---
 
 {/*
@@ -69,13 +72,34 @@ const servicesLabel = project.services[locale].join(' & ');
     className="font-display text-5xl md:text-7xl font-semibold tracking-tight leading-[1.05] mb-6 md:mb-8 max-w-4xl text-balance block text-(--ink-primary)"
   />
 
+  {/* Con premio, el aire de abajo pasa del tagline a la pill, para que el
+      encabezado termine a la misma distancia de lo que sigue. */}
   <p
-    class="text-lg md:text-2xl leading-relaxed mb-10 md:mb-12 max-w-3xl text-balance"
+    class:list={[
+      'text-lg md:text-2xl leading-relaxed max-w-3xl text-balance',
+      awardLabel ? 'mb-6' : 'mb-10 md:mb-12',
+    ]}
     data-reveal
     style="color: var(--ink-secondary); --reveal-y: 16px; --reveal-duration: 0.6s; --reveal-delay: 0.29s;"
   >
     {project.tagline[locale]}
   </p>
+
+  {awardLabel && (
+    <p
+      class="mb-10 md:mb-12"
+      data-reveal
+      style="--reveal-y: 16px; --reveal-duration: 0.6s; --reveal-delay: 0.41s;"
+    >
+      <span
+        class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border font-mono text-[11px] uppercase tracking-[0.15em] border-(--border-default) text-(--ink-secondary)"
+        style="background-color: var(--color-surface);"
+      >
+        <span aria-hidden="true" class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+        {awardLabel}
+      </span>
+    </p>
+  )}
 </div>
 
 <script>

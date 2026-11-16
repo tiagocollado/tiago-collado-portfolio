@@ -37,12 +37,16 @@ export default function ProjectCard({
   href,
   title,
   servicesLabel,
+  awardLabel = null,
   cardShape,
   coverImage,
   gridPosition = 0,
   viewProjectLabel,
 }) {
   const shapeClasses = CARD_SHAPE_CLASSES[cardShape] ?? CARD_SHAPE_CLASSES.wide;
+  const linkLabel = awardLabel
+    ? `${title} — ${servicesLabel}. ${awardLabel}. ${viewProjectLabel}`
+    : `${title} — ${servicesLabel}. ${viewProjectLabel}`;
 
   return (
     <MotionConfig reducedMotion="user">
@@ -72,7 +76,7 @@ export default function ProjectCard({
           <a
             href={href}
             className="absolute inset-0 z-30"
-            aria-label={`${title} — ${servicesLabel}. ${viewProjectLabel}`}
+            aria-label={linkLabel}
           />
 
           {coverImage && (
@@ -128,6 +132,12 @@ export default function ProjectCard({
               {title}
             </h3>
 
+            {awardLabel && (
+              <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.12em] opacity-80">
+                {awardLabel}
+              </p>
+            )}
+
             <div className="absolute bottom-8 left-8 right-8 flex items-end justify-between gap-4">
               <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.15em]">
                 {viewProjectLabel}
@@ -153,6 +163,11 @@ export default function ProjectCard({
           <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.12em] text-(--ink-secondary)">
             {servicesLabel}
           </p>
+          {awardLabel && (
+            <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.12em] text-(--ink-secondary)">
+              {awardLabel}
+            </p>
+          )}
         </div>
       </motion.article>
     </MotionConfig>

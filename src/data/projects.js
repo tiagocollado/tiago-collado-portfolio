@@ -34,9 +34,19 @@ import recuerdaloDiagram from '../assets/case-study/recuerdalo/03-diagrama.jpg';
 import recuerdaloClusterB from '../assets/case-study/recuerdalo/04-cluster-b.jpg';
 import recuerdaloPalette from '../assets/case-study/recuerdalo/05-paleta.jpg';
 
+import mimascotaCover from '../assets/covers/mimascota-cover.jpg';
+import mimascotaMockup from '../assets/case-study/mimascota/00-mockup.jpg';
+import mimascotaStrip from '../assets/case-study/mimascota/01-tira.jpg';
+import mimascotaClusterA from '../assets/case-study/mimascota/02-cluster-a.jpg';
+import mimascotaDiagram from '../assets/case-study/mimascota/03-diagrama.jpg';
+import mimascotaClusterB from '../assets/case-study/mimascota/04-cluster-b.jpg';
+import mimascotaPalette from '../assets/case-study/mimascota/05-paleta.jpg';
+
 /*
  * Campos que no se explican solos:
  * - services: categorías del trabajo, nunca roles ("Diseño Web", no "Diseño UX/UI"). Máximo 2.
+ * - award: opcional. Premio o distinción, en los dos idiomas. Se muestra en el hover de la
+ *   card, debajo de la card en táctil y como pill en el encabezado del caso. Sin award, nada.
  * - cardShape: forma de la card en la grilla del home: 'wide' (4:3), 'square' (1:1) o
  *   'portrait' (3:4 desde md; en mobile, 4:3). La card recorta el cover al centro.
  * - published: si la página del proyecto existe. Con false no se genera ni aparece en ningún lado.
@@ -517,6 +527,99 @@ export const projects = [
           en: 'The UI Kit on gray concrete, with atoms, a preference row, the panel that holds it, and the screen with the four-column grid, plus the colors and typography below',
         },
         src: cabifyPalette,
+      },
+    ],
+  },
+  {
+    slug: 'mimascota',
+    title: 'miMascota',
+    tagline: {
+      es: 'Una app para llevar la salud de tu mascota en el celular y no olvidarte de ninguna vacuna.',
+      en: "An app to keep your pet's health on your phone and never miss a vaccine.",
+    },
+    description: {
+      es: 'Una app para llevar la salud de tu mascota en el celular y no olvidarte de ninguna vacuna.',
+      en: "An app to keep your pet's health on your phone and never miss a vaccine.",
+    },
+    services: {
+      es: ['Aplicaciones Móviles'],
+      en: ['Mobile Apps'],
+    },
+    award: {
+      es: '2º puesto · UMAI UX Challenge',
+      en: '2nd place · UMAI UX Challenge',
+    },
+    links: {
+      prototype: 'https://www.figma.com/proto/8W62iRAO9b6OTmP0spmgyE/-2022--MiMascota?node-id=59-871&starting-point-node-id=59%3A871&scaling=scale-down&content-scaling=fixed&show-proto-sidebar=1&page-id=5%3A2',
+    },
+    cardShape: 'wide',
+    coverImage: mimascotaCover,
+    year: 2022,
+    published: true,
+    showOnHome: true,
+    order: 6,
+    metadata: {
+      client:   { es: 'Hackatón · UMAI UX Challenge 2022', en: 'Hackathon · UMAI UX Challenge 2022' },
+      role:     { es: 'Scrum Master y diseño UX/UI',       en: 'Scrum Master & UX/UI design' },
+      duration: { es: '1 semana',                          en: '1 week' },
+      team:     { es: 'Equipo de 5',                       en: 'Team of 5' },
+      stack:    ['Figma'],
+    },
+    imageBriefs: [
+      {
+        type: 'mockup',
+        slot: 'hero',
+        alt: {
+          es: 'Un teléfono con la pantalla de inicio de miMascota y una medalla de plata con una huella y un laurel grabados, apoyados sobre hormigón claro con luz de ventana',
+          en: 'A phone showing the miMascota home screen next to a silver medal engraved with a paw print and a laurel, resting on light concrete with window light',
+        },
+        src: mimascotaMockup,
+      },
+      {
+        type: 'long-strip',
+        slot: 'intro',
+        frame: { width: 1440, height: 810 },
+        alt: {
+          es: 'La pantalla de inicio en tres etapas: boceto en papel, media fidelidad en grises y alta fidelidad, sobre hormigón gris',
+          en: 'The home screen in three stages: paper sketch, grayscale mid fidelity and high fidelity, on gray concrete',
+        },
+        src: mimascotaStrip,
+      },
+      {
+        type: 'diagram',
+        slot: 'challenge',
+        alt: {
+          es: 'Diagrama del flujo de usuario en dos filas, desde abrir la app hasta saber qué vacunas faltan, con la opción de configurar el aviso, sobre hormigón gris',
+          en: 'User flow diagram in two rows, from opening the app to knowing which vaccines are missing, with an optional step to set the reminder, on gray concrete',
+        },
+        src: mimascotaDiagram,
+      },
+      {
+        type: 'screen-cluster',
+        slot: 'decisions',
+        alt: {
+          es: 'Diez bocetos a mano en papel, apoyados en dos filas sobre hormigón gris',
+          en: 'Ten pen-and-paper sketches laid out in two rows on gray concrete',
+        },
+        src: mimascotaClusterA,
+      },
+      {
+        type: 'screen-cluster',
+        slot: 'decisions',
+        alt: {
+          es: 'Cuatro pantallas: detalle de una vacuna con una dosis abierta, historia clínica, edición del recordatorio y la notificación en la pantalla de bloqueo, sobre hormigón gris',
+          en: 'Four screens: a vaccine detail with one dose expanded, medical history, reminder editing and the lock screen notification, on gray concrete',
+        },
+        src: mimascotaClusterB,
+      },
+      {
+        type: 'palette',
+        slot: 'delivered',
+        alt: {
+          es: 'Guía de estilos: tipografía Manrope, cinco colores, los tres botones de inicio, una card de dosis, íconos y la barra inferior, sobre hormigón gris',
+          en: 'Style guide: Manrope typeface, five colors, the three home buttons, a dose card, icons and the bottom bar, on gray concrete',
+        },
+        src: mimascotaPalette,
       },
     ],
   },
