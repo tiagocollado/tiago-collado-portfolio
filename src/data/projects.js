@@ -546,8 +546,8 @@ export const projects = [
       en: ['Mobile Apps'],
     },
     award: {
-      es: '2º puesto · UMAI UX Challenge',
-      en: '2nd place · UMAI UX Challenge',
+      es: 'Segundo puesto en el UMAI UX Challenge',
+      en: 'Second place at the UMAI UX Challenge',
     },
     links: {
       prototype: 'https://www.figma.com/proto/8W62iRAO9b6OTmP0spmgyE/-2022--MiMascota?node-id=59-871&starting-point-node-id=59%3A871&scaling=scale-down&content-scaling=fixed&show-proto-sidebar=1&page-id=5%3A2',

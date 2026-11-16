@@ -133,7 +133,7 @@ export default function ProjectCard({
             </h3>
 
             {awardLabel && (
-              <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.12em] opacity-80">
+              <p className="mt-2 text-sm leading-snug opacity-80">
                 {awardLabel}
               </p>
             )}
@@ -164,7 +164,7 @@ export default function ProjectCard({
             {servicesLabel}
           </p>
           {awardLabel && (
-            <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.12em] text-(--ink-secondary)">
+            <p className="mt-1 text-sm leading-snug text-(--ink-secondary)">
               {awardLabel}
             </p>
           )}
