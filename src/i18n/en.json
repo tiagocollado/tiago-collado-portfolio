@@ -167,6 +167,10 @@
     "new_tab": "(opens in a new tab)",
     "track_link": "on Last.fm (opens in a new tab)"
   },
+  "skills": {
+    "label": "Skills",
+    "seen_in": "See it in"
+  },
   "stack": {
     "title": "Technologies I use"
   },

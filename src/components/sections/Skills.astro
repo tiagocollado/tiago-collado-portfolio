@@ -1,0 +1,239 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { createTranslator } from '../../i18n/translate.js';
+import { skills } from '../../data/skills.js';
+import { publishedProjects } from '../../data/projects.js';
+
+const locale = Astro.currentLocale ?? 'en';
+const t = createTranslator(locale);
+
+const skillItems = skills.map((skill, index) => ({
+  name: skill.name,
+  activities: locale === 'es' ? skill.activities.es : skill.activities.en,
+  // Los títulos de los casos salen de projects.js. Si un slug no es de un
+  // proyecto publicado, el build se corta: un link roto no avisa de otra forma.
+  cases: skill.caseSlugs.map((slug) => {
+    const project = publishedProjects.find((published) => published.slug === slug);
+    if (!project) {
+      throw new Error(`skills.js nombra el caso "${slug}", que no existe o no está publicado.`);
+    }
+    return { title: project.title, href: getRelativeLocaleUrl(locale, `projects/${slug}`) };
+  }),
+  buttonId: `skill-button-${index}`,
+  panelId: `skill-panel-${index}`,
+  isActive: index === 0,
+}));
+---
+
+{/*
+  Índice de skills: los nombres en grande, separados por " / ", y debajo el
+  panel de la skill activa con sus actividades y los casos donde se ve.
+
+  - Una sola skill activa a la vez; la primera arranca abierta desde el HTML,
+    así no hay salto al cargar. El <script> de abajo solo cambia cuál.
+  - Cada nombre es un <button> con aria-expanded y aria-controls. Se activa
+    con click o tap, con Enter o Espacio y, con puntero fino, con hover.
+  - Los cuatro paneles ocupan la misma celda de una grilla: el contenedor
+    toma el alto del más largo y no salta al cambiar de skill. Los inactivos
+    quedan con visibility: hidden, que además los saca del orden de Tab y
+    de los lectores de pantalla.
+  - Sin JavaScript (el <noscript> del final): sin índice y con todos los
+    paneles abiertos, uno debajo del otro, cada uno con su nombre.
+*/}
+<section
+  aria-labelledby="skills-heading"
+  class="pt-16 md:pt-20 lg:pt-28 pb-8 md:pb-10 lg:pb-12 px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32"
+  data-skills
+>
+  <div
+    class="max-w-7xl mx-auto"
+    data-reveal-trigger
+    data-reveal-margin="-80px"
+  >
+    <h2
+      id="skills-heading"
+      class="text-xs font-mono tracking-[0.2em] uppercase"
+      style="color: var(--color-accent); --reveal-y: 12px; --reveal-duration: 0.6s;"
+      data-reveal
+    >
+      {t('skills.label')}
+    </h2>
+
+    <div
+      class="mt-8 md:mt-10 font-display text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight leading-tight"
+      style="--reveal-duration: 0.7s; --reveal-delay: 0.1s;"
+      data-reveal
+      data-skills-index
+    >
+      {skillItems.map((skill, index) => (
+        <>
+          {/* El nombre y su barra no se separan: el renglón corta entre
+              items, nunca adentro de uno.
+
+              La activa se marca con dos señales, no solo con el color de
+              la tinta: también lleva un subrayado terracota. El subrayado
+              está siempre, transparente, y solo cambia de color: así entra
+              con la misma transición que el texto. Grosor y offset en em,
+              para que escalen con la tipografía: los descendentes de Space
+              Grotesk bajan 0,2em, así que a 0,28em la línea no los toca.
+
+              El terracota cambia con el tema para llegar a 3:1 contra el
+              fondo: accent en oscuro (5,04:1) y accent-hover en claro
+              (3,76:1; accent ahí da 2,92:1). */}
+          <span class="whitespace-nowrap">
+            <button
+              type="button"
+              id={skill.buttonId}
+              aria-expanded={skill.isActive ? 'true' : 'false'}
+              aria-controls={skill.panelId}
+              data-skill-button
+              data-cursor="link"
+              class="cursor-pointer text-(--ink-secondary) hover:text-(--ink-primary) aria-expanded:text-(--ink-primary) underline decoration-transparent decoration-[length:0.06em] underline-offset-[0.28em] aria-expanded:decoration-accent-hover dark:aria-expanded:decoration-accent transition-colors duration-300 ease-expo-out motion-reduce:transition-none"
+            >
+              {skill.name}
+            </button>
+            {index < skillItems.length - 1 && (
+              <span aria-hidden="true" class="text-(--ink-muted)"> /</span>
+            )}
+          </span>{' '}
+        </>
+      ))}
+    </div>
+
+    <div
+      class="skills-panels mt-10 md:mt-12 max-w-2xl"
+      style="--reveal-duration: 0.7s; --reveal-delay: 0.15s;"
+      data-reveal
+      data-skills-panels
+    >
+      {skillItems.map((skill) => (
+        <div
+          id={skill.panelId}
+          class="skills-panel"
+          data-skill-panel
+          data-active={skill.isActive ? '' : undefined}
+        >
+          {/* Solo se ve sin JavaScript, cuando falta el índice. */}
+          <h3
+            class="skills-panel-title font-display text-2xl md:text-3xl font-semibold tracking-tight leading-tight mb-6"
+            style="color: var(--ink-primary);"
+            data-skill-panel-title
+          >
+            {skill.name}
+          </h3>
+
+          <ul class="space-y-3 text-lg md:text-xl leading-relaxed" style="color: var(--ink-secondary);">
+            {skill.activities.map((activity) => (
+              <li>
+                <span aria-hidden="true" style="color: var(--color-accent);">/ </span>{activity}
+              </li>
+            ))}
+          </ul>
+
+          <div class="mt-8 flex flex-wrap items-baseline gap-x-6 gap-y-3">
+            <p class="text-xs font-mono tracking-[0.2em] uppercase" style="color: var(--ink-muted);">
+              {t('skills.seen_in')} <span aria-hidden="true">→</span>
+            </p>
+            <ul class="flex flex-wrap gap-x-6 gap-y-2">
+              {skill.cases.map((caseItem) => (
+                <li>
+                  <a
+                    href={caseItem.href}
+                    data-cursor="link"
+                    class="text-base md:text-lg text-(--ink-primary) underline decoration-(--border-strong) underline-offset-4 transition-[color,text-decoration-color,text-underline-offset] duration-300 ease-expo-out motion-reduce:transition-none hover:text-accent hover:decoration-accent hover:underline-offset-8"
+                  >
+                    {caseItem.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<noscript>
+  <style is:inline>
+    [data-skills-index] { display: none !important; }
+    [data-skill-panel-title] { display: block !important; }
+    [data-skills-panels] { display: flex !important; flex-direction: column; row-gap: 3rem; }
+    [data-skill-panel] { visibility: visible !important; opacity: 1 !important; }
+  </style>
+</noscript>
+
+<script>
+  import '../../scripts/reveal.js';
+
+  // Con puntero fino el hover también activa, pero después de una pausa
+  // corta: los nombres ocupan más de un renglón, y sin la pausa, al bajar
+  // el mouse hacia el panel se activaría cualquier nombre que cruce.
+  const HOVER_DELAY_MS = 150;
+  const finePointer = window.matchMedia('(pointer: fine)');
+
+  for (const section of document.querySelectorAll('[data-skills]')) {
+    const buttons = [...section.querySelectorAll('[data-skill-button]')];
+    let hoverTimer = 0;
+
+    // Deja activa la skill que está en la posición `activeIndex` y cierra
+    // las demás.
+    const activate = (activeIndex = 0) => {
+      buttons.forEach((button, index) => {
+        const isActive = index === activeIndex;
+        button.setAttribute('aria-expanded', String(isActive));
+        const panel = document.getElementById(button.getAttribute('aria-controls') ?? '');
+        panel?.toggleAttribute('data-active', isActive);
+      });
+    };
+
+    buttons.forEach((button, index) => {
+      // click cubre también el tap y el Enter o Espacio del teclado.
+      button.addEventListener('click', () => activate(index));
+
+      button.addEventListener('mouseenter', () => {
+        if (!finePointer.matches) return;
+        clearTimeout(hoverTimer);
+        hoverTimer = window.setTimeout(() => activate(index), HOVER_DELAY_MS);
+      });
+      button.addEventListener('mouseleave', () => clearTimeout(hoverTimer));
+    });
+  }
+</script>
+
+<style>
+  .skills-panels {
+    display: grid;
+  }
+
+  /* Los cuatro paneles en la misma celda: la grilla mide lo que el más alto. */
+  .skills-panel {
+    grid-area: 1 / 1;
+  }
+
+  /* El nombre de cada panel solo hace falta sin JavaScript (ver <noscript>). */
+  .skills-panel-title {
+    display: none;
+  }
+
+  /*
+   * El panel que se abre entra con un fade; el que se cierra se va al
+   * instante, para que los dos textos no se pisen en la misma celda. Funciona
+   * porque una transición usa el valor de transition del estado de llegada:
+   * solo el estado activo lo tiene.
+   */
+  .skills-panel:not([data-active]) {
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  .skills-panel[data-active] {
+    transition: opacity 0.3s var(--ease-expo-out);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .skills-panel[data-active] {
+      transition: none;
+    }
+  }
+</style>
