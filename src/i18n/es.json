@@ -167,17 +167,6 @@
     "new_tab": "(abre en otra pestaña)",
     "track_link": "en Last.fm (abre en otra pestaña)"
   },
-  "services": {
-    "label": "Servicios que ofrezco",
-    "items": [
-      "UX Research",
-      "Prototipado",
-      "Diseñador UX/UI",
-      "Sistemas de diseño",
-      "Desarrollo Frontend",
-      "Accesibilidad"
-    ]
-  },
   "stack": {
     "title": "Tecnologías que Utilizo"
   },

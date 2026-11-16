@@ -167,17 +167,6 @@
     "new_tab": "(opens in a new tab)",
     "track_link": "on Last.fm (opens in a new tab)"
   },
-  "services": {
-    "label": "Services I offer",
-    "items": [
-      "UX Research",
-      "Prototyping",
-      "UX/UI Designer",
-      "Design Systems",
-      "Frontend Development",
-      "Accessibility"
-    ]
-  },
   "stack": {
     "title": "Technologies I use"
   },

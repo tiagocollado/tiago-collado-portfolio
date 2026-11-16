@@ -15,7 +15,7 @@ const dictionaries = { en, es };
  * propósito: un texto que falta y no avisa se publica como un hueco.
  *
  * Dos variantes para los casos que no son un texto suelto:
- * - t.list('services.items') devuelve una lista de textos.
+ * - t.list('seccion.items') devuelve una lista de textos.
  * - t.has('case_study_x.process') dice si existe una key opcional, sin cortar
  *   el build si falta.
  */
