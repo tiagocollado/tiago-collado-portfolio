@@ -4,7 +4,7 @@ import HeroContent from './HeroContent.jsx';
 import InteractiveDotGrid from '../ui/InteractiveDotGrid.jsx';
 import { createTranslator } from '../../i18n/translate.js';
 
-const locale = Astro.currentLocale;
+const locale = Astro.currentLocale ?? 'en';
 const t = createTranslator(locale);
 
 const heroTexts = {

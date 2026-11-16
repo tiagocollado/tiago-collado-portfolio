@@ -7,7 +7,7 @@ import { publishedProjects } from '../../data/projects.js';
 import { SIZES_COVER, SIZES_COVER_PORTRAIT } from '../case-study/imageSpec.js';
 import { getResponsiveImageProps } from '../../utils/responsiveImage.js';
 
-const locale = Astro.currentLocale;
+const locale = Astro.currentLocale ?? 'en';
 const t = createTranslator(locale);
 
 const homeProjects = publishedProjects.filter((project) => project.showOnHome);

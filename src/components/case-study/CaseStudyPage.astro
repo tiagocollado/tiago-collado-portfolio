@@ -10,7 +10,7 @@ import { createTranslator } from '../../i18n/translate.js';
 import { publishedProjects } from '../../data/projects.js';
 
 const { project } = Astro.props;
-const locale = Astro.currentLocale;
+const locale = Astro.currentLocale ?? 'en';
 const t = createTranslator(locale);
 
 const textKey = (key) => `case_study_${project.slug}.${key}`;

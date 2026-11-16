@@ -21,6 +21,25 @@ import { motion, useReducedMotion } from 'framer-motion';
  *  - `whileInView`: anima al entrar en pantalla, con UN IntersectionObserver
  *    para todo el texto (no uno por letra).
  */
+
+/**
+ * Tipos de las props, para el editor. Las que van entre corchetes son
+ * opcionales: sin esto, el editor toma como obligatoria cualquier prop sin
+ * valor por defecto (className, charClassName, id).
+ *
+ * @param {object} props
+ * @param {string} props.text
+ * @param {string} [props.as]
+ * @param {number} [props.stagger]
+ * @param {number} [props.delay]
+ * @param {number} [props.yFrom]
+ * @param {number} [props.blurFrom]
+ * @param {number} [props.duration]
+ * @param {string} [props.className]
+ * @param {string} [props.charClassName]
+ * @param {string} [props.id]
+ * @param {boolean} [props.whileInView]
+ */
 export default function SplitText({
   text,
   as = 'span',

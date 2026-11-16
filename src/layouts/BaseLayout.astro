@@ -7,7 +7,7 @@ import Navbar from '../components/ui/Navbar.jsx';
 import { createTranslator } from '../i18n/translate.js';
 import '../styles/global.css';
 
-const locale = Astro.currentLocale;
+const locale = Astro.currentLocale ?? 'en';
 if (!locale) {
   throw new Error(`La página ${Astro.url.pathname} usa BaseLayout pero no está adentro de /en ni de /es.`);
 }
