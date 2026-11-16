@@ -186,6 +186,7 @@ proyecto no usa es tan deliberado como lo que usa.
 | **El Ritual del Tono** | hero | intro | decisions | delivered | decisions | — | **5** |
 | **Cabify · Playlist del viaje** | hero | intro | challenge + decisions | delivered | decisions | — | **6** |
 | **Recuérdalo** | hero | intro | challenge + decisions | delivered | decisions | — | **6** |
+| **miMascota** | hero | intro | decisions ×2 | delivered | challenge | — | **6** |
 
 - **Cabify no tiene un sitio publicado que capturar**, así que dos tipos cambian
   de contenido sin cambiar de comportamiento: la **tira** muestra el proceso
@@ -197,6 +198,11 @@ proyecto no usa es tan deliberado como lo que usa.
 - **Recuérdalo sigue el mismo esquema que Cabify**, por la misma razón: no hay
   sitio publicado. La tira junta el card sorting y las pantallas en media
   fidelidad, y la paleta es el UI Kit.
+- **miMascota tampoco tiene sitio publicado.** La tira muestra la Home en tres
+  etapas (boceto, media y alta fidelidad), el diagrama es el flujo de usuario y
+  va en "El desafío", los dos `screen-cluster` son los bocetos en papel
+  (`02-cluster-a`) y cuatro pantallas (`04-cluster-b`), y la paleta es la guía
+  de estilos (`05-paleta`).
 - **Pulso va sin imagen en "El desafío"**: era texto denso del cliente y
   conflictos de plantillas de WordPress, y no hay nada visual honesto que
   mostrar. El slot vacío no es un hueco por completar.
@@ -398,6 +404,11 @@ el copy del caso, que sí está en los dos idiomas.
 > color y *"Paleta extraída del logo"*) y `03-diagrama` de Ritual (título y
 > *"1 documento · 11 canciones"*). No bloquean nada; se rehacen sin rótulos
 > cuando haya tiempo.
+>
+> **`03-diagrama` de miMascota, excepción aprobada** (Tiago, 2026-11-16): el
+> flujo de usuario redibujado lleva sus rótulos en castellano (*"Abre miMascota
+> y llega a la Home"*, *"¿Quiere personalizar los avisos?"*), igual que el
+> diagrama de Ritual.
 
 > ✅ **Cabify cumple la regla completa.** El único texto de sus imágenes está en
 > las pantallas del diseño y en los artefactos de proceso de la tira (los
@@ -487,6 +498,11 @@ como un sistema y no como un collage. Los de V2 siguen la misma receta:
 > acromáticos. Si otro proyecto pide un objeto con color propio, se decide caso
 > por caso y se anota acá.
 
+> ⚠️ **Excepción a la regla 1 — miMascota.** Cover y hero llevan, al lado del
+> celular, una **medalla de plata con cinta verde y azul**: la cinta es color
+> fuera de la pantalla. **Aprobada por Tiago (2026-11-16)**, con el mismo
+> criterio que el Fender de Ritual.
+
 ### El cover y el hero son el mismo mockup, a propósito
 
 Una sola escena en dos encuadres: el de la card del home (4:3 o 1:1, según
@@ -500,7 +516,7 @@ grande y completa.
 > abajo del export de 2400 (150 en el frame de 1200). Además, en reposo la
 > imagen lleva `scale-105`, que come ~2,4% más por lado; en hover vuelve a
 > 100%. **Recuérdalo, el protagonista, es `square`; Pulso es `portrait`;
-> Cabify, Paseo y Ritual son `wide`.**
+> Cabify, Paseo, Ritual y miMascota son `wide`.**
 >
 > **Cómo se compone un cover para que aguante el recorte a 3:4.** Un cover 1:1
 > en una card `portrait` pierde los costados: queda el 75% central del ancho
