@@ -3,6 +3,7 @@ import { defineConfig, envField, fontProviders } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 
 import react from '@astrojs/react';
+import sitemap from '@astrojs/sitemap';
 import vercel from '@astrojs/vercel';
 
 // https://astro.build/config
@@ -98,5 +99,18 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
 
-  integrations: [react()],
+  integrations: [
+    react(),
+    sitemap({
+      // Cada URL lleva sus alternativas hreflang: /en/x/ apunta a /es/x/ y al revés.
+      i18n: {
+        defaultLocale: 'en',
+        locales: { en: 'en', es: 'es' },
+      },
+      // Solo entran las páginas de /en/ y /es/. Así quedan afuera "/" (que
+      // redirige a /en/), el endpoint de /api/ y la redirección del CV. Los
+      // proyectos con published: false no llegan acá: no generan página.
+      filter: (page) => /^\/(en|es)\//.test(new URL(page).pathname),
+    }),
+  ],
 });
