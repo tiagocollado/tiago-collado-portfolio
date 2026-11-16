@@ -236,8 +236,6 @@ por el CTA principal.
   hardcodeado.
 - **Texto chico sobre imagen**: nunca confiar solo en el color. Pills bordeadas
   con bg semi-translúcido + `backdrop-filter: blur(4px)`.
-- **Adobe no está en simple-icons** (licencia). Para Ps/Ai/Pr, cuadrados
-  bordeados con iniciales.
 
 ---
 
