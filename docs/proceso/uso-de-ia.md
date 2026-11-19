@@ -8,6 +8,8 @@ repositorio. Las instrucciones que sigue están en [CLAUDE.md](../../CLAUDE.md)
 y en [.claude/rules/](../../.claude/rules/): reglas de diseño, de imágenes y
 una lista de errores conocidos del stack.
 
+**Imágenes.** Algunos fondos y marcos de los mockups y el logo de El Ritual del Tono se generaron con herramientas de IA de imagen.
+
 **Cómo trabajo con ella.** Cada tarea empieza con un alcance acotado. Antes de
 escribir código, la IA lee el sitio anterior y propone un enfoque; lo apruebo
 o lo cambio. Después ejecuta, verifica y frena para que revise. Los commits los
@@ -23,22 +25,21 @@ tema, táctil) y el juicio visual final los pongo yo, en el navegador.
 
 ## Migración de componentes y componentes nuevos
 
-**Qué hizo la IA.** Portó a Astro los datos, las imágenes, las secciones y los
-componentes interactivos del sitio en Next. Antes de cada tanda leyó cómo se
-coordinaban las piezas en el sitio anterior y propuso cómo resolver cada una
-sin el contexto de React, que no cruza entre islas. Para el widget de música,
-que no existía, propuso primero dónde va, cómo se ve y cada uno de sus
-estados, y lo construyó después de mi aprobación. Para su interacción hizo lo
-mismo: el patrón de accesibilidad del selector, cómo se ve cada estado nuevo,
-cómo crece sin saltos y si convenía sumar un detalle por tema. Cuando
-reemplacé las pestañas por el concepto del tocadiscos, bajó ese concepto a
-un diseño: cada estado en los dos temas y en celular, el patrón de la
-selección verificado en la guía de WAI-ARIA, qué incluye la lista y qué se
-reutilizaba del código. Para la parte del home entre el hero y el cierre,
-primero relevó lo que había y armó una tabla de evidencia solo con el
-contenido de los casos (qué skill aparece en qué caso, con qué métodos y con
-qué cita); después implementó Skills, la fila de puntos del hero, el Stack y
-el componente de íconos, y midió cada uno en Chrome headless.
+**Qué hizo la IA.**
+
+- **Migración.** Portó a Astro los datos, las imágenes, las secciones y los
+  componentes interactivos del sitio en Next. Antes de cada tanda leyó cómo
+  se coordinaban las piezas y propuso cómo resolver cada una sin el contexto
+  de React, que no cruza entre islas.
+- **Widget de música.** Propuso dónde va, cómo se ve y cada estado, y lo
+  construyó después de mi aprobación. Hizo lo mismo con cada versión de su
+  interacción: el patrón de accesibilidad, los estados nuevos y cómo crece
+  sin saltos. Cuando cambié las pestañas por el tocadiscos, bajó el concepto
+  a un diseño en los dos temas y en celular.
+- **Home entre el hero y el cierre.** Armó una tabla de evidencia solo con el
+  contenido de los casos (qué skill aparece en qué caso, con qué métodos y
+  con qué cita). Después implementó Skills, la fila de puntos del hero, el
+  Stack y el componente de íconos, y midió cada uno en Chrome headless.
 
 **Qué revisé, adapté o descarté.** Aprobé la estrategia de cada isla antes de
 que escribiera, y cambié dos cosas de lo que se había previsto: el selector de
@@ -94,41 +95,32 @@ y que el cartel "En vivo" se prenda cuando estoy escuchando.
 - Al rehacer el Stack como carrusel, dejó la pista sin recorte. Sus pruebas
   en celular sacaron capturas que se veían bien, pero no midieron el ancho
   del documento, y la verificación de producción la hizo solo en escritorio.
-  Así se publicó: en celular, el menú quedaba fuera de la pantalla. Lo encontró en un diagnóstico de mobile, midiendo con emulación
-  de celular, y lo sumó a las trampas del stack.
+  Así se publicó: en celular, el menú quedaba fuera de la pantalla. Lo
+  encontró en un diagnóstico de mobile, midiendo con emulación de celular, y
+  lo sumó a las trampas del stack.
 - En ese carrusel, en lugar de la pausa por foco en toda la sección que yo
   había pedido, puso una pausa por foco sobre la tira, que nunca se
   disparaba porque sus ítems no recibían foco. Lo marcó después de
   implementarlo, y la saqué.
 
-**Qué decidí yo.** La directiva de hidratación de cada isla; que ningún texto
-accesible quede fijo en un idioma; las animaciones de entrada en CSS y el
-título letra por letra como isla chica, en vez de convertir componentes
-enteros en islas. Del widget: su lugar en el About y que no muestre portadas.
-De su interacción: dejar afuera el detalle por tema, los títulos de la lista
-en una sola línea y el tiempo relativo con más contraste también en la vista
-Ahora. Después, reemplazar las pestañas por el tocadiscos y su concepto
-entero: sin tiempo relativo, sin flechas, la lista siempre visible en
-celular y la velocidad del giro. Primero, que el disco girara solo si el tema
-sonaba, con media vuelta al poner un tema; después cambié de criterio: el
-disco gira siempre, como ambiente, y el estado real lo dice un cartel "En
-vivo" prendido o apagado. La IA recomendó reemplazar la media vuelta por una
-escala corta, y qué anunciar con el cartel apagado (nada). Revisando en
-staging decidí la jerarquía del About: el widget es secundario, va después
-de la firma y alineado abajo con ella, más compacto y con el label en tinta
-neutra. También el cartel como un rectángulo sin efectos, y sacar la escala.
-Al final, sacar la selección: elegir un tema no aportaba nada que la lista no
-mostrara, así que el widget quedó pasivo (cada fila es un link a Last.fm), y
-la interacción significativa del sitio pasa al cambio de tema, que se
-rediseña con la identidad visual. Y dos detalles: el título balanceado en dos
-líneas y el giro a 4 s por vuelta. En el home: sacar el marquee y reemplazarlo
-por la fila de puntos; el contenido exacto de Skills y del Stack; que Skills
-sea la interacción principal; activar con Enter o Espacio; el subrayado de la
-skill activa, con un token distinto en cada tema para llegar a 3:1; dejar
-afuera del Stack lo que no puedo defender (TypeScript, Node.js, MongoDB);
-pasar el Stack de carrusel a grilla, con íconos; la card cuadrada en 4:3 en
-celular; y que el texto en `--ink-muted` llegue a 4,5:1 sin cambiar cómo se
-ve lo decorativo.
+**Qué decidí yo.**
+
+- **Arquitectura.** La directiva de hidratación de cada isla; que ningún texto
+  accesible quede fijo en un idioma; las animaciones de entrada en CSS y el
+  título letra por letra como isla chica.
+- **Widget.** Su lugar en el About, sin portadas y sin detalle por tema. El
+  cambio de las pestañas al tocadiscos, sin tiempo relativo ni flechas. El
+  disco que gira siempre, como ambiente, con un cartel "En vivo" para el
+  estado real (la IA recomendó qué anunciar con el cartel apagado: nada). La
+  jerarquía del About: el widget después de la firma, más compacto. Y al
+  final, sacar la selección: el widget quedó pasivo y cada fila es un link a
+  Last.fm.
+- **Home.** La fila de puntos en lugar del marquee; el contenido de Skills y
+  del Stack; Skills como interacción principal, activada con Enter o Espacio;
+  el subrayado de la skill activa con un token por tema; dejar afuera del
+  Stack lo que no puedo defender (TypeScript, Node.js, MongoDB); el Stack en
+  grilla con íconos; la card cuadrada en 4:3 en celular; y `--ink-muted` a
+  4,5:1 sin cambiar lo decorativo.
 
 ---
 
@@ -274,11 +266,11 @@ fechas, por etapa o por tipo de tarea, sin paso a paso.
   palabras del repositorio no admite. El control la detectó las dos veces; la
   primera, después de un push.
 
-**Qué decidí yo.** Las skills de Anthropic se usan en local y no se versionan
-(se citan en Créditos y licencias); la skill propia de auditoría de copy sí se
-versiona. El título del widget ("Lo que suena cuando diseño" / "Music I
-design to") y la aprobación de cada texto de sus estados. En el copy, que El Ritual del Tono siga rotulado como proyecto
-universitario y que su intro no nombre el curso. En Recuérdalo contesté la
+**Qué decidí yo.** Las skills de Anthropic se usan en local y no se
+versionan; la skill propia de auditoría de copy sí se versiona. El título del
+widget ("Lo que suena cuando diseño" / "Music I design to") y la aprobación
+de cada texto de sus estados. En el copy, que El Ritual del Tono siga
+rotulado como proyecto universitario y que su intro no nombre el curso. En Recuérdalo contesté la
 pasada de hechos punto por punto: confirmé lo que solo sabía yo (la duración,
 que el trabajo fue individual), saqué lo que no tenía respaldo y escribí los
 textos de reemplazo del desafío, de los entregables y del cierre.

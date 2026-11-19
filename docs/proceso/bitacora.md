@@ -4,6 +4,12 @@ Cómo se construyó el portfolio, por etapas: qué se hizo en cada una y qué
 costó. Las decisiones con su porqué están en [decisiones.md](decisiones.md); las
 fechas, en el historial de git.
 
+**Qué tiene que comunicar el sitio.** Quién soy: diseñador UX/UI y
+desarrollador frontend, con Gotya como marca, que trabaja con empresas y
+clientes directos. Cómo pienso: cada caso de estudio cuenta el problema, las
+decisiones y el resultado. Qué hago y dónde se ve: la home separa las skills,
+cada una con los casos que la respaldan, de las herramientas.
+
 **Punto de partida.** El portfolio ya existía, publicado en
 [tiagocollado.vercel.app](https://tiagocollado.vercel.app), hecho con Next.js y
 TypeScript. Este repositorio lo reconstruye en Astro y JavaScript. La primera
@@ -71,7 +77,13 @@ diccionarios.
   warning de rutas en conflicto con `src/pages/index.astro`, que es
   obligatorio. La guía de i18n no dice qué genera `/`: lo averigüé buildeando y
   leyendo el código de Astro. Quedó una redirección hecha a mano en
-  `index.astro`, sin warning y con refresh de 0 segundos.
+  `index.astro`, sin warning y con refresh de 0 segundos. Más tarde pasó a la
+  configuración (ver "Datos en vivo") y al final a detectar el idioma.
+- **Detectar el idioma en `/`.** `Astro.preferredLocale` compara el código
+  entero: con `Accept-Language: en-US` no coincide con el locale `en` y
+  devuelve `undefined`. Una función propia compara solo el idioma, y `/` pasó
+  a renderizarse a pedido para responder un 307 con
+  `Vary: Accept-Language`.
 - **El tema sin parpadeo.** Para que quien ya visitó el sitio conserve su
   elección, el script replica lo que hacía `next-themes` (leído en su código):
   misma clave en `localStorage`, la clase en `<html>` y `color-scheme`. Va
@@ -91,14 +103,15 @@ md5); las secciones de la home y del caso de estudio como componentes `.astro`;
 las páginas de los tres casos en los dos idiomas, generadas solo para los
 proyectos publicados; la redirección 307 del CV.
 
-Después de la migración se sumaron dos casos, armados desde sus archivos de
-Figma porque ninguno tiene un sitio publicado que capturar: Cabify · Playlist
-del viaje, una propuesta de rediseño, y Recuérdalo, un caso de accesibilidad
-para personas mayores. En los dos, la tira muestra el proceso (bocetos, user
-flow, card sorting, pantallas en media fidelidad) y la paleta es el UI Kit. La
-barra de metadata suma un link al prototipo navegable, que usan los dos. El
-home pasó a mostrar las cinco cards publicadas, con Recuérdalo primero y en la
-única card cuadrada, y la card de Pulso Creativo pasó a ser vertical.
+Después de la migración se sumaron tres casos sin un sitio publicado que
+capturar: Cabify · Playlist del viaje, una propuesta de rediseño; Recuérdalo,
+un caso de accesibilidad para personas mayores; y miMascota, una app de salud
+de mascotas hecha en equipo en una hackatón. En los tres, la tira muestra el
+proceso (bocetos, user flow, card sorting, pantallas en media fidelidad) y la
+paleta es el UI Kit o la guía de estilos. La barra de metadata suma un link al
+prototipo navegable, y las cards y el encabezado del caso, un premio opcional.
+El home pasó a mostrar las seis cards publicadas, con Recuérdalo primero y en
+la única card cuadrada, y la card de Pulso Creativo pasó a ser vertical.
 
 **Qué costó.**
 
@@ -200,21 +213,14 @@ devuelve normalizado, con un estado para cada error y caché en la CDN; y el
 widget en el About, con sus seis estados. Las dos redirecciones del sitio (`/`
 y el CV) pasaron a ser HTTP reales desde la configuración de Astro.
 
-Después, la interacción del widget, que terminó en ninguna. Primero fueron
-pestañas "Ahora / Últimos 5" con el patrón Tabs de WAI-ARIA y un alto que se
-anima al cambiar de vista o de estado: funcionaban, pero no transmitían
-música y estaban pensadas alrededor del tema que suena, que es la excepción.
-Después, un tocadiscos con selección: un vinilo dibujado en SVG con la G
-como etiqueta y, abajo, los últimos cinco temas como un listbox, donde
-elegir uno lo ponía en el plato. Transmitía música, pero elegir un tema no
-aportaba nada que la lista no mostrara. El widget quedó pasivo: arriba el
-tema que suena o el último, abajo la lista, y el título y cada fila como
-links a Last.fm. El disco gira siempre, como ambiente, y si estoy escuchando
-lo dice un cartel "En vivo", prendido o apagado. La interacción significativa
-del sitio pasa al cambio de tema claro / oscuro, que se rediseña junto con
-la revisión de la identidad visual. El detalle por tema quedó afuera en todas las versiones (ver
-[decisiones.md](decisiones.md): "Sin detalle por tema", "De pestañas a
-tocadiscos", "El widget queda pasivo" y "El disco gira siempre").
+El widget pasó por pestañas y por un tocadiscos con selección, y quedó
+pasivo: un vinilo dibujado en SVG, arriba el tema que suena o el último,
+abajo la lista, y cada tema como link a Last.fm. El disco gira siempre, como
+ambiente, y un cartel "En vivo" dice si estoy escuchando. La interacción
+principal del sitio pasó a Skills (ver "Home: Skills, Stack e indexación").
+El porqué de cada paso está en [decisiones.md](decisiones.md): "De pestañas a
+tocadiscos", "El widget queda pasivo", "El disco gira siempre" y "Sin detalle
+por tema".
 
 **Qué costó.**
 
@@ -255,64 +261,23 @@ tocadiscos", "El widget queda pasivo" y "El disco gira siempre").
   *"powered by AudioScrobbler"* que Last.fm ya no publica: el crédito es un
   link de texto, "vía Last.fm". El título del tema destacado enlaza a su
   página en Last.fm.
-- **Un widget que cambia de alto.** En la versión con pestañas, la lista era
-  bastante más alta que la vista Ahora. En escritorio el widget iba alineado
-  arriba con el texto del About, así solo se estiraba hacia abajo y el texto
-  de al lado no se movía. Para que tampoco saltara lo que viene después, la
-  tarjeta anima su alto. CSS no anima desde ni hacia `auto`, así que un
-  `ResizeObserver` mide el contenido y el alto se pasa en píxeles; la tarjeta
-  usa `box-content` para que el borde quede fuera de esa medida. La primera
-  medida se aplica sin animar, porque parte de `auto`. En el tocadiscos, el
-  tema de arriba mide siempre lo que el disco: el título se corta en dos
-  líneas, con `text-wrap: balance` para que no quede una palabra sola en la
-  segunda.
-- **Estados sin datos demasiado grandes.** La altura mínima pensada para un
-  tema dejaba los mensajes de vacío y de error en una tarjeta grande y casi
-  vacía. Con el alto animado ya no hace falta: el esqueleto de carga tiene
-  las medidas del contenido más común, y en el tocadiscos los mensajes van al
-  lado del disco.
-- **Un widget pensado para la excepción.** Las pestañas giraban alrededor de
-  "sonando ahora", y la mayoría de las visitas caen cuando no estoy
-  escuchando: la pestaña "Ahora" terminaba mostrando un tema del pasado con
-  "hace X". Se vio recién con el widget construido. El tocadiscos parte del
-  caso común: siempre hay un tema en el plato.
-- **Una interacción que no aportaba.** En el tocadiscos con selección, elegir
-  un tema de la lista lo ponía arriba, más grande, con los mismos título y
-  artista que ya se veían en la fila. Era un listbox entero (teclado, estado,
-  anuncio de control para el lector de pantalla) para no cambiar nada que
-  importara. Se sacó: las filas pasaron a ser links a Last.fm, como el
-  título de arriba, y la interacción significativa del sitio pasa al cambio
-  de tema.
-- **Un disco que nunca se pausó.** En la primera versión del tocadiscos el
-  disco tenía que girar solo si el tema sonaba. Tenía
-  `motion-safe:animate-spin-record` (el shorthand `animation`) y, para
-  pausarlo, `[animation-play-state:paused]`. Tailwind v4 escribe la regla de
-  la variante dentro de un `@media`, en la misma capa, con la misma
-  especificidad y **después** de la otra: su `animation` resetea
-  `animation-play-state` y el disco giraba siempre. El build pasó, la clase
-  estaba en el HTML, y las pruebas con jsdom miraban las clases, no el efecto:
-  se vio en el navegador. Quedó anotado en las trampas del stack.
-- **Del giro como señal al giro como ambiente.** Con el disco quieto casi
-  todo el tiempo (casi nunca suena nada cuando alguien entra), el widget no
-  decía "música". El giro pasó a ser permanente y el estado real a un cartel
-  "En vivo", como el "On Air" de un estudio. La media vuelta de feedback al
-  poner un tema, que tenía sentido sobre un disco quieto, sobre uno que gira
-  se leía como una aceleración: primero la reemplazó una escala corta (el
-  disco se asentaba en el plato), y después se sacó también.
-- **Un widget que le ganaba al texto.** Visto en staging, el widget empujaba
-  el texto del About, estiraba la sección y competía con su eyebrow, y el
-  cartel tenía un punto que pulsaba con brillo. Se reordenó la jerarquía: el
-  texto vuelve a su posición original, el widget va después de la firma y,
-  en escritorio, en posición absoluta, alineado abajo con ella. El cartel
-  pasó a un rectángulo que se prende sin efectos, y se sacó la escala al
-  elegir un tema. Lo que costó fue el alto: en posición absoluta, el
-  widget tenía que entrar en el alto del copy sin pegarse al claim. Medido
-  en Chrome headless (por el protocolo de DevTools, sin dependencias en el
-  repositorio), la primera versión compacta medía 381 px contra 292 del copy
-  y quedaba a 7 px del claim. Con el crédito en la fila del cartel y las filas
-  a 28 px con puntero fino (44 px con el dedo) bajó a 328 px y quedó a 60 px.
-  Después el crédito pasó al pie, chico y tenue (tiene que estar, pero apenas
-  verse): 347 px, a 41 px del claim.
+- **Un alto que cambia sin saltos.** El widget cambia de alto entre estados.
+  CSS no anima desde ni hacia `auto`: un `ResizeObserver` mide el contenido,
+  el alto se pasa en píxeles y la primera medida se aplica sin animar. El
+  esqueleto de carga tiene las medidas del caso común.
+- **Diseñar para el caso común.** Las pestañas giraban alrededor de "sonando
+  ahora", que casi nunca pasa cuando alguien entra, y la selección del
+  tocadiscos no mostraba nada que la lista no tuviera. Las dos cosas se
+  vieron recién con el widget construido, y salieron.
+- **Un disco que nunca se pausó.** `motion-safe:animate-spin-record` es el
+  shorthand `animation` dentro de un `@media`: sale después en el CSS y
+  resetea el `animation-play-state` que tenía que pausarlo. El build pasó y
+  las pruebas en jsdom miraban las clases, no el efecto: se vio en el
+  navegador. Quedó en las trampas del stack.
+- **Un widget que le ganaba al texto.** Empujaba el texto del About y
+  competía con su eyebrow. Pasó a ir después de la firma y, en escritorio, en
+  posición absoluta, alineado abajo con ella. Se midió en Chrome headless que
+  entrara en el alto del copy sin pegarse al claim.
 - **El "·" suelto.** En la lista, cuando el título se cortaba, el separador
   entre título y artista quedaba solo al final. Ahora el separador va adentro
   del bloque del artista, y la línea usa `flex-wrap` con el alto de una sola
@@ -336,8 +301,8 @@ tocadiscos", "El widget queda pasivo" y "El disco gira siempre").
 **Qué se hizo.** El proyecto de Vercel que sirve
 [tiagocollado.vercel.app](https://tiagocollado.vercel.app) dejó de construir el
 repositorio de la versión en Next y pasó a construir este. La URL, las rutas y
-la redirección del CV quedaron iguales. Con `curl -I` sobre producción: `/` da
-307 a `/en/`; `/en`, `/es` y los tres casos en los dos idiomas, sin barra, dan
+la redirección del CV quedaron iguales. Con `curl -I` sobre producción: `/`
+daba 307 a `/en/` (hoy elige el idioma, ver "Base"); `/en`, `/es` y los tres casos en los dos idiomas, sin barra, dan
 308 a su versión con barra, que da 200; el CV da 307 a Drive; el proyecto que
 salió del portfolio y una URL inexistente dan 404; y el endpoint de música
 responde `X-Vercel-Cache: HIT` en el segundo pedido.
@@ -385,8 +350,9 @@ caché funciona es el `HIT` del segundo pedido, no el header que llega.
   qué casos aparece, con qué métodos y con qué cita. Con esa tabla, Branding
   salió y Strategy se reformuló como Product Thinking. Skills quedó entre
   About y Stack: un índice de cuatro skills y un panel con las actividades de
-  la activa y links a los casos donde se ve. Stack quedó solo con
-  herramientas, en cuatro grupos; los conceptos que tenía pasaron a Skills.
+  la activa y links a los casos donde se ve. Es la interacción principal del
+  sitio. Stack quedó solo con herramientas, en cuatro grupos; los conceptos
+  que tenía pasaron a Skills.
 - **Stack, de carrusel a grilla.** Primero se rehízo como carrusel, con un
   botón de pausa. Después pasó a una grilla quieta por grupo, con el ícono de
   cada herramienta.
@@ -400,6 +366,9 @@ caché funciona es el `HIT` del segundo pedido, no el header que llega.
 - **El logo del navbar, fuera del foco mientras no se ve.** En la home
   arranca invisible y recibía el foco de teclado; ahora lleva `inert` hasta
   que aparece.
+- **Links que abren en pestaña nueva.** Los de la barra de metadata, los de
+  Contact y los del widget lo anuncian a los lectores de pantalla, todos con
+  el mismo texto.
 
 **Qué costó.**
 
@@ -445,13 +414,13 @@ En cada etapa, antes de commitear:
   Last.fm no aparezca en ningún archivo de la salida del build
   (`.vercel/output/`, incluida la función del servidor) ni del repositorio.
   El script que lo busca imprime solo nombres de archivo, nunca el valor.
-- En producción, con `curl -I`: `/` da 307 a `/es/`, `/en` y las páginas de
-  caso sin barra dan 308 a su versión con barra, `/tiago-collado-cv.pdf` da
-  307 al CV, una URL inexistente da 404 y el endpoint responde con
-  `X-Vercel-Cache: HIT` en el segundo pedido.
-- Después de actualizar Astro o el adapter de Vercel: que
-  `.vercel/output/config.json` siga teniendo la regla de `/` con 307 y que no
-  exista `.vercel/output/static/index.html`.
+- En producción, con `curl -I`: `/` da 307 a `/en/` con
+  `Accept-Language: en-US` y a `/es/` con `es-AR`, con `fr` o sin header,
+  siempre con `Vary: Accept-Language`; `/en` y las páginas de caso sin barra
+  dan 308 a su versión con barra, `/tiago-collado-cv.pdf` da 307 al CV, una
+  URL inexistente da 404 y el endpoint responde con `X-Vercel-Cache: HIT` en
+  el segundo pedido. Las pruebas de `/` se repiten después de actualizar
+  Astro o el adapter de Vercel.
 - Los estados del widget de música, con la isla montada en jsdom (fuera del
   repositorio) y respuestas falsas del endpoint: cada estado, los links de la
   lista, sus atributos ARIA y el cartel "En vivo". Como jsdom no aplica CSS,
@@ -481,9 +450,6 @@ En cada etapa, antes de commitear:
 - **El crédito del widget sobre la card en tema oscuro.** "vía Last.fm" va
   en `--ink-muted` sobre la superficie de la card, y ahí da 4,10:1; contra el
   fondo de la página sí llega a 4,5:1.
-- **Links que abren en otra pestaña sin avisarlo.** Los links externos de la
-  barra de metadata de los casos abren en una pestaña nueva y no lo anuncian a
-  los lectores de pantalla; los del widget de música sí. Hay que igualarlos.
 - **Títulos sin JavaScript.** Los títulos que entran letra por letra salen del
   servidor con cada letra en opacidad 0, así que sin JavaScript no se ven
   (los lectores de pantalla sí los leen). Pasaba igual en el sitio anterior.

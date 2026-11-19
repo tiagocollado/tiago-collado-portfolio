@@ -47,14 +47,15 @@ build; el `tsconfig` queda para que el editor entienda los imports y el JSX.
 
 ### i18n nativo de Astro con prefijo en todos los idiomas
 
-**Contexto.** El sitio publicado sirve `/en` y `/es`, y `/` lleva siempre a
-`/en`. Esas URLs ya circulan.
+**Contexto.** El sitio publicado sirve `/en` y `/es`, y esas URLs ya
+circulan.
 
 **Decisión.** i18n nativo de Astro con `defaultLocale: "en"` y
 `prefixDefaultLocale: true`: hasta el inglés lleva `/en` en la URL.
 
-**Por qué.** Mantiene las mismas URLs. Detectar el idioma del navegador
-exigiría renderizar a pedido, y el sitio es estático.
+**Por qué.** Mantiene las mismas URLs. Con los dos idiomas prefijados,
+`defaultLocale` no decide ninguna URL; a dónde va `/` lo decide la página
+(ver "`/` redirige según el idioma del navegador").
 
 ### Redirección de `/` hecha a mano
 
@@ -75,6 +76,9 @@ adapter de Vercel, que se suma con el endpoint de la API.
 
 *Reemplaza a "Redirección de `/` hecha a mano".*
 
+> **Reemplazada** por "`/` redirige según el idioma del navegador". La regla
+> llevó primero a `/en/` y después a `/es/`, siempre al mismo idioma.
+
 **Contexto.** Con el adapter de Vercel, `index.astro` sigue siendo una página
 prerenderizada: `/` responde 200 con un meta refresh, no una redirección HTTP.
 Es la URL que más circula del sitio.
@@ -91,6 +95,26 @@ misma ruta, y en el build pasa al revés (el adapter escribe la regla y Astro
 deja de generar `index.html`). Como es un comportamiento observado y no
 documentado, se revisa la configuración generada después de cada
 actualización de Astro o del adapter.
+
+### `/` redirige según el idioma del navegador
+
+*Reemplaza a "Redirección de `/` en la configuración de Astro", que mandaba
+siempre al mismo idioma.*
+
+**Contexto.** `/` es la URL que más circula del sitio, y una regla fija la
+mandaba a un solo idioma para todas las visitas.
+
+**Decisión.** `src/pages/index.astro` se renderiza a pedido y redirige con 307:
+a `/en/` si el primer idioma del header `Accept-Language` es inglés, a `/es/`
+en cualquier otro caso o sin header. La respuesta lleva
+`Vary: Accept-Language`. No usa `Astro.preferredLocale`, que compara el código
+entero (`en-US` no coincide con `en`): una función propia
+(`src/i18n/homeLocale.js`) compara solo el idioma.
+
+**Por qué.** Cada visita llega a su idioma sin elegirlo. El 307 no queda
+guardado en el navegador, y `Vary` evita que una caché le sirva a todos la
+redirección de la primera visita. El costo: cada visita a `/` ejecuta la
+función del servidor, en vez de resolverse en la CDN.
 
 ### Barra final en todas las URLs
 
@@ -113,8 +137,8 @@ según la documentación de Vercel.
 sitio de páginas completas.
 
 **Decisión.** Páginas completas, con `@view-transition { navigation: auto; }`
-en CSS para la transición entre páginas. `ClientRouter` no se adopta mientras
-el sitio no esté en producción.
+en CSS para la transición entre páginas. `ClientRouter` se evaluó y no se
+adoptó.
 
 **Por qué.** Cada página arranca limpia: no hay estado que reiniciar entre
 páginas (scroll, cursor, animaciones). En los navegadores sin soporte de
@@ -127,8 +151,7 @@ empaquetados corren una sola vez (las animaciones de entrada y el skip link no
 verían la página siguiente), el tema se tiene que reaplicar después de cada
 cambio de página, el scroll se tiene que resetear a mano y la variante del
 cursor puede quedar pegada al link que se clickeó. Son fallas que no dan
-error. El costo no compensa lo que gana antes de tener el sitio estable en
-producción.
+error, y su costo no compensa lo que gana.
 
 ### Selector de idioma con links
 
@@ -403,18 +426,19 @@ sola pantalla.
 ### El home muestra todos los casos publicados
 
 **Contexto.** La grilla del home es masonry de dos columnas y reparte las
-cards alternando. Con cinco cards, la izquierda lleva tres y la derecha dos, y
-la derecha terminaba una card antes.
+cards alternando, así que las columnas terminan a distinta altura. Con cinco
+cards, la derecha terminaba una card antes.
 
-**Decisión.** El home muestra las cinco cards publicadas.
+**Decisión.** El home muestra todas las cards publicadas: hoy, seis, tres por
+columna.
 
 **Por qué.** Que se vean todos los casos publicados pesa más que una grilla
-pareja. El hueco se achicó después con la card vertical de Pulso Creativo.
+pareja. El hueco se achicó con la card vertical de Pulso Creativo.
 
 ### Card vertical para Pulso Creativo
 
-**Contexto.** Con cinco cards, a 1440 px la columna derecha terminaba 636 px
-antes que la izquierda. El cover de Pulso es cuadrado, y la laptop ocupa la
+**Contexto.** Cuando el home tenía cinco cards, a 1440 px la columna derecha
+terminaba 636 px antes que la izquierda. El cover de Pulso es cuadrado, y la laptop ocupa la
 mitad de su ancho.
 
 **Decisión.** Una forma de card nueva, `portrait`: 3:4 desde `md` y 4:3 en
@@ -634,18 +658,19 @@ Last.fm directo.
 la conexión de Last.fm con Spotify se corta, el widget muestra lo último
 escuchado en vez de romperse.
 
-### Sitio estático con una sola ruta a pedido
+### Sitio estático con rutas a pedido solo donde hacen falta
 
 **Contexto.** El endpoint de Last.fm tiene que ejecutarse en cada pedido; las
 páginas no cambian entre deploys.
 
 **Decisión.** El adapter de Vercel con `output: 'static'`, el default. Solo
-`/api/now-playing.json` lleva `export const prerender = false` y corre como
+`/api/now-playing.json` y `/` (que elige el idioma, ver "`/` redirige según el
+idioma del navegador") llevan `export const prerender = false` y corren como
 función.
 
 **Por qué.** Las páginas se siguen sirviendo como archivos desde la CDN, sin
-ejecutar código. El adapter hace falta únicamente para la ruta que lo
-necesita.
+ejecutar código. El adapter hace falta únicamente para las rutas que lo
+necesitan.
 
 ### Un estado explícito para cada respuesta del endpoint
 
@@ -711,8 +736,9 @@ hoy. Además, una portada sería el único color fuerte del About y competiría
 con los covers de los proyectos. El crédito tiene que estar (lo piden los
 términos), pero apenas se tiene que ver: es una atribución, no contenido, y
 al final y en tono tenue se lee como el pie de una ficha. Es una decisión
-consciente contra el contraste: `--ink-muted` da 3:1, debajo del
-4,5:1 que pide WCAG para texto, y se prioriza que sea discreto. El link
+consciente contra el contraste: sobre la superficie de la card,
+`--ink-muted` da 4,85:1 en tema claro pero 4,10:1 en oscuro, debajo del 4,5:1
+que pide WCAG para texto, y se prioriza que sea discreto. El link
 sigue siendo un link con su texto y su aviso para lectores de pantalla, así
 que la información está disponible.
 
@@ -773,6 +799,10 @@ y una interacción que cambia lo que se muestra. Los cinco temas salen del
 mismo pedido al endpoint, así que la interacción no suma pedidos a Last.fm.
 
 ### El widget queda pasivo; la interacción significativa pasa al cambio de tema
+
+> **Reemplazada en parte** por "Skills como interacción principal": el widget
+> sigue pasivo, pero la interacción principal es Skills y no el cambio de
+> tema.
 
 **Contexto.** El widget pasó por dos interacciones. Las pestañas "Ahora /
 Últimos 5" no transmitían música. El tocadiscos con selección sí, pero
