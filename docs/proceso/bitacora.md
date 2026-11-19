@@ -367,6 +367,68 @@ caché funciona es el `HIT` del segundo pedido, no el header que llega.
 
 ---
 
+## Home: Skills, Stack e indexación
+
+**Qué se hizo.**
+
+- **Indexación.** Un sitemap con alternativas `hreflang` entre `/en/` y
+  `/es/`, que deja afuera `/`, la API y la redirección del CV; un
+  `robots.txt` que permite el rastreo salvo en la API y apunta al sitemap; y
+  un `/llms.txt` que se arma en el build desde los casos publicados. En
+  producción, las tres rutas responden 200 sin barra final.
+- **El corte entre el hero y Proyectos.** Salió el marquee de servicios, con
+  sus textos. En su lugar va una fila de puntos al pie del hero: la grilla
+  condensada en una línea, en CSS, que queda visible cuando la grilla se
+  apaga al scrollear. Sus columnas coinciden con las del canvas.
+- **Skills y Stack, separados.** Antes de diseñar, una tabla de evidencia
+  armada solo con el contenido de los casos: para cada skill candidata, en
+  qué casos aparece, con qué métodos y con qué cita. Con esa tabla, Branding
+  salió y Strategy se reformuló como Product Thinking. Skills quedó entre
+  About y Stack: un índice de cuatro skills y un panel con las actividades de
+  la activa y links a los casos donde se ve. Stack quedó solo con
+  herramientas, en cuatro grupos; los conceptos que tenía pasaron a Skills.
+- **Stack, de carrusel a grilla.** Primero se rehízo como carrusel, con un
+  botón de pausa. Después pasó a una grilla quieta por grupo, con el ícono de
+  cada herramienta.
+- **La grilla de puntos con movimiento reducido**, que quedaba vacía, ahora
+  se dibuja quieta y se redibuja en cada cambio de tamaño y de tema.
+- **La card cuadrada en celular.** La de Recuérdalo pasa a 4:3 en celular,
+  como las demás, y sigue cuadrada desde `md`.
+- **Contraste de `--ink-muted`.** Sube a 4,5:1 contra el fondo en los dos
+  temas, con el mismo tono; lo decorativo que lo usaba pasa a `--ink-subtle`,
+  con el valor de antes.
+- **El logo del navbar, fuera del foco mientras no se ve.** En la home
+  arranca invisible y recibía el foco de teclado; ahora lleva `inert` hasta
+  que aparece.
+
+**Qué costó.**
+
+- **El carrusel rompía la página en celular.** La pista medía más de 6000 px
+  y nada la recortaba. En escritorio no se veía, porque `html` tiene
+  `overflow-x: hidden`, pero en celular el navegador agrandaba el layout
+  viewport a 1500 px, el header fijo se estiraba con él y el botón del menú
+  quedaba fuera de la pantalla. La verificación en producción se había hecho
+  solo en escritorio; apareció al medir a 375 px con emulación de celular.
+  El Stack pasó a grilla, y la verificación de anchos ahora compara el ancho
+  del documento con el del viewport.
+- **La grilla de puntos vacía con movimiento reducido.** El canvas dibujaba
+  un frame y el primer aviso del `ResizeObserver` lo borraba, porque cambiar
+  el tamaño de un canvas lo limpia. Se confirmó contra la versión anterior:
+  cero píxeles pintados, al cargar y después de un resize.
+- **Alinear la fila de puntos con el canvas.** El canvas reparte las columnas
+  centradas con `Math.ceil`; la fila hace la misma cuenta en CSS con
+  `round(up, …)`. En horizontal coinciden a medio píxel; en vertical no
+  quedan alineadas.
+- **El subrayado de la skill activa.** El terracota de la marca da 2,92:1
+  contra el fondo claro, y un indicador de estado necesita 3:1. En el tema
+  claro el subrayado usa el terracota de hover (3,76:1).
+- **Tipos en el editor.** En el frontmatter de un `.astro`, el editor aplica
+  TypeScript e ignora las anotaciones JSDoc. Los errores de "any implícito"
+  se resolvieron escribiendo el código de forma que los tipos se deduzcan
+  solos.
+
+---
+
 ## Cómo se verifica
 
 En cada etapa, antes de commitear:
@@ -400,6 +462,12 @@ En cada etapa, antes de commitear:
   de las pantallas tiene que ser real), con el borde medido contra los dos
   fondos y el contenido fuera de la zona que recorta el parallax. El copy, con
   la pasada de hechos de la skill de auditoría contra su fuente.
+- Los anchos, con emulación de celular y no achicando la ventana: a 360, 375,
+  390, 768 y 1440 px, en la home y en un caso, el ancho del documento tiene
+  que ser igual al del viewport y el botón del menú tiene que verse y abrir
+  el menú.
+- Los contrastes, calculados con la fórmula de WCAG sobre los valores de los
+  tokens, no estimados a ojo.
 - JavaScript por página, con gzip: ~137 KB en la home y ~128 KB en un caso de
   estudio. React y Framer Motion son ~106 KB de eso y los comparten todas las
   islas; el widget de música suma 2,6 KB.
@@ -410,11 +478,9 @@ En cada etapa, antes de commitear:
   wordmark, parallax, grilla de puntos, entradas, copiado del mail,
   back-to-top, widget de música), en los dos idiomas, con movimiento
   reducido y en táctil.
-- **El cambio de tema como interacción principal.** El widget de música
-  quedó pasivo, y la interacción significativa del sitio pasa al cambio de
-  tema claro / oscuro, que se rediseña junto con la revisión de la identidad
-  visual. Hasta entonces, la interacción que modifica la experiencia es el
-  cambio de tema actual.
+- **El crédito del widget sobre la card en tema oscuro.** "vía Last.fm" va
+  en `--ink-muted` sobre la superficie de la card, y ahí da 4,10:1; contra el
+  fondo de la página sí llega a 4,5:1.
 - **Links que abren en otra pestaña sin avisarlo.** Los links externos de la
   barra de metadata de los casos abren en una pestaña nueva y no lo anuncian a
   los lectores de pantalla; los del widget de música sí. Hay que igualarlos.

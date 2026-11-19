@@ -8,7 +8,7 @@ repositorio. Las instrucciones que sigue están en [CLAUDE.md](../../CLAUDE.md)
 y en [.claude/rules/](../../.claude/rules/): reglas de diseño, de imágenes y
 una lista de errores conocidos del stack.
 
-**Cómo trabajo con ella.** Cada tarea empieza con un pedido acotado. Antes de
+**Cómo trabajo con ella.** Cada tarea empieza con un alcance acotado. Antes de
 escribir código, la IA lee el sitio anterior y propone un enfoque; lo apruebo
 o lo cambio. Después ejecuta, verifica y frena para que revise. Los commits los
 hago yo. Si falta un dato (un texto, un rol, una fecha), la regla es preguntar,
@@ -34,7 +34,11 @@ cómo crece sin saltos y si convenía sumar un detalle por tema. Cuando
 reemplacé las pestañas por el concepto del tocadiscos, bajó ese concepto a
 un diseño: cada estado en los dos temas y en celular, el patrón de la
 selección verificado en la guía de WAI-ARIA, qué incluye la lista y qué se
-reutilizaba del código.
+reutilizaba del código. Para la parte del home entre el hero y el cierre,
+primero relevó lo que había y armó una tabla de evidencia solo con el
+contenido de los casos (qué skill aparece en qué caso, con qué métodos y con
+qué cita); después implementó Skills, la fila de puntos del hero, el Stack y
+el componente de íconos, y midió cada uno en Chrome headless.
 
 **Qué revisé, adapté o descarté.** Aprobé la estrategia de cada isla antes de
 que escribiera, y cambié dos cosas de lo que se había previsto: el selector de
@@ -83,6 +87,19 @@ y que el cartel "En vivo" se prenda cuando estoy escuchando.
   compacta (381 px) era más alta que el texto del About (292 px) y quedaba a
   7 px del claim. Lo detectó midiendo con Chrome headless antes de
   entregarlo, y lo resolvió sin tocar el alto táctil de las filas.
+- La primera definición de Skills activaba una skill al recibir foco. Antes de
+  implementarlo, la IA marcó que, con el panel debajo de los nombres, al
+  tabular se activaría cada nombre y con Tab no se llegaría a los links de
+  las tres primeras skills. Propuso tres salidas y elegí Enter o Espacio.
+- Al rehacer el Stack como carrusel, dejó la pista sin recorte. Sus pruebas
+  en celular sacaron capturas que se veían bien, pero no midieron el ancho
+  del documento, y la verificación de producción la hizo solo en escritorio.
+  Así se publicó: en celular, el menú quedaba fuera de la pantalla. Lo encontró en un diagnóstico de mobile, midiendo con emulación
+  de celular, y lo sumó a las trampas del stack.
+- En ese carrusel, en lugar de la pausa por foco en toda la sección que yo
+  había pedido, puso una pausa por foco sobre la tira, que nunca se
+  disparaba porque sus ítems no recibían foco. Lo marcó después de
+  implementarlo, y la saqué.
 
 **Qué decidí yo.** La directiva de hidratación de cada isla; que ningún texto
 accesible quede fijo en un idioma; las animaciones de entrada en CSS y el
@@ -104,7 +121,14 @@ Al final, sacar la selección: elegir un tema no aportaba nada que la lista no
 mostrara, así que el widget quedó pasivo (cada fila es un link a Last.fm), y
 la interacción significativa del sitio pasa al cambio de tema, que se
 rediseña con la identidad visual. Y dos detalles: el título balanceado en dos
-líneas y el giro a 4 s por vuelta.
+líneas y el giro a 4 s por vuelta. En el home: sacar el marquee y reemplazarlo
+por la fila de puntos; el contenido exacto de Skills y del Stack; que Skills
+sea la interacción principal; activar con Enter o Espacio; el subrayado de la
+skill activa, con un token distinto en cada tema para llegar a 3:1; dejar
+afuera del Stack lo que no puedo defender (TypeScript, Node.js, MongoDB);
+pasar el Stack de carrusel a grilla, con íconos; la card cuadrada en 4:3 en
+celular; y que el texto en `--ink-muted` llegue a 4,5:1 sin cambiar cómo se
+ve lo decorativo.
 
 ---
 
@@ -142,6 +166,10 @@ a la configuración de Astro, y la de `/` pasó a ser HTTP real.
 - La documentación de Last.fm no dice que los errores llegan con un status
   HTTP distinto de 200, ni que el error 6 es el de usuario inexistente, ni que
   no manda headers de caché. Salió de pedidos reales.
+- En los componentes de Astro intentó resolver los errores de tipos del editor
+  con anotaciones JSDoc, que en el frontmatter de un `.astro` no tienen
+  efecto. Lo vio en los diagnósticos del editor y reescribió el código para
+  que los tipos se deduzcan solos.
 - La documentación de `track.getInfo` dice que con el usuario devuelve sus
   escuchas y si marcó el tema como favorito, pero no nombra esos campos ni los
   muestra en el ejemplo. Lo presentó como no verificado, junto con el riesgo
@@ -187,6 +215,14 @@ del sitio publicado, después de que `npm install` trajera unas más nuevas.
 - Si la clave de Last.fm hubiera sido obligatoria, faltar habría dado un 500
   genérico, porque Astro valida las secretas al importarlas. Lo detectó en la
   documentación antes de escribir el endpoint.
+- El servidor que armó para revisar el build no mandaba el tipo de los
+  archivos CSS y JavaScript, el navegador los rechazaba y las primeras
+  mediciones daban cero. Lo detectó porque el `body` tenía el margen por
+  defecto del navegador, y corrigió el servidor antes de sacar conclusiones.
+- Para decidir los íconos del Stack consultó qué herramientas tienen ícono en
+  simple-icons con los datos públicos del paquete, sin instalarlo. Al sumar
+  la integración del sitemap, comparó `npm audit` contra el lock anterior:
+  los avisos ya estaban y vienen del adapter de Vercel.
 
 **Qué decidí yo.** El preset `base` del `tsconfig`, porque el proyecto no usa
 TypeScript.
@@ -196,7 +232,7 @@ TypeScript.
 ## Documentación y copy
 
 **Qué hizo la IA.** Adaptó a Astro las reglas del proyecto anterior; redactó
-`CLAUDE.md`, la bitácora, el registro de decisiones, este documento y el
+`CLAUDE.md`, la bitácora, el registro de decisiones, el registro de IA y el
 README; revisó el origen de las skills que uso. En el caso de Recuérdalo,
 contrastó el copy (textos, metadata y alts) contra el archivo de Figma del
 proyecto, leído en modo solo lectura: la investigación, el UI Kit y las 29
@@ -230,6 +266,10 @@ fechas, por etapa o por tipo de tarea, sin paso a paso.
   tiene. Ninguna se nota leyendo el texto; aparecieron al buscar cada una en
   el archivo. También marcó que la intro repetía el tagline y que el cierre
   nombraba a la persona sin presentarla.
+- Al completar el README escribió que la sección de contacto tenía un
+  formulario; al revisar contra el código vio que la isla es el botón que
+  copia el mail, y lo corrigió antes de entregarlo. Los créditos que no
+  encontró anotados en el repositorio los dejó afuera y los señaló.
 - Escribió dos veces, en la documentación, una palabra que el control de
   palabras del repositorio no admite. El control la detectó las dos veces; la
   primera, después de un push.

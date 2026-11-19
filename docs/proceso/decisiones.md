@@ -428,6 +428,196 @@ justa contra los bordes de la card. En mobile la grilla es de una columna y no
 hay hueco que achicar: una card vertical a todo el ancho sería la más alta de
 la lista sin ningún motivo.
 
+### Card cuadrada en 4:3 en celular
+
+**Contexto.** La card del caso protagonista, Recuérdalo, es cuadrada. En
+celular la grilla es de una columna, y esa card quedaba más alta que las
+demás: 327 × 327 px contra 327 × 245 a 375 px de ancho.
+
+**Decisión.** La forma cuadrada rige desde `md`, igual que la vertical. En
+celular la card es 4:3, como todas.
+
+**Por qué.** La forma distinta existe para darle peso al caso protagonista en
+la grilla de dos columnas. En una sola columna no equilibra nada, y una card
+más alta se lee como un error. En escritorio no cambia nada.
+
+---
+
+## Home: Skills, Stack e indexación
+
+### Skills separadas de las herramientas, con evidencia
+
+**Contexto.** El Stack mezclaba herramientas (Figma, React) con conceptos
+(UX Research, Prototyping, Accessibility), y el home no decía en qué casos se
+ve cada habilidad.
+
+**Decisión.** Dos secciones. Skills: cuatro habilidades (UX Design, UI
+Design, Product Thinking, Frontend Development), cada una con sus actividades
+y links a los casos donde se ve. Stack: solo herramientas, en cuatro grupos.
+Antes de escribirlas se armó una tabla de evidencia con el contenido de los
+casos: para cada skill candidata, en qué casos aparece, con qué métodos y con
+qué cita. Branding salió porque ningún caso lo respalda; Strategy pasó a ser
+Product Thinking, que es lo que muestran los casos (recortar el alcance,
+priorizar según el objetivo del negocio, definir el problema con un
+benchmark).
+
+**Por qué.** Qué hace una persona y dónde se ve importa antes que con qué
+herramientas lo hace. Una skill sin un caso que la respalde no se sostiene.
+El Stack lleva solo lo que se puede defender: TypeScript, Node.js y MongoDB
+quedan afuera.
+
+### Skills como interacción principal
+
+Reemplaza a "El widget queda pasivo; la interacción significativa pasa al
+cambio de tema".
+
+**Contexto.** El widget de música quedó pasivo, y la interacción que cambia
+lo que se lee pasaba a ser el cambio de tema.
+
+**Decisión.** La interacción principal del sitio es el índice de Skills:
+elegir una skill cambia el panel que se muestra, con sus actividades y sus
+casos.
+
+**Por qué.** Cambia el contenido, no solo el aspecto, y lleva a los casos que
+respaldan cada skill.
+
+### Las skills se activan con Enter o Espacio, no con el foco
+
+**Contexto.** La primera definición activaba una skill también al recibir
+foco de teclado. El panel va debajo de los cuatro nombres.
+
+**Decisión.** Cada nombre es un `<button>` de disclosure (`aria-expanded`,
+`aria-controls`) que se activa con click, tap, Enter o Espacio, y, con
+puntero fino, con hover después de 150 ms. El foco solo no activa.
+
+**Por qué.** Si el foco activara, al tabular hacia el panel se pasaría por los
+otros nombres, cada uno cambiaría la skill activa y con Tab nunca se llegaría
+a los links de las tres primeras. Se evaluó también el patrón de pestañas con
+flechas, pero cambiaba la semántica pedida; el de disclosure con Enter o
+Espacio es el que un usuario de teclado ya conoce. La pausa del hover evita
+que bajar el mouse hacia el panel active cualquier nombre que cruce.
+
+### El subrayado de la skill activa cambia de token según el tema
+
+**Contexto.** La skill activa se marcaba solo con el color de la tinta, con
+alrededor de 2:1 de diferencia contra las demás: el estado se transmitía
+solo por color, y débil.
+
+**Decisión.** Un subrayado terracota como segunda señal, de 0,06em de grosor
+y a 0,28em de la línea base, para no tocar los descendentes. En el tema
+oscuro usa `--color-accent` (5,04:1 contra el fondo); en el claro,
+`--color-accent-hover` (3,76:1).
+
+**Por qué.** Un indicador de estado necesita 3:1 contra el fondo, y
+`--color-accent` en el tema claro da 2,92:1. Las dos variantes son tokens de
+la marca: no hizo falta un color nuevo.
+
+### Una fila de puntos en lugar del marquee de servicios
+
+**Contexto.** Entre el hero y Proyectos había un marquee de servicios con
+fondo invertido.
+
+**Decisión.** Sale el marquee. En su lugar, una fila de puntos al pie del
+hero: la grilla de puntos condensada en una línea, en CSS y decorativa. La
+grilla se apaga al scrollear; la fila queda y marca el final del hero. Usa la
+misma separación, el mismo radio, el mismo color y la misma opacidad que la
+grilla, y sus columnas caen en las del canvas.
+
+**Por qué.** Lo que decía el marquee ahora lo dicen Skills y Stack, con
+evidencia. La fila cierra el hero con un elemento que ya es de la página, y
+al ser CSS se ve igual con mouse, en táctil y sin JavaScript.
+
+### Stack como carrusel con pausa
+
+**Contexto.** El Stack era un carrusel infinito sin forma de detenerlo.
+
+**Decisión.** Carrusel con botón de pausa (`aria-pressed`), pausa con hover
+sobre la tira y lista estática con movimiento reducido o sin JavaScript.
+
+**Por qué.** Un contenido que se mueve más de 5 segundos tiene que poder
+pausarse.
+
+### Stack en grilla quieta
+
+Reemplaza a "Stack como carrusel con pausa".
+
+**Contexto.** En celular, la pista del carrusel, de más de 6000 px y sin
+recorte, agrandaba el layout viewport, y el botón del menú quedaba fuera de
+la pantalla. El carrusel además requería un botón de pausa y lógica de estado
+para mostrar una lista que no cambia.
+
+**Decisión.** Una grilla quieta por grupo: 2 columnas en celular, 3 en tablet
+y 4 en escritorio, con tarjetas sin hover porque no son clickeables.
+
+**Por qué.** Se ven todas las herramientas a la vez, sin esperar ni pausar, y
+no hay nada más ancho que la pantalla. Sin movimiento no hace falta botón de
+pausa ni script.
+
+### Íconos de las herramientas con simple-icons e iniciales
+
+**Contexto.** La grilla del Stack lleva un ícono por herramienta. De las 26,
+siete no están en simple-icons: las de Adobe (por licencia), FigJam,
+Higgsfield, Runway y Midjourney.
+
+**Decisión.** Un componente, `ToolIcon.astro`, con el ícono de simple-icons
+donde existe y un cuadrado con iniciales del mismo tamaño donde no. Todos
+monocromos en `currentColor` y ocultos para los lectores de pantalla. Una
+herramienta sin ninguna de las dos opciones corta el build.
+
+**Por qué.** Monocromo, cada ícono toma el color del texto y funciona en los
+dos temas, y la grilla se lee como un sistema y no como una colección de
+logos de colores. El nombre ya está escrito al lado, así que el ícono no
+aporta nada para un lector de pantalla.
+
+### `--ink-muted` a 4,5:1 y `--ink-subtle` para lo decorativo
+
+**Contexto.** `--ink-muted` daba 3,31:1 contra el fondo oscuro y 2,82:1
+contra el claro, y lo usaban labels de texto chico (la barra de metadata del
+caso, el About, el footer, el selector de idioma, el crédito del widget).
+También lo usaban tres elementos decorativos: las barras del índice de
+Skills, el borde del disco del widget y el scrollbar.
+
+**Decisión.** `--ink-muted` sube a 4,5:1 con el mismo tono, cambiando solo la
+luminosidad: `#686561` en claro (antes `#8A8680`) y `#807B74` en oscuro
+(antes `#6A6660`). Lo decorativo pasa a un token nuevo, `--ink-subtle`, con
+los valores de antes.
+
+**Por qué.** El texto chico necesita 4,5:1. Lo decorativo no transmite
+información, y con el valor nuevo se habría visto más fuerte sin motivo:
+con dos tokens, el texto se lee y la página se ve igual.
+
+### El logo del navbar no recibe foco mientras no se ve
+
+**Contexto.** En la home, el logo del navbar arranca con opacidad 0 y aparece
+con el scroll. Invisible, igual recibía el foco de teclado y lo leían los
+lectores de pantalla.
+
+**Decisión.** Mientras su opacidad es 0 lleva `inert`.
+
+**Por qué.** `inert` lo saca del orden de Tab, del árbol de accesibilidad y
+de los clicks en un solo atributo. Con Tab desde arriba de la home, el foco
+pasa del skip link a Proyectos; después de scrollear, el logo vuelve a ser
+enfocable.
+
+### Sitemap, robots.txt y llms.txt
+
+**Contexto.** El sitio no tenía sitemap ni `robots.txt`, y los dos idiomas no
+se declaraban como versiones de la misma página.
+
+**Decisión.** `@astrojs/sitemap`, con alternativas `hreflang` entre `/en/` y
+`/es/` y un filtro que deja solo las páginas de los dos idiomas. Un
+`robots.txt` que permite el rastreo a todos los agentes, también a los de IA,
+salvo la API. Un `/llms.txt` generado en el build desde los casos
+publicados, con los canales de contacto que ya muestra el sitio: LinkedIn,
+GitHub, el CV con la ruta del sitio y el mail. WhatsApp queda afuera porque es
+un número de teléfono.
+
+**Por qué.** El filtro por idioma evita que entren al sitemap rutas que
+redirigen o no son páginas. Generar `llms.txt` desde los datos lo mantiene
+sincronizado sin tocarlo a mano. Es una convención propuesta
+([llmstxt.org](https://llmstxt.org)), no un estándar, y no cuesta nada
+sumarla.
+
 ---
 
 ## Datos dinámicos
@@ -552,10 +742,11 @@ existía: el tocadiscos tiene altura fija.
   Las filas miden 44 px con el dedo y 28 px con mouse o trackpad
   (`pointer-fine`), por encima de los 24 px que pide WCAG 2.5.8.
 - **El label "Lo que suena cuando diseño" va en `--ink-secondary`**, no en
-  terracota (`--ink-muted` no llega al contraste mínimo para texto).
+  terracota (en ese momento, `--ink-muted` no llegaba al contraste mínimo
+  para texto).
 
 **Por qué.** La jerarquía tiene que decir qué importa: el texto del About es
-lo que un reclutador tiene que leer, y el widget suma personalidad sin pedir
+lo principal, y el widget suma personalidad sin pedir
 atención (Estética-Usabilidad: menos peso en lo secundario). Lo personal sigue
 junto a la presentación (Proximidad), sin sumar una sección entre los
 proyectos y el contacto (Hick). En posición absoluta, el widget tiene que
