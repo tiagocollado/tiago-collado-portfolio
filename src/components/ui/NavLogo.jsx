@@ -27,7 +27,7 @@ export default function NavLogo({ href, isHome, label }) {
       href={href}
       aria-label={label}
       inert={!isVisible}
-      className="font-mono text-sm font-medium no-underline whitespace-nowrap transition-colors duration-300 text-(--ink-primary) hover:text-(--color-accent)"
+      className="font-mono text-sm font-medium no-underline whitespace-nowrap transition-colors duration-300 text-(--ink-primary) hover:text-accent"
       style={{ opacity: isHome ? opacityOnHome : 1 }}
     >
       GOTYA
