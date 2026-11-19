@@ -111,7 +111,7 @@ export default function NowPlaying({ texts }) {
               className="text-[11px] leading-none font-mono tracking-[0.18em] transition-colors duration-300 ease-expo-out text-(--ink-muted) hover:text-accent"
             >
               {texts.credit}
-              <span className="sr-only select-none"> {texts.newTab}</span>
+              <span className="sr-only select-none"> {texts.opensNewTab}</span>
             </a>
           </div>
         </div>
@@ -166,7 +166,7 @@ function Turntable({ track, texts }) {
           {track.title}
           {/* select-none: el texto sr-only es seleccionable y aparecería al
               copiar el título. */}
-          <span className="sr-only select-none"> {texts.trackLink}</span>
+          <span className="sr-only select-none"> {texts.trackLink} {texts.opensNewTab}</span>
         </a>
 
         {byline && <p className="mt-1 truncate text-xs leading-relaxed text-(--ink-secondary)">{byline}</p>}
@@ -224,7 +224,7 @@ function Tracklist({ tracks, texts }) {
               </span>
 
               {track.isNowPlaying && <span className="sr-only">{texts.statusPlaying}</span>}
-              <span className="sr-only select-none"> {texts.trackLink}</span>
+              <span className="sr-only select-none"> {texts.trackLink} {texts.opensNewTab}</span>
             </a>
           </li>
         ))}

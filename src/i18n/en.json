@@ -13,7 +13,8 @@
     "theme_to_dark": "Dark mode",
     "menu_open": "Open menu",
     "menu_close": "Close menu",
-    "change_language": "Change language"
+    "change_language": "Change language",
+    "opens_new_tab": "(opens in a new tab)"
   },
   "cursor": {
     "view": "View"
@@ -80,7 +81,7 @@
     "decision_3_body": "I cut down the gear catalog, because loading every pedal of every artist would never have ended. The 13 artists with two songs each were the scope from the start. Checkout saves the order to MongoDB without charging, which is enough to go through the store from song to order.",
     "delivered_1": "Node.js + Express backend with REST API and 3 MongoDB collections",
     "delivered_2": "Next.js frontend with React Context and Tailwind, a dark interface, and orange as the action color",
-    "delivered_3": "Deployed on Vercel with end-to-end live demo (artist → song → cart → checkout)",
+    "delivered_3": "Deployed on Vercel with an end-to-end live demo (artist → song → cart → checkout)",
     "closing": "If I did it again, I'd fix three limitations the demo has today. The setup button overwrites the quantity. If a piece of gear was in the cart with three units, it drops back to one. Stock is never validated, neither when adding to the cart nor when placing the order. And the cart only lives in memory, so it's gone when the page reloads. I'd solve them by adding to the quantity instead of replacing it, checking stock on the backend when the order comes in, and saving the cart so it survives a reload."
   },
   "case_study_cabify-playlist-del-viaje": {
@@ -113,7 +114,7 @@
     "closing": "Designing a Design System is 30% visual design and 70% governance and documentation. Beautiful components are useless if nobody knows when to use them. Multicultural collaboration taught me to justify every decision: you can't just say 'I like it better this way'. If I were to redo it: fewer components, better documented."
   },
   "case_study_recuerdalo": {
-    "intro": "I designed Recuérdalo for older adults: it reminds them of their medications and doctor's appointments, and every time they log a dose or an appointment, it lets their family know. I started with interviews, observations and a card sort with people aged 60 to 80.",
+    "intro": "I designed Recuérdalo for older adults: it reminds them of their medications and doctor's appointments, and every time they log a dose or an appointment, it lets their family know. I started with interviews, observations and card sorting with people aged 60 to 80.",
     "challenge": "The people I interviewed weren't afraid of technology, but of making a mistake and not being able to go back. One of them, aged 80, put it like this: \"I start off fine, but if I make a mistake on the third step, I don't know how to go back.\" They also wanted to keep doing things on their own, and the pride of managing it by themselves came up again and again in the interviews.",
     "process": "I organized the app with the categories people grouped in the card sorting and designed five flows with a single main action per screen. The core flow has four moments: the reminder, recognizing the medication, confirming the dose and a celebration. In the diagram, taking and postponing a medication are on top, and adding a new one is below.",
     "decision_1_title": "Few things per screen",
@@ -149,7 +150,7 @@
     "claim_2": "design",
     "claim_3": "understands the",
     "claim_4": "business.",
-    "body_1": "Designing for humans means stepping out of the “design mood”. It means sitting at any table and understanding the dynamics of every department to deliver real value.",
+    "body_1": "Designing for humans means stepping out of the design mood. It means sitting at any table and understanding the dynamics of every department to deliver real value.",
     "body_2": "Gotya comes from gotcha (“I get it”). It’s the confirmation that the core idea is captured. That understanding is what turns a business goal into an experience people remember.",
     "signature": "Gotya. Got it.",
     "byline": "by Tiago Collado"
@@ -164,8 +165,7 @@
     "private": "My Last.fm history is private.",
     "error": "Couldn’t load the music right now.",
     "credit": "via Last.fm",
-    "new_tab": "(opens in a new tab)",
-    "track_link": "on Last.fm (opens in a new tab)"
+    "track_link": "on Last.fm"
   },
   "skills": {
     "label": "Skills",

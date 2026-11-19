@@ -18,9 +18,12 @@ const contactTexts = {
   copy: t('contact.copy'),
   copied: t('contact.copied'),
   downloadCv: t('contact.download_cv'),
+  opensNewTab: t('a11y.opens_new_tab'),
 };
 
+// El año sale de la fecha del build: la página es estática.
 const footerTexts = {
+  copyright: `© ${new Date().getFullYear()} Gotya`,
   credit: t('footer.credit'),
   backToTop: t('footer.back_to_top'),
 };

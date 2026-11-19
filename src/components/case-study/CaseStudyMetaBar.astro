@@ -92,6 +92,9 @@ const blockRevealStyle = (position) => {
                 class="group inline-flex items-center gap-2 text-sm md:text-base font-display leading-snug transition-colors duration-300 text-(--ink-primary) hover:text-accent"
               >
                 <span>{link.label}</span>
+                {/* select-none: el texto sr-only es seleccionable y se
+                    copiaría junto con el link. */}
+                <span class="sr-only select-none"> {t('a11y.opens_new_tab')}</span>
                 <span
                   aria-hidden="true"
                   class="inline-block transition-transform duration-300 ease-expo-out group-hover:translate-x-1 group-hover:-translate-y-1"

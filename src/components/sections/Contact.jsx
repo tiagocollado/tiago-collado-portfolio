@@ -161,6 +161,9 @@ export default function Contact({ texts }) {
                 className="group inline-flex items-center gap-2 text-xs font-mono uppercase tracking-[0.18em] transition-colors duration-300 text-(--ink-secondary) hover:text-accent"
               >
                 <span>{channel.label ?? texts.downloadCv}</span>
+                {/* select-none: el texto sr-only es seleccionable y se
+                    copiaría junto con el nombre del canal. */}
+                {!channel.download && <span className="sr-only select-none"> {texts.opensNewTab}</span>}
                 <span
                   aria-hidden="true"
                   className={`inline-block transition-transform duration-300 ease-expo-out ${

@@ -39,7 +39,9 @@ const nextProject = publishedProjects[(currentPosition + 1) % publishedProjects.
 
 const ITEM_NUMBERS = [1, 2, 3];
 
+// El año sale de la fecha del build: la página es estática.
 const footerTexts = {
+  copyright: `© ${new Date().getFullYear()} Gotya`,
   credit: t('footer.credit'),
   backToTop: t('footer.back_to_top'),
 };

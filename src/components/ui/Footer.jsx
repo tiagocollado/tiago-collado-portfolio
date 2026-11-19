@@ -44,7 +44,7 @@ export default function Footer({ texts }) {
             className="col-start-1 row-start-1 sm:col-start-auto sm:row-start-auto text-[11px] font-mono uppercase tracking-[0.18em]"
             style={{ color: 'var(--ink-muted)' }}
           >
-            © 2026 Copyright Gotya
+            {texts.copyright}
           </motion.p>
 
           {/* Cuatro flechas en una ventana de dos: subir 25% es subir una
