@@ -12,7 +12,7 @@ Cada caso de estudio cuenta el problema, las decisiones y el resultado. La home 
 
 | | |
 |---|---|
-| Framework | [Astro](https://astro.build) 7.4, sitio estático con una ruta a pedido |
+| Framework | [Astro](https://astro.build) 7.4, sitio estático con dos rutas a pedido (`/` y la API de música) |
 | Lenguajes | JavaScript (`.astro`, `.js`, `.jsx`, sin TypeScript), CSS |
 | Interactividad | React 19 en islas; scripts de Astro sin React para Skills y el skip link |
 | Estilos | Tailwind CSS 4, con los tokens de la marca en `@theme` |
@@ -76,8 +76,8 @@ Spotify ──► Last.fm ──► /api/now-playing.json ──► NowPlaying (
   `user.getRecentTracks` y devuelve solo título, artista, álbum, link y fecha
   de cada tema.
 - **La clave.** `LASTFM_API_KEY` es una variable secreta de servidor
-  (`astro:env`): solo la lee el endpoint, que es la única ruta que corre a
-  pedido. No aparece en el HTML ni en el JavaScript del navegador, que nunca
+  (`astro:env`): solo la lee el endpoint, que corre a pedido en el
+  servidor. No aparece en el HTML ni en el JavaScript del navegador, que nunca
   habla con Last.fm.
 - **Escuchando ahora o lo último.** Last.fm marca el tema en curso con
   `nowplaying`. El endpoint lo pone primero, seguido de los últimos cinco. Si

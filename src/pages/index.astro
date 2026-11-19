@@ -1,10 +1,24 @@
 ---
 /*
- * La redirección real (307) está en `redirects` de astro.config.mjs. Esta
- * página existe porque el i18n la exige, y redirige sola si esa regla deja
- * de aplicarse.
+ * "/" no tiene idioma propio: manda a /en/ o a /es/ según el navegador de
+ * cada visita, por eso se renderiza a pedido. Vary: Accept-Language avisa a
+ * las cachés (la CDN de Vercel, el navegador) que la respuesta cambia con ese
+ * header, para que no le sirvan a todos la de la primera visita. El i18n de
+ * Astro también exige que este archivo exista.
  */
 import { getRelativeLocaleUrl } from 'astro:i18n';
+import { homeLocaleFor } from '../i18n/homeLocale.js';
 
-return Astro.redirect(getRelativeLocaleUrl('es'), 307);
+export const prerender = false;
+
+const locale = homeLocaleFor(Astro.request.headers.get('Accept-Language'));
+
+// Un Response propio y no Astro.redirect(): hace falta sumar el header Vary.
+return new Response(null, {
+  status: 307,
+  headers: {
+    Location: getRelativeLocaleUrl(locale),
+    Vary: 'Accept-Language',
+  },
+});
 ---

@@ -2,7 +2,7 @@ import { LASTFM_API_KEY, LASTFM_USERNAME } from 'astro:env/server';
 
 /*
  * El tema que suena ahora (si hay uno) y los últimos cinco, según Last.fm.
- * Única ruta que corre a pedido. Siempre responde JSON con `state`: ok,
+ * Corre a pedido, como "/". Siempre responde JSON con `state`: ok,
  * empty, private, user-not-found, invalid-key, key-suspended,
  * not-configured, rate-limited, timeout o unavailable.
  */

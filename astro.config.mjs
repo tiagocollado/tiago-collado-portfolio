@@ -11,9 +11,9 @@ export default defineConfig({
   site: 'https://tiagocollado.vercel.app',
 
   // El sitio sigue siendo estático (output 'static' es el default): todas
-  // las páginas se generan en el build. El adapter solo hace falta para la
-  // única ruta que se ejecuta a pedido, /api/now-playing.json, que lleva
-  // `export const prerender = false`.
+  // las páginas se generan en el build. El adapter solo hace falta para las
+  // dos rutas que se ejecutan a pedido y llevan `export const prerender =
+  // false`: "/" (elige el idioma según el navegador) y /api/now-playing.json.
   adapter: vercel(),
 
   // Todas las URLs de páginas terminan en "/" (/en/, /en/projects/x/), igual
@@ -23,16 +23,11 @@ export default defineConfig({
   // de rutas del deploy, que redirige /en a /en/ con un 308.
   trailingSlash: 'always',
 
-  // Redirecciones HTTP reales: el adapter las escribe en la configuración de
-  // rutas de Vercel. Las dos son temporales (307): un 301 o un 308 quedan
-  // guardados en el navegador y después no se pueden cambiar.
+  // Redirección HTTP real: el adapter la escribe en la configuración de
+  // rutas de Vercel. Es temporal (307): un 301 o un 308 quedan guardados en
+  // el navegador y después no se pueden cambiar. La de "/" no está acá porque
+  // depende del idioma del navegador: la hace src/pages/index.astro.
   redirects: {
-    // La home sin idioma va al castellano. Gana sobre
-    // src/pages/index.astro, que sigue existiendo porque el i18n lo exige
-    // (el porqué, en ese archivo). Después de actualizar Astro o el adapter,
-    // revisar que .vercel/output/config.json siga teniendo esta regla.
-    '/': { status: 307, destination: '/es/' },
-
     // El CV vive en Google Drive y no entra al repo.
     '/tiago-collado-cv.pdf': {
       status: 307,
@@ -108,8 +103,9 @@ export default defineConfig({
         locales: { en: 'en', es: 'es' },
       },
       // Solo entran las páginas de /en/ y /es/. Así quedan afuera "/" (que
-      // redirige a /en/), el endpoint de /api/ y la redirección del CV. Los
-      // proyectos con published: false no llegan acá: no generan página.
+      // redirige a /en/ o a /es/ según el navegador), el endpoint de /api/ y
+      // la redirección del CV. Los proyectos con published: false no llegan
+      // acá: no generan página.
       filter: (page) => /^\/(en|es)\//.test(new URL(page).pathname),
     }),
   ],
