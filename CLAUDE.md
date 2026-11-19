@@ -445,7 +445,7 @@ src/
 ## 12. Workflow y comunicación
 
 - **Dev**: `npm run dev` (localhost:4321) · **Build**: `npm run build`.
-- **Revisar el build**: `npm run preview` **no funciona**: el adapter de Vercel no soporta el comando. Lo verificado es servir la carpeta `.vercel/output/static` con un servidor estático (se probó con uno mínimo de Node que sirve el `index.html` de cada carpeta). Así se ven las páginas y las imágenes optimizadas, pero no corren el endpoint de Last.fm ni las redirecciones del deploy (`/`, el CV, la barra final): esas se prueban en Vercel.
+- **Revisar el build**: no hay script `preview`: el adapter de Vercel no soporta `astro preview`. Lo verificado es servir la carpeta `.vercel/output/static` con un servidor estático (se probó con uno mínimo de Node que sirve el `index.html` de cada carpeta). Así se ven las páginas y las imágenes optimizadas, pero no corren el endpoint de Last.fm ni las redirecciones del deploy (`/`, el CV, la barra final): esas se prueban en Vercel.
 - **Deploy**: Vercel. Producción (`tiagocollado`) construye desde este repo desde el 8/11/2026; el proyecto de staging se borra en la limpieza del sitio viejo (plan).
 - **Proyecto nuevo**: entry en `src/data/projects.js` + bloque `case_study_{slug}` en **ambos** JSON.
 - **Todo lo que se versiona es público**: README, `docs/`, comentarios y mensajes de commit se escriben con tono profesional, sin charla interna. El detalle está en el plan.
