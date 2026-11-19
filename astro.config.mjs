@@ -27,11 +27,11 @@ export default defineConfig({
   // rutas de Vercel. Las dos son temporales (307): un 301 o un 308 quedan
   // guardados en el navegador y después no se pueden cambiar.
   redirects: {
-    // La home sin idioma va al inglés, el idioma por defecto. Gana sobre
+    // La home sin idioma va al castellano. Gana sobre
     // src/pages/index.astro, que sigue existiendo porque el i18n lo exige
     // (el porqué, en ese archivo). Después de actualizar Astro o el adapter,
     // revisar que .vercel/output/config.json siga teniendo esta regla.
-    '/': { status: 307, destination: '/en/' },
+    '/': { status: 307, destination: '/es/' },
 
     // El CV vive en Google Drive y no entra al repo.
     '/tiago-collado-cv.pdf': {
