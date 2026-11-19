@@ -22,7 +22,7 @@ export default function InteractiveDotGrid({
   influenceRadius = 140, // radio de alcance del cursor (px)
   maxDisplacement = 36, // cuánto se puede correr un punto (px)
   lerpFactor = 0.12, // suavidad del retorno (0–1): más chico, más elástico
-  colorVar = '--ink-muted', // variable CSS del color; se relee al cambiar el tema
+  colorVar = '--ink-subtle', // variable CSS del color; se relee al cambiar el tema
   opacity = 0.55,
   className,
 }) {

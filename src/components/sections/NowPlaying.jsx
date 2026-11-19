@@ -319,7 +319,7 @@ function Tracklist({ tracks, texts }) {
 
 /*
  * El vinilo. Es un objeto, como una imagen: el cuerpo y la etiqueta tienen
- * los mismos colores en los dos temas. El borde va en --ink-muted para que
+ * los mismos colores en los dos temas. El borde va en --ink-subtle para que
  * el disco se distinga de la card también en tema oscuro, donde el negro del
  * disco y el de la card casi coinciden.
  *
@@ -341,7 +341,7 @@ function Vinyl() {
     <div aria-hidden="true" className="relative size-16 shrink-0">
       <div className="size-full motion-safe:animate-spin-record">
         <svg viewBox="0 0 100 100" className="size-full">
-          <circle cx="50" cy="50" r="49.25" fill={RECORD_COLOR} strokeWidth="1.5" className="stroke-(--ink-muted)" />
+          <circle cx="50" cy="50" r="49.25" fill={RECORD_COLOR} strokeWidth="1.5" className="stroke-(--ink-subtle)" />
           {GROOVE_RADII.map((radius) => (
             <circle
               key={radius}

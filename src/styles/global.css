@@ -55,7 +55,10 @@
 
   --ink-primary:   #111110;
   --ink-secondary: #4A4845;
-  --ink-muted:     #8A8680;
+  /* Texto chico: 4,5:1 contra el fondo (4,52:1). */
+  --ink-muted:     #686561;
+  /* Solo decorativo (separadores, bordes, scrollbar): no llega a 4,5:1. */
+  --ink-subtle:    #8A8680;
 
   --color-surface:       #F4EAD5;
   --color-surface-hover: #ECE0C7;
@@ -71,7 +74,8 @@
 
   --ink-primary:   #F0EDE8;
   --ink-secondary: #A8A49F;
-  --ink-muted:     #6A6660;
+  --ink-muted:     #807B74;
+  --ink-subtle:    #6A6660;
 
   --color-surface:       #1C1B1A;
   --color-surface-hover: #252320;
@@ -118,7 +122,7 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: color-mix(in srgb, var(--ink-muted) 50%, transparent);
+    background-color: color-mix(in srgb, var(--ink-subtle) 50%, transparent);
     border: 2px solid transparent;
     background-clip: padding-box;
     border-radius: 999px;
@@ -136,7 +140,7 @@
   @supports (-moz-appearance: none) {
     html {
       scrollbar-width: thin;
-      scrollbar-color: color-mix(in srgb, var(--ink-muted) 50%, transparent) transparent;
+      scrollbar-color: color-mix(in srgb, var(--ink-subtle) 50%, transparent) transparent;
     }
   }
 }
