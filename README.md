@@ -4,7 +4,7 @@ Sitio: https://tiagocollado.vercel.app
 
 ## Sobre el proyecto
 
-Portfolio de Tiago Collado, diseñador UX/UI y desarrollador frontend. Gotya es la marca con la que trabajo como freelance: diseño sitios y productos digitales desde la definición del negocio hasta la publicación y el mantenimiento.
+Portfolio de Tiago Collado, diseñador UX/UI y desarrollador frontend. Gotya es la marca con la que trabajo como freelance: diseño sitios y productos digitales desde la definición del negocio hasta la publicación y el mantenimiento. Trabajo con empresas y clientes directos, como freelance o dentro de un equipo.
 
 Cada caso de estudio cuenta el problema, las decisiones y el resultado. La home separa lo que hago (Skills, con los casos donde se ve cada una) de las herramientas que uso (Stack).
 
@@ -64,6 +64,56 @@ disponible.
   la grilla de proyectos. En reposo, solo la imagen; en hover, un lavado
   terracota y los datos del caso. En táctil, los datos van debajo.
 
+## Tema claro y oscuro
+
+- **Sin parpadeo.** Un script inline en el `<head>`
+  ([`BaseLayout.astro`](src/layouts/BaseLayout.astro)) pone la clase del tema
+  en `<html>` antes de pintar. Un `<script>` común de Astro es un módulo y
+  corre después.
+- **Preferencia.** Se guarda en `localStorage` con la clave `theme` (`dark` o
+  `light`). Sin preferencia, oscuro: el HTML ya sale con `class="dark"`, así
+  que sin JavaScript también.
+- **Botón y pestañas.** El botón del navbar
+  ([`Navbar.jsx`](src/components/ui/Navbar.jsx)) nombra la acción ("Modo
+  claro" en tema oscuro). Si el tema cambia en otra pestaña, el evento
+  `storage` lo aplica en esta.
+
+## Idiomas y redirección
+
+- **`/`** se renderiza a pedido ([`index.astro`](src/pages/index.astro)) y
+  redirige con 307: a `/en/` si el primer idioma del navegador
+  (`Accept-Language`) es inglés, a `/es/` en cualquier otro caso o sin header.
+  Responde con `Vary: Accept-Language` para que la caché no le dé a todos la
+  misma respuesta. La cuenta está en [`homeLocale.js`](src/i18n/homeLocale.js):
+  `Astro.preferredLocale` compara el código entero, y `en-US` no coincide con
+  `en`.
+- **`defaultLocale` sigue en `en`.** Con `prefixDefaultLocale: true` los dos
+  idiomas llevan prefijo, así que no decide ninguna URL: a dónde va `/` lo
+  decide la página.
+- **Barra final.** Con `trailingSlash: 'always'`, Vercel redirige con 308
+  `/en` a `/en/`. Lenis intercepta un ancla solo si su pathname es idéntico
+  al de la página: sin la barra, `/en/#projects` recargaría la página entrando
+  por `/en`.
+- **Textos.** `t('clave')` ([`translate.js`](src/i18n/translate.js)) lee
+  `es.json` o `en.json` en el servidor, y una key que falta corta el build.
+  Las islas reciben solo los textos ya traducidos.
+- **Selector de idioma.** Links a la misma página en el otro idioma, con
+  `hreflang`, `lang` y `aria-current`. Funcionan sin JavaScript.
+
+## Navegación
+
+- **Navbar fijo.** Proyectos, Sobre Gotya y Hablemos son anclas de la home
+  (`#projects`, `#about`, `#contact`); abajo de `lg` van en un menú
+  desplegable. A la derecha, idioma y tema.
+- **Anclas.** Lenis las intercepta y hace el scroll suave; con movimiento
+  reducido no se monta y el salto es directo. El skip link mueve el foco a
+  `<main>`, y el back-to-top del footer es un ancla a `#top`.
+- **Entre páginas.** Navegación de página completa con
+  `@view-transition { navigation: auto; }`: fundido en Chrome, Edge y Safari,
+  navegación normal en Firefox. Al pie de cada caso, "Próximo proyecto"
+  recorre los casos publicados en orden y "Ver todos los proyectos" vuelve a
+  la grilla.
+
 ## Datos en vivo
 
 ```
@@ -78,24 +128,40 @@ Spotify ──► Last.fm ──► /api/now-playing.json ──► NowPlaying (
 - **La clave.** `LASTFM_API_KEY` es una variable secreta de servidor
   (`astro:env`): solo la lee el endpoint, que corre a pedido en el
   servidor. No aparece en el HTML ni en el JavaScript del navegador, que nunca
-  habla con Last.fm.
+  habla con Last.fm. En producción, las dos variables se cargan en las
+  variables de entorno del proyecto de Vercel; en local, en `.env`.
 - **Escuchando ahora o lo último.** Last.fm marca el tema en curso con
-  `nowplaying`. El endpoint lo pone primero, seguido de los últimos cinco. Si
-  hay uno en curso, el widget prende el cartel "En vivo" y le pone un
-  ecualizador a su fila; si no, muestra el último escuchado con el cartel
-  apagado.
+  `nowplaying`. El endpoint pide 6 temas y devuelve el que suena (si hay)
+  seguido de los últimos 5. El widget muestra 5 contando el destacado: arriba
+  el que suena o el último, y la lista empieza por ese mismo tema. Si hay uno
+  en curso, se prende el cartel "En vivo" y su fila lleva un ecualizador.
 - **Actualización y caché.** El widget pide los datos al entrar en pantalla y
   de nuevo al volver a la pestaña, si pasó más de un minuto. Las respuestas
   correctas se guardan 30 s en la CDN de Vercel
   (`s-maxage=30, stale-while-revalidate=60`): Last.fm recibe como mucho un
   pedido cada 30 s por región. Los errores no se cachean, y el pedido a
   Last.fm se corta a los 5 s.
-- **Estados.** El endpoint siempre responde JSON con un campo `state`.
+- **Límite de pedidos.** Last.fm limita los pedidos por IP y, al pasarse,
+  responde el error 29. La caché de 30 s es lo que evita llegar ahí. Si igual
+  llega, el endpoint responde `rate-limited` con 503 y sin caché, así el
+  pedido siguiente vuelve a intentar.
+- **Respuesta.** Siempre JSON con un campo `state`:
+
+  ```json
+  { "state": "ok", "tracks": [{ "title": "…", "artist": "…", "album": "…",
+    "url": "https://www.last.fm/…", "isNowPlaying": true, "playedAt": null }] }
+  ```
+
+  `ok` y `empty` (con `tracks: []`) responden 200. Los errores llevan solo
+  `state`: `private` (403), `user-not-found`, `invalid-key` y `key-suspended`
+  (502), `rate-limited` (503), `unavailable` (503 si Last.fm está caído, 502
+  si falla el pedido o la respuesta no se entiende), `timeout` (504) y
+  `not-configured` (500, faltan las variables).
+- **Estados del widget.**
   - Al cargar: un esqueleto con las medidas del contenido, sin saltos de alto.
   - Sin temas: "Todavía no registré ningún tema."
   - Perfil privado: "Mi historial de Last.fm está en privado."
-  - Cualquier error (clave, usuario, timeout, Last.fm caído o sin
-    configurar): "No pude cargar la música ahora."
+  - Cualquier otro error: "No pude cargar la música ahora."
   - Sin JavaScript, el widget no se muestra.
 
 ## Responsive y accesibilidad
@@ -114,7 +180,7 @@ Spotify ──► Last.fm ──► /api/now-playing.json ──► NowPlaying (
 - **Movimiento reducido**: entradas solo con fade, grilla de puntos quieta,
   disco sin girar, cambio de skill instantáneo.
 - **Sin JavaScript**: el contenido se ve, salvo los títulos animados (ver
-  [Limitaciones conocidas](#limitaciones-conocidas)), y Skills abre todos sus
+  [Limitaciones y mejoras](#limitaciones-y-mejoras)), y Skills abre todos sus
   paneles.
 - **Semántica**: un `<main>`, `<nav>`, `<header>` y `<footer>` por página;
   `aria-expanded` y `aria-controls` en Skills; `aria-hidden` en lo
@@ -167,8 +233,16 @@ detalle en [docs/proceso/uso-de-ia.md](docs/proceso/uso-de-ia.md).
   [términos de su API](https://www.last.fm/api/tos): uso no comercial,
   crédito con link ("vía Last.fm" en el widget) y sin portadas de discos.
 
-## Limitaciones conocidas
+## Limitaciones y mejoras
+
+Limitaciones:
 
 - Título y meta description iguales en todas las páginas, y en inglés en `/es/`; sin canonical ni `hreflang` en el HTML.
 - Los títulos que entran letra por letra no se ven sin JavaScript.
 - `npm audit` reporta avisos en dependencias de build del adapter de Vercel.
+
+Mejoras previstas:
+
+- SEO por página: canonical, `hreflang` en el HTML y título y descripción propios.
+- Una página `/projects` con todos los casos.
+- Una auditoría de Lighthouse sobre el sitio publicado.
