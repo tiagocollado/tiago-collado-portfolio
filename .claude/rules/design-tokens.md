@@ -26,6 +26,7 @@ premium nivel Awwwards, con la sensibilidad de Linear (precisión), Vercel
 | Dark (default) | bg `#111110` · ink `#F0EDE8` |
 | Radius | 12px cards · 999px pills |
 | Easing | `cubic-bezier(0.16, 1, 0.3, 1)` |
+| Tinta tenue | `--ink-muted` para texto chico: `#686561` claro / `#807B74` oscuro, 4,5:1 contra el fondo · `--ink-subtle` **solo decorativo** (separadores, bordes, scrollbar): `#8A8680` / `#6A6660`, no llega a 4,5:1 |
 
 Tipografía actual: Space Grotesk (display) + Geist (body) + Geist Mono (labels).
 En revisión, junto con la paleta: paso 3 de la versión siguiente (`CLAUDE.md` §8).

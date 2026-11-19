@@ -425,17 +425,17 @@ el copy del caso, que sí está en los dos idiomas.
 | **Cover vertical** | `1200 × 1600` | `2400 × 3200` | 3:4 |
 
 La forma de cada proyecto vive en `cardShape` (`src/data/projects.js`):
-`wide` (4:3), `square` (1:1) o `portrait` (3:4). La grilla del home es masonry
+`wide` (4:3), `square` (1:1 desde `md`) o `portrait` (3:4 desde `md`). La grilla del home es masonry
 de dos columnas y la card recorta el cover a su forma con `object-cover`,
 centrado. **Si el cover tiene la proporción de la card, no se pierde nada**; si
 no, se recorta al centro (ver *"Mirar `cardShape`"*, abajo). En el home hay una
 sola card cuadrada, la del caso protagonista (`CLAUDE.md` §7).
 
-> **`portrait` es vertical solo desde `md`.** En mobile la grilla es de una
-> columna y la card vuelve a 4:3, como las anchas: la forma vertical existe
-> para equilibrar las dos columnas, y abajo de `md` no hay columnas que
-> equilibrar. **Un cover para `portrait` tiene que aguantar los dos
-> recortes**: a 3:4 en desktop y a 4:3 en mobile.
+> **`portrait` y `square` rigen solo desde `md`.** En mobile la grilla es de
+> una columna y la card vuelve a 4:3, como las anchas: las formas distintas
+> existen para la grilla de dos columnas, y abajo de `md` no hay columnas que
+> equilibrar. **Un cover para `portrait` o `square` tiene que aguantar los dos
+> recortes**: a su forma en desktop y a 4:3 en mobile.
 
 ### Cómo se rendea (leer antes de abrir Figma)
 

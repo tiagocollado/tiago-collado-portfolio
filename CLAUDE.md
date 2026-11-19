@@ -25,7 +25,7 @@ Lo único que se queda en este archivo, porque es estructura y no arte:
 
 | | |
 |---|---|
-| Forma de la card del home | `cardShape` en `src/data/projects.js` (`wide` 4:3 · `square` 1:1 · `portrait` 3:4 desde `md`, 4:3 en mobile). La card recorta el cover a su forma, centrado: con la misma proporción no se pierde nada. Una sola card cuadrada (§7) |
+| Forma de la card del home | `cardShape` en `src/data/projects.js` (`wide` 4:3 · `square` 1:1 y `portrait` 3:4 desde `md`; las dos, 4:3 en mobile). La card recorta el cover a su forma, centrado: con la misma proporción no se pierde nada. Una sola card cuadrada (§7) |
 | Qué imágenes tiene un case study | `imageBriefs` en `src/data/projects.js`. **Sin cantidad fija**: cada brief declara su `type` (qué es) y su `slot` (dónde cae) |
 | Traducción de `type` a layout | `src/components/case-study/imageSpec.js` |
 
@@ -160,7 +160,7 @@ En mobile se ven completas y quietas (sin crop ni parallax); el recorte y el par
 
 ## 7. Proyectos del portfolio
 
-Orden = campo `order`. Si la página existe lo decide **`published`**; qué se muestra en el home, `showOnHome`; la forma de la card, `cardShape` (`wide` 4:3 · `square` 1:1 · `portrait` 3:4 desde `md`, 4:3 en mobile). La grilla es masonry de dos columnas.
+Orden = campo `order`. Si la página existe lo decide **`published`**; qué se muestra en el home, `showOnHome`; la forma de la card, `cardShape` (`wide` 4:3 · `square` 1:1 y `portrait` 3:4 desde `md`; las dos, 4:3 en mobile). La grilla es masonry de dos columnas.
 
 | # | Proyecto | Año | Publicado | Home | Forma | Qué es |
 |---|---|---|---|---|---|---|
@@ -174,7 +174,7 @@ Orden = campo `order`. Si la página existe lo decide **`published`**; qué se m
 
 > **Multibrand no está publicado**: su página da 404 y no aparece en ningún lado del sitio. **Volver a publicarlo es cambiar `published` a `true`**, después de su tanda (abajo), **y pasar su `order` a 7**: hoy tiene 6, el mismo que miMascota. Todo lo que se ve en el sitio lee de **`publishedProjects`**, así que un proyecto oculto no puede colarse aunque un componente nuevo se olvide de filtrar.
 
-**Una sola card cuadrada en el home: la del caso protagonista, que va primero.** El resto va en 4:3. Hoy es Recuérdalo. Cabify, el protagonista anterior, pasó a 4:3 sin reexportar: su cover cuadrado está compuesto para recortarse a 4:3 sin perder el celular central (`.claude/rules/imagenes.md` §3). Al cambiar de protagonista se renumera `order` para que no haya empates: con el mismo valor, el `sort` desempata por la posición en el array de `projects`.
+**Una sola card cuadrada en el home: la del caso protagonista, que va primero.** El resto va en 4:3. Es cuadrada desde `md`; en mobile, donde la grilla es de una columna, va en 4:3 como las demás. Hoy es Recuérdalo. Cabify, el protagonista anterior, pasó a 4:3 sin reexportar: su cover cuadrado está compuesto para recortarse a 4:3 sin perder el celular central (`.claude/rules/imagenes.md` §3). Al cambiar de protagonista se renumera `order` para que no haya empates: con el mismo valor, el `sort` desempata por la posición en el array de `projects`.
 
 **Los 5 del home son los que mejor muestran rango.** Ritual es universitario y **se queda en el home porque es el único full-stack con demo en vivo** (decisión de Tiago, 2026-09-21).
 
