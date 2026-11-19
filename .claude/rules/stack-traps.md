@@ -221,6 +221,25 @@ Preferir dejar el elemento primario **primero en el DOM** y cruzar con `order`
 en desktop: así el apilado mobile sale gratis y el orden de tabulación arranca
 por el CTA principal.
 
+### Algo más ancho que la pantalla rompe el celular aunque `html` tenga `overflow-x: hidden`
+
+En escritorio, `overflow-x: hidden` en `html` lo esconde y no se ve nada raro.
+En celular no alcanza: el navegador agranda el layout viewport hasta el ancho
+del contenido, y todo lo `fixed` se estira con él.
+
+Caso real: la pista del carrusel del Stack medía más de 6000px y su contenedor
+no tenía `overflow: hidden`. En celular el layout viewport pasó a 1500px, el
+header fijo midió 1500px y **el botón del menú quedó en x = 1354, fuera de la
+pantalla**: el home sin navegación. El build pasó y la verificación en
+escritorio dio todo bien.
+
+- ✅ Lo que sea más ancho que la pantalla a propósito (una pista, una capa
+  alineada con otra) va dentro de un contenedor con `overflow: hidden`.
+
+🔍 Se verifica con emulación de celular, no achicando la ventana: el ancho del
+documento (`document.documentElement.scrollWidth`) tiene que ser igual al del
+viewport (`clientWidth`), y `innerWidth` también.
+
 ---
 
 ## Otras trampas chicas
@@ -236,6 +255,9 @@ por el CTA principal.
   hardcodeado.
 - **Texto chico sobre imagen**: nunca confiar solo en el color. Pills bordeadas
   con bg semi-translúcido + `backdrop-filter: blur(4px)`.
+- **No todo está en simple-icons.** Adobe no está (licencia), y tampoco
+  FigJam, Higgsfield, Runway ni Midjourney. En `ToolIcon.astro` llevan un
+  cuadrado bordeado con iniciales.
 
 ---
 
