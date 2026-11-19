@@ -4,199 +4,171 @@ Sitio: https://tiagocollado.vercel.app
 
 ## Sobre el proyecto
 
-Pendiente.
+Portfolio de Tiago Collado, diseñador UX/UI y desarrollador frontend. Gotya es la marca con la que trabajo como freelance: diseño sitios y productos digitales desde la definición del negocio hasta la publicación y el mantenimiento.
+
+Cada caso de estudio cuenta el problema, las decisiones y el resultado. La home separa lo que hago (Skills, con los casos donde se ve cada una) de las herramientas que uso (Stack).
+
+## Stack técnico
+
+| | |
+|---|---|
+| Framework | [Astro](https://astro.build) 7.4, sitio estático con una ruta a pedido |
+| Lenguajes | JavaScript (`.astro`, `.js`, `.jsx`, sin TypeScript), CSS |
+| Interactividad | React 19 en islas; scripts de Astro sin React para Skills y el skip link |
+| Estilos | Tailwind CSS 4, con los tokens de la marca en `@theme` |
+| Animación | Framer Motion 12 y Lenis 1.3 (scroll suave) |
+| Idiomas | i18n de Astro: `/en/` y `/es/`, textos en `src/i18n/*.json` |
+| Imágenes | `astro:assets`, optimizadas a WebP en el build |
+| Tipografías | Space Grotesk, Geist y Geist Mono, servidas desde el sitio con la API de fuentes de Astro |
+| Íconos | simple-icons (herramientas) y Lucide (interfaz) |
+| Datos en vivo | API de Last.fm, detrás de un endpoint propio |
+| Indexación | `@astrojs/sitemap`, `robots.txt` y `llms.txt` |
+| Deploy | Vercel, con el adapter `@astrojs/vercel` |
+
+Decisiones, con su contexto: [docs/proceso/decisiones.md](docs/proceso/decisiones.md).
 
 ## Cómo correrlo
 
-Requisitos: Node.js 22.23.4 o superior (lo fija `engines` en `package.json`) y npm.
+Requisitos: Node.js 22.23.4 o superior y npm.
 
 ```sh
-# instalar dependencias
-npm install
-
-# servidor de desarrollo en http://localhost:4321
-npm run dev
-
-# build de producción
-npm run build
+npm install      # dependencias
+npm run dev      # desarrollo en http://localhost:4321
+npm run build    # build de producción en .vercel/output/
 ```
 
-El widget de música necesita dos variables de entorno: copiar `.env.example`
-como `.env` y completar `LASTFM_API_KEY` (se pide en
-[last.fm/api/account/create](https://www.last.fm/api/account/create)) y
-`LASTFM_USERNAME`. Sin ellas el sitio funciona igual y el widget muestra que
-la música no está disponible.
-
-## Stack y decisiones
-
-Pendiente. El detalle de cada decisión está en
-[docs/proceso/decisiones.md](docs/proceso/decisiones.md).
+El widget de música necesita `LASTFM_API_KEY` y `LASTFM_USERNAME`: copiar
+`.env.example` como `.env` y completarlas (la clave se pide en
+[last.fm/api/account/create](https://www.last.fm/api/account/create)). Sin
+ellas el sitio funciona igual y el widget muestra que la música no está
+disponible.
 
 ## Componentes
 
-### NowPlaying: lo que suena cuando diseño
-
-[`NowPlaying.jsx`](src/components/sections/NowPlaying.jsx) es una isla de
-React que se hidrata al entrar en pantalla (`client:visible`), en el About.
-Muestra lo que escucho, con datos de Last.fm (ver
-[Datos en vivo](#datos-en-vivo)), como un tocadiscos:
-
-- **Arriba, el tema que suena o, si no suena nada, el último**: un vinilo
-  dibujado en SVG con la G de la marca como etiqueta, y al lado el título y el
-  artista.
-- **Abajo, los últimos cinco temas**, como el listado de un disco.
-
-El título de arriba y cada fila de la lista son links a la página del tema en
-Last.fm. El widget no tiene otra interacción: es un detalle personal con
-datos en vivo, no un control.
-
-El disco gira siempre: es ambiente. Si de verdad estoy escuchando algo lo
-dice un cartel **"En vivo"**, arriba a la derecha y siempre visible, como el
-"On Air" de un estudio: un rectángulo chico, con borde tenue si no suena
-nada y relleno terracota si suena.
-
-Es un detalle personal, secundario al texto del About: compacto, en tonos
-neutros, y en escritorio en la columna izquierda alineado abajo con la firma,
-sin empujar el texto ni estirar la sección.
-
-Se ocupa de tres cosas: pedir los datos al endpoint propio (y volver a
-pedirlos al volver a la pestaña), traducir el `state` de la respuesta a lo
-que muestra (carga, datos, vacío, privado o error) y mostrar cada estado sin
-saltos de alto. Recibe del `.astro` solo los textos que usa, ya traducidos.
-
-Pendiente: el resto de los componentes propios.
+- **[`Skills.astro`](src/components/sections/Skills.astro)**: la interacción
+  principal. Índice de cuatro skills; cada nombre es un `<button>` de
+  disclosure que abre un panel con sus actividades y links a los casos donde
+  se ve. Datos en [`skills.js`](src/data/skills.js).
+- **[`Stack.astro`](src/components/sections/Stack.astro)** y
+  **[`ToolIcon.astro`](src/components/ui/ToolIcon.astro)**: las 26
+  herramientas en cuatro grupos, en una grilla de 2, 3 o 4 columnas según el
+  ancho. `ToolIcon` dibuja el ícono de simple-icons o, si no existe, un
+  cuadrado con iniciales. Datos en [`stack.js`](src/data/stack.js).
+- **[`NowPlaying.jsx`](src/components/sections/NowPlaying.jsx)**: el widget
+  de música del About (ver [Datos en vivo](#datos-en-vivo)).
+- **[`InteractiveDotGrid.jsx`](src/components/ui/InteractiveDotGrid.jsx)**:
+  grilla de puntos en `<canvas>` detrás del hero; los puntos se apartan del
+  cursor. En táctil es CSS estático. Al pie del hero, una fila de puntos en
+  CSS cae en las mismas columnas.
+- **[`ProjectCard.jsx`](src/components/sections/ProjectCard.jsx)**: card de
+  la grilla de proyectos. En reposo, solo la imagen; en hover, un lavado
+  terracota y los datos del caso. En táctil, los datos van debajo.
 
 ## Datos en vivo
 
-En la sección About, el widget **"Lo que suena cuando diseño"** muestra lo
-último que escuché como un tocadiscos: el tema que suena (o el último) en el
-plato y, abajo, los últimos cinco. Los datos son de
-[Last.fm](https://www.last.fm), que registra lo que escucho.
-
 ```
-navegador ──► /api/now-playing.json ──► Last.fm (user.getRecentTracks)
-              endpoint propio, con la clave
+Spotify ──► Last.fm ──► /api/now-playing.json ──► NowPlaying (navegador)
+          (scrobbling)   función de Vercel, con la clave
 ```
 
-- **El navegador nunca habla con Last.fm.** Llama a
-  [`/api/now-playing.json`](src/pages/api/now-playing.json.js), la única ruta
-  del sitio que se ejecuta a pedido (una función de Vercel); todo lo demás es
-  estático. El endpoint agrega la clave, que es una variable secreta de
-  servidor (`astro:env`) y no aparece en el código generado ni en el
-  JavaScript del navegador.
-- **Qué devuelve.** El tema que suena ahora (si hay uno) y los últimos cinco,
-  cada uno con título, artista, álbum, link a su página en Last.fm, si está
-  sonando y cuándo sonó. Nada más: la respuesta es chica y no trae portadas
-  (ver [Créditos y licencias](#créditos-y-licencias)).
-- **Límites.** La respuesta correcta se guarda 30 segundos en la CDN de
-  Vercel (`Cache-Control: public, s-maxage=30, stale-while-revalidate=60`):
-  con cualquier cantidad de visitas, Last.fm recibe como mucho un pedido cada
-  30 segundos por región. Last.fm no manda headers de caché propios. El pedido
-  a Last.fm se corta a los 5 segundos.
-- **El widget** ([`NowPlaying.jsx`](src/components/sections/NowPlaying.jsx))
-  pide los datos al hacerse visible y otra vez al volver a la pestaña, si pasó
-  más de un minuto. Del endpoint toma los cinco temas más recientes, contando
-  el que suena.
-- **Nunca dice algo que no es cierto.** El cartel "En vivo" se prende solo si
-  algún tema tiene `isNowPlaying`, y la fila de ese tema muestra un
-  ecualizador. Para el lector de pantalla, el cartel prendido dice "Sonando
-  ahora"; apagado no anuncia nada. No muestra tiempo
-  relativo ("hace X"). Está pensado para el caso común: que cuando alguien
-  entra, yo no esté escuchando nada.
-- **La lista** es una lista ordenada (`<ol>`, del más nuevo al más viejo) que
-  toma su nombre del label visible "Últimos 5". Cada fila es un link a la
-  página del tema en Last.fm, con el mismo hover que el título de arriba y el
-  mismo aviso de pestaña nueva para lectores de pantalla. Incluye al tema de
-  arriba, así siempre tiene cinco.
-- **El alto no salta.** El tema de arriba mide siempre lo que el disco (el
-  título se corta en dos líneas, balanceadas), y entre estados (carga, datos,
-  error) la tarjeta anima su alto.
-- **Movimiento reducido**: el disco no gira y los cambios son instantáneos.
-
-### Si la API falla o no hay datos
-
-El endpoint siempre responde JSON con un campo `state`, también cuando falla,
-así que el widget decide qué mostrar sin interpretar códigos HTTP. Ningún
-error queda como un 500 sin explicación.
-
-| Situación | `state` | HTTP | Qué muestra el widget |
-|---|---|---|---|
-| Hay un tema sonando | `ok` | 200 | Ese tema en el tocadiscos, el cartel "En vivo" prendido y la lista, con un ecualizador en su fila |
-| No suena nada | `ok` | 200 | El tema más reciente, el cartel apagado y la lista |
-| La cuenta no tiene temas | `empty` | 200 | "Todavía no registré ningún tema." |
-| El perfil oculta lo que escucha (error 17 de Last.fm) | `private` | 403 | "Mi historial de Last.fm está en privado." |
-| Usuario inexistente, clave inválida o suspendida (errores 6, 10, 26) | `user-not-found` · `invalid-key` · `key-suspended` | 502 | "No pude cargar la música ahora." |
-| Last.fm caído o limitando pedidos (errores 8, 11, 16, 29) | `unavailable` · `rate-limited` | 503 | ídem |
-| Last.fm no responde en 5 segundos | `timeout` | 504 | ídem |
-| Respuesta inesperada o falla de red | `unavailable` | 502 | ídem |
-| Faltan las variables de entorno | `not-configured` | 500 | ídem |
-
-- **Los errores no se cachean** (`Cache-Control: no-store`): el próximo pedido
-  vuelve a intentar.
-- **Mientras carga**, el widget muestra un esqueleto con las medidas del
-  contenido más común (el destacado y cinco filas), así el paso a los datos
-  no cambia el alto.
-- **Vacío, privado y error** muestran el disco con el mensaje al lado y el
-  cartel apagado, sin lista: la tarjeta queda del alto del disco.
-- **Con un solo tema** no hay lista: repetiría el de arriba.
-- **Sin JavaScript** el widget no puede pedir los datos, así que no se
-  muestra.
+- **Origen.** Lo que escucho en Spotify se registra en Last.fm. El endpoint
+  [`now-playing.json.js`](src/pages/api/now-playing.json.js) pide a Last.fm
+  `user.getRecentTracks` y devuelve solo título, artista, álbum, link y fecha
+  de cada tema.
+- **La clave.** `LASTFM_API_KEY` es una variable secreta de servidor
+  (`astro:env`): solo la lee el endpoint, que es la única ruta que corre a
+  pedido. No aparece en el HTML ni en el JavaScript del navegador, que nunca
+  habla con Last.fm.
+- **Escuchando ahora o lo último.** Last.fm marca el tema en curso con
+  `nowplaying`. El endpoint lo pone primero, seguido de los últimos cinco. Si
+  hay uno en curso, el widget prende el cartel "En vivo" y le pone un
+  ecualizador a su fila; si no, muestra el último escuchado con el cartel
+  apagado.
+- **Actualización y caché.** El widget pide los datos al entrar en pantalla y
+  de nuevo al volver a la pestaña, si pasó más de un minuto. Las respuestas
+  correctas se guardan 30 s en la CDN de Vercel
+  (`s-maxage=30, stale-while-revalidate=60`): Last.fm recibe como mucho un
+  pedido cada 30 s por región. Los errores no se cachean, y el pedido a
+  Last.fm se corta a los 5 s.
+- **Estados.** El endpoint siempre responde JSON con un campo `state`.
+  - Al cargar: un esqueleto con las medidas del contenido, sin saltos de alto.
+  - Sin temas: "Todavía no registré ningún tema."
+  - Perfil privado: "Mi historial de Last.fm está en privado."
+  - Cualquier error (clave, usuario, timeout, Last.fm caído o sin
+    configurar): "No pude cargar la música ahora."
+  - Sin JavaScript, el widget no se muestra.
 
 ## Responsive y accesibilidad
 
-Pendiente.
+- **Breakpoints** de Tailwind (`md` 768, `lg` 1024 px). Proyectos: 1 columna
+  y masonry de 2 desde `md`. Stack: 2, 3 y 4 columnas. Menú desplegable abajo
+  de `lg`.
+- **Sin scroll horizontal** a 360, 375, 390, 768 y 1440 px, en la home y en
+  un caso, medido con emulación de celular.
+- **Teclado**: skip link primero; foco visible en todo, salvo en `<main>`.
+  Las skills se activan con Enter o Espacio. El logo del navbar no recibe
+  foco mientras está oculto.
+- **Contraste**: texto chico en `--ink-muted` a 4,5:1 contra el fondo y en
+  `--ink-secondary` a 7,1:1 o más; subrayado de la skill activa a 5,04:1
+  (oscuro) y 3,76:1 (claro).
+- **Movimiento reducido**: entradas solo con fade, grilla de puntos quieta,
+  disco sin girar, cambio de skill instantáneo.
+- **Sin JavaScript**: el contenido se ve, salvo los títulos animados (ver
+  [Limitaciones conocidas](#limitaciones-conocidas)), y Skills abre todos sus
+  paneles.
+- **Semántica**: un `<main>`, `<nav>`, `<header>` y `<footer>` por página;
+  `aria-expanded` y `aria-controls` en Skills; `aria-hidden` en lo
+  decorativo; listas `<ul>` y `<ol>`; ninguna imagen sin `alt`.
 
-## Próximos pasos
+## Indexación
 
-Pendiente.
-
-## Créditos y licencias
-
-- **Datos de música**: [Last.fm](https://www.last.fm), vía su
-  [API](https://www.last.fm/api), bajo sus
-  [términos de uso](https://www.last.fm/api/tos), que permiten solo uso no
-  comercial y piden acreditar a Last.fm con un link. El widget lleva un link
-  de texto "vía Last.fm": el botón *"powered by AudioScrobbler"* que
-  nombran los términos ya no se publica entre los recursos de Last.fm. El
-  título del tema destacado enlaza a su página en Last.fm, como piden los
-  términos. No se muestran
-  portadas de discos, porque los términos excluyen las imágenes y el arte de
-  lo que se puede usar.
-- Skills de IA de Anthropic, usadas en local y no incluidas en este
-  repositorio: [`frontend-design`](https://github.com/anthropics/skills/tree/main/skills/frontend-design)
-  y [`design-critique`](https://github.com/anthropics/knowledge-work-plugins/tree/main/design/skills/design-critique).
-  Cada una se rige por la licencia de su repositorio de origen.
+- **Sitemap** (`/sitemap-index.xml`): las páginas de `/en/` y `/es/`, cada
+  una con su alternativa `hreflang`.
+- **[`robots.txt`](public/robots.txt)**: permite el rastreo salvo en `/api/`
+  y apunta al sitemap.
+- **`/llms.txt`**: resumen del sitio para modelos de lenguaje, generado en el
+  build desde los casos publicados ([`llms.txt.js`](src/pages/llms.txt.js)).
+  Sigue [llmstxt.org](https://llmstxt.org), una convención propuesta.
 
 ## Proceso
 
-Cómo se construyó el proyecto, en [docs/proceso/](docs/proceso/):
+En [docs/proceso/](docs/proceso/): [bitácora](docs/proceso/bitacora.md),
+[decisiones](docs/proceso/decisiones.md) y
+[uso de IA](docs/proceso/uso-de-ia.md).
 
-- [Bitácora](docs/proceso/bitacora.md): por etapa, desde el antecedente en
-  Next, qué se hizo y qué costó; cómo se verifica y qué queda abierto.
-- [Decisiones](docs/proceso/decisiones.md): cada decisión de diseño,
-  arquitectura y tecnología, con su contexto y su porqué.
-- [Cómo uso IA](docs/proceso/uso-de-ia.md): por tipo de tarea, qué hizo la
-  IA, qué revisé o descarté, qué errores aparecieron y qué decidí yo.
+Capturas de página entera del sitio publicado, en
+[docs/proceso/capturas/](docs/proceso/capturas/):
+
+| Página | 375 px | 768 px | 1440 px |
+|---|---|---|---|
+| Home | [oscuro](docs/proceso/capturas/home-375-oscuro.webp) · [claro](docs/proceso/capturas/home-375-claro.webp) | [oscuro](docs/proceso/capturas/home-768-oscuro.webp) · [claro](docs/proceso/capturas/home-768-claro.webp) | [oscuro](docs/proceso/capturas/home-1440-oscuro.webp) · [claro](docs/proceso/capturas/home-1440-claro.webp) |
+| Recuérdalo | [oscuro](docs/proceso/capturas/recuerdalo-375-oscuro.webp) · [claro](docs/proceso/capturas/recuerdalo-375-claro.webp) | [oscuro](docs/proceso/capturas/recuerdalo-768-oscuro.webp) · [claro](docs/proceso/capturas/recuerdalo-768-claro.webp) | [oscuro](docs/proceso/capturas/recuerdalo-1440-oscuro.webp) · [claro](docs/proceso/capturas/recuerdalo-1440-claro.webp) |
 
 ## Cómo uso IA
 
-Uso Claude Code (modelo Claude Opus 5.5) como asistente de desarrollo, en
-cuatro tipos de tarea: migrar componentes del sitio anterior, verificar cada
-API contra la documentación y el código de las librerías, configurar
-herramientas y redactar documentación. La IA propone un enfoque y lo ejecuta
-cuando lo apruebo; yo reviso, tomo las decisiones de diseño, alcance y
-arquitectura, y hago los commits. No usa el sitio como una persona: puede
-medir y capturar páginas con Chrome headless, pero lo interactivo y el juicio
-visual final los pongo yo. Tampoco abre el archivo `.env`: la clave de la API
-la cargo yo.
+Claude Code (Claude Opus 5.5) como asistente de desarrollo: migración de
+componentes, verificación contra la documentación y el código de las
+librerías, configuración y documentación. Las decisiones de diseño, alcance y
+arquitectura y los commits son míos; la IA no abre el archivo `.env`. Reglas
+del asistente en [CLAUDE.md](CLAUDE.md) y [.claude/rules/](.claude/rules/);
+detalle en [docs/proceso/uso-de-ia.md](docs/proceso/uso-de-ia.md).
 
-- **Reglas.** Lee en cada sesión [CLAUDE.md](CLAUDE.md) y
-  [.claude/rules/](.claude/rules/): tokens de diseño, producción de imágenes y
-  errores conocidos del stack.
-- **Skills.** [`auditar-copy`](.claude/skills/auditar-copy/SKILL.md), propia,
-  contrasta el copy contra la evidencia y busca patrones de texto generado por
-  IA. Además uso `frontend-design` y `design-critique`, de Anthropic, que no se
-  incluyen en el repositorio (ver [Créditos y licencias](#créditos-y-licencias)).
+## Créditos y licencias
 
-El detalle, con ejemplos, está en
-[docs/proceso/uso-de-ia.md](docs/proceso/uso-de-ia.md).
+- [Astro](https://astro.build), React, Tailwind CSS, Framer Motion, Lenis y
+  las integraciones de Astro: licencia MIT.
+- [simple-icons](https://simpleicons.org): CC0 1.0. Las marcas pertenecen a
+  sus dueños.
+- [Lucide](https://lucide.dev): licencia ISC.
+- [Space Grotesk](https://github.com/floriankarsten/space-grotesk),
+  [Geist y Geist Mono](https://github.com/vercel/geist-font):
+  [SIL Open Font License 1.1](https://openfontlicense.org).
+- Datos de música de [Last.fm](https://www.last.fm), bajo los
+  [términos de su API](https://www.last.fm/api/tos): uso no comercial,
+  crédito con link ("vía Last.fm" en el widget) y sin portadas de discos.
+
+## Limitaciones conocidas
+
+- Título y meta description iguales en todas las páginas, y en inglés en `/es/`; sin canonical ni `hreflang` en el HTML.
+- Los títulos que entran letra por letra no se ven sin JavaScript.
+- `npm audit` reporta avisos en dependencias de build del adapter de Vercel.
