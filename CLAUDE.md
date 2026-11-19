@@ -1,10 +1,9 @@
 # Portfolio Tiago Collado — marca **Gotya**
 
 > **Cómo usar este archivo**: las reglas de diseño y la ley UX son
-> obligatorias. El resto es contexto del proyecto. El plan de la migración a
-> Astro y sus fases están en `.claude/privado/plan.md` (§8). El historial vive
-> en `git log` y en `docs/proceso/bitacora.md`. Los requisitos, el plan, las
-> trampas del stack y las reglas de imagen y de tokens están importados al final.
+> obligatorias. El resto es contexto del proyecto. El historial vive en
+> `git log` y en `docs/proceso/bitacora.md`. Las trampas del stack y las
+> reglas de imagen y de tokens están importadas al final.
 >
 > **Qué va acá y qué no**: se queda la regla y el ejemplo que la hace
 > entender. El relato de cómo se llegó a ella va al mensaje del commit o a la
@@ -33,7 +32,7 @@ Lo único que se queda en este archivo, porque es estructura y no arte:
 
 ## 5. Sobre Tiago y la marca
 
-**Tiago Collado** · Estudiante avanzado de Lic. en Tecnología Multimedial (Maimónides) · perfil híbrido UX/UI Designer + Frontend Developer, más fuerte en diseño que en programación.
+**Tiago Collado** · Estudiante avanzado de Lic. en Tecnología Multimedial (Maimónides) · perfil híbrido UX/UI Designer + Frontend Developer.
 **Target**: reclutadores de equipos de producto, de pymes a corporaciones, donde se valore diseño y ejecución técnica.
 **Contacto**: tiago.collado@gmail.com · [LinkedIn](https://www.linkedin.com/in/tiagocollado/) · [GitHub](https://github.com/tiagocollado)
 
@@ -42,8 +41,8 @@ Lo único que se queda en este archivo, porque es estructura y no arte:
 - Lema — ES: *"Diseñar experiencias con empatía. / Crearlas con precisión."* · EN: *"Designing experiences with empathy. / Building them with precision."*
 - **Voz: primera persona en todo el sitio.** Gotya es el nombre comercial, no un "nosotros". Sin excepciones: el label de la grilla es `PROYECTOS` / `PROJECTS` (mismo nombre que el nav y que el ancla `#projects`), nunca *"nuestros clientes"*.
 
-### ⚠️ Nivel técnico
-Tiago sigue estudiando y la programación no es su fuerte. **El código tiene que ser lo más entendible posible**: claridad sobre abstracciones avanzadas, y siempre explicar el *por qué* de las decisiones técnicas.
+### ⚠️ Claridad del código
+**El código tiene que ser lo más entendible posible**: claridad sobre abstracciones avanzadas, y siempre explicar el *por qué* de las decisiones técnicas.
 
 ### Identidad visual
 - **Accent**: terracota `#C96A3A` (hover `#B05A2E`)
@@ -51,24 +50,23 @@ Tiago sigue estudiando y la programación no es su fuerte. **El código tiene qu
 - **Dark**: bg `#111110` · ink `#F0EDE8` — **es el tema por defecto**
 - **Símbolo**: la "G" de Gotya en `icon.svg` (en la versión Next, `src/app/icon.svg`; su lugar en Astro, §10) — **vector real exportado de Illustrator**, un único path relleno. Chaflán hexagonal a la izquierda, esquina superior derecha redondeada y una diagonal que sube apuntando al codo de la transversal: esa es la flecha. Su `viewBox` está recortado respecto del artboard original (§6).
 - **Radius** 12px cards / 999px pills · **Easing** `cubic-bezier(0.16, 1, 0.3, 1)`
-- **Tipografía**: Space Grotesk (display) + Geist (body) + Geist Mono (labels) → *en revisión: fase "Identidad" del plan (§8)*
+- **Tipografía**: Space Grotesk (display) + Geist (body) + Geist Mono (labels) → *en revisión, junto con la paleta*
 - Concepto: "minimalismo técnico pero cálido".
 
 ---
 
 ## 6. Qué hace hoy el sitio publicado — la referencia de paridad
 
-Describe el comportamiento del sitio publicado. **Desde el 8/11/2026,
-producción sirve la versión en Astro, construida desde este repo**; los
-deployments de la versión Next quedan en el proyecto de Vercel como rollback
-hasta la limpieza (plan, "Limpieza del sitio viejo"). La migración fue 1:1:
+Describe el comportamiento del sitio publicado. **Producción sirve la versión
+en Astro, construida desde este repo**; los deployments de la versión Next
+quedan en el proyecto de Vercel como rollback. La migración fue 1:1:
 **cualquier diferencia contra esto es un bug**. Los nombres de componente son
 los de la versión Next; dónde cae cada uno en Astro está en §10.
 
 **Deploy**: https://tiagocollado.vercel.app/ · proyecto `tiagocollado` de
 Vercel, conectado a este repo. La URL no cambió con la migración.
 
-**URLs que tienen que seguir iguales**: `/` (redirige a `/es`), `/en`, `/es`,
+**URLs que tienen que seguir iguales**: `/` (redirige a `/en` o `/es` según el navegador), `/en`, `/es`,
 `/{en,es}/projects/cabify-playlist-del-viaje`,
 `/{en,es}/projects/paseo-guemes-hotel`, `/{en,es}/projects/pulso-creativo`,
 `/{en,es}/projects/el-ritual-del-tono`, `/{en,es}/projects/mimascota` y
@@ -80,7 +78,7 @@ Vercel, conectado a este repo. La URL no cambió con la migración.
 > `redirects` de `astro.config.mjs` con `status: 307`; el adapter de Vercel la
 > escribe en la configuración de rutas del deploy.
 
-**Defaults**: tema **dark**; `/` redirige a `/es` (el `defaultLocale` del i18n sigue siendo `en`; las URLs `/en/...` siguen vivas).
+**Defaults**: tema **dark**; `/` redirige con 307 a `/en/` si el primer idioma de `Accept-Language` es inglés y a `/es/` en cualquier otro caso o sin header (detalle en §10). El `defaultLocale` del i18n sigue siendo `en`: con los dos idiomas prefijados, no decide ninguna URL.
 
 **Capa "frontend creativo"**: Lenis smooth scroll (con reset de scroll en cambio de ruta) · custom cursor dot+ring con variants `default | link | view | drag` · SplitText char reveal · magnetic hover + `<MagneticLink>` · grain SVG global · scrollbar custom terracota · `<MotionConfig reducedMotion="user">` (en Astro va en cada isla que anima: `.claude/rules/stack-traps.md`).
 
@@ -139,7 +137,7 @@ categoría y las escuadras de las 4 esquinas.
 
 En mobile se ven completas y quietas (sin crop ni parallax); el recorte y el parallax arrancan en `md+`, y `mockup` y `long-strip` no llevan ninguno de los dos en ningún breakpoint. No tienen hover ni cursor custom porque no abren nada — **por eso la regla de rango tonal ≥120 no les aplica**: existe para que se perciba el duotono del hover de las cards.
 
-**Open Graph**: un PNG 1200×630 con **solo la marca G centrada** sobre el fondo oscuro, **sin texto**. Aplica a todas las páginas, también a `/projects/[slug]`: compartir cualquier link muestra la marca, no una captura del proyecto. En Next se generaba en build; en Astro pasa a ser un **PNG estático** (plan, §8).
+**Open Graph**: un PNG 1200×630 con **solo la marca G centrada** sobre el fondo oscuro, **sin texto**. Aplica a todas las páginas, también a `/projects/[slug]`: compartir cualquier link muestra la marca, no una captura del proyecto. En Next se generaba en build; en Astro es un **PNG estático**.
 
 > **Por qué sin texto.** WhatsApp (y varios clientes de chat) no muestran la card ancha: **recortan un cuadrado del centro**, y un texto alineado a la izquierda queda cortado e ilegible. Una marca centrada sobrevive cualquier recorte. Sin texto, además, la imagen no depende de la tipografía (el cambio de identidad no la toca) ni duplica el lema, que vive solo en los JSON.
 
@@ -168,7 +166,7 @@ Orden = campo `order`. Si la página existe lo decide **`published`**; qué se m
 | 2 | **Cabify · Playlist del viaje** (`cabify-playlist-del-viaje`) | 2023 | ✅ | ✅ | ancha (cover 1:1, recortado al centro) | Propuesta de rediseño de la app de Cabify: elegir la música del viaje. 15 pantallas y prototipo navegable en Figma. |
 | 3 | **Paseo Güemes Hotel** | 2026 | ✅ | ✅ | ancha | Hotel 3★ en Salta. UX/UI + WordPress, reserva directa contra OTAs. |
 | 4 | **Pulso Creativo** | 2026 | ✅ | ✅ | vertical 3:4 (cover 1:1, recortado a los costados) | Consultora B2B 25+ años. Sitio institucional, contacto dual, rediseño UX del contenido. |
-| 5 | **El Ritual del Tono** | 2025 | ✅ | ✅ | ancha | **Proyecto universitario** (Programación Multimedial III, Maimónides). Full-stack MERN con demo en vivo. |
+| 5 | **El Ritual del Tono** | 2025 | ✅ | ✅ | ancha | **Proyecto universitario** (Maimónides). Full-stack MERN con demo en vivo. |
 | 6 | **miMascota** (`mimascota`) | 2022 | ✅ | ✅ | ancha | App de salud de mascotas hecha en equipo de 5 en una hackatón de una semana. 2º puesto en el UMAI UX Challenge 2022. Prototipo navegable en Figma. |
 | 6 | **Multibrand Design System** | 2025 | — V2 | — | ancha | Simulación laboral No Country, equipo de 6. |
 
@@ -176,7 +174,7 @@ Orden = campo `order`. Si la página existe lo decide **`published`**; qué se m
 
 **Una sola card cuadrada en el home: la del caso protagonista, que va primero.** El resto va en 4:3. Es cuadrada desde `md`; en mobile, donde la grilla es de una columna, va en 4:3 como las demás. Hoy es Recuérdalo. Cabify, el protagonista anterior, pasó a 4:3 sin reexportar: su cover cuadrado está compuesto para recortarse a 4:3 sin perder el celular central (`.claude/rules/imagenes.md` §3). Al cambiar de protagonista se renumera `order` para que no haya empates: con el mismo valor, el `sort` desempata por la posición en el array de `projects`.
 
-**Los 5 del home son los que mejor muestran rango.** Ritual es universitario y **se queda en el home porque es el único full-stack con demo en vivo** (decisión de Tiago, 2026-09-21).
+**Los 6 del home son los que mejor muestran rango.** Ritual es universitario y **se queda en el home porque es el único full-stack con demo en vivo**.
 
 La grilla es **masonry**: dos columnas `flex-col` independientes que reparten
 los proyectos **alternando** — las posiciones impares a la izquierda, las pares
@@ -208,24 +206,23 @@ vuelven a `flex` y el `order` no molesta.
 
 ### Decisiones tomadas que no vuelven como pendientes
 
-- **El cover de El Ritual del Tono se publica con el texto inventado que tiene
-  en la pantalla** (Tiago, 2026-09-23). El texto es tan chico que al tamaño de
-  la card no se lee; con zoom sí, y es el riesgo asumido. El hero de Ritual es
-  una composición nueva con captura real, así que el texto inventado vive solo
-  en la card. ⚠️ **No sienta precedente**: para cualquier otro cover la regla
-  de `.claude/rules/imagenes.md` §1.1 sigue entera.
-- **La tira de Pulso** (`01-tira`) se queda con las columnas al ~60% del ancho
-  (Tiago, 2026-09-23). La regla de llenar el encuadre sigue valiendo para las
-  tiras nuevas (`.claude/rules/imagenes.md` §2).
+- **El cover de El Ritual del Tono es una excepción a la regla de captura
+  real** y se publica como está. Su hero es una composición nueva con captura
+  real, así que la excepción vive solo en la card. ⚠️ **No sienta
+  precedente**: para cualquier otro cover la regla de
+  `.claude/rules/imagenes.md` §1.1 sigue entera.
+- **La tira de Pulso** (`01-tira`) se queda con las columnas al ~60% del
+  ancho. La regla de llenar el encuadre sigue valiendo para las tiras nuevas
+  (`.claude/rules/imagenes.md` §2).
 - **Recuérdalo se rotula `Caso de estudio · Diseño accesible`, sin cliente.**
-  No se le agrega rótulo de proyecto universitario (Tiago, 2026-11-13).
+  No lleva rótulo de proyecto universitario.
 - **Recuérdalo usa en cover y hero un mosaico de pantallas sin marco,
   inclinado y cortado por los bordes, en lugar de la receta de celular
-  protagonista** (Tiago, 2026-11-13).
-- **El home muestra las 5 cards publicadas aunque la columna derecha termine
-  una card antes** (Tiago, 2026-11-13).
-- **La card de Pulso pasa a vertical 3:4 para achicar el hueco de la masonry**
-  (Tiago, 2026-11-13). A 1440px el hueco baja de 636px a 279px.
+  protagonista.**
+- **El home muestra todas las cards publicadas aunque las columnas terminen a
+  distinta altura.**
+- **La card de Pulso es vertical 3:4 para achicar el hueco de la masonry.**
+  Con cinco cards, a 1440px el hueco bajó de 636px a 279px.
 
 ### Qué es una tanda
 
@@ -279,7 +276,7 @@ El título de la card da la marca y el campo **`services`** da la categoría, co
 
 > **`stack` lleva solo herramientas core.** UX Research, Card Sorting y Design System son *actividades*, no stack: viven en `role` y en el cuerpo del caso. Varios proyectos quedan en `Figma` a secas y está bien — inflar la lista con actividades le quita credibilidad a la parte que sí es herramienta.
 
-### Stack que se muestra en el carrusel
+### Stack que se muestra en el home
 Solo herramientas, y solo lo que Tiago pueda defender en una entrevista. Es `src/data/stack.js`, en este orden. Lo que se hace con ellas (research, prototipado, accesibilidad) vive en `src/data/skills.js`, no acá.
 - ✅ **Diseño**: Figma, FigJam, Miro, Framer, Photoshop, Illustrator, Premiere
 - ✅ **Desarrollo**: HTML & CSS, JavaScript, React, Next.js, Astro, Tailwind CSS, WordPress, Git & GitHub, Vercel, Cursor
@@ -289,13 +286,13 @@ Solo herramientas, y solo lo que Tiago pueda defender en una entrevista. Es `src
 
 > Excepción: en el case study de El Ritual del Tono sí se nombran Mongo/Node/Express porque son el contexto de ese proyecto. Distinto a promocionarlos como habilidad general.
 
-> **Herramientas propias**: no nombrar los temas de WordPress que usa (decisión de Tiago). En la copy va "un tema liviano" y el porqué de la elección. Elementor, WPForms, Rank Math y LiteSpeed sí se pueden nombrar **en el cuerpo del case study**, pero **no van en `metadata.stack`**: ese campo queda en lo core (`Figma · WordPress`), porque una lista de plugins en la barra de metadata tapa la herramienta que importa.
+> **Herramientas propias**: no se nombran los temas de WordPress que usa. En la copy va "un tema liviano" y el porqué de la elección. Elementor, WPForms, Rank Math y LiteSpeed sí se pueden nombrar **en el cuerpo del case study**, pero **no van en `metadata.stack`**: ese campo queda en lo core (`Figma · WordPress`), porque una lista de plugins en la barra de metadata tapa la herramienta que importa.
 
 ---
 
 ## 8. 🚦 Qué falta hacer
 
-El plan de la migración a Astro (fases, calendario, decisiones y reglas de trabajo) está en `.claude/privado/plan.md`, importado al final: una fase por vez, con check-in al cerrar cada una.
+Lo abierto está en "Abierto" de `docs/proceso/bitacora.md` y en "Limitaciones y mejoras" del README. Una tarea por vez, con check-in al cerrarla.
 
 ---
 
@@ -319,18 +316,14 @@ El plan de la migración a Astro (fases, calendario, decisiones y reglas de trab
 
 ---
 
-## 10. Stack y estructura — objetivo
-
-> 🎯 **Es la estructura objetivo que propone el plan.** Lo marcado con ✅ ya
-> existe (F3). Lo marcado *(F4)*, *(F5)* o *(F6)* se confirma contra la
-> documentación oficial en esa fase.
+## 10. Stack y estructura
 
 **Astro 7 · JavaScript (`.astro`, `.js`, `.jsx`), sin TypeScript · React en islas · Tailwind v4 · Framer Motion · Lenis · i18n nativo de Astro · `astro:assets` · adapter `@astrojs/vercel` · Last.fm como fuente dinámica**
 
 Sale de la versión Next: `next-intl` (lo reemplazan los JSON + una `t()` propia), `next-themes` (lo reemplaza un script inline en el `<head>`), `next/image` (lo reemplaza `astro:assets`) y la OG generada con satori (la reemplaza un PNG estático).
 
 ```
-astro.config.mjs                # ✅ site · adapter de Vercel · trailingSlash
+astro.config.mjs                # site · adapter de Vercel · trailingSlash
                                 # 'always' · redirects (/tiago-collado-cv.pdf →
                                 # CV en Drive, 307) · env.schema (LASTFM_API_KEY
                                 # server secret, LASTFM_USERNAME server public)
@@ -342,71 +335,67 @@ astro.config.mjs                # ✅ site · adapter de Vercel · trailingSlash
                                 # en/es y solo las páginas de /en/ y /es/)
                                 # Sin vercel.json: el adapter arma la config de
                                 # rutas del deploy solo desde astro.config.mjs
-tsconfig.json                   # ✅ preset "base" de Astro (sin modo estricto:
+tsconfig.json                   # preset "base" de Astro (sin modo estricto:
                                 # el proyecto es JavaScript)
-.env.example                    # ✅ LASTFM_API_KEY= y LASTFM_USERNAME= (sin
+.env.example                    # LASTFM_API_KEY= y LASTFM_USERNAME= (sin
                                 # valor; .env no se versiona)
 public/                         # se sirve tal cual, sin optimizar (§11)
-├── favicon.svg                 # ✅ la "G" de Gotya
-├── og-image.png                # ✅ OG estática de la G, 1200x630
-└── robots.txt                  # ✅ permite todo salvo /api/ · apunta al sitemap
+├── favicon.svg                 # la "G" de Gotya
+├── og-image.png                # OG estática de la G, 1200x630
+└── robots.txt                  # permite todo salvo /api/ · apunta al sitemap
 src/
-├── assets/                     # ✅ imágenes que optimiza astro:assets
+├── assets/                     # imágenes que optimiza astro:assets
 │   ├── covers/                 # {slug}-cover.jpg
 │   └── case-study/{slug}/      # {nn}-{nombre}.jpg
 ├── layouts/
-│   └── BaseLayout.astro        # ✅ <head>, script de tema, fuentes, metadata + OG
+│   └── BaseLayout.astro        # <head>, script de tema, fuentes, metadata + OG
 ├── pages/
-│   ├── index.astro             # ✅ obligatorio con i18n. La redirección real
-│   │                           # de / a /es/ (307) está en `redirects` de
-│   │                           # astro.config.mjs; esta página queda de
-│   │                           # respaldo con Astro.redirect (ver nota abajo)
-│   ├── en/ · es/               # ✅ carpetas por idioma: index.astro y
+│   ├── index.astro             # prerender = false · redirige / a /en/ o /es/
+│   │                           # según Accept-Language (ver nota abajo)
+│   ├── en/ · es/               # carpetas por idioma: index.astro y
 │   │                           # projects/[slug].astro (getStaticPaths con los
 │   │                           # publicados). Cada una usa un componente compartido
-│   ├── llms.txt.js             # ✅ /llms.txt estático (prerender = true), armado
+│   ├── llms.txt.js             # /llms.txt estático (prerender = true), armado
 │   │                           # desde publishedProjects y los JSON
 │   └── api/
 │       └── now-playing.json.js # prerender = false · pide a Last.fm con caché
-│                               # en la CDN de Vercel (F6)
+│                               # en la CDN de Vercel
 ├── components/
-│   ├── HomePage.astro          # ✅ la home, compartida por /en y /es
-│   ├── case-study/             # ✅ CaseStudyPage · Header · MetaBar · Section ·
+│   ├── HomePage.astro          # la home, compartida por /en y /es
+│   ├── case-study/             # CaseStudyPage · Header · MetaBar · Section ·
 │   │                           # ImageRun · NextNav (.astro) · CaseStudyImage.jsx
 │   │                           # (isla) · imageSpec.js
-│   ├── sections/               # ✅ Projects · About · Skills · Stack
-│   │                           # (.astro) · ProjectCard.jsx (isla)
-│   │                           # F5: Hero.jsx · Contact.jsx (islas)
-│   └── ui/                     # ✅ .astro: SkipLink (con <script>) · ToolIcon
-│                               # F5, islas: Navbar · NameLogo · NavLogo ·
+│   ├── sections/               # .astro: Hero · Projects · About · Skills · Stack
+│   │                           # .jsx (islas): HeroContent · ProjectCard ·
+│   │                           # Contact · NowPlaying
+│   └── ui/                     # .astro: SkipLink (con <script>) · ToolIcon
+│                               # .jsx: Navbar · NameLogo · NavLogo ·
 │                               # CustomCursor · SplitText · MagneticLink ·
-│                               # MarqueeLink · Footer · InteractiveDotGrid
-│                               # F6: NowPlaying · cambio de idioma (.astro)
-├── data/                       # ✅ projects.js · stack.js · skills.js
+│                               # MarqueeLink · Footer · InteractiveDotGrid ·
+│                               # LanguageToggle
+├── data/                       # projects.js · stack.js · skills.js
+├── scripts/                    # reveal.js (entradas con IntersectionObserver)
+│                               # · smoothScroll.js (Lenis)
 ├── utils/
-│   └── responsiveImage.js      # ✅ getImage() para las islas (solo servidor)
-├── i18n/                       # ✅ es.json · en.json · translate.js
+│   └── responsiveImage.js      # getImage() para las islas (solo servidor)
+├── i18n/                       # es.json · en.json · translate.js
 │                               # (createTranslator(locale) devuelve t('a.b'),
-│                               # t.list() y t.has())
+│                               # t.list() y t.has()) · homeLocale.js (idioma
+│                               # de / según Accept-Language)
 └── styles/
-    └── global.css              # ✅ @theme, tokens, variante dark por clase,
+    └── global.css              # @theme, tokens, variante dark por clase,
                                 # @view-transition, reset en @layer base
 ```
 
-> ⚠️ **`redirectToDefaultLocale` queda en `false` a propósito.** En el build
-> estático, con `true`, `/` sale como meta refresh de **2 segundos** (Astro lo
-> trata como 302) y el build tira un warning de rutas en conflicto con
-> `src/pages/index.astro`, que es obligatorio. Con la redirección a mano en
-> `index.astro` (`Astro.redirect(…, 307)`) sale sin warning y con refresh de 0
-> segundos.
->
-> ⚠️ **La redirección HTTP real de `/` sale de `redirects` en
-> `astro.config.mjs`** (307), que el adapter escribe en
-> `.vercel/output/config.json` y que hace que el build no genere `index.html`.
-> Contradice la doc de routing (la página debería ganar), así que **después de
-> actualizar Astro o el adapter se revisa que la regla `^/$` siga en el
-> `config.json` y que no exista `.vercel/output/static/index.html`**. En dev
-> responde 301 en vez de 307.
+> ⚠️ **`redirectToDefaultLocale` queda en `false` a propósito.** Así el i18n
+> deja pasar `/` a `src/pages/index.astro` sin redirigirlo él. La página se
+> renderiza a pedido y responde 307 con `Vary: Accept-Language`: a `/en/` si
+> el primer idioma del header es inglés, a `/es/` en cualquier otro caso o sin
+> header. **No usa `Astro.preferredLocale`**: compara el código entero, y
+> `en-US` no coincide con el locale `en`. La cuenta está en
+> `src/i18n/homeLocale.js`. Después de actualizar Astro o el adapter se
+> repiten las pruebas con `curl`: `en-US` → `/en/`; `es-AR`, `fr` y sin header
+> → `/es/`.
 
 **Fuentes**: API de fuentes de Astro (`fonts` en `astro.config.mjs`, estable en 7.4.7) + `<Font cssVariable preload />` en el layout. Descarga las fuentes de Google en el build y las sirve desde el sitio, con `font-display: swap`, un fallback con métricas ajustadas (para que el cambio de fuente no mueva el layout) y preload: la misma estrategia que usaba `next/font`. Las variables CSS son las de antes (`--font-geist-sans`, `--font-geist-mono`, `--font-space-grotesk`).
 
@@ -414,9 +403,9 @@ src/
 
 **Tema**: script inline en el `<head>` con la clave `theme` de `localStorage` (la misma que usaba `next-themes`), valores `dark`/`light`, clase en `<html>` y `color-scheme`. El HTML ya sale con `class="dark"`, así que sin JavaScript también queda en oscuro.
 
-**Islas y directivas** (detalle en el plan): `CustomCursor` con `client:only="react"` · `Navbar`, `Hero`, `NameLogo`, `NavLogo` con `client:load` · `InteractiveDotGrid` con `client:idle` · `ProjectCard`, `MagneticLink`, `MarqueeLink`, `Contact`, `Footer`, `CaseStudyImage` y `NowPlaying` con `client:visible`. Las dos trampas de las islas (el contexto no cruza; `MotionConfig` va en cada una) están en `.claude/rules/stack-traps.md`.
+**Islas y directivas**: `CustomCursor` con `client:only="react"` · `Navbar` y `HeroContent` con `client:load` · `InteractiveDotGrid` con `client:idle` · `ProjectCard`, `Contact`, `Footer`, `CaseStudyImage` y `NowPlaying` con `client:visible` · `SplitText` con `client:load` en el h1 del caso y `client:visible` (con `rootMargin: '200px'`) en el h2 de Projects. `NameLogo`, `NavLogo`, `MagneticLink`, `MarqueeLink` y `LanguageToggle` no son islas propias: van adentro de `HeroContent`, `Navbar` o `Contact`. Las dos trampas de las islas (el contexto no cruza; `MotionConfig` va en cada una) están en `.claude/rules/stack-traps.md`.
 
-**Navegación**: página completa (MPA) + `@view-transition { navigation: auto; }` en CSS. `ClientRouter` se evalúa al cerrar F5, en un commit aparte.
+**Navegación**: página completa (MPA) + `@view-transition { navigation: auto; }` en CSS. `ClientRouter` se evaluó y no se adoptó (`docs/proceso/decisiones.md`, "Navegación de página completa con transiciones CSS").
 
 **Imágenes**: covers en `src/assets/covers/` y piezas de case study en `src/assets/case-study/{slug}/{nn}-{nombre}.*` — el número es el orden, el nombre es el tipo de pieza (`mockup`, `tira`, `cluster`…), nunca la sección. 📋 **Las medidas, el vocabulario de tipos, la dirección de arte y cómo cablear una imagen están en `.claude/rules/imagenes.md`.** En `public/` va solo lo que tiene que servirse tal cual: **todo lo que está ahí se sirve en producción** (§11).
 
@@ -445,10 +434,10 @@ src/
 ## 12. Workflow y comunicación
 
 - **Dev**: `npm run dev` (localhost:4321) · **Build**: `npm run build`.
-- **Revisar el build**: no hay script `preview`: el adapter de Vercel no soporta `astro preview`. Lo verificado es servir la carpeta `.vercel/output/static` con un servidor estático (se probó con uno mínimo de Node que sirve el `index.html` de cada carpeta). Así se ven las páginas y las imágenes optimizadas, pero no corren el endpoint de Last.fm ni las redirecciones del deploy (`/`, el CV, la barra final): esas se prueban en Vercel.
-- **Deploy**: Vercel. Producción (`tiagocollado`) construye desde este repo desde el 8/11/2026; el proyecto de staging se borra en la limpieza del sitio viejo (plan).
+- **Revisar el build**: no hay script `preview`: el adapter de Vercel no soporta `astro preview`. Lo verificado es servir la carpeta `.vercel/output/static` con un servidor estático (se probó con uno mínimo de Node que sirve el `index.html` de cada carpeta). Así se ven las páginas y las imágenes optimizadas, pero no corren las rutas a pedido (`/` y el endpoint de Last.fm) ni las redirecciones del deploy (el CV, la barra final). `/` se prueba con `npm run dev`; el resto, en Vercel.
+- **Deploy**: Vercel. Producción (`tiagocollado`) construye desde este repo.
 - **Proyecto nuevo**: entry en `src/data/projects.js` + bloque `case_study_{slug}` en **ambos** JSON.
-- **Todo lo que se versiona es público**: README, `docs/`, comentarios y mensajes de commit se escriben con tono profesional, sin charla interna. El detalle está en el plan.
+- **Todo lo que se versiona es público**: README, `docs/`, comentarios y mensajes de commit se escriben con tono profesional, sin charla interna.
 - **Commits**: los hace Tiago desde su terminal para mantener la autoría. Claude prepara los cambios y le pasa los comandos (git add + git commit con el mensaje), en castellano, con prefijo convencional y **sin trailers `Co-Authored-By`**. Claude sí puede correr los comandos de git que solo leen (status, log, diff, show).
 
 **Estilo de comunicación esperado**:
@@ -457,5 +446,5 @@ src/
 - Preguntar antes de asumir cuando falta info sobre un proyecto, un rol o una decisión.
 - Claridad de código por encima de cleverness.
 
-@AGENTS.md @.claude/privado/requisitos.md @.claude/privado/plan.md
+@AGENTS.md
 @.claude/rules/imagenes.md @.claude/rules/design-tokens.md @.claude/rules/stack-traps.md

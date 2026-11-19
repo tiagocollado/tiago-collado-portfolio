@@ -57,7 +57,7 @@ El proceso correcto:
 > existe, la imagen no sirve. Esto va PRIMERO, antes de medir proporciones o
 > rango tonal: un número verde no dice nada del contenido.
 
-#### ⚠️ El caso que hace aplicable la regla — los covers (septiembre 2026)
+#### ⚠️ El caso que hace aplicable la regla — los covers
 
 **Qué se publicó.** El cover de Pulso salió con el párrafo del hero inventado:
 *"Acompañamos a empresas **doude** una mirada estratégica, **corcaca e
@@ -103,8 +103,7 @@ sirve para decidir si un texto inventado puede quedarse.
 > la captura real incrustada, y salen los dos encuadres. **La tanda de un
 > proyecto no está cerrada mientras su cover siga con texto inventado**, aunque
 > todas sus imágenes de case study estén listas. **La única excepción es el
-> cover de Ritual**, que se queda con su texto inventado por decisión de Tiago,
-> con el riesgo escrito (`CLAUDE.md` §7). No sienta precedente.
+> cover de Ritual** (`CLAUDE.md` §7). No sienta precedente.
 
 ### 1.2. Una imagen tiene que ser comprensible a 330px de ancho
 
@@ -250,8 +249,8 @@ tira es recorrerla.
 > presencia. En la tira de Pulso las columnas ocupan ~60% del ancho y sobra
 > gris alrededor: se ven como capturas chiquitas flotando. **La de Paseo es el
 > estándar** —la home desktop en dos columnas y la mobile en tres, de borde a
-> borde—. La de Pulso se queda así por decisión de Tiago (2026-09-23); las
-> tiras nuevas siguen el criterio de la de Paseo.
+> borde—. La de Pulso se queda así (`CLAUDE.md` §7); las tiras nuevas siguen
+> el criterio de la de Paseo.
 
 > **Variante: varias páginas distintas en vez de una sola partida.** Cuando el
 > valor del proyecto es que es **un producto con varias pantallas** —y no un
@@ -405,7 +404,7 @@ el copy del caso, que sí está en los dos idiomas.
 > *"1 documento · 11 canciones"*). No bloquean nada; se rehacen sin rótulos
 > cuando haya tiempo.
 >
-> **`03-diagrama` de miMascota, excepción aprobada** (Tiago, 2026-11-16): el
+> **`03-diagrama` de miMascota, excepción aceptada**: el
 > flujo de usuario redibujado lleva sus rótulos en castellano (*"Abre miMascota
 > y llega a la Home"*, *"¿Quiere personalizar los avisos?"*), igual que el
 > diagrama de Ritual.
@@ -490,9 +489,9 @@ como un sistema y no como un collage. Los de V2 siguen la misma receta:
 
 > ⚠️ **Excepción a la regla 1 — El Ritual del Tono.** Su cover lleva un
 > **amplificador Fender en tweed** (amarillo-marrón) y un pedal al lado de la
-> laptop, así que la pantalla **no** es el único color de la imagen. **Decisión
-> de Tiago (2026-09-21): queda**, porque es el objeto que lo diferencia de los
-> otros dos; un ampli gris dejaría de decir "guitarristas".
+> laptop, así que la pantalla **no** es el único color de la imagen. **Queda**,
+> porque es el objeto que lo diferencia de los otros dos; un ampli gris
+> dejaría de decir "guitarristas".
 >
 > **Es una excepción de color, no un cambio de regla.** Los demás covers siguen
 > acromáticos. Si otro proyecto pide un objeto con color propio, se decide caso
@@ -500,8 +499,8 @@ como un sistema y no como un collage. Los de V2 siguen la misma receta:
 
 > ⚠️ **Excepción a la regla 1 — miMascota.** Cover y hero llevan, al lado del
 > celular, una **medalla de plata con cinta verde y azul**: la cinta es color
-> fuera de la pantalla. **Aprobada por Tiago (2026-11-16)**, con el mismo
-> criterio que el Fender de Ritual.
+> fuera de la pantalla. **Se acepta** con el mismo criterio que el Fender de
+> Ritual.
 
 ### El cover y el hero son el mismo mockup, a propósito
 
@@ -546,14 +545,12 @@ grande y completa.
 > nunca la calidad.
 
 > ⚠️ **Excepción — El Ritual del Tono: el cover y el hero divergen.** El cover
-> tiene texto inventado en la pantalla (*"los tonos legendarios de los
-> **guionnates** más icónicos"*) y **se queda como está por decisión de Tiago**
-> (2026-09-21, confirmada el 2026-09-23: la tanda de Ritual queda cerrada así,
-> `CLAUDE.md` §7). Un hero sacado de esa escena heredaría el texto inventado, y
-> a sangre se lee sin zoom. Por eso el hero es una **composición plana nueva**:
+> es la excepción a la regla 1.1 y se queda como está (`CLAUDE.md` §7). Un
+> hero sacado de esa escena heredaría la excepción, y a sangre se lee sin
+> zoom. Por eso el hero es una **composición plana nueva**:
 > la home en desktop (captura plana) y en celular (marco dibujado, pantalla con
 > la captura real) sobre hormigón. Se pierde la continuidad card → hero, y es el
-> precio de no publicar texto inventado a sangre.
+> precio de no llevar la excepción a sangre.
 >
 > Si algún día se rehace el cover, conviene armarlo desde la escena del hero
 > nuevo, así cover y hero vuelven a ser la misma imagen.
@@ -757,8 +754,7 @@ nunca `.webp`: el WebP lo genera `astro:assets` en el build (es su formato de
 salida por defecto) y no existe en el repo.
 
 **Cómo cablear una imagen** — subir el archivo a `src/assets/`, importarlo y
-agregarlo al dato. No hace falta tocar ningún componente. *(Forma propuesta: se
-confirma en F4.)*
+agregarlo al dato. No hace falta tocar ningún componente.
 
 ```js
 // Arriba de src/data/projects.js:
