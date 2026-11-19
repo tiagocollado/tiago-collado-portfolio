@@ -1,0 +1,89 @@
+---
+import {
+  siFigma,
+  siMiro,
+  siFramer,
+  siHtml5,
+  siJavascript,
+  siReact,
+  siNextdotjs,
+  siAstro,
+  siTailwindcss,
+  siWordpress,
+  siGithub,
+  siVercel,
+  siCursor,
+  siClaude,
+  siElevenlabs,
+  siGooglegemini,
+  siGoogleanalytics,
+  siGooglesearchconsole,
+  siNotion,
+} from 'simple-icons';
+
+/*
+ * Ícono de una herramienta del Stack. Decorativo (aria-hidden): el nombre
+ * ya está escrito al lado. Monocromo con currentColor, así toma el color del
+ * texto y funciona en los dos temas.
+ *
+ * Las claves son el `name` de src/data/stack.js. Las que tienen ícono en
+ * simple-icons usan su path; las que no (Adobe no está por licencia, y
+ * otras herramientas todavía no se publicaron ahí) llevan un cuadrado con
+ * iniciales del mismo tamaño. Una herramienta nueva sin ninguna de las dos
+ * corta el build.
+ */
+const BRAND_ICONS = new Map([
+  ['Figma', siFigma],
+  ['Miro', siMiro],
+  ['Framer', siFramer],
+  ['HTML & CSS', siHtml5],
+  ['JavaScript', siJavascript],
+  ['React', siReact],
+  ['Next.js', siNextdotjs],
+  ['Astro', siAstro],
+  ['Tailwind CSS', siTailwindcss],
+  ['WordPress', siWordpress],
+  ['Git & GitHub', siGithub],
+  ['Vercel', siVercel],
+  ['Cursor', siCursor],
+  ['Claude', siClaude],
+  ['ElevenLabs', siElevenlabs],
+  ['Gemini', siGooglegemini],
+  ['Google Analytics', siGoogleanalytics],
+  ['Search Console', siGooglesearchconsole],
+  ['Notion', siNotion],
+]);
+
+const INITIALS = new Map([
+  ['FigJam', 'Fj'],
+  ['Photoshop', 'Ps'],
+  ['Illustrator', 'Ai'],
+  ['Premiere', 'Pr'],
+  ['Higgsfield', 'Hf'],
+  ['Runway', 'Rw'],
+  ['Midjourney', 'Mj'],
+]);
+
+const { name, size = 20 } = Astro.props;
+
+const brandIcon = BRAND_ICONS.get(name);
+const initials = INITIALS.get(name);
+
+if (!brandIcon && !initials) {
+  throw new Error(`ToolIcon no tiene ícono ni iniciales para "${name}". Sumalo en ToolIcon.astro.`);
+}
+---
+
+{brandIcon ? (
+  <svg viewBox="0 0 24 24" width={size} height={size} fill="currentColor" aria-hidden="true" class="shrink-0">
+    <path d={brandIcon.path} />
+  </svg>
+) : (
+  <span
+    aria-hidden="true"
+    class="shrink-0 inline-flex items-center justify-center rounded-[3px] border font-mono font-bold leading-none"
+    style={`width: ${size}px; height: ${size}px; border-color: currentColor; font-size: ${size * 0.45}px;`}
+  >
+    {initials}
+  </span>
+)}

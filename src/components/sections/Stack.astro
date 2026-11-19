@@ -1,228 +1,79 @@
 ---
-import { Pause, Play } from 'lucide-react';
+import ToolIcon from '../ui/ToolIcon.astro';
 import { createTranslator } from '../../i18n/translate.js';
-import { stack } from '../../data/stack.js';
+import { stack, stackGroups } from '../../data/stack.js';
 
 const locale = Astro.currentLocale ?? 'en';
 const t = createTranslator(locale);
 
-const items = stack.map((item) => ({
-  name: item.name,
-  group: locale === 'es' ? item.group.es : item.group.en,
+// Un bloque por grupo, en el orden de stackGroups, con sus herramientas en
+// el orden de stack.js. El nombre del grupo va como subtítulo, así que no se
+// repite en cada herramienta.
+const groups = Object.values(stackGroups).map((group) => ({
+  label: locale === 'es' ? group.es : group.en,
+  tools: stack.filter((tool) => tool.group === group).map((tool) => tool.name),
 }));
-
-// La segunda copia existe solo para que el loop no se corte: va oculta para
-// los lectores de pantalla y solo se muestra cuando el carrusel se mueve.
-const copies = [{ isLoopCopy: false }, { isLoopCopy: true }];
 ---
 
 {/*
-  Carrusel de herramientas.
-
-  - El HTML sale como lista estática con wrap: todo visible, sin la copia
-    del loop y sin botón. Es lo que se ve sin JavaScript y con movimiento
-    reducido.
-  - El <script> de abajo agrega data-animated a la sección (si no se pidió
-    menos movimiento), y recién ahí el CSS arma el carrusel: una fila, la
-    copia del loop, los bordes desvanecidos y el botón de pausa.
-  - Se pausa con el botón (aria-pressed: presionado = pausado) y con hover
-    sobre la tira. El hover se mira en la tira y no en toda la sección: el
-    botón está en la sección, así que si el hover encima pausara, apretarlo
-    para reanudar no movería nada.
+  Herramientas agrupadas, en una grilla quieta: 2 columnas en celular, 3 en
+  tablet y 4 en escritorio. Las tarjetas no son clickeables, así que no
+  tienen hover ni cursor de link.
 */}
 <section
   aria-labelledby="stack-heading"
-  class="pt-16 md:pt-20 lg:pt-28 pb-16 md:pb-20 lg:pb-28"
-  data-stack
+  class="pt-16 md:pt-20 lg:pt-28 pb-16 md:pb-20 lg:pb-28 px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32"
 >
-  <div class="px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32">
-    <div
-      class="max-w-7xl mx-auto flex items-center justify-between gap-6"
+  <div class="max-w-7xl mx-auto">
+    <h2
+      id="stack-heading"
+      class="text-xs font-mono tracking-[0.2em] uppercase"
+      style="color: var(--color-accent); --reveal-y: 12px; --reveal-duration: 0.6s;"
       data-reveal-trigger
-      data-reveal-margin="-100px"
+      data-reveal-margin="-80px"
       data-reveal
-      style="--reveal-y: 12px; --reveal-duration: 0.6s;"
     >
-      <h2
-        id="stack-heading"
-        class="text-xs font-mono tracking-[0.2em] uppercase"
-        style="color: var(--color-accent);"
-      >
-        {t('stack.label')}
-      </h2>
+      {t('stack.label')}
+    </h2>
 
-      <button
-        type="button"
-        class="stack-toggle items-center justify-center w-11 h-11 rounded-full border cursor-pointer border-(--border-default) text-(--ink-secondary) hover:border-accent hover:text-(--ink-primary) hover:scale-110 transition-[color,border-color,scale] duration-300 ease-expo-out motion-reduce:transition-none"
-        aria-label={t('stack.pause')}
-        aria-pressed="false"
-        data-stack-toggle
-        data-cursor="link"
-      >
-        <span class="stack-toggle-pause" aria-hidden="true"><Pause size={16} /></span>
-        <span class="stack-toggle-play" aria-hidden="true"><Play size={16} /></span>
-      </button>
-    </div>
-  </div>
-
-  <div
-    class="stack-strip relative mt-8 md:mt-10 px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32"
-    data-reveal-trigger
-    data-reveal-margin="-100px"
-    data-reveal
-    style="--reveal-duration: 0.7s; --reveal-delay: 0.1s;"
-  >
-    <div
-      class="stack-fade absolute left-0 top-0 bottom-0 w-20 md:w-40 z-10 pointer-events-none"
-      style="background: linear-gradient(to right, var(--bg-primary), transparent);"
-      aria-hidden="true"
-    ></div>
-    <div
-      class="stack-fade absolute right-0 top-0 bottom-0 w-20 md:w-40 z-10 pointer-events-none"
-      style="background: linear-gradient(to left, var(--bg-primary), transparent);"
-      aria-hidden="true"
-    ></div>
-
-    <div class="stack-inner max-w-7xl mx-auto">
-      <div class="stack-track">
-        {copies.map((copy) => (
-          <ul
-            class="stack-list"
-            aria-hidden={copy.isLoopCopy ? 'true' : undefined}
-            data-loop-copy={copy.isLoopCopy ? '' : undefined}
+    <div class="mt-8 md:mt-10 space-y-10 md:space-y-12">
+      {groups.map((group) => (
+        <div
+          data-reveal-trigger
+          data-reveal-margin="-80px"
+          data-reveal
+          style="--reveal-duration: 0.7s;"
+        >
+          <h3
+            class="text-xs font-mono tracking-[0.2em] uppercase"
+            style="color: var(--ink-secondary);"
           >
-            {items.map((item) => (
+            {group.label}
+          </h3>
+          <ul class="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            {group.tools.map((tool) => (
               <li
-                class="flex flex-col items-center shrink-0 px-5 py-3 md:px-6 md:py-4 rounded-full border border-(--border-default)"
+                class="flex items-center gap-3 min-w-0 px-4 py-3 md:px-5 md:py-4 rounded-xl border border-(--border-default)"
                 style="background-color: var(--color-surface);"
               >
-                <span
-                  class="font-medium text-sm md:text-base whitespace-nowrap"
-                  style="color: var(--ink-primary);"
-                >
-                  {item.name}
+                <span class="flex shrink-0" style="color: var(--ink-secondary);">
+                  <ToolIcon name={tool} size={20} />
                 </span>
                 <span
-                  class="text-xs leading-tight whitespace-nowrap"
-                  style="color: var(--ink-secondary);"
+                  class="min-w-0 font-medium text-sm md:text-base leading-snug"
+                  style="color: var(--ink-primary);"
                 >
-                  {item.group}
+                  {tool}
                 </span>
               </li>
             ))}
           </ul>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   </div>
 </section>
 
 <script>
   import '../../scripts/reveal.js';
-
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-  for (const section of document.querySelectorAll('[data-stack]')) {
-    // El carrusel se mueve solo si este script corre y no se pidió menos
-    // movimiento. Si la preferencia cambia con la página abierta, se sigue.
-    const applyMotionPreference = () => {
-      section.toggleAttribute('data-animated', !reduceMotion.matches);
-    };
-    applyMotionPreference();
-    reduceMotion.addEventListener('change', applyMotionPreference);
-
-    const toggle = section.querySelector('[data-stack-toggle]');
-    toggle?.addEventListener('click', () => {
-      const isPaused = toggle.getAttribute('aria-pressed') !== 'true';
-      toggle.setAttribute('aria-pressed', String(isPaused));
-      section.toggleAttribute('data-paused', isPaused);
-    });
-  }
 </script>
-
-<style>
-  /* ─── Lista estática: sin JavaScript y con movimiento reducido ─── */
-  .stack-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-
-  /* Lo que solo existe cuando el carrusel se mueve. */
-  [data-loop-copy],
-  .stack-toggle,
-  .stack-fade {
-    display: none;
-  }
-
-  /* ─── Carrusel: solo con data-animated (lo pone el script) ─── */
-  [data-animated] .stack-strip {
-    padding-inline: 0;
-  }
-
-  [data-animated] .stack-inner {
-    max-width: none;
-  }
-
-  [data-animated] .stack-toggle {
-    display: inline-flex;
-  }
-
-  [data-animated] .stack-fade {
-    display: block;
-  }
-
-  /*
-   * Las dos copias, una al lado de la otra, y la pista se corre la mitad
-   * de su ancho: en ese punto la segunda copia está donde estaba la
-   * primera y el loop vuelve a empezar sin salto. Cada copia lleva el gap
-   * también al final, para que la unión entre las dos mida lo mismo que el
-   * espacio entre dos ítems.
-   */
-  [data-animated] .stack-track {
-    display: flex;
-    width: max-content;
-    animation: stack-scroll 70s linear infinite;
-  }
-
-  [data-animated] .stack-list {
-    flex-wrap: nowrap;
-    padding-inline-end: 0.75rem;
-  }
-
-  [data-animated] [data-loop-copy] {
-    display: flex;
-  }
-
-  /* Pausa: con el botón y con hover sobre la tira. */
-  [data-animated][data-paused] .stack-track {
-    animation-play-state: paused;
-  }
-
-  @media (hover: hover) {
-    [data-animated] .stack-strip:hover .stack-track {
-      animation-play-state: paused;
-    }
-  }
-
-  @keyframes stack-scroll {
-    to { transform: translateX(-50%); }
-  }
-
-  /* Un ícono por estado: pausa mientras se mueve, play cuando está pausado. */
-  .stack-toggle-play,
-  .stack-toggle[aria-pressed='true'] .stack-toggle-pause {
-    display: none;
-  }
-
-  .stack-toggle[aria-pressed='true'] .stack-toggle-play {
-    display: inline-flex;
-  }
-
-  /* Por si la preferencia llega antes que el script: sin animación. */
-  @media (prefers-reduced-motion: reduce) {
-    .stack-track {
-      animation: none;
-    }
-  }
-</style>
