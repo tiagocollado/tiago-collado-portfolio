@@ -2,7 +2,9 @@
 import { createTranslator } from '../../i18n/translate.js';
 
 const { project } = Astro.props;
-const locale = Astro.currentLocale ?? 'en';
+// 'es' o 'en' y no un string cualquiera: así el editor acepta
+// metadata.client?.[locale] sin marcar "any implícito".
+const locale = Astro.currentLocale === 'es' ? 'es' : 'en';
 const t = createTranslator(locale);
 
 const metadata = project.metadata;
@@ -33,7 +35,8 @@ const projectLinks = [
 const BLOCK_FIRST_DELAY = 0.5;
 const BLOCK_STAGGER = 0.06;
 // toFixed(2) redondea la suma: 0.5 + 3 × 0.06 da 0.6799999999999999 en JS.
-const blockRevealStyle = (position) => {
+// El "= 0" le dice al editor que position es un número.
+const blockRevealStyle = (position = 0) => {
   const delay = (BLOCK_FIRST_DELAY + position * BLOCK_STAGGER).toFixed(2);
   return `--reveal-y: 12px; --reveal-duration: 0.5s; --reveal-delay: ${delay}s;`;
 };

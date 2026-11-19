@@ -7,7 +7,9 @@ import { publishedProjects } from '../../data/projects.js';
 import { SIZES_COVER, SIZES_COVER_PORTRAIT } from '../case-study/imageSpec.js';
 import { getResponsiveImageProps } from '../../utils/responsiveImage.js';
 
-const locale = Astro.currentLocale ?? 'en';
+// 'es' o 'en' y no un string cualquiera: así el editor acepta
+// project.services[locale] sin marcar "any implícito".
+const locale = Astro.currentLocale === 'es' ? 'es' : 'en';
 const t = createTranslator(locale);
 
 const homeProjects = publishedProjects.filter((project) => project.showOnHome);

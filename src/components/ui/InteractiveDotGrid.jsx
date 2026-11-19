@@ -13,7 +13,6 @@ export default function InteractiveDotGrid({
   lerpFactor = 0.12, // 0–1: más chico, retorno más elástico
   colorVar = '--ink-subtle',
   opacity = 0.55,
-  className,
 }) {
   const canvasRef = useRef(null);
   const fallbackRef = useRef(null);
@@ -218,7 +217,7 @@ export default function InteractiveDotGrid({
 
   return (
     <>
-      <canvas ref={canvasRef} className={`absolute inset-0 pointer-events-none ${className ?? ''}`} aria-hidden="true" />
+      <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" aria-hidden="true" />
 
       {/* Grilla para táctil: oculta hasta que el efecto la muestra. */}
       <div

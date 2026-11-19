@@ -36,7 +36,7 @@ export default function ProjectCard({
   href,
   title,
   servicesLabel,
-  awardLabel = null,
+  awardLabel,
   cardShape,
   coverImage,
   gridPosition = 0,
