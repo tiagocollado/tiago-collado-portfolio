@@ -26,16 +26,9 @@ const projectLinks = [
 ].filter(Boolean);
 
 /*
- * Entrada: los bloques aparecen de a uno, 0.06 s entre cada uno, cuando la
- * barra entra en pantalla. El primero espera 0.5 s, así en desktop (donde la
- * barra está a la vista desde el inicio) entra después de la cascada del
- * header y la página se lee como un solo movimiento.
- *
- * Al entrar en pantalla y no al cargar: en mobile la barra queda debajo del
- * intro, fuera de la primera pantalla, y animarla al cargar sería animarla
- * donde nadie la ve. Sin margen de detección (0px), a diferencia de las
- * secciones: con uno negativo, en una laptop baja la barra podía quedar fuera
- * del área observada al cargar y no entrar hasta el primer scroll.
+ * El primer bloque espera 0.5 s para entrar después del header. Anima al
+ * entrar en pantalla (en mobile queda debajo del intro) y sin margen: con uno
+ * negativo, en una laptop baja no entraba hasta el primer scroll.
  */
 const BLOCK_FIRST_DELAY = 0.5;
 const BLOCK_STAGGER = 0.06;

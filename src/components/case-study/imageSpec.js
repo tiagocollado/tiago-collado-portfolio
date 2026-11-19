@@ -1,24 +1,10 @@
 /*
- * Traducción del vocabulario de imágenes a layout: qué ancho, qué recorte y qué
- * `sizes` le toca a cada `type`. La dirección de arte (qué se muestra, con qué
- * luz y color) vive en `.claude/rules/imagenes.md`; acá solo lo que necesita
- * el código.
- *
- * Por cada tipo:
- * - bleed:    true = va a sangre, de borde a borde del viewport, fuera del
- *             shell de 1280px. Solo mockup y long-strip, las dos piezas que
- *             muestran el sitio entero.
- * - aspect:   recorte en desktop (md+). null = sin recorte: la imagen se ve
- *             entera y define su alto. La tira significa su largo y el mockup
- *             es una composición cerrada, así que ninguno se recorta.
- * - frame:    proporción nominal, para reservar el alto antes de que la imagen
- *             cargue (evita el salto de layout). Los tipos sin recorte la
- *             pueden sobrescribir con el `frame` del brief.
- * - parallax: la imagen se mueve ±24px al scrollear. Necesita recorte, porque
- *             se mueve dentro de un contenedor de alto fijo.
- *
- * El ancho lo decide QUÉ es la imagen, nunca DÓNDE cae: por eso es un tipo
- * (mockup) y no "el slot hero va a sangre".
+ * Ancho, recorte y `sizes` de cada `type` de imagen. El ancho lo decide qué
+ * es la imagen, nunca dónde cae.
+ * - bleed: a sangre, fuera del shell de 1280px.
+ * - aspect: recorte desde md; null = se ve entera y define su alto.
+ * - frame: proporción para reservar el alto antes de que cargue.
+ * - parallax: ±24px al scrollear; necesita recorte.
  */
 export const IMAGE_TYPE_SPEC = {
   mockup: {
@@ -59,19 +45,12 @@ export const IMAGE_TYPE_SPEC = {
   },
 };
 
-// A sangre la imagen ocupa el viewport entero: 100vw es el valor exacto.
 export const SIZES_BLEED = '100vw';
 
 /*
- * Dentro del shell (`max-w-7xl` = 1280px, con el gutter
- * `px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32`). Los escalones salen del
- * layout real:
- *   < 1024px  el gutter va de 24 a 40px por lado; 100vw sobra un poco, que
- *             es el lado seguro (nunca baja una variante borrosa).
- *   1024-1279 gutter de 64px por lado = 8rem en total.
- *   1280-1471 gutter de 96px por lado = 12rem en total.
- *   >= 1472   el shell toca su máximo y queda clavado en 1280px.
- * Si el shell cambia de ancho, estos valores se mueven en la misma pasada.
+ * Sale del shell de 1280px y su gutter: 100vw abajo de 1024 (sobra un poco,
+ * el lado seguro), menos 8rem hasta 1279, menos 12rem hasta 1471 y 1280px
+ * desde ahí. Si el shell cambia, esto cambia con él.
  */
 export const SIZES_SHELL = [
   '(max-width: 1023px) 100vw',
@@ -98,11 +77,7 @@ export const SIZES_NEXT_THUMBNAIL = '(max-width: 768px) 100vw, 160px';
 // Los anchos del srcset son los mismos que generaba next/image por defecto, más el ancho original.
 const SRCSET_WIDTHS = [640, 750, 828, 1080, 1200, 1920, 2048];
 
-/*
- * Anchos para el `srcset` de una imagen: los de la lista que entran en el
- * archivo original, más el original. Nunca uno más grande que el archivo:
- * agrandar una imagen solo suma peso sin sumar detalle.
- */
+// Nunca más ancho que el original: agrandar suma peso sin sumar detalle.
 export function srcsetWidthsFor(image) {
   const smallerWidths = SRCSET_WIDTHS.filter((width) => width < image.width);
   return [...smallerWidths, image.width];

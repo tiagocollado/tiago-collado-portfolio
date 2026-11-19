@@ -1,64 +1,28 @@
 import { useEffect, useRef, useState } from 'react';
 
 /*
- * NowPlaying: lo que estoy escuchando, con datos de Last.fm, como un
- * tocadiscos. Es un detalle personal del About, no su protagonista: por eso
- * es compacto, va en tonos neutros y no tiene interacción propia más allá de
- * sus links.
- *
- * Pide los datos a /api/now-playing.json, el endpoint propio del sitio (que
- * es el que habla con Last.fm y guarda la clave). Arriba va el tema que
- * suena o, si no suena nada, el último: un vinilo con la G como etiqueta, el
- * título y el artista. Abajo, los últimos cinco temas, como el listado de un
- * disco. El título de arriba y cada fila son links a la página del tema en
- * Last.fm.
- *
- * El disco gira siempre: es ambiente, dice "esto es música". Si de verdad
- * estoy escuchando algo lo dice el cartel "En vivo" de arriba a la derecha,
- * como el cartel "On Air" de un estudio: apagado si no suena nada, prendido
- * si algún tema tiene isNowPlaying. El widget nunca dice algo que no es
- * cierto.
- *
- * Estados de los datos:
- *   loading   esqueleto con las medidas del contenido
- *   ok        hay temas: el destacado y, si hay más de uno, la lista
- *   empty     la cuenta no tiene temas
- *   private   el perfil oculta lo que escucha
- *   error     cualquier otra falla (el endpoint distingue el motivo para los
- *             logs; a quien visita el sitio le alcanza con un mensaje)
- *
- * `texts` trae los textos ya traducidos.
+ * Lo que estoy escuchando, con datos de Last.fm, como un tocadiscos. Pide los
+ * datos al endpoint propio, que es el que tiene la clave. El disco gira
+ * siempre; si de verdad suena algo lo dice el cartel "En vivo".
  */
 
 const ENDPOINT = '/api/now-playing.json';
 
-// Al volver a la pestaña se vuelve a pedir, pero no antes de este tiempo: el
-// endpoint cachea 30 s, así que pedir más seguido no trae nada nuevo.
+// El endpoint cachea 30 s: pedir más seguido al volver a la pestaña no trae
+// nada nuevo.
 const REFRESH_AFTER_MS = 60_000;
 
-// Cuántos temas muestra la lista. El endpoint trae hasta seis (el que suena
-// más los últimos cinco); la lista toma los cinco más recientes, contando el
-// que suena. Si cambia, cambia también el texto "Últimos 5".
+// Si cambia, cambia también el texto "Últimos 5".
 const TRACKS_IN_LIST = 5;
 
-// ID fijo: el widget aparece una sola vez por página (en el About). Lo usa
-// aria-labelledby para que la lista tome su nombre del label visible.
 const LIST_LABEL_ID = 'now-playing-list-label';
 
-/*
- * Alto de cada fila de la lista: 44 px con un dedo (la medida táctil
- * recomendada) y 28 px con mouse o trackpad, por encima de los 24 px que pide
- * WCAG 2.5.8 y lo bastante compacto para que el widget no supere al texto
- * del About en escritorio. Lo decide el tipo de puntero, no el ancho de
- * pantalla: una tablet en horizontal es ancha y se usa con el dedo.
- */
+// 44 px con el dedo y 28 px con mouse (WCAG 2.5.8 pide 24). Lo decide el
+// puntero y no el ancho: una tablet en horizontal es ancha y se usa con el dedo.
 const ROW_HEIGHT = 'h-11 pointer-fine:h-7';
 
-/*
- * Convierte la respuesta del endpoint en lo que necesita la vista. El
- * endpoint siempre manda JSON con `state`, también cuando responde un error,
- * así que el JSON se lee sin mirar el código HTTP.
- */
+// El endpoint siempre manda JSON con `state`, también en los errores, así que
+// no hace falta mirar el código HTTP.
 function viewFromResponse(body) {
   if (body?.state === 'ok' && body.tracks?.length > 0) {
     return { status: 'ok', tracks: body.tracks.slice(0, TRACKS_IN_LIST) };
@@ -84,8 +48,6 @@ export default function NowPlaying({ texts }) {
         const response = await fetch(ENDPOINT, { signal: controller.signal });
         setView(viewFromResponse(await response.json()));
       } catch (error) {
-        // Abortar es intencional (se desmontó o arrancó otro pedido): no es
-        // un error que haya que mostrar.
         if (error.name !== 'AbortError') setView({ status: 'error' });
       }
     }
@@ -103,31 +65,22 @@ export default function NowPlaying({ texts }) {
     };
   }, []);
 
-  // El destacado es siempre el primero: el que suena o, si no suena nada, el
-  // último que sonó (el endpoint los manda en ese orden).
+  // El endpoint manda primero el que suena o, si no suena nada, el último.
   const featured = view.status === 'ok' ? view.tracks[0] : null;
   const isLive = view.status === 'ok' && view.tracks.some((track) => track.isNowPlaying);
 
   return (
     <div>
-      {/* En tinta secundaria y no en terracota: el widget no compite con
-          el eyebrow del About. */}
       <h3 className="text-[11px] font-mono tracking-[0.2em] uppercase text-(--ink-secondary)">{texts.label}</h3>
 
-      {/* El alto de la card se anima: sigue al del contenido (medido abajo)
-          con una transición CSS, así el paso entre estados desliza en vez de
-          saltar.
-          box-content: el alto medido es el del contenido con su padding, y
-          el borde va por fuera. Con movimiento reducido, la regla global de
-          global.css deja la transición en 0 y el cambio es instantáneo. */}
+      {/* El alto sigue al del contenido con una transición, así el cambio de
+          estado desliza en vez de saltar. box-content: el alto medido incluye
+          el padding y el borde va por fuera. */}
       <div
         className="mt-3 box-content overflow-hidden rounded-xl border border-(--border-default) bg-(--color-surface) transition-[height] duration-600 ease-expo-out"
         style={{ height: contentHeight ?? 'auto' }}
       >
         <div ref={contentRef} className="p-4">
-          {/* El cartel, solo en la fila de arriba. Está siempre, también
-              mientras carga o ante un error: ahí queda apagado, porque no
-              hay nada que diga que suena algo. */}
           <div className="flex justify-end">
             <LiveSign isLive={isLive} texts={texts} />
           </div>
@@ -147,11 +100,8 @@ export default function NowPlaying({ texts }) {
             {view.status === 'error' && <EmptyTurntable message={texts.error} />}
           </div>
 
-          {/* Crédito a Last.fm: los términos de su API piden el link, así
-              que está en todos los estados, pero apenas se ve. Va al final,
-              chico y en --ink-muted, a propósito: es una atribución, no
-              contenido. Ese tono no llega al contraste mínimo para texto
-              (3:1 contra el 4,5:1 de WCAG); se prioriza que sea discreto. */}
+          {/* Los términos de la API de Last.fm piden este link en todos los
+              estados. */}
           <div className="flex justify-end mt-2">
             <a
               href="https://www.last.fm"
@@ -161,7 +111,7 @@ export default function NowPlaying({ texts }) {
               className="text-[11px] leading-none font-mono tracking-[0.18em] transition-colors duration-300 ease-expo-out text-(--ink-muted) hover:text-accent"
             >
               {texts.credit}
-              <span className="sr-only select-none"> {texts.new_tab}</span>
+              <span className="sr-only select-none"> {texts.newTab}</span>
             </a>
           </div>
         </div>
@@ -171,21 +121,9 @@ export default function NowPlaying({ texts }) {
 }
 
 /*
- * Cartel "En vivo", como el "On Air" de un estudio: un rectángulo chico con
- * el texto adentro, sin animación.
- *
- * - Apagado: borde y texto tenues, como un cartel sin corriente.
- * - Prendido: relleno terracota sólido con el texto en la tinta oscura de la
- *   marca (#111110), fija en los dos temas porque el fondo terracota también
- *   lo es. Contraste 5:1.
- *
- * El estado no depende solo del color (WCAG 1.4.1): prendido, el cartel pasa
- * de un contorno a un bloque lleno.
- *
- * Para el lector de pantalla, lo visible va oculto (aria-hidden) y solo se
- * anuncia "Sonando ahora" cuando está prendido. Apagado no se anuncia nada:
- * el texto "En vivo" leído sería falso, y "No está sonando" tampoco sería
- * cierto mientras carga o ante un error, cuando no se sabe.
+ * Prendido: relleno terracota con tinta #111110 fija (5:1), y el estado no
+ * depende solo del color: pasa de contorno a bloque lleno. Apagado no anuncia
+ * nada: mientras carga o ante un error no se sabe si suena algo.
  */
 function LiveSign({ isLive, texts }) {
   return (
@@ -198,29 +136,16 @@ function LiveSign({ isLive, texts }) {
       >
         {texts.live}
       </span>
-      {isLive && <span className="sr-only">{texts.status_playing}</span>}
+      {isLive && <span className="sr-only">{texts.statusPlaying}</span>}
     </div>
   );
 }
 
-/*
- * Hover de los links a Last.fm (el título del destacado y las filas):
- * terracota, con el subrayado que se separa del texto. Sin flechas: lo que
- * dice "link" es el hover y el cursor. En las filas es el mismo, con group-:
- * la fila entera es el link y lo que cambia es su título.
- */
 const TRACK_LINK_HOVER =
   'transition-[color,text-decoration-color,text-underline-offset] duration-300 ease-expo-out hover:text-accent hover:decoration-accent hover:underline-offset-8';
 
-/*
- * El tema destacado: el disco y, al lado, el título (link a su página en
- * Last.fm, como piden los términos de la API) y el artista.
- *
- * El título se corta en dos líneas (solo visual: el lector de pantalla lee
- * el título completo), así el bloque mide siempre lo que el disco. Con
- * text-balance las dos líneas quedan parejas y no queda una palabra sola
- * abajo ("Another One / Bites the Dust", no "Another One Bites the / Dust").
- */
+// El título se corta en dos líneas balanceadas para que el bloque mida lo
+// mismo que el disco.
 function Turntable({ track, texts }) {
   const byline = track.album ? `${track.artist} — ${track.album}` : track.artist;
 
@@ -229,7 +154,7 @@ function Turntable({ track, texts }) {
       <Vinyl />
 
       {/* key: si un refresco trae otro tema, el bloque se vuelve a montar y
-          entra con un fade corto. */}
+          entra con un fade. */}
       <div key={`${track.url}-${track.playedAt}`} className="min-w-0 motion-safe:animate-fade-in">
         <a
           href={track.url}
@@ -239,9 +164,9 @@ function Turntable({ track, texts }) {
           className={`line-clamp-2 text-balance font-display text-base leading-tight text-(--ink-primary) underline decoration-(--border-strong) underline-offset-4 ${TRACK_LINK_HOVER}`}
         >
           {track.title}
-          {/* select-none: el texto sr-only sigue siendo seleccionable y
-              aparecería al copiar el título. */}
-          <span className="sr-only select-none"> {texts.track_link}</span>
+          {/* select-none: el texto sr-only es seleccionable y aparecería al
+              copiar el título. */}
+          <span className="sr-only select-none"> {texts.trackLink}</span>
         </a>
 
         {byline && <p className="mt-1 truncate text-xs leading-relaxed text-(--ink-secondary)">{byline}</p>}
@@ -250,13 +175,7 @@ function Turntable({ track, texts }) {
   );
 }
 
-/*
- * Los últimos cinco, del más nuevo al más viejo (por eso <ol>), como el
- * listado de un disco. Incluye al destacado: así la lista siempre tiene
- * cinco, suene algo o no. Cada fila es un link a la página del tema en
- * Last.fm, con el mismo hover y el mismo aviso para lector de pantalla que el
- * título de arriba.
- */
+// Incluye al destacado, así la lista siempre tiene cinco, suene algo o no.
 function Tracklist({ tracks, texts }) {
   return (
     <div className="mt-3">
@@ -264,7 +183,7 @@ function Tracklist({ tracks, texts }) {
         id={LIST_LABEL_ID}
         className="text-[11px] font-mono uppercase tracking-[0.18em] text-(--ink-secondary)"
       >
-        {texts.list_label}
+        {texts.listLabel}
       </p>
 
       <ol aria-labelledby={LIST_LABEL_ID} className="mt-1">
@@ -287,12 +206,9 @@ function Tracklist({ tracks, texts }) {
                 )}
               </span>
 
-              {/* Título y artista en una sola línea. El artista, con su
-                  separador, entra al lado del título o baja a una segunda
-                  línea que no se ve (flex-wrap, alto de una línea y
-                  overflow-hidden): así nunca queda un "·" suelto. Si el
-                  título solo no entra, se corta con "…". El artista sigue en
-                  el DOM, así que el lector de pantalla lo lee igual. */}
+              {/* El artista entra al lado del título o baja a una segunda
+                  línea oculta (alto de una línea + overflow-hidden), así nunca
+                  queda un "·" suelto. */}
               <span className="flex flex-1 flex-wrap h-4 min-w-0 overflow-hidden">
                 <span className="max-w-full truncate text-(--ink-primary) underline decoration-transparent underline-offset-4 transition-[color,text-decoration-color,text-underline-offset] duration-300 ease-expo-out group-hover:text-accent group-hover:decoration-accent group-hover:underline-offset-8">
                   {track.title}
@@ -307,8 +223,8 @@ function Tracklist({ tracks, texts }) {
                 )}
               </span>
 
-              {track.isNowPlaying && <span className="sr-only">{texts.status_playing}</span>}
-              <span className="sr-only select-none"> {texts.track_link}</span>
+              {track.isNowPlaying && <span className="sr-only">{texts.statusPlaying}</span>}
+              <span className="sr-only select-none"> {texts.trackLink}</span>
             </a>
           </li>
         ))}
@@ -318,18 +234,10 @@ function Tracklist({ tracks, texts }) {
 }
 
 /*
- * El vinilo. Es un objeto, como una imagen: el cuerpo y la etiqueta tienen
- * los mismos colores en los dos temas. El borde va en --ink-subtle para que
- * el disco se distinga de la card también en tema oscuro, donde el negro del
- * disco y el de la card casi coinciden.
- *
- * Gira siempre, con motion-safe: con movimiento reducido queda quieto (y sin
- * motion-safe, la regla global de global.css haría que una animación
- * infinita parpadee). El reflejo va en otra capa que no gira, como en un
- * disco de verdad: lo que se ve girar es la G.
- *
- * La G es /favicon.svg como imagen: el trazado vive en un solo archivo, y si
- * la marca cambia, el disco la sigue.
+ * Mismos colores en los dos temas, como una imagen. El borde separa el disco
+ * de la card en tema oscuro, donde los dos negros casi coinciden. motion-safe
+ * evita que la regla global de movimiento reducido haga parpadear la
+ * animación infinita. El reflejo va en una capa aparte que no gira.
  */
 const RECORD_COLOR = '#111110';
 const LABEL_COLOR = '#EDE2CD';
@@ -359,7 +267,6 @@ function Vinyl() {
         </svg>
       </div>
 
-      {/* Reflejo fijo: una franja de luz en diagonal que no gira. */}
       <svg viewBox="0 0 100 100" className="absolute inset-0 size-full pointer-events-none">
         <defs>
           <linearGradient id="now-playing-sheen" x1="0" y1="0" x2="1" y2="1">
@@ -374,10 +281,6 @@ function Vinyl() {
   );
 }
 
-/*
- * Vacío, privado o error: el disco y el mensaje en el lugar del título. La
- * card queda del alto del disco, compacta pero no vacía.
- */
 function EmptyTurntable({ message }) {
   return (
     <div className="flex items-center gap-4 motion-safe:animate-fade-in">
@@ -387,11 +290,6 @@ function EmptyTurntable({ message }) {
   );
 }
 
-/*
- * Tres barras que suben y bajan en la fila del tema que suena. Con
- * movimiento reducido no se animan (motion-safe) y quedan quietas a
- * distintas alturas.
- */
 const EQUALIZER_BARS = [
   { restHeight: 'h-1.5', delay: '0s' },
   { restHeight: 'h-3', delay: '0.2s' },
@@ -412,10 +310,8 @@ function Equalizer() {
   );
 }
 
-/*
- * Mismas medidas que el contenido más común (el destacado y cinco filas),
- * así el paso de "cargando" a los datos no cambia el alto de la card.
- */
+// Mismas medidas que el caso común (el destacado y cinco filas), así el paso
+// de "cargando" a los datos no cambia el alto.
 function LoadingSkeleton({ label }) {
   const pulse = 'bg-(--border-default) motion-safe:animate-pulse';
   const bar = `rounded-sm ${pulse}`;
@@ -445,12 +341,8 @@ function LoadingSkeleton({ label }) {
   );
 }
 
-/*
- * Alto de un elemento, medido con ResizeObserver cada vez que cambia.
- * Devuelve la ref para el elemento y su alto en píxeles. Arranca en null
- * (todavía sin medir): la card usa 'auto' y la primera medida se aplica sin
- * animación, porque CSS no anima desde 'auto'.
- */
+// Arranca en null: la card usa 'auto' y la primera medida se aplica sin
+// animación, porque CSS no anima desde 'auto'.
 function useElementHeight() {
   const ref = useRef(null);
   const [height, setHeight] = useState(null);

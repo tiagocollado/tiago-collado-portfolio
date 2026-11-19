@@ -6,20 +6,13 @@ import { stack, stackGroups } from '../../data/stack.js';
 const locale = Astro.currentLocale ?? 'en';
 const t = createTranslator(locale);
 
-// Un bloque por grupo, en el orden de stackGroups, con sus herramientas en
-// el orden de stack.js. El nombre del grupo va como subtítulo, así que no se
-// repite en cada herramienta.
 const groups = Object.values(stackGroups).map((group) => ({
   label: locale === 'es' ? group.es : group.en,
   tools: stack.filter((tool) => tool.group === group).map((tool) => tool.name),
 }));
 ---
 
-{/*
-  Herramientas agrupadas, en una grilla quieta: 2 columnas en celular, 3 en
-  tablet y 4 en escritorio. Las tarjetas no son clickeables, así que no
-  tienen hover ni cursor de link.
-*/}
+{/* Las tarjetas no son clickeables: sin hover ni cursor de link. */}
 <section
   aria-labelledby="stack-heading"
   class="pt-16 md:pt-20 lg:pt-28 pb-16 md:pb-20 lg:pb-28 px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32"

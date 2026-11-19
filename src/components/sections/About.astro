@@ -4,38 +4,28 @@ import { createTranslator } from '../../i18n/translate.js';
 
 const t = createTranslator(Astro.currentLocale);
 
-// La isla recibe solo los textos que usa, ya traducidos.
 const nowPlayingTexts = {
   label: t('now_playing.label'),
-  list_label: t('now_playing.list_label'),
+  listLabel: t('now_playing.list_label'),
   live: t('now_playing.live'),
-  status_playing: t('now_playing.status_playing'),
+  statusPlaying: t('now_playing.status_playing'),
   loading: t('now_playing.loading'),
   empty: t('now_playing.empty'),
   private: t('now_playing.private'),
   error: t('now_playing.error'),
   credit: t('now_playing.credit'),
-  new_tab: t('now_playing.new_tab'),
-  track_link: t('now_playing.track_link'),
+  newTab: t('now_playing.new_tab'),
+  trackLink: t('now_playing.track_link'),
 };
 
-/*
- * Espacio duro entre fragmentos del claim. En ES esas uniones son "el diseño"
- * y "al negocio": un salto de línea ahí dejaría el artículo solo al final
- * del renglón. text-pretty corta por largo de línea, no por gramática, así
- * que el corte bueno se fija a mano y aguanta cualquier ancho de pantalla.
- * Va con nombre y escapado porque el carácter literal no se distingue de un
- * espacio común al leer el archivo.
- */
+// En "el diseño" y "al negocio", un salto de línea dejaría el artículo solo
+// al final del renglón. Escapado porque el carácter literal no se distingue
+// de un espacio común.
 const NO_BREAK_SPACE = '\u00a0';
 ---
 
-{/*
-  Entrada: cuatro bloques con fade + subida, cada uno cuando entra en
-  pantalla (margen -80px): la fila de labels, el claim, el copy con la firma
-  y el widget de música. Esperan 0, 0.1, 0.15 y 0.2 s, así en una pantalla
-  alta, donde entran juntos, se leen en orden.
-*/}
+{/* Los delays escalonados hacen que, si los bloques entran juntos en una
+    pantalla alta, igual se lean en orden. */}
 <section
   id="about"
   aria-labelledby="about-heading"
@@ -74,17 +64,9 @@ const NO_BREAK_SPACE = '\u00a0';
       {t('about.claim_1')}{NO_BREAK_SPACE}<strong class="font-semibold">{t('about.claim_2')}</strong>{' '}{t('about.claim_3')}{NO_BREAK_SPACE}<strong class="font-semibold">{t('about.claim_4')}</strong>
     </p>
 
-    {/*
-      Copy con la firma, en la misma posición que tenía antes de que
-      existiera el widget: el texto es lo principal de la sección.
-
-      El widget de música es un detalle personal, secundario: va después de
-      la firma en el HTML (y en el orden de tabulación). En celular y tablet
-      queda debajo del copy. En escritorio pasa a la columna izquierda,
-      alineado abajo con la firma, en posición absoluta: así no empuja el
-      copy ni estira la sección. Su alto solo cambia entre estados (carga,
-      datos, error), nunca por encima del texto.
-    */}
+    {/* El widget va después de la firma en el HTML y en el orden de Tab. En
+        escritorio es absoluto, alineado abajo con la firma, para no empujar
+        el copy ni estirar la sección. */}
     <div class="relative flex flex-col items-end mt-16 md:mt-20 lg:mt-24">
       <div
         class="max-w-xl space-y-6 md:text-right"
@@ -112,11 +94,8 @@ const NO_BREAK_SPACE = '\u00a0';
         </div>
       </div>
 
-      {/*
-        Widget de música. Sin JavaScript no puede pedir los datos y se
-        quedaría en "cargando" para siempre, así que se oculta (el <noscript>
-        de abajo). data-now-playing es el gancho de esa regla.
-      */}
+      {/* Sin JavaScript se quedaría en "cargando" para siempre: el <noscript>
+          de abajo lo oculta. */}
       <div
         class="w-full max-w-sm mt-16 lg:mt-0 lg:absolute lg:left-0 lg:bottom-0 lg:w-72"
         data-now-playing

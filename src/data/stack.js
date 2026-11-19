@@ -1,13 +1,5 @@
-/*
- * Herramientas de la sección Stack, en el orden en que se muestran.
- * Solo herramientas, no conceptos: lo que se hace con ellas está en skills.js.
- * Solo lo que se puede defender en una entrevista (CLAUDE.md §7).
- *
- * - name: igual en los dos idiomas, como el title de los proyectos. Su ícono
- *   sale de ToolIcon.astro.
- * - group: su grupo en stackGroups, con la etiqueta en los dos idiomas. Cada
- *   grupo es un bloque con su nombre como subtítulo.
- */
+// Solo herramientas, en el orden en que se muestran; los conceptos están en
+// skills.js. El ícono de cada una sale de ToolIcon.astro.
 export const stackGroups = {
   design: { es: 'Diseño', en: 'Design' },
   development: { es: 'Desarrollo', en: 'Development' },

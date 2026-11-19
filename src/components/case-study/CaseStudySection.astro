@@ -2,16 +2,8 @@
 const { label } = Astro.props;
 ---
 
-{/*
-  Entrada: la sección entera hace fade + subida de 16px cuando entra en
-  pantalla (margen -15% arriba y abajo: tiene que estar un poco adentro).
-  El label hace además su propia subida de 8px, más corta, adentro de la de
-  la sección. Las dos arrancan juntas; el contenido entra con la sección.
-
-  El label es un <h2> aunque se vea como micro-label: con un <p>, el outline
-  del caso quedaba h1 → h3. El tamaño chico es una decisión visual, no
-  jerárquica.
-*/}
+{/* El label es un <h2> aunque se vea chico: con un <p>, el outline del caso
+    quedaba h1 → h3. */}
 <section
   class="relative"
   data-reveal-trigger

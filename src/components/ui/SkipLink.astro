@@ -13,10 +13,8 @@ const t = createTranslator(Astro.currentLocale);
 </a>
 
 <script>
-  // Lenis intercepta los clicks en anclas para hacer su propio scroll suave,
-  // y eso puede comerse el movimiento de foco del navegador. Acá lo único que
-  // importa es el foco (<main> ya arranca arriba, no hay nada que scrollear),
-  // así que se cancela el ancla y se mueve el foco a mano.
+  // Lenis intercepta las anclas y puede comerse el movimiento de foco: se
+  // mueve el foco a mano.
   const skipLink = document.querySelector('[data-skip-link]');
 
   skipLink?.addEventListener('click', (event) => {

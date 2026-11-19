@@ -2,18 +2,9 @@ import { useEffect, useRef } from 'react';
 import { motion, useMotionValue, useReducedMotion, useSpring } from 'framer-motion';
 
 /*
- * Link "magnético": en hover se corre un poco hacia el cursor, como si lo
- * atrajera, y vuelve a su lugar al salir. Con movimiento reducido no se mueve.
- *
- * - `factor`: qué fracción de la distancia al centro se desplaza (0.3 = 30%).
- * - `max`: tope del desplazamiento en px. Sin tope, el efecto crece con el
- *   tamaño del elemento: un pill chico se mueve poco y un bloque ancho
- *   muchísimo. Con `max` se siente igual de sutil en cualquiera.
- * - `cursorVariant`: la variante del cursor custom en hover. Se declara como
- *   atributo data-cursor, que el cursor lee por su cuenta (CustomCursor.jsx).
- *
- * El resto de las props (href, className, aria-label, handlers…) pasan
- * directo al <a>.
+ * En hover se corre hacia el cursor una fracción (`factor`) de la distancia
+ * al centro. `max` topea el desplazamiento: sin tope, un bloque ancho se
+ * movería muchísimo más que un pill chico.
  */
 export default function MagneticLink({ factor = 0.3, max, cursorVariant = 'link', style, children, ...rest }) {
   const ref = useRef(null);
@@ -21,7 +12,6 @@ export default function MagneticLink({ factor = 0.3, max, cursorVariant = 'link'
 
   const rawX = useMotionValue(0);
   const rawY = useMotionValue(0);
-  // El resorte suaviza el desplazamiento: el link no salta, se desliza.
   const x = useSpring(rawX, { stiffness: 150, damping: 15 });
   const y = useSpring(rawY, { stiffness: 150, damping: 15 });
 
@@ -36,9 +26,8 @@ export default function MagneticLink({ factor = 0.3, max, cursorVariant = 'link'
       let dx = (event.clientX - centerX) * factor;
       let dy = (event.clientY - centerY) * factor;
 
-      // Si el desplazamiento pasa el tope, se achica a `max` sin cambiar su
-      // dirección. Solo entra cuando la distancia es mayor que max, así que
-      // nunca divide por cero.
+      // Se achica a `max` sin cambiar la dirección. Solo entra si la distancia
+      // es mayor que max: nunca divide por cero.
       if (max !== undefined) {
         const distance = Math.hypot(dx, dy);
         if (distance > max) {

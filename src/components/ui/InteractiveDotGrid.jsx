@@ -1,28 +1,17 @@
 import { useEffect, useRef } from 'react';
 
 /*
- * Grilla de puntos dibujada en un <canvas> 2D. Los puntos cerca del cursor
- * se alejan de él con una fuerza que decae cuadráticamente y vuelven a su
- * lugar con un lerp suave cuando el cursor se va.
- *
- * Según el dispositivo:
- *  - Mouse (pointer fino)   → canvas animado con requestAnimationFrame.
- *  - Táctil                 → grilla estática en CSS, sin canvas.
- *  - Movimiento reducido    → el canvas se dibuja UNA vez, sin animar.
- *
- * Va con position: absolute e inset-0, así que el elemento que la contiene
- * necesita position: relative. Ese elemento es el que mide y el que escucha
- * el mouse (ver `container` abajo).
- *
- * No usa Framer Motion: el movimiento reducido lo resuelve sola.
+ * Grilla de puntos en un <canvas> 2D: los puntos cerca del cursor se apartan
+ * y vuelven a su lugar cuando se va. En táctil es una grilla CSS estática;
+ * con movimiento reducido, un frame quieto.
  */
 export default function InteractiveDotGrid({
-  spacing = 32, // separación entre puntos (px)
-  dotRadius = 1.2, // radio de cada punto (px)
-  influenceRadius = 140, // radio de alcance del cursor (px)
-  maxDisplacement = 36, // cuánto se puede correr un punto (px)
-  lerpFactor = 0.12, // suavidad del retorno (0–1): más chico, más elástico
-  colorVar = '--ink-subtle', // variable CSS del color; se relee al cambiar el tema
+  spacing = 32, // px
+  dotRadius = 1.2, // px
+  influenceRadius = 140, // px
+  maxDisplacement = 36, // px
+  lerpFactor = 0.12, // 0–1: más chico, retorno más elástico
+  colorVar = '--ink-subtle',
   opacity = 0.55,
   className,
 }) {
@@ -33,7 +22,6 @@ export default function InteractiveDotGrid({
     const isTouch = window.matchMedia('(pointer: coarse)').matches;
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Táctil: se muestra la grilla CSS y el canvas queda escondido.
     if (isTouch) {
       if (fallbackRef.current) fallbackRef.current.style.display = 'block';
       return;
@@ -44,33 +32,22 @@ export default function InteractiveDotGrid({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    /*
-     * El contenedor es el ancestro posicionado más cercano (offsetParent),
-     * no el padre directo. Esta grilla es su propia isla de Astro, y Astro
-     * la envuelve en un <astro-island> con display: contents: ese envoltorio
-     * no tiene caja (mide 0 × 0) y no recibe los eventos del mouse. El
-     * offsetParent lo saltea y llega a la <section> del Hero, que es la que
-     * tiene position: relative y contra la que se posiciona el canvas.
-     */
+    // offsetParent y no el padre: Astro envuelve la isla en un <astro-island>
+    // con display: contents, que no tiene caja ni recibe eventos del mouse.
     const container = canvas.offsetParent;
     if (!(container instanceof HTMLElement)) return;
 
-    const dpr = window.devicePixelRatio || 1;
+    const pixelRatio = window.devicePixelRatio || 1;
 
-    // ─── Estado ────────────────────────────────────────────────────────
-    // Cada punto guarda dónde está (x, y) y a dónde vuelve (homeX, homeY).
     let dots = [];
     let width = 0;
     let height = 0;
 
-    // Colores leídos de las variables CSS; se recalculan al cambiar el tema.
-    // dotColor es el color base; los puntos más cerca del cursor se tiñen
-    // de terracota (accentRGB).
     let dotColor = 'rgba(138, 134, 128, 1)';
     let accentRGB = { r: 201, g: 106, b: 58 };
     let baseRGB = { r: 138, g: 134, b: 128 };
 
-    // Pasa "rgb(r, g, b)", "rgba(...)" o "#rrggbb" a { r, g, b }.
+    // Acepta "rgb(r, g, b)", "rgba(...)" o "#rrggbb".
     const parseRGB = (value) => {
       const text = value.trim();
       if (text.startsWith('#')) {
@@ -99,28 +76,25 @@ export default function InteractiveDotGrid({
     };
     readColor();
 
-    // Cursor en coordenadas del canvas. -9999 = fuera de alcance.
+    // -9999 = cursor fuera de alcance.
     let mouseX = -9999;
     let mouseY = -9999;
 
-    // ─── Grilla ────────────────────────────────────────────────────────
-    // Se arma al montar y cada vez que el contenedor cambia de tamaño.
     const buildGrid = () => {
       const rect = container.getBoundingClientRect();
       width = rect.width;
       height = rect.height;
 
-      // Nítido en pantallas retina: el buffer en píxeles del dispositivo y
-      // el tamaño visual en píxeles CSS. Asignar width/height resetea el
-      // contexto, así que el scale(dpr) se vuelve a aplicar cada vez.
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
+      // Buffer en píxeles del dispositivo para que se vea nítido. Asignar el
+      // tamaño resetea el contexto, así que el scale se vuelve a aplicar.
+      canvas.width = Math.floor(width * pixelRatio);
+      canvas.height = Math.floor(height * pixelRatio);
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
-      ctx.scale(dpr, dpr);
+      ctx.scale(pixelRatio, pixelRatio);
 
-      // Grilla centrada: una columna y una fila de más, con el margen
-      // repartido para que los bordes queden simétricos.
+      // Una columna y una fila de más, centradas: bordes simétricos. La fila
+      // de puntos del pie del hero repite esta cuenta en CSS (Hero.astro).
       const cols = Math.ceil(width / spacing) + 1;
       const rows = Math.ceil(height / spacing) + 1;
       const offsetX = (width - (cols - 1) * spacing) / 2;
@@ -136,9 +110,8 @@ export default function InteractiveDotGrid({
       }
     };
 
-    // ─── Mouse ─────────────────────────────────────────────────────────
-    // Se escucha en el contenedor y no en window: si el cursor sale del
-    // Hero, los puntos vuelven a su lugar.
+    // En el contenedor y no en window: si el cursor sale del hero, los puntos
+    // vuelven a su lugar.
     const onMouseMove = (event) => {
       const rect = canvas.getBoundingClientRect();
       mouseX = event.clientX - rect.left;
@@ -149,23 +122,17 @@ export default function InteractiveDotGrid({
       mouseY = -9999;
     };
 
-    // ─── Loop de animación ─────────────────────────────────────────────
-    // Para cada punto:
-    //   1. Vector desde su lugar hasta el cursor.
-    //   2. Si está dentro del radio: fuerza = (1 - distancia / radio)², y
-    //      el punto se corre maxDisplacement × fuerza, alejándose del cursor.
-    //   3. Se acerca a ese destino con lerp: pos += (destino - pos) × lerpFactor.
+    // Cada punto dentro del radio se aparta maxDisplacement × (1 - d / radio)²
+    // y se acerca a ese destino con un lerp.
     const radiusSq = influenceRadius * influenceRadius;
     let animationId = 0;
 
     const render = () => {
       ctx.clearRect(0, 0, width, height);
 
-      // Se desvanece al scrollear: opacidad de 1 a 0 entre 0 y 600px.
       const scrollFade = Math.max(0, Math.min(1, 1 - window.scrollY / 600));
 
-      // "Respiración": el radio oscila entre 1× y 1,3× cada 4 segundos.
-      // Con movimiento reducido queda fijo.
+      // El radio oscila entre 1× y 1,3× cada 4 s.
       const now = performance.now();
       const pulseScale = prefersReducedMotion ? 1 : 1.15 + 0.15 * Math.sin((now * 2 * Math.PI) / 4000);
       const drawRadius = dotRadius * pulseScale;
@@ -175,8 +142,6 @@ export default function InteractiveDotGrid({
       for (const dot of dots) {
         let targetX = dot.homeX;
         let targetY = dot.homeY;
-        // 1 = pegado al cursor, 0 = lejos. Mezcla el color base con el
-        // terracota en los puntos más cercanos.
         let colorBlend = 0;
 
         if (mouseX > -9000) {
@@ -185,8 +150,7 @@ export default function InteractiveDotGrid({
           const distSq = dx * dx + dy * dy;
 
           if (distSq < radiusSq) {
-            // El 0.001 evita dividir por cero si el cursor cae justo encima.
-            const dist = Math.sqrt(distSq) || 0.001;
+            const dist = Math.sqrt(distSq) || 0.001; // evita dividir por cero
             const closeness = 1 - dist / influenceRadius;
             const push = closeness * closeness * maxDisplacement;
             targetX = dot.homeX - (dx / dist) * push;
@@ -218,12 +182,9 @@ export default function InteractiveDotGrid({
       }
     };
 
-    // ─── Arranque ──────────────────────────────────────────────────────
-    // buildGrid() reasigna el tamaño del canvas, y eso lo borra. Con
-    // animación no importa: el loop vuelve a dibujar en el frame siguiente.
-    // Con movimiento reducido no hay loop, así que se redibuja acá. Hace
-    // falta también al arrancar: el ResizeObserver avisa una primera vez
-    // apenas empieza a observar, después del primer render().
+    // Cambiar el tamaño del canvas lo borra. Con movimiento reducido no hay
+    // loop que vuelva a dibujar, así que se redibuja acá, también en el primer
+    // aviso del observer, que llega después del primer render().
     const rebuildGrid = () => {
       buildGrid();
       if (prefersReducedMotion) render();
@@ -232,9 +193,7 @@ export default function InteractiveDotGrid({
     resizeObserver.observe(container);
     buildGrid();
 
-    // El tema cambia la clase de <html>: al cambiar, se releen los colores.
-    // Con movimiento reducido tampoco hay loop que los use, así que se
-    // redibuja al momento, sin animar.
+    // El tema es una clase en <html>.
     const onThemeChange = () => {
       readColor();
       if (prefersReducedMotion) render();
@@ -242,8 +201,6 @@ export default function InteractiveDotGrid({
     const themeObserver = new MutationObserver(onThemeChange);
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
-    // Con movimiento reducido: un frame quieto (y uno nuevo en cada resize),
-    // sin escuchar el mouse.
     if (!prefersReducedMotion) {
       container.addEventListener('mousemove', onMouseMove);
       container.addEventListener('mouseleave', onMouseLeave);
@@ -261,10 +218,9 @@ export default function InteractiveDotGrid({
 
   return (
     <>
-      {/* Canvas interactivo (con mouse) */}
       <canvas ref={canvasRef} className={`absolute inset-0 pointer-events-none ${className ?? ''}`} aria-hidden="true" />
 
-      {/* Grilla CSS estática (táctil). Escondida hasta que el efecto la muestra. */}
+      {/* Grilla para táctil: oculta hasta que el efecto la muestra. */}
       <div
         ref={fallbackRef}
         className="absolute inset-0 pointer-events-none"

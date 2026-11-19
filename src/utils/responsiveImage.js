@@ -2,13 +2,9 @@ import { getImage } from 'astro:assets';
 import { IMAGE_QUALITY, srcsetWidthsFor } from '../components/case-study/imageSpec.js';
 
 /*
- * Optimiza una imagen en el servidor y devuelve lo que necesita un <img>
- * responsive: la URL, el `srcset` y el `sizes`.
- *
- * Es para las islas de React: ahí no se puede usar el <Image /> de Astro, así
- * que el .astro llama a esta función y le pasa el resultado como props (solo
- * texto), y la isla arma su propio <img>. Solo se puede llamar desde un
- * .astro: getImage() corre en el servidor.
+ * Para las islas, donde no se puede usar <Image />: el .astro la llama y le
+ * pasa src, srcset y sizes a la isla. Solo desde un .astro: getImage() corre
+ * en el servidor.
  */
 export async function getResponsiveImageProps(image, sizes) {
   const optimized = await getImage({

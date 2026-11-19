@@ -20,8 +20,6 @@
 
   --ease-expo-out: cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* Barras del widget de música mientras suena un tema. Cada barra arranca
-     con otro delay para que no suban juntas. */
   --animate-equalizer: equalizer 1s ease-in-out infinite;
 
   @keyframes equalizer {
@@ -29,7 +27,6 @@
     50%      { transform: scaleY(1); }
   }
 
-  /* Entrada del contenido del widget de música cuando llegan los datos. */
   --animate-fade-in: fade-in 0.4s var(--ease-expo-out);
 
   @keyframes fade-in {
@@ -37,11 +34,8 @@
     to   { opacity: 1; }
   }
 
-  /* Giro del disco del widget de música. Gira siempre: es ambiente, no dice
-     si algo suena (eso lo dice el cartel "En vivo"). El primer valor es lo
-     que tarda una vuelta: para cambiar la velocidad se ajusta solo acá. Es
-     más lento que un disco real (33⅓ rpm, una vuelta cada 1,8 s) para no
-     competir con el título. */
+  /* Más lento que un disco real (una vuelta cada 1,8 s) para no competir con
+     el título. */
   --animate-spin-record: spin-record 4s linear infinite;
 
   @keyframes spin-record {
@@ -152,23 +146,9 @@
   }
 }
 
-/* ─── Animaciones de entrada ────────────────────────────────────────────
-   Fade + subida corta de los bloques que no son islas de React. El script
-   src/scripts/reveal.js decide cuándo (agrega .is-revealed al disparador);
-   acá se define cómo.
-
-   Cada elemento con data-reveal declara sus valores inline:
-     --reveal-y         cuánto sube (la distancia de partida)
-     --reveal-duration  cuánto dura
-     --reveal-delay     cuánto espera desde que se dispara
-   Los defaults son los de la escala de animación del sitio.
-
-   Usa transform y no la propiedad translate a propósito: los hover de
-   Tailwind v4 (hover:-translate-y-0.5) usan translate, así que las dos se
-   suman en vez de pisarse.
-
-   Fuera de cualquier @layer, igual que la regla de movimiento reducido de
-   arriba: así el override de abajo le puede ganar por especificidad. */
+/* Animaciones de entrada (src/scripts/reveal.js decide cuándo). transform y
+   no translate: los hover de Tailwind usan translate y así se suman en vez
+   de pisarse. Fuera de @layer para que el override de abajo pueda ganar. */
 [data-reveal] {
   opacity: 0;
   transform: translateY(var(--reveal-y, 24px));
@@ -184,11 +164,9 @@
   transform: none;
 }
 
-/* Movimiento reducido: sin desplazamiento, solo el fade de opacidad, con la
-   misma duración y el mismo delay. Es lo que hacían estas entradas cuando
-   eran de Framer Motion con reducedMotion="user": anula los transforms y
-   deja la opacidad. El !important con selector de atributo le gana a la
-   regla universal de arriba, que dejaría todas las transiciones en 0.01ms. */
+/* Movimiento reducido: solo el fade, como Framer con reducedMotion="user".
+   El !important le gana a la regla universal, que dejaría la transición en
+   0.01ms. */
 @media (prefers-reduced-motion: reduce) {
   [data-reveal] {
     transform: none;

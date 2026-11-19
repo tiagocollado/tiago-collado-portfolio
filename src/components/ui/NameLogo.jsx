@@ -2,19 +2,9 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import SplitText from './SplitText.jsx';
 
 /*
- * El wordmark "GOTYA" gigante del Hero. Solo existe en la home.
- *
- * - Al cargar, entra letra por letra con desenfoque (SplitText).
- * - Es sticky (top-2): se queda arriba mientras se scrollea el Hero.
- * - Se achica de 1 a 0.065 entre 0 y 500px de scroll, hacia la esquina
- *   superior izquierda, donde está el NavLogo del navbar.
- * - Se desvanece entre 405 y 500px. Para entonces el NavLogo, que aparece
- *   entre 200 y 400px, ya está entero: se lee como si el wordmark se
- *   convirtiera en el logo del navbar.
- *
- * NameLogo y NavLogo están en islas distintas y no se comunican. Cada uno
- * lee el scroll de la ventana por su cuenta; lo que los coordina son esos
- * rangos.
+ * Wordmark gigante del hero: se achica hacia el logo del navbar y se
+ * desvanece entre 405 y 500px, cuando el NavLogo (200–400px) ya está entero.
+ * Están en islas distintas: los coordinan esos rangos de scroll.
  */
 
 // 220px (el tope del clamp del font-size) × 0.065 ≈ 14px, el tamaño del

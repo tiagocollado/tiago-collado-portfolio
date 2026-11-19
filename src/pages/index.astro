@@ -1,14 +1,8 @@
 ---
 /*
- * La redirección de / a /en/ no la hace esta página: la hace la opción
- * `redirects` de astro.config.mjs, que el adapter de Vercel escribe en la
- * configuración de rutas del deploy como un 307 HTTP real. Con esa regla,
- * el build no genera esta página.
- *
- * Igual tiene que existir: con `prefixDefaultLocale: true`, el i18n de Astro
- * exige src/pages/index.astro. Y si algún día la regla de `redirects` deja
- * de aplicarse, esta página vuelve a redirigir sola (como meta refresh en el
- * build estático), así que / nunca queda en blanco.
+ * La redirección real (307) está en `redirects` de astro.config.mjs. Esta
+ * página existe porque el i18n la exige, y redirige sola si esa regla deja
+ * de aplicarse.
  */
 import { getRelativeLocaleUrl } from 'astro:i18n';
 

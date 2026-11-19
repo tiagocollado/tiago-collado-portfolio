@@ -2,30 +2,18 @@ import { Fragment, useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 
 /*
- * Texto que entra letra por letra, con desenfoque y una subida corta.
- *
- * Cómo está armado:
- *  - El texto se parte por palabras. Cada palabra es un span con
- *    whitespace-nowrap: así una palabra nunca se corta al medio cuando la
- *    línea se termina. Entre palabras queda un espacio común, que es el
- *    único lugar donde la línea puede partirse.
- *  - Cada letra es un motion.span con su propio delay (delay + índice ×
- *    stagger). No se usa staggerChildren porque solo llega a hijos motion
- *    DIRECTOS, y acá entre el contenedor y las letras están los spans de
- *    cada palabra.
- *  - Accesibilidad: el texto entero queda en un span sr-only para los
- *    lectores de pantalla, y las letras sueltas van con aria-hidden para que
- *    no se lean de a una. El sr-only lleva select-none: sin eso, al copiar,
- *    el texto sale duplicado (está dos veces en el DOM).
- *  - Con movimiento reducido se muestra sin animar.
- *  - `whileInView`: anima al entrar en pantalla, con UN IntersectionObserver
- *    para todo el texto (no uno por letra).
+ * Texto que entra letra por letra.
+ * - Cada palabra va en un span whitespace-nowrap: si no, las letras
+ *   inline-block dejan cortar la línea en medio de una palabra.
+ * - Cada letra calcula su delay: staggerChildren no llega a través de los
+ *   spans de las palabras.
+ * - El texto entero va en un sr-only con select-none (si no, se copia
+ *   duplicado) y las letras, con aria-hidden.
  */
 
 /**
- * Tipos de las props, para el editor. Las que van entre corchetes son
- * opcionales: sin esto, el editor toma como obligatoria cualquier prop sin
- * valor por defecto (className, charClassName, id).
+ * Sin esto, el editor toma como obligatoria cualquier prop sin valor por
+ * defecto.
  *
  * @param {object} props
  * @param {string} props.text
@@ -55,7 +43,6 @@ export default function SplitText({
 }) {
   const prefersReducedMotion = useReducedMotion();
   const containerRef = useRef(null);
-  // Sin whileInView, anima al montar: arranca "en pantalla".
   const [inView, setInView] = useState(!whileInView);
 
   useEffect(() => {
@@ -76,8 +63,8 @@ export default function SplitText({
   const Tag = as;
   const words = text.split(' ');
 
-  // Índice global de la primera letra de cada palabra, para que el stagger
-  // corra a lo largo de todo el texto y no se reinicie en cada palabra.
+  // Índice de la primera letra de cada palabra, para que el stagger no se
+  // reinicie en cada palabra.
   const wordStartIndex = [];
   let lettersSoFar = 0;
   for (const word of words) {

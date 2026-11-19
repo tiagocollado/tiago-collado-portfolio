@@ -22,15 +22,9 @@ import {
 } from 'simple-icons';
 
 /*
- * Ícono de una herramienta del Stack. Decorativo (aria-hidden): el nombre
- * ya está escrito al lado. Monocromo con currentColor, así toma el color del
- * texto y funciona en los dos temas.
- *
- * Las claves son el `name` de src/data/stack.js. Las que tienen ícono en
- * simple-icons usan su path; las que no (Adobe no está por licencia, y
- * otras herramientas todavía no se publicaron ahí) llevan un cuadrado con
- * iniciales del mismo tamaño. Una herramienta nueva sin ninguna de las dos
- * corta el build.
+ * Las claves son el `name` de stack.js. Sin ícono en simple-icons (Adobe no
+ * está por licencia), un cuadrado con iniciales. Sin ninguna de las dos, el
+ * build se corta.
  */
 const BRAND_ICONS = new Map([
   ['Figma', siFigma],

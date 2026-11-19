@@ -9,25 +9,11 @@ const t = createTranslator(locale);
 
 const servicesLabel = project.services[locale].join(' & ');
 
-// Opcional: solo los proyectos con premio lo tienen (ver `award` en src/data/projects.js).
 const awardLabel = project.award?.[locale] ?? null;
 ---
 
-{/*
-  Entrada en cascada al cargar la página: el back link, los servicios y el
-  tagline entran uno detrás del otro (0.12 s entre cada uno), mientras el
-  h1 entra letra por letra.
-
-  - La cascada es CSS (src/scripts/reveal.js): el div raíz es el disparador
-    y cada bloque lleva su delay.
-  - El h1 es una isla chica de React, porque SplitText anima cada letra con
-    Framer Motion. client:load: anima apenas se abre la página, no al entrar
-    en pantalla. La isla se renderiza también en el servidor, así que el h1
-    sale en el HTML.
-
-  El reveal del back link va en su div y no en el <a>: el <a> tiene
-  transition-all, que reemplazaría la transición de entrada.
-*/}
+{/* El reveal del back link va en su div y no en el <a>: el transition-all
+    del <a> reemplazaría la transición de entrada. */}
 <div data-reveal-trigger="load">
   <div
     class="mb-10 md:mb-14"
@@ -58,8 +44,6 @@ const awardLabel = project.award?.[locale] ?? null;
     {servicesLabel}
   </p>
 
-  {/* El delay de 0.35 s arranca las letras cuando el back link y los
-      servicios ya están entrando. */}
   <SplitText
     client:load
     as="h1"

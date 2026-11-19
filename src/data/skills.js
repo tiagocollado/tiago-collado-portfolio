@@ -1,11 +1,5 @@
-/*
- * Skills de la sección del home, en el orden en que se muestran.
- *
- * - name: igual en los dos idiomas, como el title de los proyectos.
- * - activities: qué hago dentro de esa skill, en los dos idiomas.
- * - caseSlugs: los casos donde se ve. Los títulos salen de projects.js; si
- *   un slug no es de un proyecto publicado, el build se corta (Skills.astro).
- */
+// caseSlugs: los títulos salen de projects.js, y un slug sin publicar corta el
+// build (Skills.astro).
 export const skills = [
   {
     name: 'UX Design',

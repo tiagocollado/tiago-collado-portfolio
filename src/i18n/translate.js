@@ -4,20 +4,10 @@ import es from './es.json';
 const dictionaries = { en, es };
 
 /**
- * Devuelve la función t() de un idioma.
- *
- * t('hero.headline') parte la key por los puntos y la busca adentro del JSON:
- * primero el bloque "hero", después "headline". Se usa en el servidor, al
- * armar cada página, así el diccionario entero nunca viaja al navegador: a
- * una isla se le pasan solo los textos que usa, ya traducidos.
- *
- * Si la key no existe, corta el build con un error que la nombra. Es a
- * propósito: un texto que falta y no avisa se publica como un hueco.
- *
- * Dos variantes para los casos que no son un texto suelto:
- * - t.list('seccion.items') devuelve una lista de textos.
- * - t.has('case_study_x.process') dice si existe una key opcional, sin cortar
- *   el build si falta.
+ * t('hero.headline') busca la key en el JSON del idioma. Corre solo en el
+ * servidor, así el diccionario nunca viaja al navegador. Una key que falta
+ * corta el build: un texto que falta sin avisar se publica como un hueco.
+ * t.list() devuelve una lista y t.has() pregunta por una key opcional.
  */
 export function createTranslator(locale) {
   const dictionary = dictionaries[locale];

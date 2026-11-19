@@ -6,9 +6,8 @@ const OVERLAY_INK = '#F0EDE8';
 // ejecutándolo. El `order` reordena las cards en mobile (ver Projects.astro).
 const ORDER_CLASSES = ['order-1', 'order-2', 'order-3', 'order-4', 'order-5', 'order-6', 'order-7'];
 
-// Proporción de la card según su `cardShape` (src/data/projects.js). La
-// cuadrada y la vertical rigen desde `md`, donde la grilla tiene dos columnas:
-// en mobile la card ocupa todo el ancho y vuelve a 4:3, como las demás.
+// La cuadrada y la vertical rigen desde md: en mobile la grilla es de una
+// columna y todas las cards son 4:3.
 const CARD_SHAPE_CLASSES = {
   wide: 'aspect-[4/3]',
   square: 'aspect-[4/3] md:aspect-square',

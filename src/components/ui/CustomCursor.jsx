@@ -2,34 +2,14 @@ import { useEffect, useState, useSyncExternalStore } from 'react';
 import { MotionConfig, motion, useMotionValue, useReducedMotion, useSpring } from 'framer-motion';
 
 /*
- * Cursor custom: un punto que sigue al mouse y un anillo que lo sigue con
- * retraso. No oculta el cursor nativo, así que no interfiere con el foco.
- *
- * Variantes:
- *   default  punto + anillo de 32px
- *   link     el anillo crece a 64px
- *   view     el anillo crece a 80px con `viewLabel` adentro ("View" / "Ver")
- *   drag     punto grande, sin anillo
- *
- * Cómo sabe qué variante mostrar. Cada isla de Astro es su propia app de
- * React y el contexto no cruza de una a otra, así que los componentes no
- * pueden "avisarle" al cursor. En vez de eso, cualquier elemento del HTML
- * (isla o .astro sin JavaScript) declara la variante con un atributo:
- *
- *   <a data-cursor="link">…</a>
- *
- * y el cursor escucha UN solo evento `mouseover` en todo el documento
- * (delegación de eventos). La variante sale del elemento que está bajo el
- * puntero en cada momento, así que nunca queda "pegada": no hay un
- * mouseleave que alguien se olvide de disparar.
+ * Punto y anillo que siguen al mouse, sin ocultar el cursor nativo. El
+ * contexto de React no cruza entre islas, así que la variante (default, link,
+ * view, drag) se declara con data-cursor en cualquier elemento y se lee con un
+ * solo mouseover delegado en el documento: nunca queda pegada.
  */
 const VARIANTS = ['default', 'link', 'view', 'drag'];
 
-/*
- * ¿Hay mouse? Se lee del media query `(pointer: fine)`. useSyncExternalStore
- * es el hook de React para leer algo del navegador que puede cambiar solo:
- * recibe cómo suscribirse y cómo leer el valor actual.
- */
+// (pointer: fine), leído con useSyncExternalStore porque puede cambiar solo.
 const FINE_POINTER = '(pointer: fine)';
 function subscribeFinePointer(onChange) {
   const mediaQuery = window.matchMedia(FINE_POINTER);
@@ -37,8 +17,7 @@ function subscribeFinePointer(onChange) {
   return () => mediaQuery.removeEventListener('change', onChange);
 }
 const readFinePointer = () => window.matchMedia(FINE_POINTER).matches;
-// La isla es client:only, así que nunca se dibuja en el servidor. React
-// igual pide este valor: sin mouse confirmado, no hay cursor.
+// client:only: nunca se dibuja en el servidor, pero React pide el valor.
 const readFinePointerOnServer = () => false;
 
 function variantUnderPointer(target) {
@@ -51,7 +30,6 @@ export default function CustomCursor({ viewLabel }) {
   const hasFinePointer = useSyncExternalStore(subscribeFinePointer, readFinePointer, readFinePointerOnServer);
   const prefersReducedMotion = useReducedMotion();
 
-  // En táctil o con movimiento reducido queda solo el cursor nativo.
   if (!hasFinePointer || prefersReducedMotion) return null;
 
   return (
@@ -63,18 +41,13 @@ export default function CustomCursor({ viewLabel }) {
 
 function CursorShapes({ viewLabel }) {
   const [variant, setVariant] = useState('default');
-  // Hasta el primer movimiento no se sabe dónde está el mouse: la posición
-  // arranca en (0, 0) y el cursor se vería en la esquina superior izquierda.
-  // Por eso no se dibuja hasta el primer mousemove.
+  // Hasta el primer mousemove la posición es (0, 0): no se dibuja antes.
   const [hasPointerPosition, setHasPointerPosition] = useState(false);
 
   const pointerX = useMotionValue(0);
   const pointerY = useMotionValue(0);
-  // Dos resortes sobre la misma posición: el del punto es rígido (lo sigue
-  // casi pegado) y el del anillo es blando (se queda atrás). Ese retraso es
-  // lo que se lee como "anillo que persigue al punto".
-  // skipInitialAnimation: el primer cambio de posición salta sin animar, así
-  // el cursor aparece directo bajo el mouse en vez de viajar desde (0, 0).
+  // Resorte rígido para el punto y blando para el anillo. skipInitialAnimation
+  // evita que el primer movimiento viaje desde (0, 0).
   const dotSpring = { stiffness: 800, damping: 35, mass: 0.3, skipInitialAnimation: true };
   const ringSpring = { stiffness: 200, damping: 25, mass: 0.5, skipInitialAnimation: true };
   const dotX = useSpring(pointerX, dotSpring);
@@ -89,12 +62,11 @@ function CursorShapes({ viewLabel }) {
       setHasPointerPosition(true);
     };
     const onOver = (event) => setVariant(variantUnderPointer(event.target));
-    // Al salir de la ventana no hay elemento debajo: vuelve a default.
     const onOut = (event) => {
       if (!event.relatedTarget) setVariant('default');
     };
-    // Al volver con el botón Atrás, el navegador puede restaurar la página
-    // tal como quedó (bfcache), con la variante del link que se clickeó.
+    // bfcache: al volver con Atrás, la página puede restaurarse con la
+    // variante del link que se clickeó.
     const onPageShow = (event) => {
       if (event.persisted) setVariant('default');
     };
@@ -119,8 +91,8 @@ function CursorShapes({ viewLabel }) {
 
   return (
     <>
-      {/* Punto terracota sólido en los dos temas: mix-blend-difference sobre
-          el beige del tema claro daba un cursor invisible. */}
+      {/* Color sólido: mix-blend-difference daba un cursor invisible sobre el
+          beige. */}
       <motion.div
         aria-hidden="true"
         className="pointer-events-none fixed top-0 left-0 z-9999 rounded-full bg-accent"
@@ -136,8 +108,6 @@ function CursorShapes({ viewLabel }) {
         transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
       />
 
-      {/* Anillo. En "view" lleva un fondo translúcido del tema para que el
-          texto se lea sin taparlo del todo. */}
       <motion.div
         aria-hidden="true"
         className="pointer-events-none fixed top-0 left-0 z-9999 rounded-full border border-(--ink-primary) flex items-center justify-center"

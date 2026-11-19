@@ -5,28 +5,11 @@ import LanguageToggle from './LanguageToggle.jsx';
 import MarqueeLink from './MarqueeLink.jsx';
 import NavLogo from './NavLogo.jsx';
 
-/*
- * Navbar fijo de 64px (h-16).
- *
- * lg+   NavLogo a la izquierda · Proyectos / Sobre mí / "Hablemos" centrados
- *       · idioma + tema a la derecha.
- * <lg   NavLogo a la izquierda · hamburguesa con un menú desplegable.
- *
- * Los links pasan de --ink-secondary a --ink-primary pasados los 100px de
- * scroll: el wordmark del Hero ya se está achicando y el navbar toma
- * presencia.
- *
- * Todo lo que necesita del servidor llega como props, ya resuelto en el
- * layout: los textos traducidos (`texts`), la URL de la home del idioma
- * (`homeHref`), si la página es la home (`isHome`) y los links de idioma
- * (`languageLinks`).
- */
+// Los links pasan a --ink-primary a los 100px de scroll, cuando el wordmark
+// del hero ya se achica.
 
-// ─── Tema ─────────────────────────────────────────────────────────────────
-// El tema vive en la clase de <html>: la pone el script inline del layout
-// antes de pintar, y la cambia el botón de acá. Para React es un valor
-// "externo" (no es estado de React), así que se lee con useSyncExternalStore,
-// que avisa cada vez que la clase cambia.
+// El tema es una clase en <html> que pone el script inline del layout: para
+// React es un valor externo, de ahí useSyncExternalStore.
 
 const THEME_STORAGE_KEY = 'theme';
 
@@ -36,13 +19,12 @@ function subscribeToTheme(onChange) {
   return () => observer.disconnect();
 }
 const readTheme = () => (document.documentElement.classList.contains('light') ? 'light' : 'dark');
-// En el servidor no se sabe qué tema eligió la visita: null, y el botón no
-// se dibuja hasta llegar al navegador. Si se dibujara con un tema supuesto,
-// el ícono podría no coincidir con el real.
+// En el servidor no se sabe el tema: el botón espera al navegador para no
+// mostrar el ícono equivocado.
 const readThemeOnServer = () => null;
 
-// Hace lo mismo que el script inline del layout: clase en <html> y
-// color-scheme, para que los controles nativos (scrollbar, inputs) acompañen.
+// Igual que el script inline: color-scheme hace que los controles nativos
+// acompañen.
 function applyTheme(theme) {
   const root = document.documentElement;
   root.classList.remove('light', 'dark');
@@ -54,12 +36,10 @@ function saveTheme(theme) {
   try {
     localStorage.setItem(THEME_STORAGE_KEY, theme);
   } catch {
-    // Sin acceso a localStorage (modo privado estricto): el cambio vale
-    // para esta página, pero no se recuerda.
+    // Sin localStorage (modo privado estricto) el cambio no se recuerda.
   }
 }
 
-// ─── Scroll ───────────────────────────────────────────────────────────────
 
 function subscribeToScroll(onChange) {
   window.addEventListener('scroll', onChange, { passive: true });
@@ -89,7 +69,7 @@ export default function Navbar({ texts, homeHref, isHome, languageLinks }) {
     saveTheme(nextTheme);
   };
 
-  // El botón nombra la acción, no el estado: en oscuro dice "Modo claro".
+  // Nombra la acción, no el estado: en oscuro dice "Modo claro".
   const themeLabel = theme === 'dark' ? texts.themeToLight : texts.themeToDark;
   const linkColor = scrolled ? 'var(--ink-primary)' : 'var(--ink-secondary)';
 
@@ -103,14 +83,11 @@ export default function Navbar({ texts, homeHref, isHome, languageLinks }) {
         className="fixed top-0 left-0 right-0 z-50 h-16 backdrop-blur-md px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32"
         style={{ backgroundColor: 'color-mix(in srgb, var(--bg-primary) 85%, transparent)' }}
       >
-        {/* El gutter va en el header y el max-w en el nav, como en las
-            secciones: si los dos van en el mismo elemento, el padding cuenta
-            dentro del max-w y el logo queda corrido de la columna. */}
+        {/* Gutter y max-w en elementos distintos: juntos, el padding cuenta
+            dentro del max-w y el logo queda corrido. */}
         <nav className="max-w-7xl mx-auto h-16 flex items-center justify-between gap-4 relative">
           <NavLogo href={homeHref} isHome={isHome} label={texts.homeLink} />
 
-          {/* Centrado respecto del navbar entero (left-1/2 -translate-x-1/2),
-              sin importar el ancho del logo ni de los controles. */}
           <div className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
             <NavLink href={projectsHref} color={linkColor}>
               {texts.projects}
@@ -158,9 +135,6 @@ export default function Navbar({ texts, homeHref, isHome, languageLinks }) {
               {menuOpen ? <X size={18} /> : <Menu size={18} />}
             </motion.button>
 
-            {/* AnimatePresence deja que el menú anime su salida antes de
-                desmontarse. Los ítems entran escalonados: staggerChildren
-                llega porque son hijos motion directos del panel. */}
             <AnimatePresence>
               {menuOpen && (
                 <motion.div
@@ -224,8 +198,7 @@ export default function Navbar({ texts, homeHref, isHome, languageLinks }) {
   );
 }
 
-// Link de la barra de escritorio: subrayado que se dibuja de izquierda a
-// derecha en hover. El color llega por prop porque cambia con el scroll.
+// El color llega por prop porque cambia con el scroll.
 function NavLink({ href, color, children }) {
   return (
     <a
@@ -239,7 +212,6 @@ function NavLink({ href, color, children }) {
   );
 }
 
-// Ítem del menú desplegable de mobile. Entra con el stagger del panel.
 function DropdownLink({ href, onClick, children }) {
   return (
     <motion.a

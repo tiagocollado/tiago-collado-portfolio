@@ -1,18 +1,7 @@
 /*
- * Selector de idioma: dos pills lado a lado ("EN" y "ES"), con el idioma
- * activo en sólido y el otro apagado.
- *
- * Son links comunes, no botones: cada uno lleva a la misma página en su
- * idioma, y esas URLs las arma el layout en el servidor (`links`). No hace
- * falta JavaScript para cambiar de idioma. Vive como componente de React
- * porque se dibuja dos veces adentro de la isla del Navbar: en la barra de
- * escritorio y en el menú desplegable de mobile.
- *
- * `links` es una lista de { code, label, href, current }. Cada `label` es el
- * nombre del idioma en ese idioma, y el link lleva `lang` para que el lector
- * de pantalla lo pronuncie bien ("Español" con voz en castellano aunque la
- * página esté en inglés). `groupLabel` nombra el grupo en el idioma de la
- * página.
+ * Links comunes y no botones: cada uno lleva a la misma página en el otro
+ * idioma, sin JavaScript. `lang` en cada link hace que el lector de pantalla
+ * pronuncie "Español" en castellano aunque la página esté en inglés.
  */
 export default function LanguageToggle({ links, groupLabel }) {
   return (

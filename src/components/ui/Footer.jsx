@@ -3,33 +3,14 @@ import { MotionConfig, motion } from 'framer-motion';
 import { ArrowUp } from 'lucide-react';
 
 /*
- * Footer: una sola barra de tres zonas, copyright · back-to-top · crédito.
- *
- * En la home se lee junto con Contact como un único cierre de página:
- * Contact no cierra su padding inferior y este bloque arranca pegado, sin
- * una línea entre medio.
- *
- * ⚠️ role="contentinfo" es obligatorio, no redundante. Un <footer> es
- * landmark "contentinfo" solo si NO está adentro de article, aside, main,
- * nav o section, y el layout envuelve todo en <main>. Un role explícito le
- * gana siempre al implícito. Si se saca, el landmark desaparece sin que lo
- * avise ningún build ni linter.
- *
- * ⚠️ El back-to-top es un <a href="#top">, no un window.scrollTo: Lenis
- * intercepta el ancla y hace el scroll suave él mismo (un scrollTo por JS
- * pelearía contra su animación). Con movimiento reducido no hay Lenis y
- * el ancla salta sola, sin animación. Toda página que use este footer
- * necesita un id="top"; si falta, el botón no hace nada y no hay error.
- *
- * `texts` trae el crédito y el aria-label del back-to-top, ya traducidos.
+ * role="contentinfo" no es redundante: dentro de <main>, un <footer> pierde
+ * el landmark. El back-to-top es un ancla y no window.scrollTo, para que
+ * Lenis haga el scroll; la página necesita id="top" o el botón no hace nada.
  */
 
 const EASE = [0.16, 1, 0.3, 1];
 
-/*
- * staggerChildren solo llega a hijos motion DIRECTOS, y acá hay un div de
- * layout en el medio. Por eso cada hijo calcula su propio delay.
- */
+// staggerChildren solo llega a hijos motion directos: cada hijo calcula su delay.
 const fadeUp = (delay) => ({
   hidden: { opacity: 0, y: 16 },
   visible: {
@@ -46,25 +27,14 @@ export default function Footer({ texts }) {
     <MotionConfig reducedMotion="user">
       <motion.footer
         role="contentinfo"
-        // El pt grande separa de los canales de Contact: la separación la da
-        // el espacio, no una línea arriba.
         className="pt-16 md:pt-20 pb-10 md:pb-12 px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: '-50px' }}
       >
-        {/* Dos layouts.
-
-            Mobile: grilla de 2 columnas. Copyright y crédito apilados a la
-            izquierda; back-to-top a la derecha, ocupando las dos filas
-            (row-span-2) y centrado contra ellas. La mitad derecha es la que
-            el pulgar alcanza con menos esfuerzo (Fitts). Las posiciones van
-            explícitas (col-start / row-start) porque el orden del DOM es
-            copyright → botón → crédito, y la ubicación automática pondría
-            el crédito arriba a la derecha.
-
-            sm+: grilla de 3 columnas, con el back-to-top centrado respecto
-            del ancho total. Cada hijo resetea su posición con sm:*-auto. */}
+        {/* En mobile, posiciones explícitas: el orden del DOM es copyright →
+            botón → crédito y la ubicación automática pondría el crédito
+            arriba a la derecha. */}
         <div
           className="max-w-7xl mx-auto grid grid-cols-[1fr_auto] gap-x-6 gap-y-3 sm:grid-cols-3 sm:gap-6 items-center pt-8 border-t"
           style={{ borderColor: 'var(--border-default)' }}
@@ -77,11 +47,8 @@ export default function Footer({ texts }) {
             © 2026 Copyright Gotya
           </motion.p>
 
-          {/* Back-to-top: dos flechas apiladas que suben en loop mientras hay
-              hover. Es la técnica del MarqueeLink: el track tiene 4 flechas
-              iguales y la ventana muestra 2 (h-7 = 2 × 14px). Mover `y` de 0%
-              a -25% sube exactamente una flecha, así que al reiniciar el
-              ciclo la imagen es idéntica y el salto no se ve. */}
+          {/* Cuatro flechas en una ventana de dos: subir 25% es subir una
+              flecha exacta, así el loop reinicia sin salto. */}
           <motion.div
             variants={fadeUp(0.1)}
             className="col-start-2 row-start-1 row-span-2 sm:col-start-auto sm:row-start-auto sm:row-span-1 flex items-center justify-end sm:justify-center"

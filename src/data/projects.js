@@ -43,17 +43,14 @@ import mimascotaClusterB from '../assets/case-study/mimascota/04-cluster-b.jpg';
 import mimascotaPalette from '../assets/case-study/mimascota/05-paleta.jpg';
 
 /*
- * Campos que no se explican solos:
- * - services: categorías del trabajo, nunca roles ("Diseño Web", no "Diseño UX/UI"). Máximo 2.
- * - award: opcional. Premio o distinción, en los dos idiomas. Se muestra en el hover de la
- *   card, debajo de la card en táctil y como pill en el encabezado del caso. Sin award, nada.
- * - cardShape: forma de la card en la grilla del home: 'wide' (4:3), 'square' (1:1) o
- *   'portrait' (3:4 desde md; en mobile, 4:3). La card recorta el cover al centro.
- * - published: si la página del proyecto existe. Con false no se genera ni aparece en ningún lado.
- * - showOnHome: si, además de existir, aparece en la grilla del home.
+ * - services: categorías, nunca roles ("Diseño Web", no "Diseño UX/UI"). Máximo 2.
+ * - award: opcional, en los dos idiomas.
+ * - cardShape: 'wide' (4:3), 'square' (1:1) o 'portrait' (3:4); las dos últimas
+ *   desde md, en mobile 4:3.
+ * - published: con false la página no se genera ni aparece en ningún lado.
  * - order: orden del home y del ciclo de "Próximo proyecto".
- * - imageBriefs: imágenes del caso. type decide ancho y recorte (imageSpec.js); slot, dónde cae.
- * - frame: proporción real del archivo, solo en los tipos sin recorte (mockup y long-strip).
+ * - imageBriefs: type decide ancho y recorte (imageSpec.js); slot, dónde cae.
+ * - frame: proporción real del archivo, solo en mockup y long-strip.
  */
 export const projects = [
   {
