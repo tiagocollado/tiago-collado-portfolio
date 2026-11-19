@@ -68,7 +68,7 @@ los de la versión Next; dónde cae cada uno en Astro está en §10.
 **Deploy**: https://tiagocollado.vercel.app/ · proyecto `tiagocollado` de
 Vercel, conectado a este repo. La URL no cambió con la migración.
 
-**URLs que tienen que seguir iguales**: `/` (redirige a `/en`), `/en`, `/es`,
+**URLs que tienen que seguir iguales**: `/` (redirige a `/es`), `/en`, `/es`,
 `/{en,es}/projects/cabify-playlist-del-viaje`,
 `/{en,es}/projects/paseo-guemes-hotel`, `/{en,es}/projects/pulso-creativo`,
 `/{en,es}/projects/el-ritual-del-tono`, `/{en,es}/projects/mimascota` y
@@ -80,7 +80,7 @@ Vercel, conectado a este repo. La URL no cambió con la migración.
 > `redirects` de `astro.config.mjs` con `status: 307`; el adapter de Vercel la
 > escribe en la configuración de rutas del deploy.
 
-**Defaults**: tema **dark**, locale **`en`** (`/` redirige a `/en`; las URLs `/es/...` siguen vivas).
+**Defaults**: tema **dark**; `/` redirige a `/es` (el `defaultLocale` del i18n sigue siendo `en`; las URLs `/en/...` siguen vivas).
 
 **Capa "frontend creativo"**: Lenis smooth scroll (con reset de scroll en cambio de ruta) · custom cursor dot+ring con variants `default | link | view | drag` · SplitText char reveal · magnetic hover + `<MagneticLink>` · grain SVG global · scrollbar custom terracota · `<MotionConfig reducedMotion="user">` (en Astro va en cada isla que anima: `.claude/rules/stack-traps.md`).
 
@@ -358,7 +358,7 @@ src/
 │   └── BaseLayout.astro        # ✅ <head>, script de tema, fuentes, metadata + OG
 ├── pages/
 │   ├── index.astro             # ✅ obligatorio con i18n. La redirección real
-│   │                           # de / a /en/ (307) está en `redirects` de
+│   │                           # de / a /es/ (307) está en `redirects` de
 │   │                           # astro.config.mjs; esta página queda de
 │   │                           # respaldo con Astro.redirect (ver nota abajo)
 │   ├── en/ · es/               # ✅ carpetas por idioma: index.astro y

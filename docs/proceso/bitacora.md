@@ -445,7 +445,7 @@ En cada etapa, antes de commitear:
   Last.fm no aparezca en ningún archivo de la salida del build
   (`.vercel/output/`, incluida la función del servidor) ni del repositorio.
   El script que lo busca imprime solo nombres de archivo, nunca el valor.
-- En producción, con `curl -I`: `/` da 307 a `/en/`, `/en` y las páginas de
+- En producción, con `curl -I`: `/` da 307 a `/es/`, `/en` y las páginas de
   caso sin barra dan 308 a su versión con barra, `/tiago-collado-cv.pdf` da
   307 al CV, una URL inexistente da 404 y el endpoint responde con
   `X-Vercel-Cache: HIT` en el segundo pedido.
